@@ -2263,7 +2263,7 @@ endpoint:
 <code>0.01</code>, для BTCUSDT usdm = <code>0.10</code>, и т.д.</p>
 <p><strong>Что сейчас.</strong> Парсер запускает <code>exchange_info_poller</code> <strong>только
 если в markets есть usdm</strong> (см.
-<a href="https://github.com/SNCapital/Backend/blob/main/binance_parser/services/live.py">binance_parser/services/live.py</a>).
+<a href="https://github.com/SNCapital/Backend/blob/main/binance_parser/services/live.py">binance_parser/services/live.py</a>.
 Комментарий объясняет: «у спота нет leverage tiers, поэтому пока
 скоупом ограничились USD-M». Для spot exchange_info на диск <strong>не
 пишется</strong>, и <code>tick_size</code> для spot символов недоступен в
