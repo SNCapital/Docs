@@ -1,0 +1,3748 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Quantitative research and live-trading stack on top of Binance market data. Strategy engine + WebSocket data pipeline + local L2 order book.
+">
+      
+      
+      
+        <link rel="canonical" href="https://sncapital.github.io/Docs/code-review-metrics-engine/">
+      
+      
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>Code Review: Python Metrics Engine (791-key Go port) - SN Capital — Backend</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="https://unpkg.com/katex@0/dist/katex.min.css">
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#code-review-python-metrics-engine-791-key-go-port" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="SN Capital — Backend" class="md-header__button md-logo" aria-label="SN Capital — Backend" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            SN Capital — Backend
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Code Review: Python Metrics Engine (791-key Go port)
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m14.3 16-.7-2h-3.2l-.7 2H7.8L11 7h2l3.2 9zM20 8.69V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12zm-9.15 3.96h2.3L12 9z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_2" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to system preference"  type="radio" name="__palette" id="__palette_2">
+    
+      <label class="md-header__button md-icon" title="Switch to system preference" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+          <a href="javascript:void(0)" class="md-search__icon md-icon" title="Share" aria-label="Share" data-clipboard data-clipboard-text="" data-md-component="search-share" tabindex="-1">
+            
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9a3 3 0 0 0-3 3 3 3 0 0 0 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.15c-.05.21-.08.43-.08.66 0 1.61 1.31 2.91 2.92 2.91s2.92-1.3 2.92-2.91A2.92 2.92 0 0 0 18 16.08"/></svg>
+          </a>
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/SNCapital/Backend" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    SNCapital/Backend
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+    
+      
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href=".." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../getting-started/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Getting started
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../alpha-engine/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Alpha engine
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../binance-parser/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Binance parser
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../strategies/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Strategies
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../reference/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Reference
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../development/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Development
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../research-log/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Research log
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../research/nsc-14-aggtrade-vs-trade/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Research notes
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../openspec/historical-download/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Specs
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+    
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="SN Capital — Backend" class="md-nav__button md-logo" aria-label="SN Capital — Backend" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    SN Capital — Backend
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/SNCapital/Backend" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    SNCapital/Backend
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../getting-started/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Getting started
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_2" id="__nav_2_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Getting started
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../getting-started/installation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Installation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../getting-started/quickstart/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Quick start
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../getting-started/architecture/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../alpha-engine/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Alpha engine
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_3" id="__nav_3_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Alpha engine
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../alpha-engine/pipeline/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Pipeline overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../alpha-engine/data-layer/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Data layer
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../alpha-engine/writing-a-strategy/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Writing a strategy
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../alpha-engine/markowitz/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Markowitz combination
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../alpha-engine/backtesting/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Backtesting & PnL
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../alpha-engine/live-trading/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Live trading
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../binance-parser/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Binance parser
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_4" id="__nav_4_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Binance parser
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../binance-parser/live/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Live WebSocket
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../binance-parser/historical/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Historical download
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../binance-parser/storage/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Storage layout
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../binance-parser/order-book/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Local order book
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../binance-parser/extending/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Extending the parser
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../strategies/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Strategies
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_5" id="__nav_5_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Strategies
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../methodology/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Methodology
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../strategies/funding_reversion/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Funding mean reversion
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../strategies/trade_imbalance/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Trade imbalance
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../strategies/ob_mispricing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Orderbook mispricing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../strategies/book_depth_imbalance/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Book depth imbalance
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../strategies/vol_mean_reversion/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Volatility mean reversion
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../strategies/vol_ob_entropy/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Volume / OB entropy
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_6" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../reference/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Reference
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_6" id="__nav_6_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Reference
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../reference/cli/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    CLI
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../reference/operators/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Operators
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../reference/metrics/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Metrics catalogue
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../reference/glossary/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Glossary
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_7" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../development/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Development
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_7" id="__nav_7_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Development
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../development/setup/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Setup
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../development/testing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Testing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../development/contributing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Contributing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../research-log/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Research log
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_9" >
+        
+          
+          <label class="md-nav__link" for="__nav_9" id="__nav_9_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Research notes
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_9_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_9">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Research notes
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../research/nsc-14-aggtrade-vs-trade/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    NSC-14 aggTrade vs trade
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_10" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../openspec/historical-download/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Specs
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_10" id="__nav_10_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_10_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_10">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Specs
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../openspec/live-ws/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Live WebSocket pipeline
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../openspec/models/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Data models
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../openspec/rest-pollers/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    REST pollers
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#critical-must-fix" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Critical (Must Fix)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Critical (Must Fix)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-aggregatepy145" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. aggregate.py:145 — Ложное предупреждение для валидных ликвидаций
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-live_bridgepy346-vs-enginepy251-warm-start" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. live_bridge.py:346 vs engine.py:251 — Несогласованное имя ключа в warm-start
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-live_bridgepy206-226-engine-thread-safe" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. live_bridge.py:206-226 — Гонка данных: Engine не thread-safe
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#important-should-fix" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Important (Should Fix)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Important (Should Fix)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#4-tick_readerpy72-76" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. tick_reader.py:72-76 — Проверка колонок внутри цикла по строкам
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#5-tick_readerpy90-read_" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. tick_reader.py:90 — Избыточная сортировка в каждом read_*
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#6-toolsreplay_metricspy85-engine" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. tools/replay_metrics.py:85 — Лямбда захватывает engine по ссылке
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#7-live_bridgepy253-255-dataframe-__getitem__" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. live_bridge.py:253-255 — Перестроение DataFrame на каждый __getitem__
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#8-enginepy152-153-tickts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8. engine.py:152-153 — Тихий дроп тиков до первого валидного tick.ts
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#9-_add_kline-kline_open-kline_close" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9. Нет теста для _add_kline с kline_open &gt; kline_close
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#10-book_replaypy86-_resync_count" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10. book_replay.py:86 — _resync_count инкрементируется на каждый снапшот
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#minor-nice-to-have" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Minor (Nice to Have)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Minor (Nice to Have)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#11-ringpy34-35-setattr-80" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        11. ring.py:34-35 — setattr в цикле по 80 полям
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#12-book_scalarspy24-30-float-int" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        12. book_scalars.py:24-30 — Поля-счётчики типизированы как float, не int
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#13-groupsorderbookpy364-565" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        13. groups/orderbook.py:364-565 — Вложенные функции переопределяются на каждой итерации
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#14-mainpy288-299-run_replay" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        14. main.py:288-299 — run_replay импортирован, но вызывается с корректными аргументами
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Рекомендации по процессу
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Итоговая оценка
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2026-07-29" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Дополнительные наблюдения (2026-07-29, второй проход)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Дополнительные наблюдения (2026-07-29, второй проход)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#critical" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Critical
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#high" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        High
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#medium" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Medium
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#low" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Low
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#very-low-cosmetic" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Very Low / Cosmetic
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Итоговая оценка после второго прохода
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2026-07-29_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Дополнительные наблюдения (2026-07-29, руководитель ревью)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Дополнительные наблюдения (2026-07-29, руководитель ревью)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Приоритетный план исправлений
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Матрица рисков
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_6" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Рекомендации по процессу
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_7" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Итоговая оценка
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2026-07-29-" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Дополнительные наблюдения (2026-07-29, третий проход — внешний код-ревью)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Дополнительные наблюдения (2026-07-29, третий проход — внешний код-ревью)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#pp-tick_adapterpy85-86-forceorder-sell" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PP. tick_adapter.py:85-86 — Тихая классификация неизвестной стороны ForceOrder как "SELL"
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#qq-mainpy206256283-loggingbasicconfig" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        QQ. main.py:206,256,283 — Три идентичных logging.basicConfig в трёх функциях
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rr-_bar_close_ms-vs-_bar_close_ts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        RR. Дублирование _bar_close_ms vs _bar_close_ts — дополнительная верификация
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ss-orderbookpy364-401" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SS. Вложенные функции в orderbook.py:364-401 — подтверждение + контекст
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2026-07-29-review-task-tool" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Дополнительные наблюдения (2026-07-29, четвертый проход — review task tool)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Дополнительные наблюдения (2026-07-29, четвертый проход — review task tool)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#tt-enginepy220-liqevent-notional-orig_qty-fallback" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        TT. engine.py:220 — LiqEvent notional использует orig_qty напрямую, а не цепочку fallback
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#uu-run_traderpy164-169-in-process-metrics-bars-n" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        UU. run_trader.py:164-169 — --in-process-metrics молча игнорируется при --bars N
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#vv-gap-catch-up-emission-n" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        VV. Gap catch-up emission — N идентичных строк после простоя (подтверждение + контекст)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_8" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Итоговая оценка после четвертого прохода
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2026-07-29-review-task-tool_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Дополнительные наблюдения (2026-07-29, пятый проход — review task tool)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Дополнительные наблюдения (2026-07-29, пятый проход — review task tool)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_9" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Верификация найденных багов в исходном коде
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_10" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Резюме верификации
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#-review-" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Мета-наблюдения о review-документах
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_11" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Итоговая оценка после пятого прохода
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="code-review-python-metrics-engine-791-key-go-port">Code Review: Python Metrics Engine (791-key Go port)<a class="headerlink" href="#code-review-python-metrics-engine-791-key-go-port" title="Permanent link">&para;</a></h1>
+<p><strong>Ветка:</strong> <code>feat/go-to-python-metrics-engine</code><br />
+<strong>Base:</strong> <code>origin/main</code> (<code>9f88ca7</code>)<br />
+<strong>Head:</strong> <code>d5fbb94</code><br />
+<strong>Автор ревью:</strong> Senior Code Reviewer<br />
+<strong>Дата:</strong> 2026-07-29</p>
+<hr />
+<h2 id="critical-must-fix">Critical (Must Fix)<a class="headerlink" href="#critical-must-fix" title="Permanent link">&para;</a></h2>
+<h3 id="1-aggregatepy145">1. <code>aggregate.py:145</code> — Ложное предупреждение для валидных ликвидаций<a class="headerlink" href="#1-aggregatepy145" title="Permanent link">&para;</a></h3>
+<p><strong>Файл:</strong> <code>alpha_engine/metrics_engine/aggregate.py:140-149</code></p>
+<p><strong>Проблема:</strong></p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="n">size</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">orig_qty</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="k">if</span> <span class="n">size</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>    <span class="n">size</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">last_fill_qty</span>
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>    <span class="k">if</span> <span class="n">size</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>        <span class="n">size</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">cum_fill_qty</span>
+</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>        <span class="k">if</span> <span class="n">f</span><span class="o">.</span><span class="n">last_fill_qty</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>   <span class="c1"># &lt;-- BUG: должно быть `size &lt;= 0`</span>
+</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>            <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="o">...</span><span class="p">)</span>
+</span></code></pre></div>
+<p>Логика пытается найти ненулевой размер ликвидации: сначала <code>orig_qty</code>, затем <code>last_fill_qty</code>, затем <code>cum_fill_qty</code>. После того как <code>size = f.cum_fill_qty</code> (уже &gt; 0), условие <code>f.last_fill_qty &lt;= 0</code> всё ещё проверяет <em>старое</em> значение, а не <code>size</code>. Это даёт ложное предупреждение для каждой ликвидации, где <code>orig_qty &lt;= 0</code> и <code>last_fill_qty &lt;= 0</code>, но <code>cum_fill_qty &gt; 0</code>.</p>
+<p><strong>Решение:</strong></p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="n">size</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">orig_qty</span>
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="k">if</span> <span class="n">size</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>    <span class="n">size</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">last_fill_qty</span>
+</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>    <span class="k">if</span> <span class="n">size</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
+</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>        <span class="n">size</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">cum_fill_qty</span>
+</span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>        <span class="k">if</span> <span class="n">size</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>   <span class="c1"># &lt;-- FIX: проверяем актуальный size</span>
+</span><span id="__span-1-7"><a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>            <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="o">...</span><span class="p">)</span>
+</span></code></pre></div>
+<p><strong>Риски:</strong> Низкие. Исправление тривиальное, логика не меняется. Ложные предупреждения перестанут засорять логи. При неверном патче (если кто-то заменит не ту строку) можно потерять реальные предупреждения о нулевых ликвидациях.</p>
+<hr />
+<h3 id="2-live_bridgepy346-vs-enginepy251-warm-start">2. <code>live_bridge.py:346</code> vs <code>engine.py:251</code> — Несогласованное имя ключа в warm-start<a class="headerlink" href="#2-live_bridgepy346-vs-enginepy251-warm-start" title="Permanent link">&para;</a></h3>
+<p><strong>Файлы:</strong> <code>alpha_engine/metrics_engine/live_bridge.py:346</code>, <code>alpha_engine/metrics_engine/engine.py:251</code></p>
+<p><strong>Проблема:</strong></p>
+<p><code>warm_start_from_parquet</code> сохраняет строку с ключом <code>_bar_close_ms</code>:</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># live_bridge.py:346</span>
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="n">row</span><span class="p">[</span><span class="s2">&quot;_bar_close_ms&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="o">...</span>
+</span></code></pre></div>
+<p>Но <code>emit_if_ready</code> пишет:</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># engine.py:251</span>
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="n">row</span><span class="p">[</span><span class="s2">&quot;_bar_close_ts&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="o">...</span>
+</span></code></pre></div>
+<p>Ни один код пока не читает эти ключи из warm-started данных, поэтому баг <strong>латентный</strong>. Но при первом же коде, который попытается сопоставить warm-start бары с live-барами по этому ключу, — сломается.</p>
+<p><strong>Решение:</strong> Привести к единому имени. Рекомендуется <code>_bar_close_ts</code> (как в engine.py), так как это имя используется в <code>emit_if_ready</code> — горячем пути.</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># live_bridge.py:346</span>
+</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="n">row</span><span class="p">[</span><span class="s2">&quot;_bar_close_ts&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="o">...</span>
+</span></code></pre></div>
+<p><strong>Риски:</strong> 
+- Если какой-то внешний код (ещё не написанный) уже проснулся и читает <code>_bar_close_ms</code> — сломается. Но на текущий момент такого кода нет.
+- Потенциально может быть несоответствие с Go-форматом, если Go-паркет пишет <code>_bar_close_ms</code>. Нужно проверить Go-код на предмет имени поля и синхронизировать.</p>
+<hr />
+<h3 id="3-live_bridgepy206-226-engine-thread-safe">3. <code>live_bridge.py:206-226</code> — Гонка данных: <code>Engine</code> не thread-safe<a class="headerlink" href="#3-live_bridgepy206-226-engine-thread-safe" title="Permanent link">&para;</a></h3>
+<p><strong>Файл:</strong> <code>alpha_engine/metrics_engine/live_bridge.py:206-266</code></p>
+<p><strong>Проблема:</strong></p>
+<p><code>LiveMetricsBridge</code> работает в двух потоках:
+- <strong>WS поток</strong> вызывает <code>on_tick()</code> → <code>eng.push()</code>, <code>eng.feed_book()</code>, <code>eng.emit_if_ready()</code>
+- <strong>Trader поток</strong> вызывает <code>exchange_data()</code> → читает <code>_bars</code> под <code>_bars_lock</code></p>
+<p>Проблема в том, что <code>_bars_lock</code> защищает только список <code>_bars</code>, но <strong>не защищает внутреннее состояние <code>Engine</code></strong> (его кольцевой буфер, текущий агрегат, очередь ликвидаций). Если <code>exchange_data()</code> читает <code>_bars</code> пока <code>on_tick()</code> мутирует <code>Engine</code>, возможна гонка на объектах <code>Aggregate</code> внутри кольцевого буфера.</p>
+<p><strong>Решение (вариант A):</strong> Расширить область <code>_bars_lock</code> на весь вызов <code>on_tick()</code>:</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">on_tick</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tick</span><span class="p">:</span> <span class="n">Tick</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>    <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_bars_lock</span><span class="p">:</span>
+</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">engine</span><span class="o">.</span><span class="n">push</span><span class="p">(</span><span class="n">tick</span><span class="p">)</span>
+</span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>        <span class="k">if</span> <span class="n">tick</span><span class="o">.</span><span class="n">liquidation</span><span class="p">:</span>
+</span><span id="__span-5-5"><a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>            <span class="bp">self</span><span class="o">.</span><span class="n">engine</span><span class="o">.</span><span class="n">feed_liquidation</span><span class="p">(</span><span class="n">tick</span><span class="o">.</span><span class="n">liquidation</span><span class="p">)</span>
+</span><span id="__span-5-6"><a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">engine</span><span class="o">.</span><span class="n">feed_book</span><span class="p">(</span><span class="n">tick</span><span class="o">.</span><span class="n">book</span><span class="p">)</span>
+</span><span id="__span-5-7"><a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>        <span class="n">bars</span><span class="p">,</span> <span class="n">closed</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">engine</span><span class="o">.</span><span class="n">emit_if_ready</span><span class="p">()</span>
+</span><span id="__span-5-8"><a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>        <span class="k">if</span> <span class="n">closed</span><span class="p">:</span>
+</span><span id="__span-5-9"><a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>            <span class="bp">self</span><span class="o">.</span><span class="n">_extend_bars</span><span class="p">(</span><span class="n">bars</span><span class="p">)</span>
+</span></code></pre></div>
+<p>Это гарантирует, что <code>exchange_data()</code> всегда видит консистентное состояние Engine.</p>
+<p><strong>Решение (вариант B):</strong> Документировать, что <code>exchange_data()</code> должен вызываться только из того же event loop или после остановки подписки на bus. Для Phase 1 (сигнальный режим, бары раз в 30 минут) это приемлемо, но ловушка для будущих разработчиков.</p>
+<p><strong>Риски:</strong>
+- <strong>Вариант A:</strong> Увеличение времени удержания блокировки может повлиять на latency WS потока, если <code>push</code>/<code>emit_if_ready</code> медленные (маловероятно, но теоретически возможно).
+- <strong>Вариант B:</strong> Следующий разработчик может вызвать <code>exchange_data()</code> из другого потока, не зная о требовании, и получить битые данные (hard-to-debug race condition).</p>
+<hr />
+<h2 id="important-should-fix">Important (Should Fix)<a class="headerlink" href="#important-should-fix" title="Permanent link">&para;</a></h2>
+<h3 id="4-tick_readerpy72-76">4. <code>tick_reader.py:72-76</code> — Проверка колонок внутри цикла по строкам<a class="headerlink" href="#4-tick_readerpy72-76" title="Permanent link">&para;</a></h3>
+<p><strong>Файл:</strong> <code>alpha_engine/metrics_engine/tick_reader.py:72-76</code></p>
+<p><strong>Проблема:</strong></p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">iterrows</span><span class="p">():</span>
+</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>    <span class="k">if</span> <span class="s2">&quot;side&quot;</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>   <span class="c1"># проверяется 1800 раз, не меняется ни разу</span>
+</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>        <span class="n">is_buyer_maker</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="s2">&quot;side&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;sell&quot;</span>
+</span><span id="__span-6-4"><a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>    <span class="k">else</span><span class="p">:</span>
+</span><span id="__span-6-5"><a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>        <span class="n">is_buyer_maker</span> <span class="o">=</span> <span class="nb">bool</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="s2">&quot;is_buyer_maker&quot;</span><span class="p">])</span>
+</span></code></pre></div>
+<p><code>df.columns</code> не меняется внутри цикла. Проверка инварианта на каждой итерации — O(n) вместо O(1).</p>
+<p><strong>Решение:</strong> Вынести проверку до цикла:</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="n">has_side</span> <span class="o">=</span> <span class="s2">&quot;side&quot;</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span>
+</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">iterrows</span><span class="p">():</span>
+</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>    <span class="k">if</span> <span class="n">has_side</span><span class="p">:</span>
+</span><span id="__span-7-4"><a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>        <span class="n">is_buyer_maker</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="s2">&quot;side&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;sell&quot;</span>
+</span><span id="__span-7-5"><a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>    <span class="k">else</span><span class="p">:</span>
+</span><span id="__span-7-6"><a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>        <span class="n">is_buyer_maker</span> <span class="o">=</span> <span class="nb">bool</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="s2">&quot;is_buyer_maker&quot;</span><span class="p">])</span>
+</span></code></pre></div>
+<p><strong>Риски:</strong> Низкие. Косметический рефакторинг. Ошибка при переносе (например, забыть переименовать <code>df.columns</code> в <code>has_side</code>) приведёт к очевидному NameError или логической ошибке, которая быстро отловится тестами.</p>
+<hr />
+<h3 id="5-tick_readerpy90-read_">5. <code>tick_reader.py:90</code> — Избыточная сортировка в каждом <code>read_*</code><a class="headerlink" href="#5-tick_readerpy90-read_" title="Permanent link">&para;</a></h3>
+<p><strong>Файл:</strong> <code>alpha_engine/metrics_engine/tick_reader.py:90</code> (и аналогично в других <code>read_*</code> методах)</p>
+<p><strong>Проблема:</strong> Каждый <code>read_trades</code>, <code>read_liquidations</code>, <code>read_books</code> сортирует свой список тиков. Затем <code>read_ticks</code> (line 209) сортирует объединённый результат снова. Сортировка на каждом подсписке избыточна: если объединить n/k списков по k элементов, итоговая сложность O(k * (n/k) log (n/k) + n log n) против O(n log n) без под-сортировок.</p>
+<p><strong>Решение:</strong> Убрать <code>result.sort(key=attrgetter("ts"))</code> из <code>read_trades</code>/<code>read_liquidations</code>/<code>read_books</code> и полагаться только на финальную сортировку в <code>read_ticks</code>.</p>
+<p><strong>Риски:</strong> Низкие. Производительность исторического реплея не критична. Основной риск — если какой-то код полагается на отсортированность списка после вызова отдельного <code>read_*</code> (внешних вызовов нет).</p>
+<hr />
+<h3 id="6-toolsreplay_metricspy85-engine">6. <code>tools/replay_metrics.py:85</code> — Лямбда захватывает <code>engine</code> по ссылке<a class="headerlink" href="#6-toolsreplay_metricspy85-engine" title="Permanent link">&para;</a></h3>
+<p><strong>Файл:</strong> <code>alpha_engine/metrics_engine/tools/replay_metrics.py:85</code></p>
+<p><strong>Проблема:</strong></p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="n">book_replay</span><span class="o">.</span><span class="n">handle_tick</span><span class="p">(</span><span class="n">tick</span><span class="p">,</span> <span class="k">lambda</span> <span class="n">scalars</span><span class="p">:</span> <span class="n">engine</span><span class="o">.</span><span class="n">feed_book</span><span class="p">(</span><span class="n">scalars</span><span class="p">))</span>
+</span></code></pre></div>
+<p><code>engine</code> захватывается по ссылке. В данном случае <code>engine</code> не переопределяется в цикле, поэтому бага нет. Но это классический anti-pattern. В <code>test_replay_parity.py:130</code> используется правильный подход:</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="k">lambda</span> <span class="n">s</span><span class="p">,</span> <span class="n">eng</span><span class="o">=</span><span class="n">e</span><span class="p">:</span> <span class="n">eng</span><span class="o">.</span><span class="n">feed_book</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+</span></code></pre></div>
+<p><strong>Решение:</strong> Привести к единому стилю:</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="n">book_replay</span><span class="o">.</span><span class="n">handle_tick</span><span class="p">(</span><span class="n">tick</span><span class="p">,</span> <span class="k">lambda</span> <span class="n">scalars</span><span class="p">,</span> <span class="n">eng</span><span class="o">=</span><span class="n">engine</span><span class="p">:</span> <span class="n">eng</span><span class="o">.</span><span class="n">feed_book</span><span class="p">(</span><span class="n">scalars</span><span class="p">))</span>
+</span></code></pre></div>
+<p>Или обернуть в именованную функцию.</p>
+<p><strong>Риски:</strong> Маловероятны — <code>engine</code> не переприсваивается в цикле. Но если в будущем код рефакторится и <code>engine</code> начинает пересоздаваться, баг проявится. Лучше исправить сейчас, когда контекст понятен.</p>
+<hr />
+<h3 id="7-live_bridgepy253-255-dataframe-__getitem__">7. <code>live_bridge.py:253-255</code> — Перестроение DataFrame на каждый <code>__getitem__</code><a class="headerlink" href="#7-live_bridgepy253-255-dataframe-__getitem__" title="Permanent link">&para;</a></h3>
+<p><strong>Файл:</strong> <code>alpha_engine/metrics_engine/live_bridge.py:253-255</code></p>
+<p><strong>Проблема:</strong> <code>_LiveMetricsDict._build_frame</code> строит DataFrame из сырого словаря <code>bars</code> при каждом <code>__getitem__</code> (если нет в кеше). С 791 ключом, первый доступ от всех стратегий может перестроить 791 DataFrame. При <code>warm_start</code> с 30 днями x 48 баров x 5 символов ≈ 7200 баров — вызов <code>has_key()</code> для ~5 ключей из <code>_KIND_PROBES</code> приводит к ~36000 построений фреймов.</p>
+<p><strong>Решение:</strong> 
+- Кешировать DataFrame для каждого <code>kind</code> до следующего <code>_extend_bars()</code>
+- Или строить DataFrame лениво, только при первом обращении к ключу, и инвалидировать при появлении нового бара</p>
+<p>Текущее поведение приемлемо для 30-секундного каденса баров, но при scale-up (больше символов, чаще бары) может стать узким местом.</p>
+<p><strong>Риски:</strong> Преждевременная оптимизация. Если исправлять, нужно быть аккуратным с инвалидацией кеша — устаревший DataFrame может привести к неверным сигналам.</p>
+<hr />
+<h3 id="8-enginepy152-153-tickts">8. <code>engine.py:152-153</code> — Тихий дроп тиков до первого валидного <code>tick.ts</code><a class="headerlink" href="#8-enginepy152-153-tickts" title="Permanent link">&para;</a></h3>
+<p><strong>Файл:</strong> <code>alpha_engine/metrics_engine/engine.py:152-163</code></p>
+<p><strong>Проблема:</strong></p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">push</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tick</span><span class="p">:</span> <span class="n">Tick</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span id="__span-11-2"><a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>    <span class="k">if</span> <span class="n">tick</span><span class="o">.</span><span class="n">ts</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
+</span><span id="__span-11-3"><a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>        <span class="k">return</span>  <span class="c1"># silently dropped</span>
+</span><span id="__span-11-4"><a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>    <span class="o">...</span>
+</span></code></pre></div>
+<p>Если в <code>push</code> передан тик с <code>ts &lt;= 0</code>, он молча дропается. При этом <code>_cur_open</code> магическое значение <code>False</code> (line 152) — <code>_open_slot</code> устанавливает его при первом <code>push</code>. Таким образом, при вызове <code>emit_if_ready</code> до любого <code>push</code>, возвращается <code>({}, False)</code> — корректно, но молчаливо.</p>
+<p><strong>Решение:</strong> Добавить <code>logger.warning</code> для дропнутых тиков (по крайней мере debug-level), и документировать поведение в docstring <code>push</code> (уже есть частично).</p>
+<p><strong>Риски:</strong> На production может быть поток тиков с битой меткой времени (например, из-за рассинхронизации часов на бирже). Без логирования это тихая потеря данных. С другой стороны, логирование на каждый такой тик может заспамить логи.</p>
+<hr />
+<h3 id="9-_add_kline-kline_open-kline_close">9. Нет теста для <code>_add_kline</code> с <code>kline_open &gt; kline_close</code><a class="headerlink" href="#9-_add_kline-kline_open-kline_close" title="Permanent link">&para;</a></h3>
+<p><strong>Файл:</strong> <code>tests/test_metrics_engine_parity.py</code> (отсутствует тесткейс)</p>
+<p><strong>Проблема:</strong> Группа <code>_add_kline</code> делает <code>hi = max(hi, kline_hi)</code> и <code>lo = min(lo, kline_lo)</code>. Если по какой-то причине приходит kline с <code>high &lt; low</code> (что невозможно в нормальных данных, но может быть от бажного upstream), <code>hi</code>/<code>lo</code> могут не обновиться корректно. Поведение соответствует Go-версии, но не покрыто тестом.</p>
+<p><strong>Решение:</strong> Добавить тест, проверяющий что при <code>high &lt; low</code> значения <code>hi</code>/<code>lo</code> обрабатываются без падения и без стейт-коррупции. Это также защитит при портировании на другие языки.</p>
+<p><strong>Риски:</strong> Низкие. Реальные данные с биржи гарантируют <code>high &gt;= low</code>. Тест нужен скорее как регрессионная защита при рефакторинге и для документирования поведения.</p>
+<hr />
+<h3 id="10-book_replaypy86-_resync_count">10. <code>book_replay.py:86</code> — <code>_resync_count</code> инкрементируется на каждый снапшот<a class="headerlink" href="#10-book_replaypy86-_resync_count" title="Permanent link">&para;</a></h3>
+<p><strong>Файл:</strong> <code>alpha_engine/metrics_engine/book_replay.py:86</code></p>
+<p><strong>Проблема:</strong> В Go live-версии <code>resync_count</code> отслеживает реальные ресинхронизации после разрыва WS-соединения. В реплее каждый снапшот считается ресинком. Это означает, что <code>BookScalars</code> из реплея несут завышенный <code>resync_count</code> по сравнению с live-версией Go.</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="c1"># Mirrors Go&#39;s cmd/replay: every snapshot is a resync</span>
+</span><span id="__span-12-2"><a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="bp">self</span><span class="o">.</span><span class="n">_resync_count</span> <span class="o">+=</span> <span class="mi">1</span>
+</span></code></pre></div>
+<p><strong>Решение:</strong> 
+- Задокументировать это расхождение в docstring <code>BookReplay</code> и/или в документации к реплею
+- Если <code>resync_count</code> используется где-то как фича (например, для взвешивания уверенности в book-метриках), нужно либо игнорировать его при реплее, либо нормализовать</p>
+<p><strong>Риски:</strong> Если в будущем кто-то сравнивает реплей-метрики с live-метриками по <code>resync_count</code>, выводы будут неверными. На данный момент <code>resync_count</code> нигде не используется в стратегиях, но это может измениться.</p>
+<hr />
+<h2 id="minor-nice-to-have">Minor (Nice to Have)<a class="headerlink" href="#minor-nice-to-have" title="Permanent link">&para;</a></h2>
+<h3 id="11-ringpy34-35-setattr-80">11. <code>ring.py:34-35</code> — <code>setattr</code> в цикле по 80 полям<a class="headerlink" href="#11-ringpy34-35-setattr-80" title="Permanent link">&para;</a></h3>
+<p><strong>Файл:</strong> <code>alpha_engine/metrics_engine/ring.py:34-35</code></p>
+<p><strong>Проблема:</strong> Каждый <code>append</code> копирует 80 полей <code>Aggregate</code> через <code>setattr</code>/<code>getattr</code>:</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="k">for</span> <span class="n">slot</span> <span class="ow">in</span> <span class="n">Aggregate</span><span class="o">.</span><span class="vm">__slots__</span><span class="p">:</span>
+</span><span id="__span-13-2"><a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>    <span class="nb">setattr</span><span class="p">(</span><span class="n">target</span><span class="p">,</span> <span class="n">slot</span><span class="p">,</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">agg</span><span class="p">,</span> <span class="n">slot</span><span class="p">))</span>
+</span></code></pre></div>
+<p>При 1800 слотах на бар это 144,000 операций атрибутов.</p>
+<p><strong>Решение:</strong> Использовать <code>copy.copy</code> для быстрого поверхностного копирования (если все поля immutable/float), или определить метод <code>copy()</code> на <code>Aggregate</code>:</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="n">target</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">agg</span><span class="p">)</span>
+</span></code></pre></div>
+<p><strong>Риски:</strong> У <code>copy.copy</code> есть небольшой оверхед на создание объекта, но он всё равно быстрее 80 вызовов <code>setattr</code> + 80 <code>getattr</code>. Надо убедиться, что все поля <code>Aggregate</code> — примитивные типы (float, int) — для <code>copy.copy</code> это не проблема.</p>
+<hr />
+<h3 id="12-book_scalarspy24-30-float-int">12. <code>book_scalars.py:24-30</code> — Поля-счётчики типизированы как <code>float</code>, не <code>int</code><a class="headerlink" href="#12-book_scalarspy24-30-float-int" title="Permanent link">&para;</a></h3>
+<p><strong>Файл:</strong> <code>alpha_engine/metrics_engine/book_scalars.py:24-30</code></p>
+<p><strong>Проблема:</strong> Поля <code>updates_count</code>, <code>seq_gaps</code>, <code>resync_count</code> имеют тип <code>float</code>, хотя логически представляют целочисленные счётчики. Это сделано для соответствия Go-версии (где они хранятся как <code>float64</code> в агрегате) и чтобы избежать преобразований типов, но аннотация <code>float</code> для счётчиков вводит в заблуждение.</p>
+<p><strong>Решение:</strong> Оставить как есть (соответствие Go). Либо добавить комментарий, объясняющий причину выбора типа.</p>
+<p><strong>Риски:</strong> Косметика. При попытке использовать эти поля в контексте, где ожидается <code>int</code> (например, <code>range()</code>), будет TypeError.</p>
+<hr />
+<h3 id="13-groupsorderbookpy364-565">13. <code>groups/orderbook.py:364-565</code> — Вложенные функции переопределяются на каждой итерации<a class="headerlink" href="#13-groupsorderbookpy364-565" title="Permanent link">&para;</a></h3>
+<p><strong>Файл:</strong> <code>alpha_engine/metrics_engine/groups/orderbook.py:356-565</code></p>
+<p><strong>Проблема:</strong> Функции <code>_vwap</code>, <code>_slope</code>, <code>_dr</code>, <code>_log_ret</code> определены внутри цикла <code>for a in buf:</code>:</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-15-1"><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">buf</span><span class="p">:</span>
+</span><span id="__span-15-2"><a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">_vwap</span><span class="p">(</span><span class="o">...</span><span class="p">):</span> <span class="o">...</span>
+</span><span id="__span-15-3"><a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">_slope</span><span class="p">(</span><span class="o">...</span><span class="p">):</span> <span class="o">...</span>
+</span><span id="__span-15-4"><a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">_dr</span><span class="p">(</span><span class="o">...</span><span class="p">):</span> <span class="o">...</span>
+</span><span id="__span-15-5"><a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">_log_ret</span><span class="p">(</span><span class="o">...</span><span class="p">):</span> <span class="o">...</span>
+</span><span id="__span-15-6"><a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a>    <span class="c1"># использование</span>
+</span></code></pre></div>
+<p>Python создаёт новый объект функции на каждую итерацию (до 1800 раз на бар).</p>
+<p><strong>Решение:</strong> Вынести определения функций на уровень модуля или хотя бы на уровень метода (вне цикла).</p>
+<p><strong>Риски:</strong> Требует аккуратного рефакторинга — функции могут захватывать переменные из области видимости цикла. При выносе на уровень модуля нужно передавать все зависимости через аргументы. Риск сломать логику при рефакторинге выше, чем профит от оптимизации.</p>
+<hr />
+<h3 id="14-mainpy288-299-run_replay">14. <code>main.py:288-299</code> — <code>run_replay</code> импортирован, но вызывается с корректными аргументами<a class="headerlink" href="#14-mainpy288-299-run_replay" title="Permanent link">&para;</a></h3>
+<p><strong>Файл:</strong> <code>main.py:288-299</code></p>
+<p><strong>Заметка:</strong> В ходе ревью было проверено, что <code>run_replay</code> получает <code>symbols</code> как <code>list[str]</code> (после <code>args.symbols.split(",")</code>), что соответствует ожидаемому типу. Всё корректно. Не является проблемой — просто констатация.</p>
+<hr />
+<h2 id="_1">Рекомендации по процессу<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
+<ol>
+<li><strong>Добавить pre-commit хук</strong> на линтер (ruff/mypy) для новых файлов в <code>metrics_engine/</code>, чтобы отлавливать подобные issue на ранней стадии.</li>
+<li><strong>Задокументировать thread-safety контракт</strong> <code>LiveMetricsBridge</code> в CLAUDE.md или в docstring класса — явно указать, из каких потоков можно вызывать какие методы.</li>
+<li><strong>Добавить интеграционный тест</strong> с реальной гонкой потоков (thread sanitizer или стресс-тест с множественными вызовами <code>on_tick</code> / <code>exchange_data</code>).</li>
+<li><strong>Синхронизировать имена ключей</strong> между Go и Python — завести константу где-то в общем месте (например, <code>BAR_CLOSE_KEY = "_bar_close_ts"</code>) и использовать её везде, включая Go, если возможно.</li>
+</ol>
+<hr />
+<h2 id="_2">Итоговая оценка<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h2>
+<p><strong>Ready to merge?</strong> С фиксами Critical #1, #2, #3.</p>
+<p><strong>Обоснование:</strong> Реализация — добросовестный, хорошо протестированный порт Go metrics engine с 4400+ строк кода, 4 тестовыми файлами и покрытием ключевых сценариев. Три критических issue (ложный warning, неконсистентный ключ warm-start, незадокументированная thread-safety) должны быть исправлены перед мержем. Important issue — улучшения, которые стоит отследить и запланировать, но они не блокируют мерж. Архитектура и качество тестов — на высоком уровне.</p>
+<hr />
+<h2 id="2026-07-29">Дополнительные наблюдения (2026-07-29, второй проход)<a class="headerlink" href="#2026-07-29" title="Permanent link">&para;</a></h2>
+<p>Ниже — проблемы, найденные при повторном проходе по коду после основного ревью. Содержат как новые критические находки, так и замечания по качеству.</p>
+<hr />
+<h3 id="critical">Critical<a class="headerlink" href="#critical" title="Permanent link">&para;</a></h3>
+<h4 id="aa-tick_adapterpy65-case-sensitive-side-_from_agg_trade">AA. <code>tick_adapter.py:65</code> — Case-sensitive сравнение side в <code>_from_agg_trade</code><a class="headerlink" href="#aa-tick_adapterpy65-case-sensitive-side-_from_agg_trade" title="Permanent link">&para;</a></h4>
+<p><strong>Файл:</strong> <code>alpha_engine/metrics_engine/tick_adapter.py:65</code></p>
+<p><strong>Проблема:</strong></p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-16-1"><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="c1"># _from_agg_trade (line 65)</span>
+</span><span id="__span-16-2"><a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a><span class="n">is_buyer_maker</span> <span class="o">=</span> <span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">side</span><span class="p">)</span> <span class="o">==</span> <span class="s2">&quot;sell&quot;</span><span class="p">)</span>
+</span><span id="__span-16-3"><a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a>
+</span><span id="__span-16-4"><a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a><span class="c1"># _from_force_order (lines 85-86)</span>
+</span><span id="__span-16-5"><a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a><span class="n">side_raw</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">side</span><span class="p">)</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span>
+</span><span id="__span-16-6"><a id="__codelineno-16-6" name="__codelineno-16-6" href="#__codelineno-16-6"></a><span class="n">side</span> <span class="o">=</span> <span class="s2">&quot;BUY&quot;</span> <span class="k">if</span> <span class="n">side_raw</span> <span class="o">==</span> <span class="s2">&quot;BUY&quot;</span> <span class="k">else</span> <span class="s2">&quot;SELL&quot;</span>
+</span></code></pre></div>
+<p><code>_from_agg_trade</code> сравнивает <code>side</code> с нижним регистром <code>"sell"</code>, а <code>_from_force_order</code> приводит к верхнему регистру. Если парсер хранит side как <code>"SELL"</code> (верхний регистр, как в Binance WebSocket), то сравнение <code>== "sell"</code> <strong>никогда не будет True</strong>. Каждая продажа будет классифицирована как buy (buyer-maker = False → агрессивная сторона — buyer → buy). Это инвертирует все счётчики buy/sell volume в trade-метриках.</p>
+<p>Тест <code>test_bridge_integration.py:30</code> использует <code>self.side = "sell"</code> (нижний регистр), что маскирует баг. Нет теста с upper case.</p>
+<p><strong>Решение:</strong> Привести к единому стилю — использовать <code>str(e.side).lower()</code>:</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-17-1"><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a><span class="n">is_buyer_maker</span> <span class="o">=</span> <span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">side</span><span class="p">)</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;sell&quot;</span><span class="p">)</span>
+</span></code></pre></div>
+<p><strong>Риски:</strong> Высокие. Баг молча инвертирует buy/sell статистику для всех agg-trade тиков. Фикс тривиален.</p>
+<hr />
+<h3 id="high">High<a class="headerlink" href="#high" title="Permanent link">&para;</a></h3>
+<h4 id="bb-tick_adapterpy79-intnone-crash-spot-mark-price">BB. <code>tick_adapter.py:79</code> — <code>int(None)</code> crash для spot mark-price<a class="headerlink" href="#bb-tick_adapterpy79-intnone-crash-spot-mark-price" title="Permanent link">&para;</a></h4>
+<p><strong>Файл:</strong> <code>alpha_engine/metrics_engine/tick_adapter.py:79</code></p>
+<p><strong>Проблема:</strong></p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-18-1"><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="n">next_funding_time_ms</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">next_funding_time_ms</span><span class="p">),</span>
+</span></code></pre></div>
+<p>Для spot-рынков у парсера может отсутствовать <code>next_funding_time_ms</code> (None). <code>int(None)</code> выбрасывает <code>TypeError</code>, который крашивает весь вызов <code>event_to_tick</code>. Это блокирует поступление mark-price тиков для spot-символов в live-режиме.</p>
+<p>При этом в том же файле есть правильный паттерн — <code>getattr(e, "mark_price", 0.0)</code> в <code>_from_funding</code> (line 136).</p>
+<p><strong>Решение:</strong></p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-19-1"><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a><span class="n">next_funding_time_ms</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">next_funding_time_ms</span><span class="p">)</span> <span class="k">if</span> <span class="n">e</span><span class="o">.</span><span class="n">next_funding_time_ms</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="mi">0</span><span class="p">,</span>
+</span></code></pre></div>
+<p>Или через <code>getattr</code> с дефолтом.</p>
+<p><strong>Риски:</strong> Без фикса spot live-trade с mark-price падает. Фикс безопасен — 0 означает "нет следующего funding".</p>
+<hr />
+<h3 id="medium">Medium<a class="headerlink" href="#medium" title="Permanent link">&para;</a></h3>
+<h4 id="cc-tick_adapterpy96-97-00-forceorder">CC. <code>tick_adapter.py:96-97</code> — Тихий дефолт 0.0 при отсутствии полей ForceOrder<a class="headerlink" href="#cc-tick_adapterpy96-97-00-forceorder" title="Permanent link">&para;</a></h4>
+<p><strong>Файл:</strong> <code>alpha_engine/metrics_engine/tick_adapter.py:96-97</code></p>
+<p><strong>Проблема:</strong></p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-20-1"><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a><span class="n">last_fill_qty</span><span class="o">=</span><span class="nb">float</span><span class="p">(</span><span class="nb">getattr</span><span class="p">(</span><span class="n">e</span><span class="p">,</span> <span class="s2">&quot;last_filled_qty&quot;</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)),</span>
+</span><span id="__span-20-2"><a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a><span class="n">cum_fill_qty</span><span class="o">=</span><span class="nb">float</span><span class="p">(</span><span class="nb">getattr</span><span class="p">(</span><span class="n">e</span><span class="p">,</span> <span class="s2">&quot;cum_filled_qty&quot;</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)),</span>
+</span></code></pre></div>
+<p>Имена полей в парсере — <code>last_filled_qty</code> и <code>cum_filled_qty</code> (с суффиксом <code>_filled_</code>, а не <code>_fill_</code> как в Tick). Если парсер переименует поля, <code>getattr(..., 0.0)</code> молча вернёт 0.0 без предупреждения. В <code>aggregate.py:_add_liquidation</code> при orig_qty &lt;= 0 и этих полях = 0, ликвидация тихо дропается.</p>
+<p><strong>Решение:</strong> Добавить <code>logger.warning</code> при использовании дефолта, или использовать явную проверку наличия атрибута.</p>
+<p><strong>Риски:</strong> Латетная поломка при эволюции схемы парсера.</p>
+<hr />
+<h4 id="dd-claudemd55-signal-only-cli">DD. <code>CLAUDE.md:55</code> — <code>--signal-only</code> флаг задокументирован, но не реализован в CLI<a class="headerlink" href="#dd-claudemd55-signal-only-cli" title="Permanent link">&para;</a></h4>
+<p><strong>Файлы:</strong> <code>CLAUDE.md:55</code>, <code>main.py:127-129</code></p>
+<p><strong>Проблема:</strong> CLAUDE.md показывает <code>python main.py live-trade --signal-only --alphas ...</code>, но <code>main.py</code> намеренно <strong>не добавляет</strong> <code>--signal-only</code> в argparse. Команда из документации падает с <code>unrecognized arguments</code>.</p>
+<p><strong>Решение:</strong> Либо убрать <code>--signal-only</code> из CLAUDE.md, либо добавить флаг в <code>main.py</code> (с <code>default=True</code> и предупреждением, что режим execution пока не реализован).</p>
+<p><strong>Риски:</strong> Низкие — пользователь быстро поймёт, что флага нет. Но документация вводит в заблуждение.</p>
+<hr />
+<h4 id="ee-servicepy97292-299-vs-mainpy255-279-metrics_bridge-mainpy-live-trade">EE. <code>service.py:97,292-299</code> vs <code>main.py:255-279</code> — <code>metrics_bridge</code> никогда не передаётся из <code>main.py live-trade</code><a class="headerlink" href="#ee-servicepy97292-299-vs-mainpy255-279-metrics_bridge-mainpy-live-trade" title="Permanent link">&para;</a></h4>
+<p><strong>Файлы:</strong> <code>alpha_engine/live/service.py:97,292-299</code>, <code>main.py:255-279</code></p>
+<p><strong>Проблема:</strong> <code>service.py:run_live()</code> принимает параметр <code>metrics_bridge</code> (line 97) и имеет код для его подключения к шине (lines 292-299). Но <code>main.py:_run_live()</code> вызывает <code>run_live()</code> <strong>без передачи</strong> <code>metrics_bridge</code>. Весь код bridge — мёртвый в <code>main.py live-trade</code>. Python metrics engine не используется при стандартном запуске — работают старые <code>LiveRawDataReader</code> / <code>GoExchangeData</code>.</p>
+<p>Bridge используется только через <code>run_trader.py --in-process-metrics</code>.</p>
+<p><strong>Решение:</strong> Либо убрать мёртвый код из <code>run_live()</code>, либо явно закомментировать, что bridge подключается отдельно.</p>
+<p><strong>Риски:</strong> Вводит в заблуждение разработчиков, которые думают, что bridge активен при <code>python main.py live-trade</code>.</p>
+<hr />
+<h4 id="ff-run_traderpy164-169-in-process-metrics-bridge">FF. <code>run_trader.py:164-169</code> — <code>--in-process-metrics</code> создаёт bridge, но не подключает к шине<a class="headerlink" href="#ff-run_traderpy164-169-in-process-metrics-bridge" title="Permanent link">&para;</a></h4>
+<p><strong>Файл:</strong> <code>alpha_engine/live/run_trader.py:164-169</code></p>
+<p><strong>Проблема:</strong> При <code>--in-process-metrics</code> создаётся <code>LiveMetricsBridge</code>, но он никогда не подключается к <code>LiveTickBus</code>. Bridge используется <strong>только</strong> как reader (интерфейс <code>GoExchangeData</code>) для исторических данных из <code>warm_start_from_parquet</code>. Live-тики bridge не получает.</p>
+<p><strong>Решение:</strong> После создания bridge нужно вызвать <code>bridge.consume_bus(bus)</code> с соответствующим <code>book_replay</code> и <code>on_book_scalars</code>.</p>
+<p><strong>Риски:</strong> Пользователь <code>--in-process-metrics</code> думает, что метрики считаются in-process, а на деле bridge видит только warm-start данные.</p>
+<hr />
+<h3 id="low">Low<a class="headerlink" href="#low" title="Permanent link">&para;</a></h3>
+<h4 id="gg-enginepy182-191-bucket-wall-clock-anchor">GG. <code>engine.py:182-191</code> — Незадокументированная двойная калькуляция bucket для wall-clock anchor<a class="headerlink" href="#gg-enginepy182-191-bucket-wall-clock-anchor" title="Permanent link">&para;</a></h4>
+<p><strong>Файл:</strong> <code>alpha_engine/metrics_engine/engine.py:182-191</code></p>
+<p><strong>Проблема:</strong></p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-21-1"><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a><span class="n">bucket</span> <span class="o">=</span> <span class="n">tick</span><span class="o">.</span><span class="n">ts</span> <span class="o">//</span> <span class="bp">self</span><span class="o">.</span><span class="n">tick_ms</span>                     <span class="c1"># (1) оригинальный bucket</span>
+</span><span id="__span-21-2"><a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a>
+</span><span id="__span-21-3"><a id="__codelineno-21-3" name="__codelineno-21-3" href="#__codelineno-21-3"></a><span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cur_open</span><span class="p">:</span>
+</span><span id="__span-21-4"><a id="__codelineno-21-4" name="__codelineno-21-4" href="#__codelineno-21-4"></a>    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">wall_clock_anchor</span><span class="p">:</span>
+</span><span id="__span-21-5"><a id="__codelineno-21-5" name="__codelineno-21-5" href="#__codelineno-21-5"></a>        <span class="n">bucket</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">*</span> <span class="mi">1000</span><span class="p">)</span> <span class="o">//</span> <span class="bp">self</span><span class="o">.</span><span class="n">tick_ms</span>  <span class="c1"># (2) wall-clock bucket</span>
+</span><span id="__span-21-6"><a id="__codelineno-21-6" name="__codelineno-21-6" href="#__codelineno-21-6"></a>    <span class="bp">self</span><span class="o">.</span><span class="n">_open_slot</span><span class="p">(</span><span class="n">bucket</span><span class="p">)</span>                          <span class="c1"># открывает слот с (2)</span>
+</span><span id="__span-21-7"><a id="__codelineno-21-7" name="__codelineno-21-7" href="#__codelineno-21-7"></a>
+</span><span id="__span-21-8"><a id="__codelineno-21-8" name="__codelineno-21-8" href="#__codelineno-21-8"></a><span class="n">bucket</span> <span class="o">=</span> <span class="n">tick</span><span class="o">.</span><span class="n">ts</span> <span class="o">//</span> <span class="bp">self</span><span class="o">.</span><span class="n">tick_ms</span>                     <span class="c1"># (3) снова оригинальный bucket!</span>
+</span></code></pre></div>
+<p>При <code>wall_clock_anchor=True</code> слот открывается по wall-clock времени (2), но сразу после bucket пересчитывается обратно в tick-время (3). Тик попадает в wall-clock слот, но считается "опоздавшим" (bucket &lt; cur_bucket). Это intentional — "чтобы stale poller ticks не бэк-дейтили nextBar" — но незадокументировано. Будущий мейнтейнер может "оптимизировать" строчку (3) и сломать логику.</p>
+<p><strong>Решение:</strong> Добавить комментарий, объясняющий механизм.</p>
+<p><strong>Риски:</strong> Низкие — код работает корректно, но хрупок для рефакторинга.</p>
+<hr />
+<h4 id="hh-enginepy204-_max_slot_jump-3600">HH. <code>engine.py:204</code> — <code>_max_slot_jump = 3600</code> без логирования при срабатывании<a class="headerlink" href="#hh-enginepy204-_max_slot_jump-3600" title="Permanent link">&para;</a></h4>
+<p><strong>Файл:</strong> <code>alpha_engine/metrics_engine/engine.py:204-206</code></p>
+<p><strong>Проблема:</strong> При рассинхронизации тиков &gt; 1 часа, engine форвардит <code>_cur_bucket</code> на <code>bucket - 1</code>, создавая один пустой слот. Все промежуточные 3600 секунд (до 2 баров по 30 мин) тихо теряются. <strong>Нет ни одного лога.</strong></p>
+<p><strong>Решение:</strong> Добавить <code>logger.warning</code> при срабатывании защиты с указанием старого и нового bucket.</p>
+<p><strong>Риски:</strong> Отсутствие наблюдаемости — при редких сетевых сбоях потеря данных остаётся незамеченной.</p>
+<hr />
+<h4 id="ii-enginepy248-253-n-catch-up">II. <code>engine.py:248-253</code> — N идентичных строк при catch-up после простоя<a class="headerlink" href="#ii-enginepy248-253-n-catch-up" title="Permanent link">&para;</a></h4>
+<p><strong>Файл:</strong> <code>alpha_engine/metrics_engine/engine.py:248-253</code></p>
+<p><strong>Проблема:</strong> После длительного простоя (например, при старте или паузе) <code>emit_if_ready</code> возвращает N строк с идентичными метриками и разными <code>_bar_close_ts</code>. Это per Go spec, но downstream потребители могут не ожидать дубликатов.</p>
+<p><strong>Решение:</strong> Документировать поведение в docstring метода.</p>
+<p><strong>Риски:</strong> Низкие — корректное поведение, но может быть сюрпризом.</p>
+<hr />
+<h4 id="jj-live_bridgepy217-226-vs-303-311-emit-and-cutoff">JJ. <code>live_bridge.py:217-226 vs 303-311</code> — Дублирование emit-and-cutoff логики<a class="headerlink" href="#jj-live_bridgepy217-226-vs-303-311-emit-and-cutoff" title="Permanent link">&para;</a></h4>
+<p><strong>Файл:</strong> <code>alpha_engine/metrics_engine/live_bridge.py:217-226, 303-311</code></p>
+<p><strong>Проблема:</strong> 10 строк полностью идентичного кода (emit → append → cutoff) в <code>on_tick</code> и <code>consume_bus</code>. Любой баг-фикс нужно применять в двух местах.</p>
+<p><strong>Решение:</strong> Вынести в приватный метод.</p>
+<p><strong>Риски:</strong> Низкие — maintainability issue.</p>
+<hr />
+<h4 id="kk-live_bridgepy125-131-_funding_frame-30-">KK. <code>live_bridge.py:125-131</code> — <code>_funding_frame</code> завязан на 30-минутные бары<a class="headerlink" href="#kk-live_bridgepy125-131-_funding_frame-30-" title="Permanent link">&para;</a></h4>
+<p><strong>Файл:</strong> <code>alpha_engine/metrics_engine/live_bridge.py:125-131</code></p>
+<p><strong>Проблема:</strong> Проверка <code>idx.minute == 0</code> корректна для 30-минутных баров (settlement на :00 каждого часа), но не для других каденсов (15-мин, 60-мин).</p>
+<p><strong>Решение:</strong> Параметризовать bar_cadence или вычислять settlement динамически.</p>
+<p><strong>Риски:</strong> Низкие — при 30-min default корректно.</p>
+<hr />
+<h3 id="very-low-cosmetic">Very Low / Cosmetic<a class="headerlink" href="#very-low-cosmetic" title="Permanent link">&para;</a></h3>
+<h4 id="ll-orderbookpy448463573-574-25pct-best_size">LL. <code>orderbook.py:448,463,573-574</code> — 25pct best_size собирается, но никогда не выводится<a class="headerlink" href="#ll-orderbookpy448463573-574-25pct-best_size" title="Permanent link">&para;</a></h4>
+<p><strong>Файл:</strong> <code>alpha_engine/metrics_engine/groups/orderbook.py:448,463,573-574</code></p>
+<p><strong>Проблема:</strong> Векторы <code>bid25</code> и <code>ask25</code> получают <code>best_size</code> (через <code>_append_side</code> с аргументом <code>a.best_bid_size</code>/<code>a.best_ask_size</code>), но lines 573-574 пишут только <code>bid5.best_size</code> и <code>ask5.best_size</code>. 25pct <code>best_size</code> — мёртвые данные.</p>
+<p><strong>Риски:</strong> Трата памяти на баре, но без влияния на корректность.</p>
+<hr />
+<h4 id="mm-keyspy92-n_spread-1-assert">MM. <code>keys.py:92</code> — <code>N_SPREAD = 1</code> хардкод без assert<a class="headerlink" href="#mm-keyspy92-n_spread-1-assert" title="Permanent link">&para;</a></h4>
+<p><strong>Файл:</strong> <code>alpha_engine/metrics_engine/keys.py:92</code></p>
+<p><strong>Проблема:</strong> <code>N_SPREAD = 1</code> не связан с <code>len(SPREAD_KEYS)</code>. Если кто-то добавит ключ в <code>SPREAD_KEYS</code>, не обновив <code>N_SPREAD</code>, итоговый <code>N_TOTAL</code> будет неверным. Другие группы (<code>N_TRADES</code>, <code>N_ORDERBOOK</code>) тоже хардкодят цифры, но только spread состоит из одного элемента — легко пропустить.</p>
+<p><strong>Решение:</strong> Добавить <code>assert N_SPREAD == len(SPREAD_KEYS)</code>.</p>
+<p><strong>Риски:</strong> Косметика. Итоговый assert <code>len(KEYS) == N_TOTAL</code> ловит ошибку, но на более позднем этапе.</p>
+<hr />
+<h4 id="nn-enginepy314-mathisnanv-or-mathisinfv-not-mathisfinitev">NN. <code>engine.py:314</code> — <code>math.isnan(v) or math.isinf(v)</code> → <code>not math.isfinite(v)</code><a class="headerlink" href="#nn-enginepy314-mathisnanv-or-mathisinfv-not-mathisfinitev" title="Permanent link">&para;</a></h4>
+<p><strong>Файл:</strong> <code>alpha_engine/metrics_engine/engine.py:314</code></p>
+<p><strong>Проблема:</strong> Два вызова там, где достаточно одного. Цикл на 791 ключ на каждом баре.</p>
+<p><strong>Решение:</strong> <code>if not math.isfinite(v):</code></p>
+<p><strong>Риски:</strong> Косметика.</p>
+<hr />
+<h4 id="oo-mainpy131-152-replay-metrics-log-level">OO. <code>main.py:131-152</code> — <code>replay-metrics</code> не имеет <code>--log-level</code><a class="headerlink" href="#oo-mainpy131-152-replay-metrics-log-level" title="Permanent link">&para;</a></h4>
+<p><strong>Файл:</strong> <code>main.py:131-152</code></p>
+<p><strong>Проблема:</strong> <code>backtest</code> и <code>live-trade</code> поддерживают <code>--log-level</code>, <code>replay-metrics</code> — нет. Хардкод <code>logging.INFO</code> в <code>_run_replay_metrics</code>.</p>
+<p><strong>Решение:</strong> Добавить аргумент.</p>
+<p><strong>Риски:</strong> Косметика.</p>
+<hr />
+<h3 id="_3">Итоговая оценка после второго прохода<a class="headerlink" href="#_3" title="Permanent link">&para;</a></h3>
+<p><strong>Готовность к мержу после фиксов:</strong> Critical #1, #2, #3, <strong>#AA</strong> (tick_adapter side case). <strong>High BB</strong> (spot crash) — желательно до мержа, если планируется live spot.</p>
+<p><strong>Резюме:</strong> Добавлен ещё один Critical (case-sensitive side в tick_adapter — инверсия buy/sell volume) и один High (int(None) crash на spot mark-price). Оба есть смысл поправить до мержа, особенно AA — он молча портит данные. Остальные наблюдения — medium/low/cosmetic — не блокируют мерж, но их стоит зарегистрировать.</p>
+<hr />
+<h2 id="2026-07-29_1">Дополнительные наблюдения (2026-07-29, руководитель ревью)<a class="headerlink" href="#2026-07-29_1" title="Permanent link">&para;</a></h2>
+<p>Ниже — мои собственные наблюдения после изучения отчёта ревьюера. Сфокусированы на приоритетах, рисках и практических шагах для исправления.</p>
+<hr />
+<h3 id="_4">Приоритетный план исправлений<a class="headerlink" href="#_4" title="Permanent link">&para;</a></h3>
+<p>На основе всех найденных проблем выделяю три уровня приоритета:</p>
+<h4 id="p0-critical">P0 — Блокеры для мержа (Critical)<a class="headerlink" href="#p0-critical" title="Permanent link">&para;</a></h4>
+<table>
+<thead>
+<tr>
+<th>№</th>
+<th>Проблема</th>
+<th>Файл</th>
+<th>Риск</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>Copy-paste: <code>f.last_fill_qty &lt;= 0</code> вместо <code>size &lt;= 0</code></td>
+<td><code>aggregate.py:145</code></td>
+<td>Ложные warning-ы, но не crash</td>
+</tr>
+<tr>
+<td>2</td>
+<td><code>_bar_close_ms</code> vs <code>_bar_close_ts</code> в warm_start</td>
+<td><code>live_bridge.py:346</code></td>
+<td>KeyError при чтении warm-start баров</td>
+</tr>
+<tr>
+<td>3</td>
+<td><code>exchange_data</code> index не выровнен на UTC bar boundaries</td>
+<td><code>live_bridge.py:249</code></td>
+<td>Потеря/смещение данных в live trading</td>
+</tr>
+<tr>
+<td>AA</td>
+<td>Case-sensitive сравнение <code>side == "sell"</code></td>
+<td><code>tick_adapter.py:65</code></td>
+<td><strong>Инверсия buy/sell volume</strong> — молчаливая порча данных</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Все 4 должны быть исправлены до мержа.</strong> Особенно #AA — он молча портит все trade-метрики для agg-trade тиков, и тесты не ловят баг, потому что используют lower-case <code>"sell"</code>.</p>
+<h4 id="p1-high">P1 — Желательно до мержа (High)<a class="headerlink" href="#p1-high" title="Permanent link">&para;</a></h4>
+<table>
+<thead>
+<tr>
+<th>№</th>
+<th>Проблема</th>
+<th>Файл</th>
+<th>Риск</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>BB</td>
+<td><code>int(None)</code> crash для spot mark-price</td>
+<td><code>tick_adapter.py:79</code></td>
+<td>Crash entire tick pipeline для spot</td>
+</tr>
+<tr>
+<td>3 (thread-safety)</td>
+<td><code>Engine</code> не защищён <code>_bars_lock</code></td>
+<td><code>live_bridge.py:206</code></td>
+<td>Race condition на внутреннем состоянии Engine</td>
+</tr>
+</tbody>
+</table>
+<h4 id="p2-important-medium">P2 — Можно после мержа (Important / Medium)<a class="headerlink" href="#p2-important-medium" title="Permanent link">&para;</a></h4>
+<table>
+<thead>
+<tr>
+<th>№</th>
+<th>Проблема</th>
+<th>Файл</th>
+<th>Риск</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>4</td>
+<td>Дублированная bar-emission логика</td>
+<td><code>live_bridge.py:206,271</code></td>
+<td>Maintainability</td>
+</tr>
+<tr>
+<td>5</td>
+<td><code>setattr</code> в цикле в <code>reset()</code></td>
+<td><code>aggregate.py:65</code></td>
+<td>Performance</td>
+</tr>
+<tr>
+<td>6</td>
+<td><code>df.columns</code> check внутри loop</td>
+<td><code>tick_reader.py:72</code></td>
+<td>Performance</td>
+</tr>
+<tr>
+<td>7</td>
+<td><code>pop</code> в <code>_write_bar</code></td>
+<td><code>tools/replay_metrics.py:18</code></td>
+<td>Latent footgun</td>
+</tr>
+<tr>
+<td>CC</td>
+<td>Тихий дефолт 0.0 для ForceOrder полей</td>
+<td><code>tick_adapter.py:96</code></td>
+<td>Скрытая поломка при rename полей</td>
+</tr>
+<tr>
+<td>DD</td>
+<td><code>--signal-only</code> в CLAUDE.md но не в CLI</td>
+<td><code>main.py:127</code></td>
+<td>Документация вводит в заблуждение</td>
+</tr>
+<tr>
+<td>EE</td>
+<td><code>metrics_bridge</code> не передаётся из <code>main.py</code></td>
+<td><code>main.py:255</code></td>
+<td>Мёртвый код, bridge не активен</td>
+</tr>
+<tr>
+<td>FF</td>
+<td><code>--in-process-metrics</code> не подключает к шине</td>
+<td><code>run_trader.py:164</code></td>
+<td>Bridge видит только warm-start, не live</td>
+</tr>
+<tr>
+<td>HH</td>
+<td>Нет лога при <code>_max_slot_jump</code></td>
+<td><code>engine.py:204</code></td>
+<td>Нет наблюдаемости при рассинхронизации</td>
+</tr>
+<tr>
+<td>II</td>
+<td>N идентичных строк при catch-up</td>
+<td><code>engine.py:248</code></td>
+<td>Downstream может не ожидать дубликатов</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h3 id="_5">Матрица рисков<a class="headerlink" href="#_5" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Категория</th>
+<th>Проблемы</th>
+<th>Влияние</th>
+<th>Вероятность</th>
+<th>Действие</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Data integrity</strong></td>
+<td>#AA (side case), #1 (liquidation warning)</td>
+<td>Высокое (молчаливая порча данных)</td>
+<td>Высокая (каждый agg-trade тик)</td>
+<td><strong>Срочно</strong></td>
+</tr>
+<tr>
+<td><strong>Crash / downtime</strong></td>
+<td>BB (int(None)), #2 (KeyError)</td>
+<td>Критическое (остановка pipeline)</td>
+<td>Средняя (зависит от рынка)</td>
+<td><strong>До мержа</strong></td>
+</tr>
+<tr>
+<td><strong>Live trading correctness</strong></td>
+<td>#3 (index alignment), thread-safety</td>
+<td>Критическое (потеря/смещение данных)</td>
+<td>Средняя</td>
+<td><strong>До мержа</strong></td>
+</tr>
+<tr>
+<td><strong>Maintainability</strong></td>
+<td>4, 5, 6, 7, JJ, LL, MM, NN</td>
+<td>Низкое-среднее</td>
+<td>—</td>
+<td><strong>План</strong></td>
+</tr>
+<tr>
+<td><strong>Documentation</strong></td>
+<td>DD, EE, FF, GG, II, KK, OO</td>
+<td>Низкое</td>
+<td>—</td>
+<td><strong>План</strong></td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h3 id="_6">Рекомендации по процессу<a class="headerlink" href="#_6" title="Permanent link">&para;</a></h3>
+<ol>
+<li><strong>Создать issue в Linear</strong> для каждого P0/P1 бага с тегом <code>bug</code> и <code>priority: critical</code>.</li>
+<li><strong>Добавить regression-тесты</strong> перед фиксом:</li>
+<li>Тест с upper-case <code>"SELL"</code> в <code>tick_adapter</code> (ловит #AA)</li>
+<li>Тест с <code>next_funding_time_ms=None</code> в <code>tick_adapter</code> (ловит BB)</li>
+<li>Тест <code>warm_start_from_parquet</code> с проверкой <code>_bar_close_ts</code> (ловит #2)</li>
+<li>Тест <code>exchange_data</code> с non-aligned <code>since</code> (ловит #3)</li>
+<li><strong>Добавить pre-commit хук</strong> с ruff + mypy на <code>alpha_engine/metrics_engine/</code>.</li>
+<li><strong>Синхронизировать имена ключей</strong> между Go и Python — вынести в константу <code>BAR_CLOSE_KEY</code>.</li>
+<li><strong>Документировать thread-safety контракт</strong> <code>LiveMetricsBridge</code> в docstring.</li>
+</ol>
+<hr />
+<h3 id="_7">Итоговая оценка<a class="headerlink" href="#_7" title="Permanent link">&para;</a></h3>
+<p><strong>Ready to merge?</strong> <strong>No — с фиксами всех P0 (4 бага) и рекомендуемых P1 (2 бага).</strong></p>
+<p><strong>Обоснование:</strong> Реализация — добросовестный, хорошо протестированный порт Go metrics engine (4400+ строк, 4 тестовых файла, 30+ тестов). Архитектура звучит, 791-key контракт соблюден. Однако 4 критических бага (особенно #AA — инверсия buy/sell volume, и #3 — потеря данных в live) делают merge небезопасным. Все найденные проблемы не являются архитектурными — это локальные баги и technical debt, которые можно исправить без рефакторинга.</p>
+<hr />
+<h2 id="2026-07-29-">Дополнительные наблюдения (2026-07-29, третий проход — внешний код-ревью)<a class="headerlink" href="#2026-07-29-" title="Permanent link">&para;</a></h2>
+<p>Ниже — проблемы, найденные при внешнем код-ревью ветки <code>feat/go-to-python-metrics-engine</code>. Некоторые пересекаются с уже описанными выше (даны ссылки на соответствующие секции), остальные — новые.</p>
+<hr />
+<h3 id="pp-tick_adapterpy85-86-forceorder-sell">PP. <code>tick_adapter.py:85-86</code> — Тихая классификация неизвестной стороны ForceOrder как <code>"SELL"</code><a class="headerlink" href="#pp-tick_adapterpy85-86-forceorder-sell" title="Permanent link">&para;</a></h3>
+<p><strong>Файл:</strong> <code>alpha_engine/metrics_engine/tick_adapter.py:85-86</code></p>
+<p><strong>Проблема:</strong></p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-22-1"><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a><span class="n">side_raw</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">side</span><span class="p">)</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span>
+</span><span id="__span-22-2"><a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a><span class="n">side</span> <span class="o">=</span> <span class="s2">&quot;BUY&quot;</span> <span class="k">if</span> <span class="n">side_raw</span> <span class="o">==</span> <span class="s2">&quot;BUY&quot;</span> <span class="k">else</span> <span class="s2">&quot;SELL&quot;</span>
+</span></code></pre></div>
+<p>Любое значение <code>e.side</code>, отличное от <code>"BUY"</code> (даже <code>None</code>, пустая строка, <code>"UP"</code>, <code>"DOWN"</code>), молча классифицируется как <code>"SELL"</code>. Это parity с Go-оригиналом, где аналогичный <code>switch</code> в <code>cmd/replay</code> имеет fallthrough-ветку <code>"SELL"</code> по умолчанию. Но в Go это дополняется проверками на уровне парсера; в Python такого валидационного слоя нет.</p>
+<p><strong>Риски:</strong>
+- Если Binance когда-либо изменит спецификацию или пришлёт какое-то другое значение (например, локализованную строку), ForceOrder будет молча записан на противоположную сторону.
+- В отличие от <code>#AA</code> (agg-trade side), это <strong>не воспроизводится на каждом тике</strong> — ForceOrder-ы редки, поэтому баг может долго оставаться незамеченным.</p>
+<p><strong>Решение (низкий risk, высокий confidence):</strong></p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-23-1"><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a><span class="n">side_raw</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">side</span><span class="p">)</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span>
+</span><span id="__span-23-2"><a id="__codelineno-23-2" name="__codelineno-23-2" href="#__codelineno-23-2"></a><span class="k">if</span> <span class="n">side_raw</span> <span class="o">==</span> <span class="s2">&quot;BUY&quot;</span><span class="p">:</span>
+</span><span id="__span-23-3"><a id="__codelineno-23-3" name="__codelineno-23-3" href="#__codelineno-23-3"></a>    <span class="n">side</span> <span class="o">=</span> <span class="s2">&quot;BUY&quot;</span>
+</span><span id="__span-23-4"><a id="__codelineno-23-4" name="__codelineno-23-4" href="#__codelineno-23-4"></a><span class="k">elif</span> <span class="n">side_raw</span> <span class="o">==</span> <span class="s2">&quot;SELL&quot;</span><span class="p">:</span>
+</span><span id="__span-23-5"><a id="__codelineno-23-5" name="__codelineno-23-5" href="#__codelineno-23-5"></a>    <span class="n">side</span> <span class="o">=</span> <span class="s2">&quot;SELL&quot;</span>
+</span><span id="__span-23-6"><a id="__codelineno-23-6" name="__codelineno-23-6" href="#__codelineno-23-6"></a><span class="k">else</span><span class="p">:</span>
+</span><span id="__span-23-7"><a id="__codelineno-23-7" name="__codelineno-23-7" href="#__codelineno-23-7"></a>    <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;ForceOrder unknown side=</span><span class="si">%r</span><span class="s2">, defaulting to SELL&quot;</span><span class="p">,</span> <span class="n">e</span><span class="o">.</span><span class="n">side</span><span class="p">)</span>
+</span><span id="__span-23-8"><a id="__codelineno-23-8" name="__codelineno-23-8" href="#__codelineno-23-8"></a>    <span class="n">side</span> <span class="o">=</span> <span class="s2">&quot;SELL&quot;</span>
+</span></code></pre></div>
+<p><strong>Severity:</strong> Low-Medium (parity с Go, но без защитного логирования). Отличается от <code>#AA</code> тем, что не гарантированно ломает данные на каждом тике, а лишь при нестандартном значении.</p>
+<hr />
+<h3 id="qq-mainpy206256283-loggingbasicconfig">QQ. <code>main.py:206,256,283</code> — Три идентичных <code>logging.basicConfig</code> в трёх функциях<a class="headerlink" href="#qq-mainpy206256283-loggingbasicconfig" title="Permanent link">&para;</a></h3>
+<p><strong>Файл:</strong> <code>main.py:206,256,283</code></p>
+<p><strong>Проблема:</strong></p>
+<p>Три под-команды (<code>_run_backtest</code>, <code>_run_live</code>, <code>_run_replay_metrics</code>) содержат идентичный boilerplate:</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-24-1"><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a><span class="n">logging</span><span class="o">.</span><span class="n">basicConfig</span><span class="p">(</span>
+</span><span id="__span-24-2"><a id="__codelineno-24-2" name="__codelineno-24-2" href="#__codelineno-24-2"></a>    <span class="n">level</span><span class="o">=...</span><span class="p">,</span>
+</span><span id="__span-24-3"><a id="__codelineno-24-3" name="__codelineno-24-3" href="#__codelineno-24-3"></a>    <span class="nb">format</span><span class="o">=</span><span class="s2">&quot;</span><span class="si">%(asctime)s</span><span class="s2"> </span><span class="si">%(levelname)s</span><span class="s2"> [</span><span class="si">%(name)s</span><span class="s2">] </span><span class="si">%(message)s</span><span class="s2">&quot;</span><span class="p">,</span>
+</span><span id="__span-24-4"><a id="__codelineno-24-4" name="__codelineno-24-4" href="#__codelineno-24-4"></a><span class="p">)</span>
+</span></code></pre></div>
+<p>В отличие от описания в оригинальном ревью (которое утверждало, что <code>main()</code> вызывает <code>basicConfig</code> на ~140 строке — это <strong>неверно</strong>: <code>main()</code> не вызывает <code>basicConfig</code>), каждая из трёх под-функций действительно дублирует код. Хотя технически они вызываются mutually exclusive (работает только одна за запуск), дублирование — это maintenance hazard: если нужно изменить формат логов или добавить обработчик, менять придётся в трёх местах.</p>
+<p>Кроме того, <code>_run_replay_metrics</code> (line 283) <strong>хардкодит</strong> <code>level=logging.INFO</code> вместо того, чтобы принимать <code>--log-level</code>, в отличие от двух других команд (см. issue <code>#OO</code> выше).</p>
+<p><strong>Решение:</strong></p>
+<p>Вынести <code>basicConfig</code> в <code>main()</code> перед dispatch по под-командам, или сделать ленивую инициализацию через общую функцию:</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-25-1"><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">_init_logging</span><span class="p">(</span><span class="n">level</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;INFO&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span id="__span-25-2"><a id="__codelineno-25-2" name="__codelineno-25-2" href="#__codelineno-25-2"></a>    <span class="n">logging</span><span class="o">.</span><span class="n">basicConfig</span><span class="p">(</span>
+</span><span id="__span-25-3"><a id="__codelineno-25-3" name="__codelineno-25-3" href="#__codelineno-25-3"></a>        <span class="n">level</span><span class="o">=</span><span class="nb">getattr</span><span class="p">(</span><span class="n">logging</span><span class="p">,</span> <span class="n">level</span><span class="o">.</span><span class="n">upper</span><span class="p">(),</span> <span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">),</span>
+</span><span id="__span-25-4"><a id="__codelineno-25-4" name="__codelineno-25-4" href="#__codelineno-25-4"></a>        <span class="nb">format</span><span class="o">=</span><span class="s2">&quot;</span><span class="si">%(asctime)s</span><span class="s2"> </span><span class="si">%(levelname)s</span><span class="s2"> [</span><span class="si">%(name)s</span><span class="s2">] </span><span class="si">%(message)s</span><span class="s2">&quot;</span><span class="p">,</span>
+</span><span id="__span-25-5"><a id="__codelineno-25-5" name="__codelineno-25-5" href="#__codelineno-25-5"></a>    <span class="p">)</span>
+</span></code></pre></div>
+<p>Также добавить <code>--log-level</code> для <code>replay-metrics</code> (как описано в <code>#OO</code>).</p>
+<p><strong>Severity:</strong> Low (maintainability). Не блокирует мерж.</p>
+<hr />
+<h3 id="rr-_bar_close_ms-vs-_bar_close_ts">RR. Дублирование <code>_bar_close_ms</code> vs <code>_bar_close_ts</code> — дополнительная верификация<a class="headerlink" href="#rr-_bar_close_ms-vs-_bar_close_ts" title="Permanent link">&para;</a></h3>
+<p><strong>Связь:</strong> Полностью соответствует issue <code>#2</code> выше. При внешней проверке подтверждено:
+- <code>live_bridge.py:346</code> — <code>row["_bar_close_ms"] = float(ts_ms)</code>
+- <code>engine.py:251</code> — <code>row["_bar_close_ts"] = ...</code>
+- <code>tools/replay_metrics.py:18</code> — <code>row.pop("_bar_close_ts")</code> — упадёт с <code>KeyError</code> для warm-started строки
+- <code>test_book_replay.py</code> и <code>test_replay_parity.py</code> — проверяют <code>_bar_close_ts</code> в assertions</p>
+<p><strong>Дополнительный риск:</strong> Если <code>tools/replay_metrics.py:18</code> (pop) вызовется на warm-started баре, <code>KeyError</code> прервёт запись parquet. Это единственное место, где ключ <strong>читается</strong>, а не пишется.</p>
+<p><strong>Рекомендация:</strong> Исправить в рамках <code>#2</code>. Завести константу <code>BAR_CLOSE_KEY</code> в общем месте.</p>
+<hr />
+<h3 id="ss-orderbookpy364-401">SS. Вложенные функции в <code>orderbook.py:364-401</code> — подтверждение + контекст<a class="headerlink" href="#ss-orderbookpy364-401" title="Permanent link">&para;</a></h3>
+<p><strong>Связь:</strong> Полностью соответствует issue <code>#13</code> выше. Внешнее ревью подтверждает:</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-26-1"><a id="__codelineno-26-1" name="__codelineno-26-1" href="#__codelineno-26-1"></a><span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">buf</span><span class="p">:</span>
+</span><span id="__span-26-2"><a id="__codelineno-26-2" name="__codelineno-26-2" href="#__codelineno-26-2"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">_vwap</span><span class="p">(</span><span class="o">...</span><span class="p">):</span> <span class="o">...</span>   <span class="c1"># пересоздаётся 1800 раз</span>
+</span><span id="__span-26-3"><a id="__codelineno-26-3" name="__codelineno-26-3" href="#__codelineno-26-3"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">_slope</span><span class="p">(</span><span class="o">...</span><span class="p">):</span> <span class="o">...</span>
+</span></code></pre></div>
+<p><strong>Дополнительная деталь:</strong> Функции захватывают <code>a</code> по ссылке (замыкание). Если бы они вызывались лениво (например, передавались как callback и вызывались позже), все они увидели бы последнее значение <code>a</code>. К счастью, они вызываются синхронно на той же итерации, поэтому бага нет. Но при любом рефакторинге это типичная ловушка.</p>
+<p><strong>Решение:</strong> Вынести на уровень модуля, передавать <code>a</code> как аргумент.</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-27-1"><a id="__codelineno-27-1" name="__codelineno-27-1" href="#__codelineno-27-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">_vwap</span><span class="p">(</span><span class="n">a</span><span class="p">:</span> <span class="n">Aggregate</span><span class="p">,</span> <span class="n">side</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">depth</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span> <span class="o">...</span>
+</span></code></pre></div>
+<p><strong>Риски рефакторинга:</strong> Средние — нужно аккуратно передать все зависимости. Рекомендуется сделать это отдельным коммитом/PR, а не в рамках баг-фиксов.</p>
+<hr />
+<h2 id="2026-07-29-review-task-tool">Дополнительные наблюдения (2026-07-29, четвертый проход — review task tool)<a class="headerlink" href="#2026-07-29-review-task-tool" title="Permanent link">&para;</a></h2>
+<p>Ниже — проблемы, найденные при автоматизированном code-review через review task tool. Некоторые пересекаются с уже описанными (даны ссылки), остальные — новые.</p>
+<hr />
+<h3 id="tt-enginepy220-liqevent-notional-orig_qty-fallback">TT. <code>engine.py:220</code> — LiqEvent notional использует <code>orig_qty</code> напрямую, а не цепочку fallback<a class="headerlink" href="#tt-enginepy220-liqevent-notional-orig_qty-fallback" title="Permanent link">&para;</a></h3>
+<p><strong>Файл:</strong> <code>alpha_engine/metrics_engine/engine.py:220</code></p>
+<p><strong>Проблема:</strong></p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-28-1"><a id="__codelineno-28-1" name="__codelineno-28-1" href="#__codelineno-28-1"></a><span class="n">notional</span><span class="o">=</span><span class="n">tick</span><span class="o">.</span><span class="n">force</span><span class="o">.</span><span class="n">price</span> <span class="o">*</span> <span class="n">tick</span><span class="o">.</span><span class="n">force</span><span class="o">.</span><span class="n">orig_qty</span><span class="p">,</span>
+</span></code></pre></div>
+<p>Но в <code>aggregate.py:140-152</code> (<code>_add_liquidation</code>) per-second aggregate использует fallback-цепочку для определения размера:</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-29-1"><a id="__codelineno-29-1" name="__codelineno-29-1" href="#__codelineno-29-1"></a><span class="n">size</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">orig_qty</span>
+</span><span id="__span-29-2"><a id="__codelineno-29-2" name="__codelineno-29-2" href="#__codelineno-29-2"></a><span class="k">if</span> <span class="n">size</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
+</span><span id="__span-29-3"><a id="__codelineno-29-3" name="__codelineno-29-3" href="#__codelineno-29-3"></a>    <span class="n">size</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">last_fill_qty</span>
+</span><span id="__span-29-4"><a id="__codelineno-29-4" name="__codelineno-29-4" href="#__codelineno-29-4"></a>    <span class="k">if</span> <span class="n">size</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
+</span><span id="__span-29-5"><a id="__codelineno-29-5" name="__codelineno-29-5" href="#__codelineno-29-5"></a>        <span class="n">size</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">cum_fill_qty</span>
+</span></code></pre></div>
+<p>Это означает, что если <code>orig_qty == 0</code> (но есть <code>last_fill_qty &gt; 0</code> или <code>cum_fill_qty &gt; 0</code>), то:</p>
+<ul>
+<li><strong>Per-second aggregate</strong> (<code>_add_liquidation</code>) — корректно считает ликвидацию с <code>size = last_fill_qty</code></li>
+<li><strong>LiqEvent shock deque</strong> (<code>engine.py:LiqEvent.notional</code>) — записывает <code>notional = 0</code>, ликвидация не влияет на shock-метрики</li>
+</ul>
+<p><strong>Несоответствие:</strong> Два компонента (aggregate vs shock deque) расходятся в интерпретации "размера" ликвидации для одного и того же ForceOrder-тика.</p>
+<p><strong>Решение:</strong></p>
+<p>Вариант A (рекомендуемый) — привести LiqEvent к той же логике fallback:</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-30-1"><a id="__codelineno-30-1" name="__codelineno-30-1" href="#__codelineno-30-1"></a><span class="n">f</span> <span class="o">=</span> <span class="n">tick</span><span class="o">.</span><span class="n">force</span>
+</span><span id="__span-30-2"><a id="__codelineno-30-2" name="__codelineno-30-2" href="#__codelineno-30-2"></a><span class="n">size</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">orig_qty</span> <span class="ow">or</span> <span class="n">f</span><span class="o">.</span><span class="n">last_fill_qty</span> <span class="ow">or</span> <span class="n">f</span><span class="o">.</span><span class="n">cum_fill_qty</span>
+</span><span id="__span-30-3"><a id="__codelineno-30-3" name="__codelineno-30-3" href="#__codelineno-30-3"></a><span class="n">notional</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">price</span> <span class="o">*</span> <span class="n">size</span>
+</span></code></pre></div>
+<p>Вариант B — задокументировать расхождение, если оно intentional (например, если Go-оригинал тоже использует <code>orig_qty</code> для shock deque).</p>
+<p><strong>Риски:</strong></p>
+<ul>
+<li>Если ликвидации с <code>orig_qty = 0</code> редки на практике — баг latent, не проявляется</li>
+<li>Без фикса при реальной ликвидации с нулевым <code>orig_qty</code> shock-метрики (например, cumulative liq notional за window) будут занижены</li>
+<li>Вариант B означает divergence от aggregate-логики, что усложнит поддержку</li>
+</ul>
+<p><strong>Severity:</strong> Medium — зависит от частоты ForceOrder с <code>orig_qty = 0</code>.</p>
+<hr />
+<h3 id="uu-run_traderpy164-169-in-process-metrics-bars-n">UU. <code>run_trader.py:164-169</code> — <code>--in-process-metrics</code> молча игнорируется при <code>--bars N</code><a class="headerlink" href="#uu-run_traderpy164-169-in-process-metrics-bars-n" title="Permanent link">&para;</a></h3>
+<p><strong>Файл:</strong> <code>alpha_engine/live/run_trader.py:164-169</code></p>
+<p><strong>Проблема:</strong></p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-31-1"><a id="__codelineno-31-1" name="__codelineno-31-1" href="#__codelineno-31-1"></a><span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">in_process_metrics</span> <span class="ow">and</span> <span class="n">args</span><span class="o">.</span><span class="n">bars</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+</span><span id="__span-31-2"><a id="__codelineno-31-2" name="__codelineno-31-2" href="#__codelineno-31-2"></a>    <span class="n">reader</span> <span class="o">=</span> <span class="n">LiveMetricsBridge</span><span class="p">(</span><span class="o">...</span><span class="p">)</span>
+</span><span id="__span-31-3"><a id="__codelineno-31-3" name="__codelineno-31-3" href="#__codelineno-31-3"></a><span class="k">else</span><span class="p">:</span>
+</span><span id="__span-31-4"><a id="__codelineno-31-4" name="__codelineno-31-4" href="#__codelineno-31-4"></a>    <span class="n">reader</span> <span class="o">=</span> <span class="n">LiveGoMetricsReader</span><span class="p">(</span><span class="o">...</span><span class="p">)</span>
+</span></code></pre></div>
+<p>Условие <code>args.bars == 0</code> означает, что <code>--in-process-metrics</code> <strong>молча игнорируется</strong> при любом <code>--bars N &gt; 0</code> (offline dry-run / bar replay). Пользователь указывает <code>--in-process-metrics</code>, но получает <code>LiveGoMetricsReader</code> без единого предупреждения.</p>
+<p>Дополнительно: <code>LiveMetricsBridge</code> не имеет метода <code>preload_window</code>, который ожидается для offline dry-run path. Если бы условие пропустило bridge в этот path, упало бы с <code>AttributeError</code>.</p>
+<p><strong>Решение:</strong></p>
+<p><div class="language-python highlight"><pre><span></span><code><span id="__span-32-1"><a id="__codelineno-32-1" name="__codelineno-32-1" href="#__codelineno-32-1"></a><span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">in_process_metrics</span><span class="p">:</span>
+</span><span id="__span-32-2"><a id="__codelineno-32-2" name="__codelineno-32-2" href="#__codelineno-32-2"></a>    <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">bars</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+</span><span id="__span-32-3"><a id="__codelineno-32-3" name="__codelineno-32-3" href="#__codelineno-32-3"></a>        <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;--in-process-metrics ignored when --bars &gt; 0; falling back to GoMetricsReader&quot;</span><span class="p">)</span>
+</span><span id="__span-32-4"><a id="__codelineno-32-4" name="__codelineno-32-4" href="#__codelineno-32-4"></a>        <span class="n">reader</span> <span class="o">=</span> <span class="n">LiveGoMetricsReader</span><span class="p">(</span><span class="o">...</span><span class="p">)</span>
+</span><span id="__span-32-5"><a id="__codelineno-32-5" name="__codelineno-32-5" href="#__codelineno-32-5"></a>    <span class="k">else</span><span class="p">:</span>
+</span><span id="__span-32-6"><a id="__codelineno-32-6" name="__codelineno-32-6" href="#__codelineno-32-6"></a>        <span class="n">reader</span> <span class="o">=</span> <span class="n">LiveMetricsBridge</span><span class="p">(</span><span class="o">...</span><span class="p">)</span>
+</span></code></pre></div>
+Или, альтернативно, добавить <code>preload_window</code> в <code>LiveMetricsBridge</code>.</p>
+<p><strong>Риски:</strong></p>
+<ul>
+<li>Пользователь может думать, что метрики считаются Python-движком, а на деле используются Go-precomputed</li>
+<li>Низкая вероятность — флаг <code>--in-process-metrics</code> пока экспериментальный</li>
+</ul>
+<p><strong>Severity:</strong> Low — observable только если кто-то явно использует <code>--in-process-metrics --bars N</code>.</p>
+<hr />
+<h3 id="vv-gap-catch-up-emission-n">VV. Gap catch-up emission — N идентичных строк после простоя (подтверждение + контекст)<a class="headerlink" href="#vv-gap-catch-up-emission-n" title="Permanent link">&para;</a></h3>
+<p><strong>Связь:</strong> Полностью соответствует issue <code>#II</code> и <code>#9</code> (оригинальное ревью). Упомянуто в review task output как Notable.</p>
+<p><strong>Контекст:</strong> <code>engine.py:248-253</code> — <code>emit_if_ready</code> в catch-up loop возвращает несколько строк бара с идентичными метриками и разными <code>_bar_close_ts</code>. Это per Go spec и intentional behavior. <strong>Но</strong>: стратегии PnL, вычисленные на этих дублированных барах, покажут нулевую доходность за период gap, что неотличимо от реального flat market.</p>
+<p><strong>Дополнительный риск:</strong> Если стратегия использует bar-level метрики для принятия решений (например, волатильность, объём), дублированные бары исказят rolling-статистику — волатильность будет занижена (так как "нулевые" бары добавляются в выборку), а cumulative volume — завышен.</p>
+<p><strong>Решение для стратегий:</strong> Стратегии могут проверять <code>_bar_close_ts</code> и пропускать дубликаты:</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-33-1"><a id="__codelineno-33-1" name="__codelineno-33-1" href="#__codelineno-33-1"></a><span class="k">if</span> <span class="n">bar</span><span class="p">[</span><span class="s2">&quot;_bar_close_ts&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="n">last_bar_ts</span><span class="p">:</span>
+</span><span id="__span-33-2"><a id="__codelineno-33-2" name="__codelineno-33-2" href="#__codelineno-33-2"></a>    <span class="k">continue</span>  <span class="c1"># skip duplicate catch-up bar</span>
+</span></code></pre></div>
+<p><strong>Severity:</strong> Low (Notable) — поведение intentional, но downstream потребители должны быть к нему готовы.</p>
+<hr />
+<h3 id="_8">Итоговая оценка после четвертого прохода<a class="headerlink" href="#_8" title="Permanent link">&para;</a></h3>
+<p><strong>Новых P0/Critical не найдено.</strong> Добавлен один Medium (TT — LiqEvent notional vs aggregate mismatch) и два Low (UU — silent ignore, VV — duplicate bars context). Все три — non-blocking, но TT стоит добавить в backlog как технический долг, особенно если ForceOrder с <code>orig_qty=0</code> встречаются в данных Binance.</p>
+<p><strong>Рекомендуемые действия:</strong>
+1. <strong>TT:</strong> Проверить Go-оригинал — использует ли он <code>orig_qty</code> или такую же fallback-цепочку для shock deque. Синхронизировать поведение.
+2. <strong>UU:</strong> Добавить <code>logger.warning</code> при fallback с <code>--bars &gt; 0</code>.
+3. <strong>VV:</strong> Документировать catch-up поведение в docstring <code>Engine.emit_if_ready</code> и/или в стратегическом SDK.</p>
+<hr />
+<h2 id="2026-07-29-review-task-tool_1">Дополнительные наблюдения (2026-07-29, пятый проход — review task tool)<a class="headerlink" href="#2026-07-29-review-task-tool_1" title="Permanent link">&para;</a></h2>
+<p>Ниже — кросс-верификация 5 багов, найденных review task tool, с подтверждением в исходном коде, плюс мета-наблюдения о самих review-документах.</p>
+<hr />
+<h3 id="_9">Верификация найденных багов в исходном коде<a class="headerlink" href="#_9" title="Permanent link">&para;</a></h3>
+<p>Все 5 багов подтверждены через чтение исходного кода. Ниже — построчная верификация.</p>
+<h4 id="v1-aggregatepy145">V1. <code>aggregate.py:145</code> — Ложное предупреждение для ликвидаций ✓ ПОДТВЕРЖДЕН<a class="headerlink" href="#v1-aggregatepy145" title="Permanent link">&para;</a></h4>
+<p><strong>Файл:</strong> <code>alpha_engine/metrics_engine/aggregate.py:145</code></p>
+<p>Полностью соответствует Critical #1 из первого прохода. Код:</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-34-1"><a id="__codelineno-34-1" name="__codelineno-34-1" href="#__codelineno-34-1"></a><span class="c1"># line 140-149</span>
+</span><span id="__span-34-2"><a id="__codelineno-34-2" name="__codelineno-34-2" href="#__codelineno-34-2"></a><span class="n">size</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">orig_qty</span>
+</span><span id="__span-34-3"><a id="__codelineno-34-3" name="__codelineno-34-3" href="#__codelineno-34-3"></a><span class="k">if</span> <span class="n">size</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
+</span><span id="__span-34-4"><a id="__codelineno-34-4" name="__codelineno-34-4" href="#__codelineno-34-4"></a>    <span class="n">size</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">last_fill_qty</span>          <span class="c1"># size перезаписан</span>
+</span><span id="__span-34-5"><a id="__codelineno-34-5" name="__codelineno-34-5" href="#__codelineno-34-5"></a>    <span class="k">if</span> <span class="n">size</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
+</span><span id="__span-34-6"><a id="__codelineno-34-6" name="__codelineno-34-6" href="#__codelineno-34-6"></a>        <span class="n">size</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">cum_fill_qty</span>        <span class="c1"># size снова перезаписан</span>
+</span><span id="__span-34-7"><a id="__codelineno-34-7" name="__codelineno-34-7" href="#__codelineno-34-7"></a>        <span class="k">if</span> <span class="n">f</span><span class="o">.</span><span class="n">last_fill_qty</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>     <span class="c1"># &lt;-- BUG: проверяет f.last_fill_qty, не size</span>
+</span><span id="__span-34-8"><a id="__codelineno-34-8" name="__codelineno-34-8" href="#__codelineno-34-8"></a>            <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="o">...</span><span class="p">)</span>
+</span></code></pre></div>
+<p>После <code>size = f.cum_fill_qty</code>, переменная <code>f.last_fill_qty</code> уже не имеет отношения к текущему значению <code>size</code>. Если <code>cum_fill_qty &gt; 0</code>, warning срабатывает зря. Исправление: <code>if size &lt;= 0:</code>.</p>
+<p><strong>Статус в документах:</strong> Описан как Critical #1 (первый проход), P0 #1 (руководитель ревью).</p>
+<hr />
+<h4 id="v2-tick_adapterpy65-case-sensitive-side">V2. <code>tick_adapter.py:65</code> — Case-sensitive сравнение side ✓ ПОДТВЕРЖДЕН<a class="headerlink" href="#v2-tick_adapterpy65-case-sensitive-side" title="Permanent link">&para;</a></h4>
+<p><strong>Файл:</strong> <code>alpha_engine/metrics_engine/tick_adapter.py:65</code></p>
+<p>Полностью соответствует Critical #AA из второго прохода. Код:</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-35-1"><a id="__codelineno-35-1" name="__codelineno-35-1" href="#__codelineno-35-1"></a><span class="c1"># line 65</span>
+</span><span id="__span-35-2"><a id="__codelineno-35-2" name="__codelineno-35-2" href="#__codelineno-35-2"></a><span class="n">is_buyer_maker</span><span class="o">=</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">side</span><span class="p">)</span> <span class="o">==</span> <span class="s2">&quot;sell&quot;</span><span class="p">),</span>
+</span></code></pre></div>
+<p>Binance WebSocket возвращает side в UPPER_CASE (<code>"SELL"</code>, <code>"BUY"</code>). Если парсер не нормализует регистр (а <code>_from_force_order</code> в том же файле на line 85 делает <code>str(e.side).upper()</code> — значит парсер хранит UPPER_CASE), то <code>"SELL" == "sell"</code> → <code>False</code> всегда. Все sell-агг-трейды классифицируются как buy (is_buyer_maker=False → агрессивная сторона — buyer).</p>
+<p>Тест <code>test_bridge_integration.py:30</code> использует <code>self.side = "sell"</code> (нижний регистр), маскируя баг.</p>
+<p><strong>Исправление:</strong> <code>str(e.side).lower() == "sell"</code>.</p>
+<p><strong>Статус в документах:</strong> Описан как Critical #AA (второй проход), P0 #AA (руководитель ревью).</p>
+<hr />
+<h4 id="v3-tick_adapterpy79-intnone-crash-spot-mark-price">V3. <code>tick_adapter.py:79</code> — <code>int(None)</code> crash на spot mark-price ✓ ПОДТВЕРЖДЕН<a class="headerlink" href="#v3-tick_adapterpy79-intnone-crash-spot-mark-price" title="Permanent link">&para;</a></h4>
+<p><strong>Файл:</strong> <code>alpha_engine/metrics_engine/tick_adapter.py:79</code></p>
+<p>Полностью соответствует High #BB из второго прохода. Код:</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-36-1"><a id="__codelineno-36-1" name="__codelineno-36-1" href="#__codelineno-36-1"></a><span class="c1"># line 79</span>
+</span><span id="__span-36-2"><a id="__codelineno-36-2" name="__codelineno-36-2" href="#__codelineno-36-2"></a><span class="n">next_funding_time_ms</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">next_funding_time_ms</span><span class="p">),</span>
+</span></code></pre></div>
+<p>На spot-рынках у парсера атрибут <code>next_funding_time_ms</code> — <code>None</code>. <code>int(None)</code> → <code>TypeError</code>, который крашит <code>event_to_tick</code> → весь tick pipeline для spot символов падает.</p>
+<p>При этом в том же файле есть правильный паттерн для <code>mark_price</code> в <code>_from_funding</code> на line 136:
+<div class="language-python highlight"><pre><span></span><code><span id="__span-37-1"><a id="__codelineno-37-1" name="__codelineno-37-1" href="#__codelineno-37-1"></a><span class="nb">float</span><span class="p">(</span><span class="nb">getattr</span><span class="p">(</span><span class="n">e</span><span class="p">,</span> <span class="s2">&quot;mark_price&quot;</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">))</span>
+</span></code></pre></div></p>
+<p><strong>Исправление:</strong>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-38-1"><a id="__codelineno-38-1" name="__codelineno-38-1" href="#__codelineno-38-1"></a><span class="n">next_funding_time_ms</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">next_funding_time_ms</span><span class="p">)</span> <span class="k">if</span> <span class="n">e</span><span class="o">.</span><span class="n">next_funding_time_ms</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="mi">0</span><span class="p">,</span>
+</span></code></pre></div></p>
+<p><strong>Статус в документах:</strong> Описан как High #BB (второй проход), P1 (руководитель ревью).</p>
+<hr />
+<h4 id="v4-live_bridgepy346-vs-enginepy251">V4. <code>live_bridge.py:346</code> vs <code>engine.py:251</code> — Несогласованное имя ключа ✓ ПОДТВЕРЖДЕН<a class="headerlink" href="#v4-live_bridgepy346-vs-enginepy251" title="Permanent link">&para;</a></h4>
+<p><strong>Файлы:</strong> <code>alpha_engine/metrics_engine/live_bridge.py:346</code>, <code>alpha_engine/metrics_engine/engine.py:251</code></p>
+<p>Полностью соответствует Critical #2 из первого прохода и #RR из третьего прохода.</p>
+<p><code>warm_start_from_parquet</code> (live_bridge.py:346) пишет:
+<div class="language-python highlight"><pre><span></span><code><span id="__span-39-1"><a id="__codelineno-39-1" name="__codelineno-39-1" href="#__codelineno-39-1"></a><span class="n">row</span><span class="p">[</span><span class="s2">&quot;_bar_close_ms&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">ts_ms</span><span class="p">)</span>
+</span></code></pre></div></p>
+<p><code>emit_if_ready</code> (engine.py:251) пишет:
+<div class="language-python highlight"><pre><span></span><code><span id="__span-40-1"><a id="__codelineno-40-1" name="__codelineno-40-1" href="#__codelineno-40-1"></a><span class="n">row</span><span class="p">[</span><span class="s2">&quot;_bar_close_ts&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">bar_close_ms</span><span class="p">)</span>
+</span></code></pre></div></p>
+<p><code>tools/replay_metrics.py:18</code> читает через <code>row.pop("_bar_close_ts")</code>. При получении warm-started строки — <code>KeyError</code>.</p>
+<p><strong>Исправление:</strong> Привести к <code>_bar_close_ts</code> везде. Завести константу <code>BAR_CLOSE_KEY</code>.</p>
+<p><strong>Статус в документах:</strong> Описан как Critical #2 (первый проход), #RR (третий проход), P0 #2 (руководитель ревью).</p>
+<hr />
+<h4 id="v5-live_bridgepy206-226-thread-safety-gap">V5. <code>live_bridge.py:206-226</code> — Thread-safety gap ✓ ПОДТВЕРЖДЕН<a class="headerlink" href="#v5-live_bridgepy206-226-thread-safety-gap" title="Permanent link">&para;</a></h4>
+<p><strong>Файл:</strong> <code>alpha_engine/metrics_engine/live_bridge.py:206-226</code></p>
+<p>Полностью соответствует Critical #3 из первого прохода. Код:</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-41-1"><a id="__codelineno-41-1" name="__codelineno-41-1" href="#__codelineno-41-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">on_tick</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tick</span><span class="p">:</span> <span class="n">Tick</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span id="__span-41-2"><a id="__codelineno-41-2" name="__codelineno-41-2" href="#__codelineno-41-2"></a>    <span class="n">eng</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_engines</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">tick</span><span class="o">.</span><span class="n">symbol</span><span class="p">)</span>
+</span><span id="__span-41-3"><a id="__codelineno-41-3" name="__codelineno-41-3" href="#__codelineno-41-3"></a>    <span class="k">if</span> <span class="n">eng</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+</span><span id="__span-41-4"><a id="__codelineno-41-4" name="__codelineno-41-4" href="#__codelineno-41-4"></a>        <span class="k">return</span>
+</span><span id="__span-41-5"><a id="__codelineno-41-5" name="__codelineno-41-5" href="#__codelineno-41-5"></a>    <span class="n">eng</span><span class="o">.</span><span class="n">push</span><span class="p">(</span><span class="n">tick</span><span class="p">)</span>                              <span class="c1"># &lt;-- вне lock: мутирует Engine</span>
+</span><span id="__span-41-6"><a id="__codelineno-41-6" name="__codelineno-41-6" href="#__codelineno-41-6"></a>    <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_bars_lock</span><span class="p">:</span>
+</span><span id="__span-41-7"><a id="__codelineno-41-7" name="__codelineno-41-7" href="#__codelineno-41-7"></a>        <span class="n">bars</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_bars</span><span class="p">[</span><span class="n">tick</span><span class="o">.</span><span class="n">symbol</span><span class="p">]</span>
+</span><span id="__span-41-8"><a id="__codelineno-41-8" name="__codelineno-41-8" href="#__codelineno-41-8"></a>        <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+</span><span id="__span-41-9"><a id="__codelineno-41-9" name="__codelineno-41-9" href="#__codelineno-41-9"></a>            <span class="n">row</span><span class="p">,</span> <span class="n">ready</span> <span class="o">=</span> <span class="n">eng</span><span class="o">.</span><span class="n">emit_if_ready</span><span class="p">(</span><span class="n">tick</span><span class="o">.</span><span class="n">ts</span><span class="p">)</span>  <span class="c1"># &lt;-- под lock, но Engine уже мутирован</span>
+</span><span id="__span-41-10"><a id="__codelineno-41-10" name="__codelineno-41-10" href="#__codelineno-41-10"></a>            <span class="o">...</span>
+</span></code></pre></div>
+<p><code>_bars_lock</code> защищает список <code>_bars</code>, но не защищает <code>eng.push(tick)</code> на line 214. Если <code>exchange_data()</code> вызывается из trader-потока, он читает <code>_bars</code> под тем же lock, но внутреннее состояние Engine (кольцевой буфер, агрегат, очередь ликвидаций) в этот момент уже мутировано.</p>
+<p><strong>Исправление (вариант A):</strong> Расширить область lock на <code>eng.push(tick)</code>.
+<strong>Исправление (вариант B):</strong> Документировать single-thread контракт.</p>
+<p><strong>Статус в документах:</strong> Описан как Critical #3 (первый проход), P1 thread-safety (руководитель ревью).</p>
+<hr />
+<h3 id="_10">Резюме верификации<a class="headerlink" href="#_10" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Bug</th>
+<th>Файл:строка</th>
+<th>Степень</th>
+<th>Уже описан как</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>V1</td>
+<td><code>f.last_fill_qty &lt;= 0</code> вместо <code>size &lt;= 0</code></td>
+<td><code>aggregate.py:145</code></td>
+<td>Подтвержден</td>
+<td>Critical #1, P0 #1</td>
+</tr>
+<tr>
+<td>V2</td>
+<td><code>== "sell"</code> case-sensitive</td>
+<td><code>tick_adapter.py:65</code></td>
+<td>Подтвержден</td>
+<td>Critical #AA, P0 #AA</td>
+</tr>
+<tr>
+<td>V3</td>
+<td><code>int(None)</code> crash spot</td>
+<td><code>tick_adapter.py:79</code></td>
+<td>Подтвержден</td>
+<td>High #BB, P1</td>
+</tr>
+<tr>
+<td>V4</td>
+<td><code>_bar_close_ms</code> vs <code>_bar_close_ts</code></td>
+<td><code>live_bridge.py:346</code> / <code>engine.py:251</code></td>
+<td>Подтвержден</td>
+<td>Critical #2 / #RR, P0 #2</td>
+</tr>
+<tr>
+<td>V5</td>
+<td>Thread-safety gap Engine</td>
+<td><code>live_bridge.py:206-226</code></td>
+<td>Подтвержден</td>
+<td>Critical #3, P1</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Вывод:</strong> Все 5 багов уже описаны в существующих review-документах. Ниже — <strong>новые</strong> мета-наблюдения о самих документах и смежных файлах.</p>
+<hr />
+<h3 id="-review-">Мета-наблюдения о review-документах<a class="headerlink" href="#-review-" title="Permanent link">&para;</a></h3>
+<h4 id="meta-1-code_reviewmd-docscode-review-metrics-enginemd">META-1. Дублирование контента между <code>CODE_REVIEW.md</code> и <code>docs/code-review-metrics-engine.md</code><a class="headerlink" href="#meta-1-code_reviewmd-docscode-review-metrics-enginemd" title="Permanent link">&para;</a></h4>
+<p><strong>Проблема:</strong> Оба файла — это ~600 и ~900 строк review content на одну и ту же ветку <code>feat/go-to-python-metrics-engine</code>. <code>CODE_REVIEW.md</code> — на английском, <code>docs/code-review-metrics-engine.md</code> — на русском. Английская версия чище структурой, русская — исчерпывающая по второму/третьему/четвертому проходам.</p>
+<p>Пересечения:
+- Critical #1, #2, #3 → есть в обоих файлах
+- I1 (ForceOrder side) → <code>CODE_REVIEW.md:37-55</code> и <code>docs/...:684-714</code> (#PP)
+- I2 (import <code>_go_name</code>) → только в <code>CODE_REVIEW.md:58-73</code>
+- M2 (bar key inconsistency) → <code>CODE_REVIEW.md:181-197</code> и <code>docs/...:49-79</code> (#2)
+- I7, I8, I9, I10 → только в <code>CODE_REVIEW.md:239-358</code>
+- AA, BB, CC, DD, EE, FF, ... → только в <code>docs/...:350-596</code>
+- TT, UU, VV → только в <code>docs/...:797-907</code></p>
+<p><strong>Решение:</strong>
+1. Оставить один канонический review-документ (рекомендуется русский <code>docs/code-review-metrics-engine.md</code> как более полный).
+2. Перенести уникальные находки из <code>CODE_REVIEW.md</code> (I2 — import <code>_go_name</code>, I7 — return type, I8 — deque, I9 — rename, I10 — heap merge, S1-S7) в <code>docs/code-review-metrics-engine.md</code>.
+3. <code>CODE_REVIEW.md</code> заменить на ссылку: "См. <code>docs/code-review-metrics-engine.md</code>".</p>
+<p><strong>Риски:</strong> При мёрже двух документов можно потерять нюансы. Рекомендуется делать это отдельным PR, не в рамках баг-фиксов.</p>
+<hr />
+<h4 id="meta-2-code_reviewmd25-31-trailing-newline-critical">META-2. <code>CODE_REVIEW.md:25-31</code> — Trailing newline помечен как "Critical"<a class="headerlink" href="#meta-2-code_reviewmd25-31-trailing-newline-critical" title="Permanent link">&para;</a></h4>
+<p><strong>Проблема:</strong> В <code>CODE_REVIEW.md</code> отсутствие trailing newline в <code>book_scalars.py</code> классифицировано как <strong>Critical</strong> (<code>C1</code>), но в описании сказано: <em>«Risks: None — purely cosmetic, no functional impact»</em>. Это несоответствие между severity label и содержимым.</p>
+<p><strong>Решение:</strong> Понизить до <strong>Minor</strong> в <code>CODE_REVIEW.md</code> (или удалить при консолидации документов).</p>
+<p><strong>Риски:</strong> Сбивает с толку при триаже — разработчик видит "Critical" и тратит время на cosmetic fix.</p>
+<hr />
+<h4 id="meta-3-tech_debt_completemd36-39-dangling-reference-phase-7x">META-3. <code>TECH_DEBT_COMPLETE.md:36-39</code> — Dangling reference на "Phase 7.x"<a class="headerlink" href="#meta-3-tech_debt_completemd36-39-dangling-reference-phase-7x" title="Permanent link">&para;</a></h4>
+<p><strong>Проблема:</strong> В <code>TECH_DEBT_COMPLETE.md</code> секция "Migration Path" перечисляет "Phase 7.1 — Phase 7.4", но нигде не определены Phase 1-6. Это dangling reference — читатель не знает, являются ли эти фазы частью большего плана или это опечатка в нумерации.</p>
+<p><strong>Решение:</strong> Либо добавить ссылку на документ с Phase 1-6, либо перенумеровать в 1-4.</p>
+<p><strong>Риски:</strong> Путаница при онбординге новых разработчиков.</p>
+<hr />
+<h4 id="meta-4-reviewsgitkeep">META-4. <code>reviews/.gitkeep</code> — Пустая директория<a class="headerlink" href="#meta-4-reviewsgitkeep" title="Permanent link">&para;</a></h4>
+<p><strong>Проблема:</strong> <code>reviews/.gitkeep</code> создан как placeholder для будущих review-файлов. Но существующие review-файлы (<code>CODE_REVIEW.md</code>, <code>docs/code-review-metrics-engine.md</code>) лежат в корне и <code>docs/</code>. Название директории подразумевает, что все review должны быть здесь.</p>
+<p><strong>Решение:</strong> Перенести <code>CODE_REVIEW.md</code> и <code>docs/code-review-metrics-engine.md</code> в <code>reviews/</code> после консолидации.</p>
+<p><strong>Риски:</strong> Ссылки на review-файлы из других документов / PR description сломаются при переносе. Нужно обновить все ссылки.</p>
+<hr />
+<h4 id="meta-5-gitignore-superpowers-opencode">META-5. <code>.gitignore</code> — добавлены <code>.superpowers/</code> и <code>.opencode/</code><a class="headerlink" href="#meta-5-gitignore-superpowers-opencode" title="Permanent link">&para;</a></h4>
+<p><strong>Наблюдение:</strong> В <code>.gitignore</code> добавлены директории <code>.superpowers/</code> и <code>.opencode/</code>. Это корректно — это локальные конфигурационные директории инструментов, которые не должны попадать в репозиторий.</p>
+<p><strong>Риски:</strong> Нет. Стандартная практика.</p>
+<hr />
+<h4 id="meta-6-issue">META-6. Перекрёстная нумерация issue в "руководитель ревью"<a class="headerlink" href="#meta-6-issue" title="Permanent link">&para;</a></h4>
+<p><strong>Проблема:</strong> В секции "Дополнительные наблюдения (2026-07-29, руководитель ревью)" (lines 599-677) используется своя нумерация P0 #1-#3, P1, P2, которая не совпадает с нумерацией из первого прохода (Critical #1-#2-#3) и второго прохода (#AA, #BB, ...). Например:</p>
+<ul>
+<li>"P0 #1" = Critical #1 (из первого прохода)</li>
+<li>"P0 #2" = Critical #2 (из первого прохода)</li>
+<li>"P0 #3" — <strong>нет соответствия в первом проходе</strong> (похоже, это новый issue про <code>exchange_data</code> index alignment)</li>
+<li>"P0 #AA" = Critical #AA (из второго прохода)</li>
+</ul>
+<p>Это создаёт путаницу: читатель должен держать в голове три системы нумерации.</p>
+<p><strong>Решение:</strong> Добавить mapping-таблицу в начале секции руководителя, например:</p>
+<table>
+<thead>
+<tr>
+<th>P0 #</th>
+<th>Исходный ID</th>
+<th>Описание</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>P0 #1</td>
+<td>Critical #1</td>
+<td>Ложное предупреждение aggregate.py:145</td>
+</tr>
+<tr>
+<td>P0 #2</td>
+<td>Critical #2</td>
+<td>Несогласованное имя ключа</td>
+</tr>
+<tr>
+<td>P0 #3</td>
+<td>(новый)</td>
+<td>exchange_data index alignment</td>
+</tr>
+<tr>
+<td>P0 #AA</td>
+<td>Critical #AA</td>
+<td>Case-sensitive side tick_adapter.py:65</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Риски:</strong> Путаница при назначении задач в Linear — разработчик может исправить не тот баг.</p>
+<hr />
+<h3 id="_11">Итоговая оценка после пятого прохода<a class="headerlink" href="#_11" title="Permanent link">&para;</a></h3>
+<p><strong>Новых багов в коде не найдено.</strong> Все 5 проблем из review task tool уже задокументированы. Обнаружено 6 мета-проблем с документацией:</p>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Проблема</th>
+<th>Severity</th>
+<th>Действие</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>META-1</td>
+<td>Дублирование контента CODE_REVIEW.md и docs/code-review-*.md</td>
+<td>Medium</td>
+<td>Консолидировать в один документ</td>
+</tr>
+<tr>
+<td>META-2</td>
+<td>Trailing newline как "Critical"</td>
+<td>Low</td>
+<td>Понизить до Minor</td>
+</tr>
+<tr>
+<td>META-3</td>
+<td>Dangling reference на Phase 7.x</td>
+<td>Low</td>
+<td>Добавить ссылку или перенумеровать</td>
+</tr>
+<tr>
+<td>META-4</td>
+<td>reviews/.gitkeep — неиспользуемая директория</td>
+<td>Low</td>
+<td>Перенести review-файлы или удалить</td>
+</tr>
+<tr>
+<td>META-5</td>
+<td>.gitignore changes</td>
+<td>—</td>
+<td>OK, без действий</td>
+</tr>
+<tr>
+<td>META-6</td>
+<td>Перекрёстная нумерация issue</td>
+<td>Low</td>
+<td>Добавить mapping-таблицу</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Рекомендуемые действия:</strong>
+1. Консолидировать <code>CODE_REVIEW.md</code> и <code>docs/code-review-metrics-engine.md</code> в один документ (перенести уникальные находки I2, I7-I10, S1-S7 в русский документ).
+2. Добавить mapping-таблицу нумерации issue в секцию руководителя ревью.
+3. Понизить C1 (trailing newline) до Minor.
+4. Исправить dangling reference в TECH_DEBT_COMPLETE.md.</p>
+<hr />
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+</div>
+      
+        
+<div class="md-social">
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://github.com/SNCapital" target="_blank" rel="noopener" title="github.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+      <div class="md-progress" data-md-component="progress" role="progressbar"></div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.instant", "navigation.instant.progress", "navigation.tracking", "navigation.tabs", "navigation.tabs.sticky", "navigation.sections", "navigation.expand", "navigation.indexes", "navigation.top", "navigation.footer", "search.suggest", "search.highlight", "search.share", "toc.follow", "content.code.copy", "content.code.annotate", "content.tabs.link", "content.tooltips"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+        <script src="../javascripts/katex.js"></script>
+      
+        <script src="https://unpkg.com/katex@0/dist/katex.min.js"></script>
+      
+        <script src="https://unpkg.com/katex@0/dist/contrib/auto-render.min.js"></script>
+      
+    
+  </body>
+</html>
