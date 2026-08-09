@@ -14,10 +14,10 @@
         <link rel="canonical" href="https://sncapital.github.io/Docs/openspec/live-ws/">
       
       
-        <link rel="prev" href="../historical-download/">
+        <link rel="prev" href="../live-trading/">
       
       
-        <link rel="next" href="../models/">
+        <link rel="next" href="../metrics-aggregation/">
       
       
         
@@ -435,7 +435,7 @@
     
     
       <li class="md-tabs__item md-tabs__item--active">
-        <a href="../historical-download/" class="md-tabs__link">
+        <a href="../batch-backtest/" class="md-tabs__link">
           
   
   
@@ -1964,6 +1964,16 @@
       
         
       
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
     
     
     
@@ -1984,7 +1994,7 @@
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="../historical-download/" class="md-nav__link ">
+            <a href="../batch-backtest/" class="md-nav__link ">
               
   
   
@@ -2019,6 +2029,90 @@
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
             
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dashboard/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Dashboard
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../historical-download/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Historical download
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../live-trading/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Live Trading
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
               
             
               
@@ -2225,6 +2319,62 @@
   
 </nav>
       
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../metrics-aggregation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Metrics Aggregation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../metrics-engine/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Metrics Engine
+  
+
+    
+  </span>
+  
+  
+
+      </a>
     </li>
   
 
@@ -2521,6 +2671,11 @@
 <li><strong>WHEN</strong> the depth-log interval setting is configured to a positive value</li>
 <li><strong>THEN</strong> the first and then every Nth depth diff per stream is logged at debug level</li>
 </ul>
+<h4 id="scenario-malformed-frame-resilience">Scenario: Malformed-frame resilience<a class="headerlink" href="#scenario-malformed-frame-resilience" title="Permanent link">&para;</a></h4>
+<ul>
+<li><strong>WHEN</strong> an incoming frame fails to parse with <code>JSONDecodeError</code>, <code>KeyError</code>, or <code>ValueError</code> (bad JSON, missing keys, wrong value types)</li>
+<li><strong>THEN</strong> the frame is logged with the error trace and skipped, and the WS connection deliberately survives; other unexpected exceptions are treated as code bugs and escalate (abort the run) rather than being masked by a reconnect</li>
+</ul>
 <h4 id="scenario-silent-unknown-stream-drop">Scenario: Silent unknown-stream drop<a class="headerlink" href="#scenario-silent-unknown-stream-drop" title="Permanent link">&para;</a></h4>
 <ul>
 <li><strong>WHEN</strong> a message matches no known stream</li>
@@ -2587,7 +2742,7 @@
 <h4 id="scenario-snapshot-limited-bootstrap">Scenario: Snapshot-limited bootstrap<a class="headerlink" href="#scenario-snapshot-limited-bootstrap" title="Permanent link">&para;</a></h4>
 <ul>
 <li><strong>WHEN</strong> a book cannot bridge the snapshot with the buffered diffs</li>
-<li><strong>THEN</strong> bootstrap is retried after a fixed 2-second wait and the book stays <code>bootstrapping</code></li>
+<li><strong>THEN</strong> bootstrap is retried after a fixed 2-second wait and the book keeps its current state: a cold-start book stays <code>bootstrapping</code>, while a book that fell behind after going live stays <code>resyncing</code> (bootstrap itself never sets the state, it only flips to <code>live</code> on success)</li>
 </ul>
 <h4 id="scenario-rate-limited-bootstrap-wait">Scenario: Rate-limited bootstrap wait<a class="headerlink" href="#scenario-rate-limited-bootstrap-wait" title="Permanent link">&para;</a></h4>
 <ul>
@@ -2622,7 +2777,7 @@
 <li><strong>THEN</strong> no booksnapshot parquet files are written and a notice is printed</li>
 </ul>
 <h3 id="requirement-health-and-pipeline-statistics">Requirement: Health and pipeline statistics<a class="headerlink" href="#requirement-health-and-pipeline-statistics" title="Permanent link">&para;</a></h3>
-<p>The system SHALL track health counters (trade-id gaps - incremented when a trade id is not exactly the previous plus one; WS reconnects; order-book force resyncs; clock-drift alerts) plus per-symbol last-event timestamps. It SHALL expose a snapshot of these counters for external scraping. The pipeline SHALL report periodic statistics: message counts and lag per stream, reconnect count, and depth-resync counts per symbol, reported every 60 seconds; a high-frequency stream (aggtrades) that has never delivered a message, or whose lag exceeds 10 times its 30-second threshold (i.e. 300 seconds), SHALL trigger a warning.</p>
+<p>The system SHALL track health counters (trade-id gaps - incremented only for raw <code>@trade</code> events when a trade id is not exactly the previous plus one; since the default subscription prefers <code>@aggTrade</code> and the raw <code>@trade</code> stream is not subscribed by default, this counter stays at zero unless raw trades are explicitly enabled; WS reconnects; order-book force resyncs; plus a clock-drift counter that the parser's own live run never increments - the standalone run leaves it at zero, and the only caller of <code>record_clock_drift()</code> is the alpha-engine live time-sync process) and per-symbol last-event timestamps. It SHALL expose a Python snapshot of these counters via the health object's snapshot method for in-process consumers; no HTTP or metrics endpoint exists (a Prometheus exporter is intentionally excluded). The pipeline SHALL report periodic statistics: message counts and lag per stream, reconnect count, and depth-resync counts per symbol, reported every 60 seconds; a high-frequency stream (aggtrades) that has never delivered a message, or whose lag exceeds 10 times its 30-second threshold (i.e. 300 seconds), SHALL trigger a warning.</p>
 <h4 id="scenario-trade-id-gap-detection">Scenario: Trade id gap detection<a class="headerlink" href="#scenario-trade-id-gap-detection" title="Permanent link">&para;</a></h4>
 <ul>
 <li><strong>WHEN</strong> a trade arrives whose id is not the previously seen id plus one</li>
@@ -2690,7 +2845,7 @@
       <nav class="md-footer__inner md-grid" aria-label="Footer" >
         
           
-          <a href="../historical-download/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Historical download">
+          <a href="../live-trading/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Live Trading">
             <div class="md-footer__button md-icon">
               
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
@@ -2700,20 +2855,20 @@
                 Previous
               </span>
               <div class="md-ellipsis">
-                Historical download
+                Live Trading
               </div>
             </div>
           </a>
         
         
           
-          <a href="../models/" class="md-footer__link md-footer__link--next" aria-label="Next: Data models">
+          <a href="../metrics-aggregation/" class="md-footer__link md-footer__link--next" aria-label="Next: Metrics Aggregation">
             <div class="md-footer__title">
               <span class="md-footer__direction">
                 Next
               </span>
               <div class="md-ellipsis">
-                Data models
+                Metrics Aggregation
               </div>
             </div>
             <div class="md-footer__button md-icon">

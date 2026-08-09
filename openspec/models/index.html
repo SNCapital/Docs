@@ -14,7 +14,7 @@
         <link rel="canonical" href="https://sncapital.github.io/Docs/openspec/models/">
       
       
-        <link rel="prev" href="../live-ws/">
+        <link rel="prev" href="../metrics-engine/">
       
       
         <link rel="next" href="../rest-pollers/">
@@ -435,7 +435,7 @@
     
     
       <li class="md-tabs__item md-tabs__item--active">
-        <a href="../historical-download/" class="md-tabs__link">
+        <a href="../batch-backtest/" class="md-tabs__link">
           
   
   
@@ -1964,6 +1964,16 @@
       
         
       
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
     
     
     
@@ -1984,7 +1994,7 @@
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="../historical-download/" class="md-nav__link ">
+            <a href="../batch-backtest/" class="md-nav__link ">
               
   
   
@@ -2028,6 +2038,90 @@
   
   
     <li class="md-nav__item">
+      <a href="../dashboard/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Dashboard
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../historical-download/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Historical download
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../live-trading/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Live Trading
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../live-ws/" class="md-nav__link">
         
   
@@ -2036,6 +2130,62 @@
     
   
     Live WebSocket pipeline
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../metrics-aggregation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Metrics Aggregation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../metrics-engine/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Metrics Engine
   
 
     
@@ -2495,7 +2645,7 @@
 <h4 id="scenario-adding-a-new-market">Scenario: Adding a new market<a class="headerlink" href="#scenario-adding-a-new-market" title="Permanent link">&para;</a></h4>
 <ul>
 <li><strong>WHEN</strong> a new market value is introduced</li>
-<li><strong>THEN</strong> it requires a corresponding entry in the five venue-specific configuration maps; other REST endpoints (funding, exchange-info, market-stats, margin interest) remain fixed constants outside the maps</li>
+<li><strong>THEN</strong> it requires a corresponding entry in the five venue-specific configuration maps (WebSocket base, REST base, exchange-info path, depth-snapshot path, history base), plus per-market entries in the depth snapshot max-limit and bootstrap-stagger maps (indexed by market at bootstrap time); other REST endpoints (funding, market-stats, margin interest) remain fixed constants outside the maps</li>
 </ul>
 <h3 id="requirement-live-websocket-dtos">Requirement: Live WebSocket DTOs<a class="headerlink" href="#requirement-live-websocket-dtos" title="Permanent link">&para;</a></h3>
 <p>The system SHALL deserialize every subscribed Binance stream event into a typed DTO with a fixed pyarrow schema. Every DTO SHALL expose its schema, an <code>event_type</code> identifier, and a row serializer for parquet persistence. All timestamps SHALL be int64 milliseconds; wire-derived timestamps are UTC, and a depth event without a wire timestamp falls back to the local clock, while a mark-price event prefers the event time <code>E</code> over <code>T</code>. Price and quantity columns SHALL be float32, except mark-price fields which SHALL be float64.</p>
@@ -2670,7 +2820,7 @@
       <nav class="md-footer__inner md-grid" aria-label="Footer" >
         
           
-          <a href="../live-ws/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Live WebSocket pipeline">
+          <a href="../metrics-engine/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Metrics Engine">
             <div class="md-footer__button md-icon">
               
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
@@ -2680,7 +2830,7 @@
                 Previous
               </span>
               <div class="md-ellipsis">
-                Live WebSocket pipeline
+                Metrics Engine
               </div>
             </div>
           </a>

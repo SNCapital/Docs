@@ -11,13 +11,13 @@
       
       
       
-        <link rel="canonical" href="https://sncapital.github.io/Docs/development/setup/">
+        <link rel="canonical" href="https://sncapital.github.io/Docs/openspec/live-trading/">
       
       
-        <link rel="prev" href="../">
+        <link rel="prev" href="../historical-download/">
       
       
-        <link rel="next" href="../testing/">
+        <link rel="next" href="../live-ws/">
       
       
         
@@ -28,7 +28,7 @@
     
     
       
-        <title>Setup - SN Capital — Backend</title>
+        <title>Live Trading - SN Capital — Backend</title>
       
     
     
@@ -81,7 +81,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#setup" class="md-skip">
+        <a href="#purpose" class="md-skip">
           Skip to content
         </a>
       
@@ -117,7 +117,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Setup
+              Live Trading
             
           </span>
         </div>
@@ -366,13 +366,11 @@
   
   
   
-    
-  
   
     
     
-      <li class="md-tabs__item md-tabs__item--active">
-        <a href="../" class="md-tabs__link">
+      <li class="md-tabs__item">
+        <a href="../../development/" class="md-tabs__link">
           
   
   
@@ -431,11 +429,13 @@
   
   
   
+    
+  
   
     
     
-      <li class="md-tabs__item">
-        <a href="../../openspec/batch-backtest/" class="md-tabs__link">
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../batch-backtest/" class="md-tabs__link">
           
   
   
@@ -1661,8 +1661,6 @@
       
   
   
-    
-  
   
   
     
@@ -1682,23 +1680,22 @@
     
     
       
-        
-        
-      
       
         
       
     
     
-    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" checked>
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_7" >
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="../" class="md-nav__link ">
+            <a href="../../development/" class="md-nav__link ">
               
   
   
@@ -1716,13 +1713,13 @@
             </a>
             
               
-              <label class="md-nav__link " for="__nav_7" id="__nav_7_label" tabindex="">
+              <label class="md-nav__link " for="__nav_7" id="__nav_7_label" tabindex="0">
                 <span class="md-nav__icon md-icon"></span>
               </label>
             
           </div>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="true">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_7">
             <span class="md-nav__icon md-icon"></span>
             
@@ -1739,37 +1736,10 @@
                 
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Setup
-  
-
-    
-  </span>
-  
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../../development/setup/" class="md-nav__link">
         
   
   
@@ -1785,103 +1755,6 @@
   
 
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#clone-venv" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Clone + venv
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#dependencies" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Dependencies
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#smoke-test" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Smoke test
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#editor" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Editor
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#optional-tools" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Optional tools
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#a-note-about-the-parsers-bare-imports" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        A note about the parser's bare imports
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#common-dev-tasks" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Common dev tasks
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -1894,7 +1767,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../testing/" class="md-nav__link">
+      <a href="../../development/testing/" class="md-nav__link">
         
   
   
@@ -1922,7 +1795,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../contributing/" class="md-nav__link">
+      <a href="../../development/contributing/" class="md-nav__link">
         
   
   
@@ -2074,6 +1947,8 @@
       
   
   
+    
+  
   
   
     
@@ -2103,22 +1978,23 @@
     
     
       
+        
+        
+      
       
         
       
     
     
-    <li class="md-nav__item md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
       
         
         
-          
-        
-        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_10" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_10" checked>
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="../../openspec/batch-backtest/" class="md-nav__link ">
+            <a href="../batch-backtest/" class="md-nav__link ">
               
   
   
@@ -2136,13 +2012,13 @@
             </a>
             
               
-              <label class="md-nav__link " for="__nav_10" id="__nav_10_label" tabindex="0">
+              <label class="md-nav__link " for="__nav_10" id="__nav_10_label" tabindex="">
                 <span class="md-nav__icon md-icon"></span>
               </label>
             
           </div>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_10_label" aria-expanded="false">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_10_label" aria-expanded="true">
           <label class="md-nav__title" for="__nav_10">
             <span class="md-nav__icon md-icon"></span>
             
@@ -2162,7 +2038,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../openspec/dashboard/" class="md-nav__link">
+      <a href="../dashboard/" class="md-nav__link">
         
   
   
@@ -2190,7 +2066,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../openspec/historical-download/" class="md-nav__link">
+      <a href="../historical-download/" class="md-nav__link">
         
   
   
@@ -2215,10 +2091,35 @@
                 
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="../../openspec/live-trading/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Live Trading
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   
@@ -2234,6 +2135,184 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#purpose" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Purpose
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#requirements" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Requirements
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Requirements">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#requirement-live-cli-contract" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Requirement: Live CLI contract
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#requirement-live-service-wiring" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Requirement: Live service wiring
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#requirement-live-tick-bus" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Requirement: Live tick bus
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#requirement-bar-clock-and-time-synchronization" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Requirement: Bar clock and time synchronization
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#requirement-live-raw-data-reader" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Requirement: Live raw data reader
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#requirement-bar-boundary-evaluation-signal-engine" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Requirement: Bar boundary evaluation (signal engine)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#requirement-trader-bar-loop" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Requirement: Trader bar loop
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#requirement-risk-guard" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Requirement: Risk guard
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#requirement-execution-layer" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Requirement: Execution layer
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#requirement-position-and-pnl-accounting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Requirement: Position and PnL accounting
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#requirement-state-contract-for-the-dashboard" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Requirement: State contract for the dashboard
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#requirement-standalone-trader-entry" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Requirement: Standalone trader entry
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -2246,7 +2325,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../openspec/live-ws/" class="md-nav__link">
+      <a href="../live-ws/" class="md-nav__link">
         
   
   
@@ -2274,7 +2353,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../openspec/metrics-aggregation/" class="md-nav__link">
+      <a href="../metrics-aggregation/" class="md-nav__link">
         
   
   
@@ -2302,7 +2381,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../openspec/metrics-engine/" class="md-nav__link">
+      <a href="../metrics-engine/" class="md-nav__link">
         
   
   
@@ -2330,7 +2409,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../openspec/models/" class="md-nav__link">
+      <a href="../models/" class="md-nav__link">
         
   
   
@@ -2358,7 +2437,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../openspec/rest-pollers/" class="md-nav__link">
+      <a href="../rest-pollers/" class="md-nav__link">
         
   
   
@@ -2403,8 +2482,6 @@
   
   
   
-    
-  
   
     <label class="md-nav__title" for="__toc">
       <span class="md-nav__icon md-icon"></span>
@@ -2413,10 +2490,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#clone-venv" class="md-nav__link">
+  <a href="#purpose" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Clone + venv
+        Purpose
       
     </span>
   </a>
@@ -2424,68 +2501,151 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#dependencies" class="md-nav__link">
+  <a href="#requirements" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Dependencies
+        Requirements
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Requirements">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#requirement-live-cli-contract" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Requirement: Live CLI contract
       
     </span>
   </a>
   
 </li>
-      
-        <li class="md-nav__item">
-  <a href="#smoke-test" class="md-nav__link">
+        
+          <li class="md-nav__item">
+  <a href="#requirement-live-service-wiring" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Smoke test
+        Requirement: Live service wiring
       
     </span>
   </a>
   
 </li>
-      
-        <li class="md-nav__item">
-  <a href="#editor" class="md-nav__link">
+        
+          <li class="md-nav__item">
+  <a href="#requirement-live-tick-bus" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Editor
+        Requirement: Live tick bus
       
     </span>
   </a>
   
 </li>
-      
-        <li class="md-nav__item">
-  <a href="#optional-tools" class="md-nav__link">
+        
+          <li class="md-nav__item">
+  <a href="#requirement-bar-clock-and-time-synchronization" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Optional tools
+        Requirement: Bar clock and time synchronization
       
     </span>
   </a>
   
 </li>
-      
-        <li class="md-nav__item">
-  <a href="#a-note-about-the-parsers-bare-imports" class="md-nav__link">
+        
+          <li class="md-nav__item">
+  <a href="#requirement-live-raw-data-reader" class="md-nav__link">
     <span class="md-ellipsis">
       
-        A note about the parser's bare imports
+        Requirement: Live raw data reader
       
     </span>
   </a>
   
 </li>
-      
-        <li class="md-nav__item">
-  <a href="#common-dev-tasks" class="md-nav__link">
+        
+          <li class="md-nav__item">
+  <a href="#requirement-bar-boundary-evaluation-signal-engine" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Common dev tasks
+        Requirement: Bar boundary evaluation (signal engine)
       
     </span>
   </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#requirement-trader-bar-loop" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Requirement: Trader bar loop
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#requirement-risk-guard" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Requirement: Risk guard
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#requirement-execution-layer" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Requirement: Execution layer
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#requirement-position-and-pnl-accounting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Requirement: Position and PnL accounting
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#requirement-state-contract-for-the-dashboard" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Requirement: State contract for the dashboard
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#requirement-standalone-trader-entry" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Requirement: Standalone trader entry
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -2509,125 +2669,174 @@
   
 
 
-<h1 id="setup">Setup<a class="headerlink" href="#setup" title="Permanent link">&para;</a></h1>
-<p>Local development environment in five commands.</p>
-<h2 id="clone-venv">Clone + venv<a class="headerlink" href="#clone-venv" title="Permanent link">&para;</a></h2>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/SNCapital/-Backend.git<span class="w"> </span>backend
-</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nb">cd</span><span class="w"> </span>backend
-</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
-</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>python3.13<span class="w"> </span>-m<span class="w"> </span>venv<span class="w"> </span>.venv
-</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="nb">source</span><span class="w"> </span>.venv/bin/activate
-</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>pip<span class="w"> </span>install<span class="w"> </span>-U<span class="w"> </span>pip
-</span></code></pre></div>
-<h2 id="dependencies">Dependencies<a class="headerlink" href="#dependencies" title="Permanent link">&para;</a></h2>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>pip<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </span>requirements.txt<span class="w"> </span>-r<span class="w"> </span>binance_parser/requirements.txt
-</span></code></pre></div>
-<p>That gives you everything the engine and parser need — pandas, pyarrow,
-scipy, matplotlib for backtest; aiohttp, websockets, sortedcontainers
-for the parser.</p>
-<p>For the docs site (this site) — install the doc tooling separately:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>pip<span class="w"> </span>install<span class="w"> </span><span class="s1">&#39;mkdocs-material&gt;=9.5&#39;</span><span class="w"> </span><span class="s1">&#39;pymdown-extensions&gt;=10&#39;</span>
-</span></code></pre></div>
-<h2 id="smoke-test">Smoke test<a class="headerlink" href="#smoke-test" title="Permanent link">&para;</a></h2>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>pytest<span class="w">                                 </span><span class="c1"># 100 passing</span>
-</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>python<span class="w"> </span>tools/backtest.py<span class="w"> </span>--mock<span class="w"> </span>--since<span class="w"> </span><span class="m">2024</span>-01-01<span class="w"> </span>--until<span class="w"> </span><span class="m">2024</span>-01-08<span class="w"> </span><span class="se">\</span>
-</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">    </span>--alphas<span class="w"> </span>funding_reversion<span class="w"> </span>--no-plot
-</span></code></pre></div>
-<h2 id="editor">Editor<a class="headerlink" href="#editor" title="Permanent link">&para;</a></h2>
-<p>Anything with Python LSP works. The repo uses:</p>
+  <h1>Live Trading</h1>
+
+<h2 id="purpose">Purpose<a class="headerlink" href="#purpose" title="Permanent link">&para;</a></h2>
+<p>Defines the live trading runtime of <code>alpha_engine</code> (<code>live/</code>): the CLI entry (<code>main.py live-trade</code>), the component wiring in <code>LiveService</code> (tick bus, order book manager, snapshot loops, warm-start reader, bar orchestrator), the UTC-aligned <code>BarClock</code> with exchange drift correction (<code>BinanceTimeSync</code>), the signal-only bar evaluation loop (<code>LiveEngine</code>), and the full trader loop (<code>LiveTrader</code>, <code>RiskGuard</code>, <code>OrderExecutor</code>, <code>LiveBlotter</code>, <code>StateStore</code>) that Phase 3 wires into paper execution. Phase 1 is signal-only by contract: <code>signal_only=True</code> is hard-coded at the CLI, and any non-signal-only invocation raises <code>NotImplementedError</code>.</p>
+<h2 id="requirements">Requirements<a class="headerlink" href="#requirements" title="Permanent link">&para;</a></h2>
+<h3 id="requirement-live-cli-contract">Requirement: Live CLI contract<a class="headerlink" href="#requirement-live-cli-contract" title="Permanent link">&para;</a></h3>
+<p>The system SHALL expose a <code>live-trade</code> subcommand in the root <code>main.py</code> (and treat a flag-only or empty invocation as <code>live-trade</code> for backwards compatibility) accepting <code>--alphas</code> (nargs+, choices from <code>ALPHA_REGISTRY</code>, default <code>trade_imbalance</code>), <code>--symbols</code> (default: the parser's configured symbols), <code>--bar-minutes</code> (default 30), <code>--settlement-seconds</code> (default 5.0), <code>--lookback-days</code> (default 30), <code>--max-w</code> (default 0.03), <code>--end-range</code> (default 50), <code>--market</code> (<code>spot</code>|<code>usdm</code>, default <code>spot</code>), <code>--no-order-book</code>, <code>--snapshot-interval-ms</code>, <code>--data-root</code> (default <code>./data</code>), and <code>--log-level</code>. The invocation SHALL always run in signal-only mode (Phase 1); attempting to disable it SHALL raise <code>NotImplementedError</code> because execution lands in Phases &frac34;.</p>
+<h4 id="scenario-default-invocation">Scenario: Default invocation<a class="headerlink" href="#scenario-default-invocation" title="Permanent link">&para;</a></h4>
 <ul>
-<li><code>from __future__ import annotations</code> — forward refs everywhere.</li>
-<li>Plain <code>dataclasses</code> — no Pydantic.</li>
-<li>Stdlib <code>pathlib</code> and <code>typing.Literal</code> for paths and enums.</li>
+<li><strong>WHEN</strong> <code>python main.py</code> is run with no subcommand</li>
+<li><strong>THEN</strong> it behaves as <code>live-trade</code> with defaults (spot, <code>trade_imbalance</code>, 30-minute bars)</li>
 </ul>
-<p>Recommended VS Code settings:</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>{
-</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>  &quot;python.defaultInterpreterPath&quot;: &quot;.venv/bin/python&quot;,
-</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>  &quot;python.testing.pytestEnabled&quot;: true,
-</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>  &quot;python.testing.pytestArgs&quot;: [&quot;.&quot;],
-</span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>  &quot;editor.formatOnSave&quot;: false
-</span><span id="__span-4-6"><a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>}
-</span></code></pre></div>
-<h2 id="optional-tools">Optional tools<a class="headerlink" href="#optional-tools" title="Permanent link">&para;</a></h2>
+<h4 id="scenario-execution-mode-not-implemented">Scenario: Execution mode not implemented<a class="headerlink" href="#scenario-execution-mode-not-implemented" title="Permanent link">&para;</a></h4>
 <ul>
-<li><strong>Black</strong> for autoformat (<code>pip install black; black .</code>). Not enforced
-  in CI yet, but the codebase is already roughly Black-shaped.</li>
-<li><strong>Ruff</strong> for linting (<code>pip install ruff; ruff check .</code>). The
-  conftest's <code>noqa: E402</code> for the parser sys.path hack is the only
-  intentional lint suppression.</li>
-<li><strong>DuckDB</strong> for poking at parquet without loading the engine:</li>
+<li><strong>WHEN</strong> the engine is asked to run with execution enabled</li>
+<li><strong>THEN</strong> it raises <code>NotImplementedError</code> (Phases &frac34;)</li>
 </ul>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>pip<span class="w"> </span>install<span class="w"> </span>duckdb
-</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>duckdb<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;</span>
-</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="s2">  SELECT symbol, count(*)</span>
-</span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="s2">  FROM read_parquet(&#39;data/market=usdm/type=trades/**/*.parquet&#39;, hive_partitioning=1)</span>
-</span><span id="__span-5-5"><a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="s2">  WHERE dt = &#39;2026-04-25&#39;</span>
-</span><span id="__span-5-6"><a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="s2">  GROUP BY 1</span>
-</span><span id="__span-5-7"><a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="s2">  ORDER BY 2 DESC</span>
-</span><span id="__span-5-8"><a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="s2">&quot;</span>
-</span></code></pre></div>
-<h2 id="a-note-about-the-parsers-bare-imports">A note about the parser's bare imports<a class="headerlink" href="#a-note-about-the-parsers-bare-imports" title="Permanent link">&para;</a></h2>
-<p><code>binance_parser/</code> imports its own subpackages without the package
-prefix (<code>from config.settings import …</code>, not
-<code>from binance_parser.config.settings import …</code>). This is intentional —
-it means the parser is its own runnable application that doesn't care
-about being a sub-package.</p>
-<p>To make <code>pytest</code> from the repo root work, the root <code>conftest.py</code>
-prepends <code>binance_parser/</code> onto <code>sys.path</code>. The same trick lives in
-<code>alpha_engine/live/service.py</code> so <code>python main.py live-trade</code> works
-from anywhere.</p>
-<p>If you write new code in the alpha engine that needs the parser, you
-have <strong>two equivalent options</strong>:</p>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Either: copy the sys.path trick (see alpha_engine/live/service.py)</span>
-</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span><span class="o">.</span><span class="n">resolve</span><span class="p">()</span><span class="o">.</span><span class="n">parents</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">/</span> <span class="s2">&quot;binance_parser&quot;</span><span class="p">))</span>
-</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="kn">from</span><span class="w"> </span><span class="nn">models.events</span><span class="w"> </span><span class="kn">import</span> <span class="n">MarketEvent</span>
-</span><span id="__span-6-4"><a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>
-</span><span id="__span-6-5"><a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="c1"># Or: use the namespaced form (also works because of conftest)</span>
-</span><span id="__span-6-6"><a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="kn">from</span><span class="w"> </span><span class="nn">binance_parser.models.events</span><span class="w"> </span><span class="kn">import</span> <span class="n">MarketEvent</span>
-</span></code></pre></div>
-<p>The first form matches the parser's internal style; the second is
-clearer in code review. Pick one and be consistent within a file.</p>
-<h2 id="common-dev-tasks">Common dev tasks<a class="headerlink" href="#common-dev-tasks" title="Permanent link">&para;</a></h2>
-<table>
-<thead>
-<tr>
-<th>Task</th>
-<th>Command</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Add a new strategy</td>
-<td>Edit <code>alpha_engine/strategies/alphas.py</code> — see <a href="../../alpha-engine/writing-a-strategy/">Writing a strategy</a></td>
-</tr>
-<tr>
-<td>Add a new metric</td>
-<td>Edit one of <code>alpha_engine/metrics/*_aggregator.py</code></td>
-</tr>
-<tr>
-<td>Add a new WS stream</td>
-<td>Edit <code>binance_parser/models/events.py</code> + <code>live/ws_client.py</code> — see <a href="../../binance-parser/extending/">Extending the parser</a></td>
-</tr>
-<tr>
-<td>Run the docs site locally</td>
-<td><code>mkdocs serve</code></td>
-</tr>
-<tr>
-<td>Run a single test class</td>
-<td><code>pytest tests/test_pipeline.py::TestMarkowitz -v</code></td>
-</tr>
-<tr>
-<td>Run with debug logging</td>
-<td><code>python main.py live-trade --log-level DEBUG …</code></td>
-</tr>
-</tbody>
-</table>
+<h3 id="requirement-live-service-wiring">Requirement: Live service wiring<a class="headerlink" href="#requirement-live-service-wiring" title="Permanent link">&para;</a></h3>
+<p>The system SHALL compose the live runtime in <code>run_live</code> in a fixed order: uppercase the symbols; resolve the venue tag (<code>spot -&gt; "binance"</code>, <code>usdm -&gt; "binance-f"</code>); build a <code>LiveTickBus</code> with a <code>FileWriter</code> sink (excluding <code>booksnapshot</code>); create a shared <code>HealthCounters</code>; build the <code>OrderBookManager</code> unless <code>enable_order_book</code> is false; register the <code>OrderBookUpdatesAggregator</code> as a diff observer when the book is enabled; build <code>LiveRawDataReader</code> with a lookback of <code>lookback_days + 30</code>; warm-start it from parquet under <code>data-root</code> (missing root logs a warning and continues; a warm-start exception is logged and the reader proceeds with empty deques); construct <code>LiveEngine</code> with its config, <code>BinanceTimeSync</code>, and a 30-minute <code>Bar</code>; validate symbols with the parser's pre-flight check; then start everything in one <code>asyncio.TaskGroup</code>: file writer, time sync poller, WS listener, order book manager plus watchdog, order-book parquet snapshot loop (UTC bar-aligned interval, 30 minutes from the parser's live-snapshot setting unless overridden by <code>--snapshot-interval-ms</code>; skipped entirely when the effective interval is &lt;= 0), order-book bus snapshot loop (1 Hz default; skipped when &lt;= 0), reader consumer, and engine. All snapshot cadences: the parquet loop simply runs at the effective interval - the "5000 ms fallback" in the stale <code>run_live</code> docstring does not exist in code (the parser allows no interval and the loop is skipped) - and the loop must keep serving snapshots because the live reader needs them to populate the orderbook deque; the bus snapshot stream never lands on disk (the FileWriter sink excludes <code>booksnapshot</code>).</p>
+<h4 id="scenario-warm-start-failure">Scenario: Warm-start failure<a class="headerlink" href="#scenario-warm-start-failure" title="Permanent link">&para;</a></h4>
+<ul>
+<li><strong>WHEN</strong> the warm-start bootstrap raises or finds no rows under the data root</li>
+<li><strong>THEN</strong> the runtime logs the failure and starts with empty deques rather than aborting</li>
+</ul>
+<h4 id="scenario-book-disabled">Scenario: Book disabled<a class="headerlink" href="#scenario-book-disabled" title="Permanent link">&para;</a></h4>
+<ul>
+<li><strong>WHEN</strong> <code>--no-order-book</code> is given</li>
+<li><strong>THEN</strong> no <code>OrderBookManager</code>, watchdog, snapshot loops, or diff-observer are created</li>
+</ul>
+<h3 id="requirement-live-tick-bus">Requirement: Live tick bus<a class="headerlink" href="#requirement-live-tick-bus" title="Permanent link">&para;</a></h3>
+<p>The system SHALL fan out every parser event through <code>LiveTickBus</code>, which implements the same <code>write(market, record)</code> contract as the parser's <code>FileWriter</code> so it can serve as the WS listener's writer. Every written event SHALL be delivered to each subscriber (one <code>asyncio.Queue</code> each) and forwarded inline to every attached sink. Backpressure SHALL be lossy: a subscriber whose queue is full (default 10,000 events) SHALL drop the event, increment its <code>dropped</code> counter, and log at power-of-two thresholds, while the other subscribers still receive the event. A subscription SHALL optionally restrict <code>event_types</code> at the publish edge so high-rate streams (e.g. raw orderbook diffs) never consume queue slots. Sinks SHALL support <code>exclude_types</code> (canonical use: <code>booksnapshot</code> excluded from the parquet writer because the dedicated snapshot loop writes parquet snapshots at a different cadence). The live reader's subscription SHALL be filtered to <code>aggtrades, klines, booksnapshot, funding, markprice, forceorder, trades</code>, deliberately excluding raw orderbook diffs.</p>
+<h4 id="scenario-slow-subscriber-drop">Scenario: Slow subscriber drop<a class="headerlink" href="#scenario-slow-subscriber-drop" title="Permanent link">&para;</a></h4>
+<ul>
+<li><strong>WHEN</strong> a subscriber's queue fills</li>
+<li><strong>THEN</strong> the event is dropped for that subscriber only and the drop counter increments</li>
+</ul>
+<h4 id="scenario-publish-edge-filter">Scenario: Publish-edge filter<a class="headerlink" href="#scenario-publish-edge-filter" title="Permanent link">&para;</a></h4>
+<ul>
+<li><strong>WHEN</strong> a subscription specifies <code>event_types</code></li>
+<li><strong>THEN</strong> events outside the set are not enqueued, saving queue slots for the events that matter</li>
+</ul>
+<h3 id="requirement-bar-clock-and-time-synchronization">Requirement: Bar clock and time synchronization<a class="headerlink" href="#requirement-bar-clock-and-time-synchronization" title="Permanent link">&para;</a></h3>
+<p><code>BarClock</code> SHALL yield one <code>pd.Timestamp</code> per UTC-aligned bar boundary, strictly after the current time, computed as <code>base + (floor(minutes_into_hour / bar_minutes) + 1) * bar_minutes</code> where <code>base</code> is the current minute-zero UTC; each yield SHALL be delayed by <code>settlement_seconds</code> (default 5.0) after the boundary so the WS can deliver the last ticks of the just-closed bar. <code>bar_minutes &lt;= 0</code> or <code>settlement_seconds &lt; 0</code> SHALL raise <code>ValueError</code>. The clock SHALL accept an injectable <code>time_source</code> so boundaries align to the exchange even on a host with a skewed clock. <code>BinanceTimeSync</code> SHALL poll the exchange server-time endpoint once per minute (<code>/api/v3/time</code> on spot, <code>/fapi/v1/time</code> on USD-M), timestamp local time at request start and end (midpoint correction), maintain an EWMA of the <code>server - local</code> offset with <code>alpha=0.3</code>, and expose <code>now()</code> / <code>now_ms()</code>. Until the first sample the offset SHALL be 0 (fall back to local clock); a poll failure SHALL keep the previous EWMA rather than resetting. A drift over 500 ms SHALL log a warning; over 2000 ms SHALL log an error and record a clock-drift alert on the shared <code>HealthCounters</code>.</p>
+<h4 id="scenario-settlement-delay">Scenario: Settlement delay<a class="headerlink" href="#scenario-settlement-delay" title="Permanent link">&para;</a></h4>
+<ul>
+<li><strong>WHEN</strong> a bar boundary is reached</li>
+<li><strong>THEN</strong> the clock sleeps <code>settlement_seconds</code> past the boundary before yielding the bar timestamp</li>
+</ul>
+<h4 id="scenario-cold-start-clock">Scenario: Cold-start clock<a class="headerlink" href="#scenario-cold-start-clock" title="Permanent link">&para;</a></h4>
+<ul>
+<li><strong>WHEN</strong> no server-time sample has landed yet</li>
+<li><strong>THEN</strong> <code>BinanceTimeSync.now()</code> falls back to the local clock unchanged, and the engine still starts immediately</li>
+</ul>
+<h3 id="requirement-live-raw-data-reader">Requirement: Live raw data reader<a class="headerlink" href="#requirement-live-raw-data-reader" title="Permanent link">&para;</a></h3>
+<p><code>LiveRawDataReader</code> SHALL serve the aggregator contract (DataFrame views over <code>[since, until]</code>, same column normalization as the parquet reader) from rolling in-memory deques keyed by <code>(exchange, kind, ticker)</code>, fed from a bus subscription. Event routing SHALL be fixed: <code>aggtrades</code> -&gt; aggregated <code>trades</code> (canonical), raw <code>trades</code> -&gt; <code>trades_raw</code> only when the parser flag <code>LIVE_RECONSTRUCT_MULTILEVEL</code> is set (otherwise dropped, preventing double-counting), <code>forceorder</code> -&gt; <code>liquidations</code>, closed <code>klines</code> only, <code>booksnapshot</code> -&gt; long-form <code>orderbook</code> rows (one per bid/ask level at the snapshot timestamp), <code>funding</code> -&gt; <code>realized_funding</code> column only, <code>markprice</code> -&gt; all four mark-price columns, and raw orderbook diff updates SHALL be ignored. <code>bootstrap_from</code> SHALL seed the deques from prior parquets (<code>trades, trades_raw, orderbook, klines, funding, markprice, liquidations</code>). Eviction SHALL be lazy: rows older than <code>since - grace</code> are dropped during <code>read()</code>, plus periodic global eviction every 10,000 events, using per-kind retention (the orderbook deque SHALL keep only 1 day because full-depth 1 Hz books are too large for the general 60-day lookback). Late-event accounting SHALL count events with timestamps strictly before the last processed bar after <code>mark_bar_processed(bar_ts)</code>, logging periodically, so an operator can watch for WS reconnect/load spikes.</p>
+<h4 id="scenario-double-count-protection">Scenario: Double-count protection<a class="headerlink" href="#scenario-double-count-protection" title="Permanent link">&para;</a></h4>
+<ul>
+<li><strong>WHEN</strong> a raw <code>trades</code> event arrives and <code>LIVE_RECONSTRUCT_MULTILEVEL</code> is off</li>
+<li><strong>THEN</strong> it is routed to nothing, keeping the aggregated <code>trades</code> deque aggtrade-only</li>
+</ul>
+<h4 id="scenario-orderbook-memory-bound">Scenario: Orderbook memory bound<a class="headerlink" href="#scenario-orderbook-memory-bound" title="Permanent link">&para;</a></h4>
+<ul>
+<li><strong>WHEN</strong> full-depth booksnapshots accumulate</li>
+<li><strong>THEN</strong> the orderbook deque is bounded by a 1-day window while cheaper kinds keep the 60-day window</li>
+</ul>
+<h4 id="scenario-late-event-accounting">Scenario: Late event accounting<a class="headerlink" href="#scenario-late-event-accounting" title="Permanent link">&para;</a></h4>
+<ul>
+<li><strong>WHEN</strong> an event's timestamp is strictly before the last bar the engine has processed</li>
+<li><strong>THEN</strong> it is counted as late and logged periodically, not silently mixed into the wrong bar</li>
+</ul>
+<h3 id="requirement-bar-boundary-evaluation-signal-engine">Requirement: Bar boundary evaluation (signal engine)<a class="headerlink" href="#requirement-bar-boundary-evaluation-signal-engine" title="Permanent link">&para;</a></h3>
+<p><code>LiveEngine</code> SHALL run once per bar: build an <code>ExchangeData</code> view over <code>[bar_ts - lookback_days, bar_ts]</code> via the live reader, run all configured strategies through <code>run_strategies</code>, take the latest weight row at or before <code>bar_ts</code> per strategy, combine (single strategy -&gt; pass-through; multiple -&gt; equal-weight blend across the union of tickers; PnL-driven Markowitz is deferred to Phase 3), log the final target vector with gross and non-zero counts, signal <code>mark_bar_processed(bar_ts)</code>, and record the bar in <code>weights_history</code>. Strategy evaluation failure at a bar SHALL log the exception and return <code>None</code> (no opinion) rather than crashing the loop, and a bar whose strategies produce no rows SHALL also yield <code>None</code>.</p>
+<h4 id="scenario-multiple-strategies-blend">Scenario: Multiple strategies blend<a class="headerlink" href="#scenario-multiple-strategies-blend" title="Permanent link">&para;</a></h4>
+<ul>
+<li><strong>WHEN</strong> two or more strategies produce weights for a bar</li>
+<li><strong>THEN</strong> the target is the equal-weight average of their latest rows across the union of tickers</li>
+</ul>
+<h4 id="scenario-strategy-failure-is-not-fatal">Scenario: Strategy failure is not fatal<a class="headerlink" href="#scenario-strategy-failure-is-not-fatal" title="Permanent link">&para;</a></h4>
+<ul>
+<li><strong>WHEN</strong> strategy evaluation raises at a bar</li>
+<li><strong>THEN</strong> the bar logs the exception and continues no-op; the loop keeps running</li>
+</ul>
+<h3 id="requirement-trader-bar-loop">Requirement: Trader bar loop<a class="headerlink" href="#requirement-trader-bar-loop" title="Permanent link">&para;</a></h3>
+<p><code>LiveTrader</code> SHALL run the full round-trip bar loop (paper mode, Phase 3): read a rolling metrics window from its reader - the file-based <code>LiveGoMetricsReader</code>, which rebuilds a <code>GoMetricsStore</code> over <code>[bar_ts - lookback_days, bar_ts]</code> from the Go parser's <code>type=metrics</code> parquet per bar, or serves cheap in-memory slices from a single <code>preload_window</code> store for offline dry-runs (<code>run_trader --bars N</code>); the reader's <code>latest_metric_ts</code> SHALL report the newest metrics bar on disk for parser-health display. (The in-process <code>LiveMetricsBridge</code> of <code>alpha-engine/metrics-engine</code> supersedes this file handoff on the signal-only path.) - then compute the target via an injectable <code>weight_fn</code> (default: run the named alphas and combine with <code>risk_parity</code> - the estimation-free default, since on short histories the Markowitz tangency chases noise; <code>markowitz</code> / <code>ew</code> selectable); enforce a predictability freshness guard that drops symbols whose order-book metrics are frozen (fewer than 2 distinct values over the last 6 bars of <code>ob__minor__imbalance_top25__mean</code>) - and if every symbol is stale, HOLD (return <code>None</code>) instead of liquidating; optionally rescale to a <code>target_leverage</code> gross when &gt; 0; apply execution smoothing toward the current marked book by at most <code>smooth_delta</code> weight per symbol per bar (live mirror of the backtest's cap smoothing; empty targets still wind down at the same rate); then reconcile/mark prices, run the risk check, rebalance via the executor, re-reconcile, and persist state. Semantics: <code>None</code> from the weight function means "no opinion this bar - HOLD the current book" and never trades; an explicit (possibly empty) Series is a real target (an empty one flattens every position); the two cases SHALL stay distinct so warm-up or degenerate input cannot accidentally flatten a live book.</p>
+<h4 id="scenario-stale-book-freshness-guard">Scenario: Stale-book freshness guard<a class="headerlink" href="#scenario-stale-book-freshness-guard" title="Permanent link">&para;</a></h4>
+<ul>
+<li><strong>WHEN</strong> a symbol's orderbook metric is identical across the last 6 bars (dead depth stream)</li>
+<li><strong>THEN</strong> the symbol is dropped from the target; if every symbol is stale the loop holds the book</li>
+</ul>
+<h4 id="scenario-hold-vs-flatten">Scenario: HOLD vs flatten<a class="headerlink" href="#scenario-hold-vs-flatten" title="Permanent link">&para;</a></h4>
+<ul>
+<li><strong>WHEN</strong> the combiner is degenerate during warm-up</li>
+<li><strong>THEN</strong> the weight function returns <code>None</code> (hold the book) rather than an empty target that would liquidate every position</li>
+</ul>
+<h4 id="scenario-execution-smoothing">Scenario: Execution smoothing<a class="headerlink" href="#scenario-execution-smoothing" title="Permanent link">&para;</a></h4>
+<ul>
+<li><strong>WHEN</strong> the target moves by more than <code>smooth_delta</code> per symbol</li>
+<li><strong>THEN</strong> the executor receives only the clipped step toward the target (except the kill-switch flatten path, which bypasses smoothing because safety exits must be immediate)</li>
+</ul>
+<h3 id="requirement-risk-guard">Requirement: Risk guard<a class="headerlink" href="#requirement-risk-guard" title="Permanent link">&para;</a></h3>
+<p>Every target weight vector SHALL pass through <code>RiskGuard.check</code> before execution, failing safe toward less risk: non-finite weights SHALL be scrubbed to 0; <code>|w_i|</code> SHALL be clipped to <code>max_per_symbol_pct</code> (0.05); the gross <code>sum|w|</code> SHALL be scaled down to <code>max_total_leverage</code> (1.0) when over; net exposure beyond <code>max_net_exposure</code> (0.20) SHALL be recorded as a warning (not corrected); rebalance within <code>min_rebalance_seconds</code> SHALL return a "held" decision that keeps the current actual weights; and a daily drawdown breaching <code>max_daily_drawdown_pct</code> (0.02) SHALL LATCH a kill-switch: from then on every check returns an all-zero flatten target until manually <code>reset()</code> - and the latch SHALL be re-applied from persisted state on restart (<code>latch()</code>), so a crash cannot silently re-arm trading inside a losing day. NAV SHALL be the smaller of the blotter's equity and <code>max_nav_usd</code> (default 200.0) passed to the executor.</p>
+<h4 id="scenario-kill-switch-lattice">Scenario: Kill-switch lattice<a class="headerlink" href="#scenario-kill-switch-lattice" title="Permanent link">&para;</a></h4>
+<ul>
+<li><strong>WHEN</strong> the daily drawdown breaches the threshold</li>
+<li><strong>THEN</strong> the kill-switch latches and every later check returns a flat target until an operator resets it</li>
+</ul>
+<h4 id="scenario-rate-limited-hold">Scenario: Rate-limited hold<a class="headerlink" href="#scenario-rate-limited-hold" title="Permanent link">&para;</a></h4>
+<ul>
+<li><strong>WHEN</strong> two rebalances land within <code>min_rebalance_seconds</code></li>
+<li><strong>THEN</strong> the second is a <code>held</code> decision that trades nothing</li>
+</ul>
+<h3 id="requirement-execution-layer">Requirement: Execution layer<a class="headerlink" href="#requirement-execution-layer" title="Permanent link">&para;</a></h3>
+<p>The system SHALL trade each target vector through an <code>OrderExecutor</code> that diffs target quantity against the blotter's current quantity and trades only the difference, skipping dust below <code>min_notional_usd</code> (default 5.0). <code>target_quantities(weights, prices, nav)</code> SHALL map missing/invalid prices or NaN weights to 0.0. <code>PaperExecutor</code> SHALL model fills at <code>price * (1 +- slippage_bps / 1e4)</code> charged against trade direction (default 1.0 bps) plus a fee of <code>|delta| * fill_price * fee_rate</code> (default 1.6 bps), mirroring the backtest cost model so paper PnL tracks the backtest net PnL; its <code>reconcile</code> SHALL be a no-op (the paper blotter is authoritative). The real <code>BinanceFuturesExecutor</code> SHALL be testnet-by-default (<code>testnet.binancefuture.com</code> unless <code>testnet=False</code>), SIGNED by signed REST with timestamp + <code>recvWindow</code> + HMAC-SHA256, round quantities DOWN to the symbol's step size with a min-notional check before sending, rebalance only the delta between the exchange's reported position and the target (a restart reconciles rather than double-trades), and its <code>reconcile</code> SHALL overwrite the blotter from the venue's real positions/equity each bar so ambiguous order states self-correct. Until the first successful account mirror (<code>_reconciled_once</code>), <code>rebalance</code> SHALL return no orders rather than size a restart book off the blank initial snapshot. Positions whose symbol vanished from the universe SHALL be priced from the venue's <code>mark_prices()</code> so their target (0) still values them for closing (orphan guard). Target position notional SHALL be capped to the exchange's tightest leverage bracket for that symbol (<code>max_notional_cap</code>), so thin symbols can never trigger a <code>-2027</code> "exceeded max position at current leverage" rejection.</p>
+<h4 id="scenario-dust-skipped">Scenario: Dust skipped<a class="headerlink" href="#scenario-dust-skipped" title="Permanent link">&para;</a></h4>
+<ul>
+<li><strong>WHEN</strong> the delta for a symbol is below <code>min_notional_usd</code> in notional terms</li>
+<li><strong>THEN</strong> no order is placed for that symbol</li>
+</ul>
+<h4 id="scenario-restart-reconciliation">Scenario: Restart reconciliation<a class="headerlink" href="#scenario-restart-reconciliation" title="Permanent link">&para;</a></h4>
+<ul>
+<li><strong>WHEN</strong> the executor starts with an already-open venue position</li>
+<li><strong>THEN</strong> it trades only the difference between the venue's position and the target, never re-opening the full position</li>
+</ul>
+<h3 id="requirement-position-and-pnl-accounting">Requirement: Position and PnL accounting<a class="headerlink" href="#requirement-position-and-pnl-accounting" title="Permanent link">&para;</a></h3>
+<p><code>LiveBlotter</code> SHALL book every fill with the average-cost method: same-direction fills weight the average entry; reducing, closing, or flipping fills realize PnL on the closed quantity as <code>(exit_price - avg_entry) * closed_qty * direction</code>; a flip leaves the leftover quantity at the open price; fees are non-negative and reduce equity. Equity SHALL be <code>initial_capital + realized + unrealized - total_fees</code>, with unrealized marked from the latest prices. The daily drawdown reference SHALL reset at each UTC date change (<code>roll_day_if_needed</code>), be restored from persisted state on restart (<code>restore_day_reference</code>), and adjust for net wallet transfers so deposits are not profit and withdrawals are not loss. In live-venue mode the exchange is the source of truth: <code>reconcile_from_exchange</code> overwrites positions/marks/equity/wallet/unrealized, WITHOUT corrupting <code>initial_capital</code> (kept as true deposit so PnL stays meaningful). <code>snapshot()</code> SHALL return a plain dict consumed by the dashboard and the state file.</p>
+<h4 id="scenario-average-cost-entry">Scenario: Average-cost entry<a class="headerlink" href="#scenario-average-cost-entry" title="Permanent link">&para;</a></h4>
+<ul>
+<li><strong>WHEN</strong> a position is increased in the same direction</li>
+<li><strong>THEN</strong> the average entry price is recalculated weighted by the new fill; realized PnL is not booked</li>
+</ul>
+<h4 id="scenario-flip-realized-pnl">Scenario: Flip realized PnL<a class="headerlink" href="#scenario-flip-realized-pnl" title="Permanent link">&para;</a></h4>
+<ul>
+<li><strong>WHEN</strong> a fill flips a position from long to short</li>
+<li><strong>THEN</strong> realized PnL books on the closed long quantity and the leftover short opens at the fill price</li>
+</ul>
+<h3 id="requirement-state-contract-for-the-dashboard">Requirement: State contract for the dashboard<a class="headerlink" href="#requirement-state-contract-for-the-dashboard" title="Permanent link">&para;</a></h3>
+<p>The system SHALL persist one JSON state file per run, written atomically (temp file + <code>os.replace</code>) once per bar - fills are folded into the same bar's update and there is no fill-triggered write - with the schema: <code>updated_ts</code>, <code>mode</code>, <code>bar_count</code>, <code>last_bar_ts</code>, <code>next_bar_eta_s</code>, <code>parser_last_metric_ts</code>, <code>killed</code>, <code>risk_violations</code>, <code>account</code> (initial/equity/realized/unrealized/total fees/gross/leverage/daily dd/day baseline/<code>n_fills</code>), <code>positions[]</code>, <code>target_weights</code>, <code>actual_weights</code>, <code>equity_curve</code> (capped at 5000 points), <code>recent_fills</code> (capped at 200), <code>weight_history</code> (capped at 96 entries). A restart SHALL seed the rolling history from the existing file (so the equity curve and weight tape survive frequent restarts); an unreadable/corrupt file SHALL warn and start empty rather than crash. The file SHALL be read-only for the dashboard process and never written by it.</p>
+<h4 id="scenario-restart-seeding">Scenario: Restart seeding<a class="headerlink" href="#scenario-restart-seeding" title="Permanent link">&para;</a></h4>
+<ul>
+<li><strong>WHEN</strong> the trader restarts and a state file exists</li>
+<li><strong>THEN</strong> equity curve, recent fills, and weight history are pre-seeded from the file</li>
+</ul>
+<h4 id="scenario-corrupt-state-file">Scenario: Corrupt state file<a class="headerlink" href="#scenario-corrupt-state-file" title="Permanent link">&para;</a></h4>
+<ul>
+<li><strong>WHEN</strong> the state file is unreadable at startup</li>
+<li><strong>THEN</strong> the trader warns and continues with empty history instead of crashing</li>
+</ul>
+<h3 id="requirement-standalone-trader-entry">Requirement: Standalone trader entry<a class="headerlink" href="#requirement-standalone-trader-entry" title="Permanent link">&para;</a></h3>
+<p>The system SHALL provide an operator entry point (<code>python -m alpha_engine.live.run_trader</code>) with explicit safety-ordered modes <code>--mode paper|testnet|mainnet</code> (paper default, no exchange contact), <code>--bars N</code> offline dry-run over the latest N metric bars instead of waiting on live boundaries, and testnet/mainnet reading API keys from env (<code>BINANCE_API_KEY</code> / <code>BINANCE_API_SECRET</code>). <code>--execution taker|maker</code> SHALL select the rebalance flow: <code>taker</code> uses the base <code>BinanceFuturesExecutor</code> (marketable diff), <code>maker</code> uses <code>MakerFuturesExecutor</code>, which posts post-only GTX limit orders at the touch and switches to a market order after <code>--maker-wait</code> seconds (default 45) when the venue bounces the limit. The standalone trader SHALL drive its <code>BarClock</code> with <code>settlement_seconds = 10.0</code> (the CLI and <code>BarClock</code> default of 5.0 does not apply here). On startup the runtime SHALL re-apply persisted safety state, but only when the persisted <code>mode</code> matches the current <code>--mode</code> (safety state never leaks across paper/testnet/mainnet): a previously latched kill-switch SHALL stay latched unless <code>--reset-kill</code> is given, and the persisted day-start drawdown baseline SHALL be restored - so a crash-restart inside a losing day cannot silently reset the daily kill reference.</p>
+<h4 id="scenario-offline-dry-run">Scenario: Offline dry-run<a class="headerlink" href="#scenario-offline-dry-run" title="Permanent link">&para;</a></h4>
+<ul>
+<li><strong>WHEN</strong> <code>--bars N</code> is given</li>
+<li><strong>THEN</strong> the trader runs over the latest N metric bars without waiting on bar boundaries and without exchange contact</li>
+</ul>
+<h4 id="scenario-persisted-kill-switch-survives-restart">Scenario: Persisted kill-switch survives restart<a class="headerlink" href="#scenario-persisted-kill-switch-survives-restart" title="Permanent link">&para;</a></h4>
+<ul>
+<li><strong>WHEN</strong> the trader restarts inside a losing day and the persisted state has <code>killed: true</code></li>
+<li><strong>THEN</strong> the kill-switch stays latched unless <code>--reset-kill</code> is given, and the day's drawdown baseline is restored so the daily kill can still fire</li>
+</ul>
 
 
 
 
 
 
+
+  
+  
 
 
 
@@ -2659,7 +2868,7 @@ clearer in code review. Pick one and be consistent within a file.</p>
       <nav class="md-footer__inner md-grid" aria-label="Footer" >
         
           
-          <a href="../" class="md-footer__link md-footer__link--prev" aria-label="Previous: Development">
+          <a href="../historical-download/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Historical download">
             <div class="md-footer__button md-icon">
               
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
@@ -2669,20 +2878,20 @@ clearer in code review. Pick one and be consistent within a file.</p>
                 Previous
               </span>
               <div class="md-ellipsis">
-                Development
+                Historical download
               </div>
             </div>
           </a>
         
         
           
-          <a href="../testing/" class="md-footer__link md-footer__link--next" aria-label="Next: Testing">
+          <a href="../live-ws/" class="md-footer__link md-footer__link--next" aria-label="Next: Live WebSocket pipeline">
             <div class="md-footer__title">
               <span class="md-footer__direction">
                 Next
               </span>
               <div class="md-ellipsis">
-                Testing
+                Live WebSocket pipeline
               </div>
             </div>
             <div class="md-footer__button md-icon">

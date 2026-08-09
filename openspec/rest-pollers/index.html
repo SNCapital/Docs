@@ -433,7 +433,7 @@
     
     
       <li class="md-tabs__item md-tabs__item--active">
-        <a href="../historical-download/" class="md-tabs__link">
+        <a href="../batch-backtest/" class="md-tabs__link">
           
   
   
@@ -1962,6 +1962,16 @@
       
         
       
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
     
     
     
@@ -1982,7 +1992,7 @@
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="../historical-download/" class="md-nav__link ">
+            <a href="../batch-backtest/" class="md-nav__link ">
               
   
   
@@ -2026,6 +2036,90 @@
   
   
     <li class="md-nav__item">
+      <a href="../dashboard/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Dashboard
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../historical-download/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Historical download
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../live-trading/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Live Trading
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../live-ws/" class="md-nav__link">
         
   
@@ -2034,6 +2128,62 @@
     
   
     Live WebSocket pipeline
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../metrics-aggregation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Metrics Aggregation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../metrics-engine/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Metrics Engine
   
 
     
@@ -2161,10 +2311,10 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#requirement-exchange-info-poller" class="md-nav__link">
+  <a href="#requirement-poller-session-and-retry-policy" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Requirement: Exchange-info poller
+        Requirement: Poller session and retry policy
       
     </span>
   </a>
@@ -2183,10 +2333,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#requirement-market-stats-poller" class="md-nav__link">
+  <a href="#requirement-exchange-info-poller" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Requirement: Market-stats poller
+        Requirement: Exchange-info poller
       
     </span>
   </a>
@@ -2194,10 +2344,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#requirement-poller-session-and-retry-policy" class="md-nav__link">
+  <a href="#requirement-market-stats-poller-futures" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Requirement: Poller session and retry policy
+        Requirement: Market-stats poller (futures)
       
     </span>
   </a>
@@ -2205,10 +2355,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#requirement-generic-poller-utilities" class="md-nav__link">
+  <a href="#requirement-market-stats-spot-interest-poller" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Requirement: Generic poller utilities
+        Requirement: Market-stats spot interest poller
       
     </span>
   </a>
@@ -2216,10 +2366,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#requirement-periodic-metrics-keychain" class="md-nav__link">
+  <a href="#requirement-periodic-metrics-pollers" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Requirement: Periodic-metrics keychain
+        Requirement: Periodic-metrics pollers
       
     </span>
   </a>
@@ -2295,10 +2445,10 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#requirement-exchange-info-poller" class="md-nav__link">
+  <a href="#requirement-poller-session-and-retry-policy" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Requirement: Exchange-info poller
+        Requirement: Poller session and retry policy
       
     </span>
   </a>
@@ -2317,10 +2467,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#requirement-market-stats-poller" class="md-nav__link">
+  <a href="#requirement-exchange-info-poller" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Requirement: Market-stats poller
+        Requirement: Exchange-info poller
       
     </span>
   </a>
@@ -2328,10 +2478,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#requirement-poller-session-and-retry-policy" class="md-nav__link">
+  <a href="#requirement-market-stats-poller-futures" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Requirement: Poller session and retry policy
+        Requirement: Market-stats poller (futures)
       
     </span>
   </a>
@@ -2339,10 +2489,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#requirement-generic-poller-utilities" class="md-nav__link">
+  <a href="#requirement-market-stats-spot-interest-poller" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Requirement: Generic poller utilities
+        Requirement: Market-stats spot interest poller
       
     </span>
   </a>
@@ -2350,10 +2500,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#requirement-periodic-metrics-keychain" class="md-nav__link">
+  <a href="#requirement-periodic-metrics-pollers" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Requirement: Periodic-metrics keychain
+        Requirement: Periodic-metrics pollers
       
     </span>
   </a>
@@ -2388,89 +2538,104 @@
   <h1>REST pollers</h1>
 
 <h2 id="purpose">Purpose<a class="headerlink" href="#purpose" title="Permanent link">&para;</a></h2>
-<p>Defines the REST polling pipelines of <code>binance_parser</code> that run alongside the live WebSocket listener: exchange metadata (exchangeInfo), funding-rate, market-stats, and the legacy periodic-metrics pollers. It pins the polling cadences, retry and rate-limit behavior, shared poller utilities, and the keychain of periodic-metrics endpoints that the metrics engine consumes.</p>
+<p>Defines the REST polling pipelines of <code>binance_parser</code> that run alongside the live WebSocket listener: funding-rate polling aligned to exchange settlements, the daily exchange-metadata poll, futures market-stats polling, the optional signed spot margin-interest poll, and the periodic-metrics pollers. It pins the polling cadences, the shared retry and rate-limit policy, and the parquet types each poller writes.</p>
 <h2 id="requirements">Requirements<a class="headerlink" href="#requirements" title="Permanent link">&para;</a></h2>
-<h3 id="requirement-exchange-info-poller">Requirement: Exchange-info poller<a class="headerlink" href="#requirement-exchange-info-poller" title="Permanent link">&para;</a></h3>
-<p>The system SHALL poll the per-market exchange-info endpoint every 6 hours per market, parse the response, and persist the resulting rows as parquet in <code>data/market={m}/type=exchangeinfo/dt=YYYY-MM-DD/symbol={SYM}/part-*.parquet</code>. Polls SHALL be scheduled with a small random jitter at startup; two polls of the same market SHALL never run concurrently (a failed poll SHALL be retried once after 60 seconds, and a poll that is still running when its next tick arrives SHALL be skipped). Only USD-M SHALL be polled by default; spot SHALL be polled only when explicitly enabled. Spot polling SHALL be scheduled through the shared generic poller utilities, while USD-M polling is managed directly by the live-run orchestrator.</p>
-<h4 id="scenario-skewed-market-schedules">Scenario: Skewed market schedules<a class="headerlink" href="#scenario-skewed-market-schedules" title="Permanent link">&para;</a></h4>
-<ul>
-<li><strong>WHEN</strong> both spot and usdm exchange-info polling are enabled</li>
-<li><strong>THEN</strong> the two markets poll at the same 6-hour cadence but with different startup jitter, so their requests never align</li>
-</ul>
-<h4 id="scenario-spot-opt-in-default">Scenario: Spot opt-in default<a class="headerlink" href="#scenario-spot-opt-in-default" title="Permanent link">&para;</a></h4>
-<ul>
-<li><strong>WHEN</strong> a live run starts without explicit spot exchange-info enablement</li>
-<li><strong>THEN</strong> only USD-M exchange-info is polled</li>
-</ul>
-<h3 id="requirement-funding-rate-poller">Requirement: Funding-rate poller<a class="headerlink" href="#requirement-funding-rate-poller" title="Permanent link">&para;</a></h3>
-<p>The system SHALL poll the USD-M funding-rate endpoint every 30 minutes at a fixed offset of <code>:07</code> minutes past each half-hour, across the configured symbol set (default BTCUSDT and ETHUSDT). Each symbol SHALL be polled with an independent initial offset (scattered across the minute), and a poll of a symbol that is still running SHALL be skipped. The poller SHALL deduplicate by (symbol, fundingTime) and retry on rate-limit responses per the shared retry policy.</p>
-<h4 id="scenario-fixed-half-hour-offset">Scenario: Fixed half-hour offset<a class="headerlink" href="#scenario-fixed-half-hour-offset" title="Permanent link">&para;</a></h4>
-<ul>
-<li><strong>WHEN</strong> the funding poller wakes on its 30-minute cadence</li>
-<li><strong>THEN</strong> the poll for every symbol is issued at <code>:07</code> minutes past the half-hour boundary</li>
-</ul>
-<h4 id="scenario-duplicate-funding-row">Scenario: Duplicate funding row<a class="headerlink" href="#scenario-duplicate-funding-row" title="Permanent link">&para;</a></h4>
-<ul>
-<li><strong>WHEN</strong> two polls return the same (symbol, fundingTime)</li>
-<li><strong>THEN</strong> only the first row is persisted</li>
-</ul>
-<h3 id="requirement-market-stats-poller">Requirement: Market-stats poller<a class="headerlink" href="#requirement-market-stats-poller" title="Permanent link">&para;</a></h3>
-<p>The system SHALL poll, for the configured symbol set (default BTCUSDT and ETHUSDT), the four endpoints open-interest, global long/short account ratio, top long/short account ratio, and top long/short position ratio. All four SHALL share one cadence; the poller SHALL be evenly spread (scatter) across the cadence window and SHALL skip a symbol whose previous poll is still running. USD-M status filters SHALL follow the exchange-info state from USD-M exchange metadata (spot always open). Polled rows SHALL be persisted via the shared buffered writer under <code>type=marketstats</code> with event-type tags distinguishing the four endpoints; values that fail to cast to float SHALL persist as NaN.</p>
-<h4 id="scenario-scattered-symbol-polls">Scenario: Scattered symbol polls<a class="headerlink" href="#scenario-scattered-symbol-polls" title="Permanent link">&para;</a></h4>
-<ul>
-<li><strong>WHEN</strong> the market-stats poller runs a cycle</li>
-<li><strong>THEN</strong> the four endpoints for a symbol are spread evenly across the cadence window rather than fired in a burst</li>
-</ul>
-<h4 id="scenario-non-numeric-ratio-value">Scenario: Non-numeric ratio value<a class="headerlink" href="#scenario-non-numeric-ratio-value" title="Permanent link">&para;</a></h4>
-<ul>
-<li><strong>WHEN</strong> a market-stats endpoint returns a value that cannot be cast to float</li>
-<li><strong>THEN</strong> the row is persisted with NaN for that value</li>
-</ul>
-<h4 id="scenario-longshort-ratio-cadence-pairing">Scenario: Long/short ratio cadence pairing<a class="headerlink" href="#scenario-longshort-ratio-cadence-pairing" title="Permanent link">&para;</a></h4>
-<ul>
-<li><strong>WHEN</strong> the top long/short ratio and top long/short position ratio are enabled</li>
-<li><strong>THEN</strong> both poll at the same cadence with the same scatter</li>
-</ul>
 <h3 id="requirement-poller-session-and-retry-policy">Requirement: Poller session and retry policy<a class="headerlink" href="#requirement-poller-session-and-retry-policy" title="Permanent link">&para;</a></h3>
-<p>All REST pollers SHALL share a common session and retry policy: an adaptive Retry-After honorer, exponential backoff (1, 2, 4 seconds) on connect errors, and a maximum of 3 retries per poll. Rate-limit responses SHALL be honored via <code>Retry-After</code> plus a random 5-30 second jitter. Non-retryable HTTP errors (4xx other than 429/418) SHALL be logged as permanent failures without retry.</p>
+<p>All REST pollers SHALL follow one retry policy: transient errors (network, 5xx) SHALL back off over (1, 3, 10) seconds, and 429/418 rate-limit responses SHALL be honored by sleeping per <code>Retry-After</code>, up to 3 waits per call. Non-retryable 4xx (any 4xx other than 408/429/500/502/503/504) SHALL be printed and cause the current cycle to be skipped (return None), without retries. Each poller SHALL open its own HTTP session (no shared session object); the endpoint weight of every USD-M call SHALL be acquired from the shared multi-bucket rate limiter before the request, and the USD-M limiter SHALL be shared by all USD-M pollers and the depth bootstrap. The spot-margin poller passes no limiter and relies on its own hourly alignment.</p>
 <h4 id="scenario-connect-error-backoff">Scenario: Connect-error backoff<a class="headerlink" href="#scenario-connect-error-backoff" title="Permanent link">&para;</a></h4>
 <ul>
 <li><strong>WHEN</strong> a poll fails with a connection error</li>
-<li><strong>THEN</strong> it is retried at 1, then 2, then 4 seconds, stopping after the third failure</li>
+<li><strong>THEN</strong> it is retried after 1, then 3, then 10 seconds, then the cycle is skipped</li>
 </ul>
-<h4 id="scenario-http-403-permanent">Scenario: HTTP 403 permanent<a class="headerlink" href="#scenario-http-403-permanent" title="Permanent link">&para;</a></h4>
+<h4 id="scenario-rate-limit-wait">Scenario: Rate-limit wait<a class="headerlink" href="#scenario-rate-limit-wait" title="Permanent link">&para;</a></h4>
+<ul>
+<li><strong>WHEN</strong> a poll returns 429 with a <code>Retry-After</code> header</li>
+<li><strong>THEN</strong> the client sleeps for the announced duration (up to 3 waits per call) and then retries</li>
+</ul>
+<h4 id="scenario-non-retryable-4xx">Scenario: Non-retryable 4xx<a class="headerlink" href="#scenario-non-retryable-4xx" title="Permanent link">&para;</a></h4>
 <ul>
 <li><strong>WHEN</strong> a poll returns 403</li>
-<li><strong>THEN</strong> it is logged as a permanent failure and not retried</li>
+<li><strong>THEN</strong> it is printed as a permanent failure and the cycle is skipped without retry</li>
 </ul>
-<h3 id="requirement-generic-poller-utilities">Requirement: Generic poller utilities<a class="headerlink" href="#requirement-generic-poller-utilities" title="Permanent link">&para;</a></h3>
-<p>The system SHALL provide a reusable periodic-poll utility: given a cadence, a task per symbol, and a spread parameter, it SHALL cycle each symbol through running, waiting, and error states, with an <code>until</code> option limiting total runtime. Errors SHALL be logged with symbol and error context. A poller constructed with zero symbols SHALL print a notice and exit.</p>
-<h4 id="scenario-poller-idle-on-zero-symbols">Scenario: Poller idle on zero symbols<a class="headerlink" href="#scenario-poller-idle-on-zero-symbols" title="Permanent link">&para;</a></h4>
+<h3 id="requirement-funding-rate-poller">Requirement: Funding-rate poller<a class="headerlink" href="#requirement-funding-rate-poller" title="Permanent link">&para;</a></h3>
+<p>The system SHALL poll the USD-M funding-rate endpoint (<code>/fapi/v1/fundingRate</code>, weight 1) once per symbol per cycle with <code>limit=1</code>, for the configured symbol set, and persist rows under <code>type=funding</code> (market <code>usdm</code>) with a single <code>flush()</code> per cycle (one partition per day/symbol instead of one file per row). The first cycle SHALL run immediately; later cycles SHALL sleep until the next UTC settlement hour (00/08/16) plus 30 seconds (minimum 1 second). Requests SHALL be bounded by the configured funding parallelism (5); an empty response SHALL yield no row.</p>
+<h4 id="scenario-settlement-aligned-poll">Scenario: Settlement-aligned poll<a class="headerlink" href="#scenario-settlement-aligned-poll" title="Permanent link">&para;</a></h4>
 <ul>
-<li><strong>WHEN</strong> a poller is constructed with an empty symbol set</li>
-<li><strong>THEN</strong> it prints a notice and exits immediately</li>
+<li><strong>WHEN</strong> the funding poller finishes a cycle at 05:00 UTC</li>
+<li><strong>THEN</strong> it sleeps until 08:00 UTC plus 30 seconds, then polls again</li>
 </ul>
-<h4 id="scenario-finite-poller-run">Scenario: Finite poller run<a class="headerlink" href="#scenario-finite-poller-run" title="Permanent link">&para;</a></h4>
+<h4 id="scenario-empty-funding-response">Scenario: Empty funding response<a class="headerlink" href="#scenario-empty-funding-response" title="Permanent link">&para;</a></h4>
 <ul>
-<li><strong>WHEN</strong> a poller is given an <code>until</code> deadline</li>
-<li><strong>THEN</strong> it stops after the deadline rather than running forever</li>
+<li><strong>WHEN</strong> the endpoint returns no rows for a symbol</li>
+<li><strong>THEN</strong> no row is written for that symbol for the cycle</li>
 </ul>
-<h3 id="requirement-periodic-metrics-keychain">Requirement: Periodic-metrics keychain<a class="headerlink" href="#requirement-periodic-metrics-keychain" title="Permanent link">&para;</a></h3>
-<p>The system SHALL implement a keychain of legacy periodic-metrics pollers, each polling its own endpoint on a distinct cadence: open-interest history (1 hour, <code>_5m</code> granularity), taker long/short ratio (1 hour, <code>_5m</code> granularity), top long/short position ratio (1 hour, <code>_5m</code> granularity), global long/short account ratio (6 hours, <code>_1h</code> granularity), top long/short account ratio (6 hours, <code>_1h</code> granularity), and spot margin borrow/repay interest history (1 hour, <code>_1d</code> granularity). Each poller SHALL deduplicate rows by (symbol, timestamp), share a single session, and retry with the shared policy. The pollers SHALL expose an internal state object with per-symbol timestamps so callers (metrics engine) can inspect each poller's progress without re-deriving it. Each poller SHALL expose its most recent result (rows plus timestamp) in a single internal dict, stored at the object level, so consumers read exactly what the poller last produced.</p>
-<h4 id="scenario-granularity-aliases">Scenario: Granularity aliases<a class="headerlink" href="#scenario-granularity-aliases" title="Permanent link">&para;</a></h4>
+<h3 id="requirement-exchange-info-poller">Requirement: Exchange-info poller<a class="headerlink" href="#requirement-exchange-info-poller" title="Permanent link">&para;</a></h3>
+<p>The system SHALL poll the USD-M exchange metadata once per UTC day: the first cycle SHALL run immediately, later cycles SHALL run daily at 00:05 UTC. Each cycle SHALL fetch <code>exchangeInfo</code> (weight 10) and <code>leverageBracket</code> (weight 1) in parallel and build one row per symbol by cross-joining the two payloads (filtered to the configured symbols), persisted under <code>type=exchange_info</code> (market <code>usdm</code>). The poller SHALL run only when USD-M is part of the live run. When <code>MIN_QUOTE_VOLUME_24H_USD</code> is set, the cycle SHALL additionally fetch the full-market 24-hour ticker batch (weight 40) and drop symbols whose 24h quote volume is below the threshold; a failed volume fetch SHALL skip the filter entirely (symbols are not silently lost), unparsable quote volumes SHALL count as 0 with a warning, and non-finite values SHALL count as 0 silently.</p>
+<h4 id="scenario-daily-schedule-with-immediate-first-cycle">Scenario: Daily schedule with immediate first cycle<a class="headerlink" href="#scenario-daily-schedule-with-immediate-first-cycle" title="Permanent link">&para;</a></h4>
 <ul>
-<li><strong>WHEN</strong> a periodic-metrics poller requests data with granularity <code>_1m</code></li>
-<li><strong>THEN</strong> the actual Binance endpoint granularity used is the 5-minute alias <code>_5m</code> (klines are 5-minute)</li>
+<li><strong>WHEN</strong> the live run starts at 12:00 UTC</li>
+<li><strong>THEN</strong> the exchange-info cycle runs immediately, then every day at 00:05 UTC</li>
 </ul>
-<h4 id="scenario-poller-state-query">Scenario: Poller state query<a class="headerlink" href="#scenario-poller-state-query" title="Permanent link">&para;</a></h4>
+<h4 id="scenario-empty-payload-body">Scenario: Empty payload body<a class="headerlink" href="#scenario-empty-payload-body" title="Permanent link">&para;</a></h4>
 <ul>
-<li><strong>WHEN</strong> the metrics engine queries a periodic-metrics poller's state</li>
-<li><strong>THEN</strong> it reads the last-result dict (rows and timestamp) without re-deriving or re-polling</li>
+<li><strong>WHEN</strong> the exchange-info endpoint returns HTTP 200 with an error body that has no <code>symbols</code> (e.g. Binance code -1003)</li>
+<li><strong>THEN</strong> the cycle is skipped with a printed message</li>
 </ul>
-<h4 id="scenario-row-deduplication">Scenario: Row deduplication<a class="headerlink" href="#scenario-row-deduplication" title="Permanent link">&para;</a></h4>
+<h4 id="scenario-missing-leverage-brackets">Scenario: Missing leverage brackets<a class="headerlink" href="#scenario-missing-leverage-brackets" title="Permanent link">&para;</a></h4>
 <ul>
-<li><strong>WHEN</strong> a poller polls a symbol whose latest timestamp already exists</li>
-<li><strong>THEN</strong> the duplicate row is skipped</li>
+<li><strong>WHEN</strong> the leverageBracket payload is not a list</li>
+<li><strong>THEN</strong> the cycle continues with empty brackets and the leverage fields persist as NaN</li>
+</ul>
+<h4 id="scenario-volume-filter">Scenario: Volume filter<a class="headerlink" href="#scenario-volume-filter" title="Permanent link">&para;</a></h4>
+<ul>
+<li><strong>WHEN</strong> <code>MIN_QUOTE_VOLUME_24H_USD</code> is set and the 24h ticker fetch succeeds</li>
+<li><strong>THEN</strong> symbols below the quote-volume threshold are dropped from the persisted rows</li>
+</ul>
+<h3 id="requirement-market-stats-poller-futures">Requirement: Market-stats poller (futures)<a class="headerlink" href="#requirement-market-stats-poller-futures" title="Permanent link">&para;</a></h3>
+<p>The system SHALL poll, for the configured symbol set, four endpoints per symbol in parallel: open interest (<code>/fapi/v1/openInterest</code>, rows <code>open_interest_now</code>), global long/short account ratio, top long/short account ratio, and top long/short position ratio (rows <code>global_long_accounts</code>, <code>top_long_accounts</code>, <code>top_long_positions</code>). Cycles SHALL align to 5-minute UTC slots (always the next slot, so the same bucket is never polled twice), with the first cycle immediately; a slow cycle that crosses a slot boundary SHALL skip that slot rather than queue up. Requests SHALL be bounded by the market-stats parallelism (5). For ratio endpoints Binance returns arrays oldest-first, so only the LAST element SHALL be used; an empty array SHALL yield no row. A row SHALL be written only when the result is not None, and an open-interest parse error (missing key or wrong type) SHALL log a warning and skip that row without stopping the cycle.</p>
+<h4 id="scenario-five-minute-slot-alignment">Scenario: Five-minute slot alignment<a class="headerlink" href="#scenario-five-minute-slot-alignment" title="Permanent link">&para;</a></h4>
+<ul>
+<li><strong>WHEN</strong> the market-stats poller starts mid-slot</li>
+<li><strong>THEN</strong> the first cycle fires immediately, and from the second cycle on the polls are issued at the next 5-minute UTC boundary</li>
+</ul>
+<h4 id="scenario-last-array-element-ratio">Scenario: Last-array-element ratio<a class="headerlink" href="#scenario-last-array-element-ratio" title="Permanent link">&para;</a></h4>
+<ul>
+<li><strong>WHEN</strong> a ratio endpoint returns a non-empty array</li>
+<li><strong>THEN</strong> only the last (latest) element is persisted</li>
+</ul>
+<h4 id="scenario-parse-error-survival">Scenario: Parse error survival<a class="headerlink" href="#scenario-parse-error-survival" title="Permanent link">&para;</a></h4>
+<ul>
+<li><strong>WHEN</strong> an open-interest row cannot be parsed</li>
+<li><strong>THEN</strong> the row is skipped with a warning and the cycle continues</li>
+</ul>
+<h3 id="requirement-market-stats-spot-interest-poller">Requirement: Market-stats spot interest poller<a class="headerlink" href="#requirement-market-stats-spot-interest-poller" title="Permanent link">&para;</a></h3>
+<p>The system SHALL optionally poll the signed margin interest endpoint (<code>/sapi/v1/margin/next-hourly-interest-rate</code>, per the configured margin-interest URL) with hourly UTC alignment, persisting rows under <code>type=daily_interest_rate</code> (market <code>spot</code>). The poller SHALL run only when the margin-interest flag is enabled AND spot is part of the live run, with the asset list taken from the configured <code>MARGIN_INTEREST_ASSETS</code>. The request SHALL be signed (HMAC-SHA256 over the query with the margin API secret, signature in the query string, API key in the <code>X-MBX-APIKEY</code> header). The poller SHALL refuse to start when the feature flag is disabled (info log), when the API key/secret are empty (one warning), or when there are no assets, no symbols, or no matches (info log and exit). The endpoint returns a per-hour rate; the stored value SHALL be that hourly rate multiplied by 24 (daily-equivalent <code>daily_interest_rate = hourly x 24</code>). Each interest rate SHALL be duplicated onto every symbol that matches its asset (<code>symbol.startswith(asset)</code> and <code>symbol != asset</code>).</p>
+<h4 id="scenario-disabled-margin-poller">Scenario: Disabled margin poller<a class="headerlink" href="#scenario-disabled-margin-poller" title="Permanent link">&para;</a></h4>
+<ul>
+<li><strong>WHEN</strong> the margin-interest flag is disabled</li>
+<li><strong>THEN</strong> the poller logs an info message and does not start</li>
+</ul>
+<h4 id="scenario-asset-to-symbol-matching">Scenario: Asset-to-symbol matching<a class="headerlink" href="#scenario-asset-to-symbol-matching" title="Permanent link">&para;</a></h4>
+<ul>
+<li><strong>WHEN</strong> an asset matches several symbols</li>
+<li><strong>THEN</strong> the same interest rate is written for each matching symbol</li>
+</ul>
+<h3 id="requirement-periodic-metrics-pollers">Requirement: Periodic-metrics pollers<a class="headerlink" href="#requirement-periodic-metrics-pollers" title="Permanent link">&para;</a></h3>
+<p>The system SHALL provide a generic periodic poller over three USD-M metric kinds: open-interest history, taker long/short ratio, and top long/short position ratio (<code>type={kind}</code>). Each poller SHALL be constructed per (kind, symbol) with a polling interval (default 300 seconds), a Binance period parameter (default <code>5m</code>), and a limit of 2 candles (the latest and the previous one), and SHALL run an endless loop sleeping <code>interval</code> between cycles. An unknown kind SHALL raise <code>ValueError</code> listing the valid kinds. Rate-limit exhaustion inside a cycle SHALL produce an empty cycle (no rows, no crash); any unexpected exception SHALL be logged with <code>log.exception</code> and re-raised (escalation instead of silent continuation). The pollers SHALL run only when the periodic-poller flag is enabled and USD-M is part of the live run.</p>
+<h4 id="scenario-unknown-kind-rejected">Scenario: Unknown kind rejected<a class="headerlink" href="#scenario-unknown-kind-rejected" title="Permanent link">&para;</a></h4>
+<ul>
+<li><strong>WHEN</strong> a poller is constructed with a kind outside the three supported ones</li>
+<li><strong>THEN</strong> it raises <code>ValueError</code> naming the valid kinds</li>
+</ul>
+<h4 id="scenario-rate-limit-exhaustion">Scenario: Rate-limit exhaustion<a class="headerlink" href="#scenario-rate-limit-exhaustion" title="Permanent link">&para;</a></h4>
+<ul>
+<li><strong>WHEN</strong> a cycle exhausts the rate-limit retry budget</li>
+<li><strong>THEN</strong> the cycle produces no rows and the loop continues without crashing</li>
+</ul>
+<h4 id="scenario-unexpected-error-escalation">Scenario: Unexpected error escalation<a class="headerlink" href="#scenario-unexpected-error-escalation" title="Permanent link">&para;</a></h4>
+<ul>
+<li><strong>WHEN</strong> a cycle hits an unexpected exception</li>
+<li><strong>THEN</strong> it is logged with <code>log.exception</code> and re-raised rather than silently swallowed</li>
 </ul>
 
 
