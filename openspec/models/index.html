@@ -2709,7 +2709,7 @@
 <li><strong>THEN</strong> bool columns are excluded from the mapping so they are not coerced to object strings during read</li>
 </ul>
 <h3 id="requirement-funding-rate-row">Requirement: Funding rate row<a class="headerlink" href="#requirement-funding-rate-row" title="Permanent link">&para;</a></h3>
-<p>The system SHALL parse REST funding-rate records into a <code>funding</code> row with symbol, funding time (ms), funding rate (float32), and optional mark price (float32, null when absent). The symbol and funding time are required keys in the source payload.</p>
+<p>The system SHALL parse REST funding-rate records into a <code>funding</code> row with symbol, funding time (ms), funding rate (float32), and optional mark price (float32, null when absent). The symbol, funding time, and funding rate are required keys in the source payload (accessed with <code>[]</code>, so a missing one raises <code>KeyError</code>); only mark price is optional via <code>.get()</code>.</p>
 <h4 id="scenario-funding-row-with-mark-price">Scenario: Funding row with mark price<a class="headerlink" href="#scenario-funding-row-with-mark-price" title="Permanent link">&para;</a></h4>
 <ul>
 <li><strong>WHEN</strong> a REST record contains <code>fundingTime</code>, <code>fundingRate</code>, and <code>markPrice</code></li>
@@ -2721,7 +2721,7 @@
 <li><strong>THEN</strong> the parsed row has a null mark price and still serializes successfully</li>
 </ul>
 <h3 id="requirement-rest-exchange-metadata-dtos">Requirement: REST exchange metadata DTOs<a class="headerlink" href="#requirement-rest-exchange-metadata-dtos" title="Permanent link">&para;</a></h3>
-<p>The system SHALL parse exchange-info payloads into a per-symbol row with symbol, status, contract type, tick size (from <code>PRICE_FILTER</code>), step size (from <code>LOT_SIZE</code>), min notional (from <code>MIN_NOTIONAL</code>, falling back to <code>NOTIONAL</code> variants), max leverage (maximum <code>initialLeverage</code> across leverage brackets), maintenance margin rate (of the lowest bracket), default maker/taker fees, and the full leverage-bracket curve. Missing filters SHALL become NaN; missing brackets SHALL yield zero max leverage, NaN maintenance margin rate, and an empty bracket list.</p>
+<p>The system SHALL parse exchange-info payloads into a per-symbol row with symbol, status, contract type, tick size (from <code>PRICE_FILTER</code>), step size (from <code>LOT_SIZE</code>), min notional (from <code>MIN_NOTIONAL</code>, falling back to <code>NOTIONAL</code> variants), max leverage (maximum <code>initialLeverage</code> across leverage brackets), maintenance margin rate (of the lowest bracket), default maker/taker fees, and the full leverage-bracket curve. Missing filters SHALL become NaN; missing brackets SHALL yield zero max leverage, NaN maintenance margin rate, and an empty bracket list. Exchange-info payloads SHALL also be parsed into a simpler <code>ExchangeInfoSymbol</code> DTO (symbol, status, base asset, quote asset, optional contract type - empty for spot) with <code>is_trading</code> and <code>is_perpetual</code> convenience properties, used for the non-persisted exchangeInfo shape.</p>
 <h4 id="scenario-spot-vs-usd-m-notional-shape">Scenario: Spot vs USD-M notional shape<a class="headerlink" href="#scenario-spot-vs-usd-m-notional-shape" title="Permanent link">&para;</a></h4>
 <ul>
 <li><strong>WHEN</strong> the source payload exposes min notional only through the <code>NOTIONAL</code> filter</li>
