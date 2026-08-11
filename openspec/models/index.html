@@ -2628,10 +2628,16 @@
   <h1>Data models</h1>
 
 <h2 id="purpose">Purpose<a class="headerlink" href="#purpose" title="Permanent link">&para;</a></h2>
-<p>Defines the typed data contracts of <code>binance_parser</code>: market abstraction, live WebSocket DTOs, historical row schemas, REST response DTOs, and the shared rate limiter that all Binance-facing callers rely on.</p>
+<p>Defines the typed data contracts of <code>binance_parser</code>: market abstraction, live WebSocket DTOs,
+historical row schemas, REST response DTOs, and the shared rate limiter that all Binance-facing
+callers rely on.</p>
 <h2 id="requirements">Requirements<a class="headerlink" href="#requirements" title="Permanent link">&para;</a></h2>
 <h3 id="requirement-market-abstraction">Requirement: Market abstraction<a class="headerlink" href="#requirement-market-abstraction" title="Permanent link">&para;</a></h3>
-<p>The system SHALL model a market as one of exactly two values: <code>spot</code> or <code>usdm</code> (USD-M perpetual futures). All venue-specific URLs (WebSocket base, REST base, exchange-info path, depth-snapshot path, history base) SHALL be defined per market in single configuration maps. CLI parsing of a market argument SHALL accept <code>spot</code>, <code>usdm</code>, or <code>both</code> (expands to both markets); any other value SHALL be rejected with an error.</p>
+<p>The system SHALL model a market as one of exactly two values: <code>spot</code> or <code>usdm</code> (USD-M perpetual
+futures). All venue-specific URLs (WebSocket base, REST base, exchange-info path, depth-snapshot
+path, history base) SHALL be defined per market in single configuration maps. CLI parsing of a
+market argument SHALL accept <code>spot</code>, <code>usdm</code>, or <code>both</code> (expands to both markets); any other value
+SHALL be rejected with an error.</p>
 <h4 id="scenario-cli-market-parsing">Scenario: CLI market parsing<a class="headerlink" href="#scenario-cli-market-parsing" title="Permanent link">&para;</a></h4>
 <ul>
 <li><strong>WHEN</strong> the market argument is <code>both</code></li>
@@ -2645,47 +2651,68 @@
 <h4 id="scenario-adding-a-new-market">Scenario: Adding a new market<a class="headerlink" href="#scenario-adding-a-new-market" title="Permanent link">&para;</a></h4>
 <ul>
 <li><strong>WHEN</strong> a new market value is introduced</li>
-<li><strong>THEN</strong> it requires a corresponding entry in the five venue-specific configuration maps (WebSocket base, REST base, exchange-info path, depth-snapshot path, history base), plus per-market entries in the depth snapshot max-limit and bootstrap-stagger maps (indexed by market at bootstrap time); other REST endpoints (funding, market-stats, margin interest) remain fixed constants outside the maps</li>
+<li><strong>THEN</strong> it requires a corresponding entry in the five venue-specific configuration maps
+  (WebSocket base, REST base, exchange-info path, depth-snapshot path, history base), plus
+  per-market entries in the depth snapshot max-limit and bootstrap-stagger maps (indexed by market
+  at bootstrap time); other REST endpoints (funding, market-stats, margin interest) remain fixed
+  constants outside the maps</li>
 </ul>
 <h3 id="requirement-live-websocket-dtos">Requirement: Live WebSocket DTOs<a class="headerlink" href="#requirement-live-websocket-dtos" title="Permanent link">&para;</a></h3>
-<p>The system SHALL deserialize every subscribed Binance stream event into a typed DTO with a fixed pyarrow schema. Every DTO SHALL expose its schema, an <code>event_type</code> identifier, and a row serializer for parquet persistence. All timestamps SHALL be int64 milliseconds; wire-derived timestamps are UTC, and a depth event without a wire timestamp falls back to the local clock, while a mark-price event prefers the event time <code>E</code> over <code>T</code>. Price and quantity columns SHALL be float32, except mark-price fields which SHALL be float64.</p>
+<p>The system SHALL deserialize every subscribed Binance stream event into a typed DTO with a fixed
+pyarrow schema. Every DTO SHALL expose its schema, an <code>event_type</code> identifier, and a row serializer
+for parquet persistence. All timestamps SHALL be int64 milliseconds; wire-derived timestamps are
+UTC, and a depth event without a wire timestamp falls back to the local clock, while a mark-price
+event prefers the event time <code>E</code> over <code>T</code>. Price and quantity columns SHALL be float32, except
+mark-price fields which SHALL be float64.</p>
 <h4 id="scenario-depth-diff-dto">Scenario: Depth diff DTO<a class="headerlink" href="#scenario-depth-diff-dto" title="Permanent link">&para;</a></h4>
 <ul>
 <li><strong>WHEN</strong> a <code>@depth</code> payload is parsed</li>
-<li><strong>THEN</strong> it becomes an <code>orderbook</code> event carrying symbol, event timestamp, first/last/previous update ids, and parallel bid/ask price and size lists, and is dispatched to the in-memory book only - never persisted as a row</li>
+<li><strong>THEN</strong> it becomes an <code>orderbook</code> event carrying symbol, event timestamp, first/last/previous
+  update ids, and parallel bid/ask price and size lists, and is dispatched to the in-memory book
+  only - never persisted as a row</li>
 </ul>
 <h4 id="scenario-depth-diff-market-difference">Scenario: Depth diff market difference<a class="headerlink" href="#scenario-depth-diff-market-difference" title="Permanent link">&para;</a></h4>
 <ul>
 <li><strong>WHEN</strong> a <code>@depth</code> payload arrives on spot</li>
-<li><strong>THEN</strong> the previous-update id is always null (spot diffs carry no <code>pu</code>), while usdm diffs carry it</li>
+<li><strong>THEN</strong> the previous-update id is always null (spot diffs carry no <code>pu</code>), while usdm diffs carry
+  it</li>
 </ul>
 <h4 id="scenario-trade-dto">Scenario: Trade DTO<a class="headerlink" href="#scenario-trade-dto" title="Permanent link">&para;</a></h4>
 <ul>
 <li><strong>WHEN</strong> a <code>@trade</code> payload is parsed</li>
-<li><strong>THEN</strong> it becomes a <code>trades</code> event with trade id, timestamp, price, quantity, and side (<code>buy</code> when the payload's <code>m</code> flag is falsy, else <code>sell</code>)</li>
+<li><strong>THEN</strong> it becomes a <code>trades</code> event with trade id, timestamp, price, quantity, and side (<code>buy</code>
+  when the payload's <code>m</code> flag is falsy, else <code>sell</code>)</li>
 </ul>
 <h4 id="scenario-aggtrade-dto">Scenario: AggTrade DTO<a class="headerlink" href="#scenario-aggtrade-dto" title="Permanent link">&para;</a></h4>
 <ul>
 <li><strong>WHEN</strong> an <code>@aggTrade</code> payload is parsed</li>
-<li><strong>THEN</strong> it becomes an <code>aggtrades</code> event with aggregate trade id, first/last constituent trade ids, timestamp, price, quantity, and side</li>
+<li><strong>THEN</strong> it becomes an <code>aggtrades</code> event with aggregate trade id, first/last constituent trade
+  ids, timestamp, price, quantity, and side</li>
 </ul>
 <h4 id="scenario-mark-price-dto">Scenario: Mark price DTO<a class="headerlink" href="#scenario-mark-price-dto" title="Permanent link">&para;</a></h4>
 <ul>
 <li><strong>WHEN</strong> a <code>@markPrice@1s</code> payload is parsed</li>
-<li><strong>THEN</strong> it becomes a <code>markprice</code> event with mark price, index price, predicted funding rate (all float64), and next funding time</li>
+<li><strong>THEN</strong> it becomes a <code>markprice</code> event with mark price, index price, predicted funding rate (all
+  float64), and next funding time</li>
 </ul>
 <h4 id="scenario-liquidation-dto">Scenario: Liquidation DTO<a class="headerlink" href="#scenario-liquidation-dto" title="Permanent link">&para;</a></h4>
 <ul>
 <li><strong>WHEN</strong> a <code>@forceOrder</code> payload is parsed</li>
-<li><strong>THEN</strong> it becomes a <code>forceorder</code> event whose fields are read from the nested <code>o</code> object, with the side mapped from uppercase <code>BUY</code>/other to <code>buy</code>/<code>sell</code></li>
+<li><strong>THEN</strong> it becomes a <code>forceorder</code> event whose fields are read from the nested <code>o</code> object, with
+  the side mapped from uppercase <code>BUY</code>/other to <code>buy</code>/<code>sell</code></li>
 </ul>
 <h4 id="scenario-kline-dto">Scenario: Kline DTO<a class="headerlink" href="#scenario-kline-dto" title="Permanent link">&para;</a></h4>
 <ul>
 <li><strong>WHEN</strong> a closed <code>@kline_&lt;interval&gt;</code> payload is parsed</li>
-<li><strong>THEN</strong> it becomes a <code>klines</code> event with open/close times, OHLCV, quote volume, taker-buy volumes, trade count (int32), and closed flag</li>
+<li><strong>THEN</strong> it becomes a <code>klines</code> event with open/close times, OHLCV, quote volume, taker-buy
+  volumes, trade count (int32), and closed flag</li>
 </ul>
 <h3 id="requirement-stream-event-dispatch">Requirement: Stream event dispatch<a class="headerlink" href="#requirement-stream-event-dispatch" title="Permanent link">&para;</a></h3>
-<p>The system SHALL map a raw stream message to its DTO by substring matching on the stream name, in a fixed precedence order: <code>@depth</code>, then <code>@markPrice</code>, then <code>@aggTrade</code>, then <code>@forceOrder</code>, then <code>@trade</code>, then <code>@kline</code>. Messages whose stream matches none of these SHALL be rejected as unknown (the rejection is a <code>ValueError</code> subclass); a <code>@kline</code> payload whose bar is not yet closed SHALL also be rejected as unknown (running bars are dropped).</p>
+<p>The system SHALL map a raw stream message to its DTO by substring matching on the stream name, in a
+fixed precedence order: <code>@depth</code>, then <code>@markPrice</code>, then <code>@aggTrade</code>, then <code>@forceOrder</code>, then
+<code>@trade</code>, then <code>@kline</code>. Messages whose stream matches none of these SHALL be rejected as unknown
+(the rejection is a <code>ValueError</code> subclass); a <code>@kline</code> payload whose bar is not yet closed SHALL
+also be rejected as unknown (running bars are dropped).</p>
 <h4 id="scenario-dispatch-precedence-of-force-order-over-trade">Scenario: Dispatch precedence of force order over trade<a class="headerlink" href="#scenario-dispatch-precedence-of-force-order-over-trade" title="Permanent link">&para;</a></h4>
 <ul>
 <li><strong>WHEN</strong> a stream name contains both <code>@forceOrder</code> and <code>@trade</code></li>
@@ -2697,7 +2724,10 @@
 <li><strong>THEN</strong> the system rejects the message as an unknown running-kline stream and it is not persisted</li>
 </ul>
 <h3 id="requirement-historical-row-schemas">Requirement: Historical row schemas<a class="headerlink" href="#requirement-historical-row-schemas" title="Permanent link">&para;</a></h3>
-<p>The system SHALL define pyarrow schemas for historical archive rows: klines (11 columns, <code>trades</code> int32), aggTrades, trades, bookTicker, and funding rate. These schemas SHALL be available in a registry keyed by archive data type, and SHALL map to pandas read dtypes for CSV ingestion. All timestamps SHALL be int64 milliseconds UTC; prices and quantities float32.</p>
+<p>The system SHALL define pyarrow schemas for historical archive rows: klines (11 columns, <code>trades</code>
+int32), aggTrades, trades, bookTicker, and funding rate. These schemas SHALL be available in a
+registry keyed by archive data type, and SHALL map to pandas read dtypes for CSV ingestion. All
+timestamps SHALL be int64 milliseconds UTC; prices and quantities float32.</p>
 <h4 id="scenario-schema-registry-coverage">Scenario: Schema registry coverage<a class="headerlink" href="#scenario-schema-registry-coverage" title="Permanent link">&para;</a></h4>
 <ul>
 <li><strong>WHEN</strong> a historical data type is <code>klines</code>, <code>aggTrades</code>, <code>trades</code>, <code>bookTicker</code>, or <code>funding</code></li>
@@ -2706,10 +2736,14 @@
 <h4 id="scenario-csv-dtype-mapping">Scenario: CSV dtype mapping<a class="headerlink" href="#scenario-csv-dtype-mapping" title="Permanent link">&para;</a></h4>
 <ul>
 <li><strong>WHEN</strong> pandas dtypes are derived from a schema for CSV reading</li>
-<li><strong>THEN</strong> bool columns are excluded from the mapping so they are not coerced to object strings during read</li>
+<li><strong>THEN</strong> bool columns are excluded from the mapping so they are not coerced to object strings
+  during read</li>
 </ul>
 <h3 id="requirement-funding-rate-row">Requirement: Funding rate row<a class="headerlink" href="#requirement-funding-rate-row" title="Permanent link">&para;</a></h3>
-<p>The system SHALL parse REST funding-rate records into a <code>funding</code> row with symbol, funding time (ms), funding rate (float32), and optional mark price (float32, null when absent). The symbol, funding time, and funding rate are required keys in the source payload (accessed with <code>[]</code>, so a missing one raises <code>KeyError</code>); only mark price is optional via <code>.get()</code>.</p>
+<p>The system SHALL parse REST funding-rate records into a <code>funding</code> row with symbol, funding time
+(ms), funding rate (float32), and optional mark price (float32, null when absent). The symbol,
+funding time, and funding rate are required keys in the source payload (accessed with <code>[]</code>, so a
+missing one raises <code>KeyError</code>); only mark price is optional via <code>.get()</code>.</p>
 <h4 id="scenario-funding-row-with-mark-price">Scenario: Funding row with mark price<a class="headerlink" href="#scenario-funding-row-with-mark-price" title="Permanent link">&para;</a></h4>
 <ul>
 <li><strong>WHEN</strong> a REST record contains <code>fundingTime</code>, <code>fundingRate</code>, and <code>markPrice</code></li>
@@ -2721,7 +2755,15 @@
 <li><strong>THEN</strong> the parsed row has a null mark price and still serializes successfully</li>
 </ul>
 <h3 id="requirement-rest-exchange-metadata-dtos">Requirement: REST exchange metadata DTOs<a class="headerlink" href="#requirement-rest-exchange-metadata-dtos" title="Permanent link">&para;</a></h3>
-<p>The system SHALL parse exchange-info payloads into a per-symbol row with symbol, status, contract type, tick size (from <code>PRICE_FILTER</code>), step size (from <code>LOT_SIZE</code>), min notional (from <code>MIN_NOTIONAL</code>, falling back to <code>NOTIONAL</code> variants), max leverage (maximum <code>initialLeverage</code> across leverage brackets), maintenance margin rate (of the lowest bracket), default maker/taker fees, and the full leverage-bracket curve. Missing filters SHALL become NaN; missing brackets SHALL yield zero max leverage, NaN maintenance margin rate, and an empty bracket list. Exchange-info payloads SHALL also be parsed into a simpler <code>ExchangeInfoSymbol</code> DTO (symbol, status, base asset, quote asset, optional contract type - empty for spot) with <code>is_trading</code> and <code>is_perpetual</code> convenience properties, used for the non-persisted exchangeInfo shape.</p>
+<p>The system SHALL parse exchange-info payloads into a per-symbol row with symbol, status, contract
+type, tick size (from <code>PRICE_FILTER</code>), step size (from <code>LOT_SIZE</code>), min notional (from
+<code>MIN_NOTIONAL</code>, falling back to <code>NOTIONAL</code> variants), max leverage (maximum <code>initialLeverage</code> across
+leverage brackets), maintenance margin rate (of the lowest bracket), default maker/taker fees, and
+the full leverage-bracket curve. Missing filters SHALL become NaN; missing brackets SHALL yield zero
+max leverage, NaN maintenance margin rate, and an empty bracket list. Exchange-info payloads SHALL
+also be parsed into a simpler <code>ExchangeInfoSymbol</code> DTO (symbol, status, base asset, quote asset,
+optional contract type - empty for spot) with <code>is_trading</code> and <code>is_perpetual</code> convenience
+properties, used for the non-persisted exchangeInfo shape.</p>
 <h4 id="scenario-spot-vs-usd-m-notional-shape">Scenario: Spot vs USD-M notional shape<a class="headerlink" href="#scenario-spot-vs-usd-m-notional-shape" title="Permanent link">&para;</a></h4>
 <ul>
 <li><strong>WHEN</strong> the source payload exposes min notional only through the <code>NOTIONAL</code> filter</li>
@@ -2733,7 +2775,12 @@
 <li><strong>THEN</strong> its row has max leverage 0, maintenance margin rate NaN, and an empty bracket list</li>
 </ul>
 <h3 id="requirement-market-stats-rest-rows">Requirement: Market-stats REST rows<a class="headerlink" href="#requirement-market-stats-rest-rows" title="Permanent link">&para;</a></h3>
-<p>The system SHALL parse five distinct market-statistics responses into rows with namespaced columns and float64 numeric fields: open interest now, global long/short account ratio, top long/short account ratio, top long/short position ratio, and spot margin daily interest rate. Ratio and quantity strings in responses SHALL be cast to float; column names SHALL be namespaced by the source endpoint so identical concepts from different endpoints do not collide; event types SHALL be distinct from the legacy periodic-metrics event types.</p>
+<p>The system SHALL parse five distinct market-statistics responses into rows with namespaced columns
+and float64 numeric fields: open interest now, global long/short account ratio, top long/short
+account ratio, top long/short position ratio, and spot margin daily interest rate. Ratio and
+quantity strings in responses SHALL be cast to float; column names SHALL be namespaced by the source
+endpoint so identical concepts from different endpoints do not collide; event types SHALL be
+distinct from the legacy periodic-metrics event types.</p>
 <h4 id="scenario-symbol-absent-from-ratio-payloads">Scenario: Symbol absent from ratio payloads<a class="headerlink" href="#scenario-symbol-absent-from-ratio-payloads" title="Permanent link">&para;</a></h4>
 <ul>
 <li><strong>WHEN</strong> the global/top long-short payloads do not carry the symbol</li>
@@ -2745,7 +2792,12 @@
 <li><strong>THEN</strong> the parsed row stores the rate multiplied by 24 as a daily rate</li>
 </ul>
 <h3 id="requirement-legacy-periodic-futures-metrics">Requirement: Legacy periodic futures metrics<a class="headerlink" href="#requirement-legacy-periodic-futures-metrics" title="Permanent link">&para;</a></h3>
-<p>The system SHALL parse three <code>/futures/data/</code> responses (open-interest history, taker long/short ratio, top long/short position ratio) into rows that keep numeric values as strings, with all columns non-nullable: open_interest, taker_ratio, and long_short_ratio events. These SHALL use event types distinct from the market-stats rows and SHALL persist <code>sum_open_interest</code>, <code>sum_open_interest_value</code>, <code>buy_sell_ratio</code>, <code>buy_vol</code>, <code>sell_vol</code>, <code>long_short_ratio</code>, <code>long_account</code>, and <code>short_account</code> as string columns.</p>
+<p>The system SHALL parse three <code>/futures/data/</code> responses (open-interest history, taker long/short
+ratio, top long/short position ratio) into rows that keep numeric values as strings, with all
+columns non-nullable: open_interest, taker_ratio, and long_short_ratio events. These SHALL use event
+types distinct from the market-stats rows and SHALL persist <code>sum_open_interest</code>,
+<code>sum_open_interest_value</code>, <code>buy_sell_ratio</code>, <code>buy_vol</code>, <code>sell_vol</code>, <code>long_short_ratio</code>,
+<code>long_account</code>, and <code>short_account</code> as string columns.</p>
 <h4 id="scenario-taker-ratio-symbol-injection">Scenario: Taker ratio symbol injection<a class="headerlink" href="#scenario-taker-ratio-symbol-injection" title="Permanent link">&para;</a></h4>
 <ul>
 <li><strong>WHEN</strong> a taker-ratio payload omits the symbol (Binance does not include it)</li>
@@ -2757,11 +2809,18 @@
 <li><strong>THEN</strong> the row keeps it as its original string representation, never casting to float</li>
 </ul>
 <h3 id="requirement-rate-limiter">Requirement: Rate limiter<a class="headerlink" href="#requirement-rate-limiter" title="Permanent link">&para;</a></h3>
-<p>The system SHALL throttle Binance REST requests with token-bucket limiters. A multi-bucket limiter SHALL route each request to the first bucket whose pattern is a substring of the request URL, with an empty-string pattern as the catch-all default; an empty bucket list SHALL be rejected at construction, and a request matching no bucket at all SHALL trip an internal assertion. The canonical USD-M limiter SHALL provide a <code>/futures/data/</code> bucket of 400 weight per 300 seconds and a default bucket of 2000 weight per 60 seconds. A request costing more than a bucket's capacity SHALL be rejected with an error.</p>
+<p>The system SHALL throttle Binance REST requests with token-bucket limiters. A multi-bucket limiter
+SHALL route each request to the first bucket whose pattern is a substring of the request URL, with
+an empty-string pattern as the catch-all default; an empty bucket list SHALL be rejected at
+construction, and a request matching no bucket at all SHALL trip an internal assertion. The
+canonical USD-M limiter SHALL provide a <code>/futures/data/</code> bucket of 400 weight per 300 seconds and a
+default bucket of 2000 weight per 60 seconds. A request costing more than a bucket's capacity SHALL
+be rejected with an error.</p>
 <h4 id="scenario-url-to-bucket-routing">Scenario: URL-to-bucket routing<a class="headerlink" href="#scenario-url-to-bucket-routing" title="Permanent link">&para;</a></h4>
 <ul>
 <li><strong>WHEN</strong> a request URL contains <code>/futures/data/</code></li>
-<li><strong>THEN</strong> it is charged to the 400-weight/300-second bucket, and all other URLs to the 2000-weight/60-second bucket</li>
+<li><strong>THEN</strong> it is charged to the 400-weight/300-second bucket, and all other URLs to the
+  2000-weight/60-second bucket</li>
 </ul>
 <h4 id="scenario-bucket-exhaustion-waits">Scenario: Bucket exhaustion waits<a class="headerlink" href="#scenario-bucket-exhaustion-waits" title="Permanent link">&para;</a></h4>
 <ul>
@@ -2774,11 +2833,14 @@
 <li><strong>THEN</strong> the limiter raises an error rather than waiting</li>
 </ul>
 <h3 id="requirement-rate-limit-error-semantics">Requirement: Rate-limit error semantics<a class="headerlink" href="#requirement-rate-limit-error-semantics" title="Permanent link">&para;</a></h3>
-<p>The system SHALL treat HTTP 429 (rate limited) and 418 (IP banned) as rate-limit responses: parse <code>Retry-After</code> from headers (falling back to 60 seconds), and cap consecutive rate-limit waits per REST call at 3.</p>
+<p>The system SHALL treat HTTP 429 (rate limited) and 418 (IP banned) as rate-limit responses: parse
+<code>Retry-After</code> from headers (falling back to 60 seconds), and cap consecutive rate-limit waits per
+REST call at 3.</p>
 <h4 id="scenario-retry-after-parsing">Scenario: Retry-After parsing<a class="headerlink" href="#scenario-retry-after-parsing" title="Permanent link">&para;</a></h4>
 <ul>
 <li><strong>WHEN</strong> a rate-limit response carries a <code>Retry-After</code> header</li>
-<li><strong>THEN</strong> the system uses that value as the wait duration, defaulting to 60 seconds when absent or malformed</li>
+<li><strong>THEN</strong> the system uses that value as the wait duration, defaulting to 60 seconds when absent or
+  malformed</li>
 </ul>
 
 

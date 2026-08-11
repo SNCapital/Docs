@@ -2240,6 +2240,39 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#requirement-per-kind-column-normalisation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Requirement: Per-kind column normalisation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#requirement-mock-raw-data-generation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Requirement: Mock raw data generation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#requirement-mock-metric-provider" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Requirement: Mock metric provider
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#requirement-metric-registry-and-lazy-container" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2284,6 +2317,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#requirement-orderbook-per-snapshot-base-panel" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Requirement: Orderbook per-snapshot base panel
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#requirement-liquidations-aggregation" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2299,6 +2343,17 @@
     <span class="md-ellipsis">
       
         Requirement: Multilevel reconstruction
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#requirement-maker-orders-panel" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Requirement: Maker-orders panel
       
     </span>
   </a>
@@ -2332,6 +2387,28 @@
     <span class="md-ellipsis">
       
         Requirement: Backend-go precomputed metrics
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#requirement-go-metrics-store-discovery-caching-and-loading" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Requirement: Go metrics store discovery, caching and loading
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#requirement-consumer-contract-for-pipeline-and-live-runtime" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Requirement: Consumer contract for pipeline and live runtime
       
     </span>
   </a>
@@ -2502,6 +2579,39 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#requirement-per-kind-column-normalisation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Requirement: Per-kind column normalisation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#requirement-mock-raw-data-generation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Requirement: Mock raw data generation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#requirement-mock-metric-provider" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Requirement: Mock metric provider
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#requirement-metric-registry-and-lazy-container" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2546,6 +2656,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#requirement-orderbook-per-snapshot-base-panel" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Requirement: Orderbook per-snapshot base panel
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#requirement-liquidations-aggregation" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2561,6 +2682,17 @@
     <span class="md-ellipsis">
       
         Requirement: Multilevel reconstruction
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#requirement-maker-orders-panel" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Requirement: Maker-orders panel
       
     </span>
   </a>
@@ -2600,6 +2732,28 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#requirement-go-metrics-store-discovery-caching-and-loading" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Requirement: Go metrics store discovery, caching and loading
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#requirement-consumer-contract-for-pipeline-and-live-runtime" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Requirement: Consumer contract for pipeline and live runtime
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -2628,10 +2782,51 @@
   <h1>Metrics Aggregation</h1>
 
 <h2 id="purpose">Purpose<a class="headerlink" href="#purpose" title="Permanent link">&para;</a></h2>
-<p>Defines the offline metric aggregation layer of <code>alpha_engine</code> (<code>metrics/</code>): raw data readers over the <code>binance_parser</code> parquet tree, the lazy metric container (<code>AggregatedMetricsDict</code> / <code>ExchangeData</code>) with its metric-to-group registry, and the per-kind 30-minute aggregators (klines / funding / markprice, trades, orderbook, liquidations, trades v2, multilevel, maker orders, market stats, orderbook updates). It covers the data contract shared by the batch backtester and the live runtime; real-time metric computation lives in <code>alpha-engine/metrics-engine</code>, and the live trading runtime in <code>alpha-engine/live-trading</code>.</p>
+<p>Defines the offline metric aggregation layer of <code>alpha_engine</code> (<code>metrics/</code>): raw data readers over
+the <code>binance_parser</code> parquet tree, the lazy metric container (<code>AggregatedMetricsDict</code> /
+<code>ExchangeData</code>) with its metric-to-group registry, and the per-kind 30-minute aggregators (klines /
+funding / markprice, trades, orderbook, liquidations, trades v2, multilevel, maker orders, market
+stats, orderbook updates). It covers the data contract shared by the batch backtester
+(<code>AlphaPipeline</code>) and the live runtime (<code>LiveEngine</code> over <code>LiveRawDataReader</code>); real-time metric
+computation lives in <code>alpha-engine/metrics-engine</code>, and the live trading runtime in
+<code>alpha-engine/live-trading</code>. Canonical Backend-go key names plus the alpha-engine to Go resolver
+(<code>go_name</code>, <code>FUNDING_SETTLEMENT_HOURS</code>) live in <code>alpha_engine/metrics_engine/keys.py</code>; the
+Backend-go reader is <code>alpha_engine/metrics/go_metrics_reader.py</code>.</p>
 <h2 id="requirements">Requirements<a class="headerlink" href="#requirements" title="Permanent link">&para;</a></h2>
 <h3 id="requirement-raw-data-readers-and-parquet-layout">Requirement: Raw data readers and parquet layout<a class="headerlink" href="#requirement-raw-data-readers-and-parquet-layout" title="Permanent link">&para;</a></h3>
-<p>The system SHALL expose a <code>RawDataReader</code> abstraction with <code>read(exchange, kind, ticker, since, until)</code> and <code>available_tickers(exchange, kind)</code>. The primary <code>MultiFileParquetReader</code> SHALL read the Hive-partitioned layout <code>{data_root}/market={spot|usdm}/type={event_type}/dt=YYYY-MM-DD/symbol={SYMBOL}/part-*.parquet</code>, mapping alpha-engine exchange tags (<code>binance</code>, <code>binance-f</code>) to parser <code>market=</code> partitions and <code>RawDataKind</code> to the <code>type=</code> partition(s): <code>aggtrades</code> (lowercase, live writer) and <code>aggTrades</code> (camelCase, historical download) SHALL both resolve to the trades kind without double-reading; raw per-fill <code>trades</code> shards SHALL be a distinct kind (<code>trades_raw</code>) and never mixed into the aggregated trades stream; <code>forceorder</code> SHALL feed the liquidations kind; <code>market_stats</code> SHALL union five partitions (<code>open_interest_now</code>, <code>global_long_accounts</code>, <code>top_long_accounts</code>, <code>top_long_positions</code>, <code>daily_interest_rate</code>); the periodic-poll kinds <code>open_interest</code>, <code>taker_ratio</code>, <code>long_short_ratio</code> SHALL map to their own <code>type=</code> partitions under <code>market=usdm</code>; <code>orderbook</code> SHALL resolve exclusively to <code>type=booksnapshot</code> - diff updates are deliberately excluded (diffs are not snapshots). The reader SHALL prune by <code>dt=</code> partition (keeping only days overlapping <code>[since, until]</code>) before reading any file and SHALL normalise columns per kind (e.g. liquidation size from <code>cum_filled_qty</code>, with a legacy fallback that renames <code>orig_qty</code> to <code>size</code> when the <code>cum_filled_qty</code> column is absent, and price from <code>avg_price</code>); the side is already lowercased by the parser DTO before the reader ever sees it (the reader does no case conversion). A <code>ParquetFileReader</code> SHALL additionally support the legacy flat layout <code>data_root/{exchange}/{kind}/{TICKER}.parquet</code> plus CSV and zip archives. <code>MockRawDataReader</code> SHALL generate structurally identical synthetic data for the five kinds it can synthesise (trades, orderbook, klines, funding, markprice); every other kind (liquidations, trades_v2, market_stats, trades_multilevel, maker_orders, trades_raw) returns no tickers in mock mode (deliberate kind-gating so go_metrics-backed strategies are skipped instead of crashing on missing keys).</p>
+<p>The system SHALL expose a <code>RawDataReader</code> abstraction with <code>read(exchange, kind, ticker, since,
+until)</code> and <code>available_tickers(exchange, kind)</code>. The primary <code>MultiFileParquetReader</code> SHALL read the
+Hive-partitioned layout
+<code>{data_root}/market={spot|usdm}/type={event_type}/dt=YYYY-MM-DD/symbol={SYMBOL}/part-*.parquet</code>,
+mapping alpha-engine exchange tags (<code>binance</code>, <code>binance-f</code>) to parser <code>market=</code> partitions and
+<code>RawDataKind</code> to the <code>type=</code> partition(s): <code>aggtrades</code> (lowercase, live writer) and <code>aggTrades</code>
+(camelCase, historical download) SHALL both resolve to the trades kind without double-reading (files
+are deduped by path across the two partitions); raw per-fill <code>trades</code> shards SHALL be a distinct
+kind (<code>trades_raw</code>) and never mixed into the aggregated trades stream; <code>forceorder</code> SHALL feed the
+liquidations kind; <code>market_stats</code> SHALL union five partitions (<code>open_interest_now</code>,
+<code>global_long_accounts</code>, <code>top_long_accounts</code>, <code>top_long_positions</code>, <code>daily_interest_rate</code>); the
+periodic-poll kinds <code>open_interest</code>, <code>taker_ratio</code>, <code>long_short_ratio</code> SHALL map to their own
+<code>type=</code> partitions under <code>market=usdm</code>; <code>orderbook</code> SHALL resolve exclusively to <code>type=booksnapshot</code> -
+diff updates are deliberately excluded (diffs are not snapshots); a kind with no <code>_KIND_TO_TYPES</code>
+entry SHALL fall back to <code>type={kind}</code> verbatim, and an unknown <code>exchange</code> tag SHALL yield no
+partition root at all. The <code>RawDataKind</code> enumeration is exactly <code>trades</code>, <code>trades_raw</code>, <code>orderbook</code>,
+<code>klines</code>, <code>funding</code>, <code>markprice</code>, <code>liquidations</code>, <code>open_interest</code>, <code>taker_ratio</code>,
+<code>long_short_ratio</code>, <code>market_stats</code>. The reader SHALL prune by <code>dt=</code> partition before reading any
+file, keeping a day iff <code>day + 1 day &gt;= since and day &lt;= until</code>; a directory whose name does not
+start with <code>dt=</code> is skipped silently and an unparseable <code>dt=</code> name is skipped with a WARNING (a
+garbage name would otherwise be an invisible whole-day hole). <code>read</code> SHALL return <code>None</code> when no
+shard matches, concatenate the matching shards, apply the per-kind column normalisation, filter
+<code>timestamp</code> inclusively on both ends of <code>[since, until]</code>, then <code>sort_values("timestamp")</code> and reset
+the index; a shard that fails to load is skipped with a WARNING (fail-open per shard) and <code>None</code> is
+returned when every shard fails. <code>available_tickers</code> SHALL scan every <code>dt=</code> directory of every
+mapped <code>type=</code> partition WITHOUT window pruning, collect the <code>symbol=</code> directory names and return
+them sorted (no parquet file is opened). A <code>ParquetFileReader</code> SHALL additionally support the legacy
+flat layout <code>data_root/{exchange}/{kind}/{TICKER}.parquet</code> plus CSV and zip archives, probing
+extensions in the order <code>.parquet</code>, <code>.csv</code>, <code>.zip</code>, taking the first <code>.parquet</code>-or-<code>.csv</code> member
+inside an archive and raising <code>ValueError</code> for an archive with neither or for an unsupported suffix;
+it SHALL apply NO per-kind normalisation (raw columns pass through), only coercing <code>timestamp</code> to
+UTC and filtering inclusively without sorting, and its <code>available_tickers</code> SHALL be the sorted file
+stems of the directory.</p>
 <h4 id="scenario-aggtrades-case-insensitive-collision">Scenario: AggTrades case-insensitive collision<a class="headerlink" href="#scenario-aggtrades-case-insensitive-collision" title="Permanent link">&para;</a></h4>
 <ul>
 <li><strong>WHEN</strong> both <code>type=aggtrades</code> and <code>type=aggTrades</code> partitions exist for a symbol</li>
@@ -2640,15 +2835,173 @@
 <h4 id="scenario-raw-fills-stay-separate">Scenario: Raw fills stay separate<a class="headerlink" href="#scenario-raw-fills-stay-separate" title="Permanent link">&para;</a></h4>
 <ul>
 <li><strong>WHEN</strong> reading the trades kind</li>
-<li><strong>THEN</strong> raw per-fill <code>type=trades</code> shards are not mixed in, so aggregated and raw streams never double-count</li>
+<li><strong>THEN</strong> raw per-fill <code>type=trades</code> shards are not mixed in, so aggregated and raw streams never
+  double-count</li>
 </ul>
 <h4 id="scenario-dt-pruning">Scenario: dt pruning<a class="headerlink" href="#scenario-dt-pruning" title="Permanent link">&para;</a></h4>
 <ul>
 <li><strong>WHEN</strong> a date range is requested</li>
-<li><strong>THEN</strong> only <code>dt=</code> directories overlapping the range are opened, and unparseable <code>dt=</code> names are skipped with a warning</li>
+<li><strong>THEN</strong> only <code>dt=</code> directories overlapping the range are opened, and unparseable <code>dt=</code> names are
+  skipped with a warning</li>
+</ul>
+<h4 id="scenario-unreadable-shard">Scenario: Unreadable shard<a class="headerlink" href="#scenario-unreadable-shard" title="Permanent link">&para;</a></h4>
+<ul>
+<li><strong>WHEN</strong> one part file of a multi-shard read cannot be parsed</li>
+<li><strong>THEN</strong> it is skipped with a WARNING and the remaining shards still produce a frame, but a read
+  where every shard fails returns <code>None</code></li>
+</ul>
+<h4 id="scenario-ticker-discovery-ignores-the-window">Scenario: Ticker discovery ignores the window<a class="headerlink" href="#scenario-ticker-discovery-ignores-the-window" title="Permanent link">&para;</a></h4>
+<ul>
+<li><strong>WHEN</strong> <code>available_tickers</code> is called for a kind</li>
+<li><strong>THEN</strong> every <code>dt=</code> directory of the mapped partitions is scanned regardless of <code>since</code> /
+  <code>until</code>, so gating sees a symbol that only has data outside the backtest window</li>
+</ul>
+<h3 id="requirement-per-kind-column-normalisation">Requirement: Per-kind column normalisation<a class="headerlink" href="#requirement-per-kind-column-normalisation" title="Permanent link">&para;</a></h3>
+<p>The system SHALL normalise live-writer and historical-archive column names to the aggregator
+contract inside <code>MultiFileParquetReader.read</code> (helper <code>_normalise_columns</code>, operating on a copy of
+the concatenated frame) in a fixed order. Timestamp resolution: when a <code>timestamp</code> column is absent,
+<code>timestamp_ms</code> SHALL be converted (ms, UTC) and the source column DROPPED, else <code>open_time</code> SHALL be
+used as the klines bar start (ms, UTC, source column KEPT), else <code>transaction_time</code> (ms, UTC); when
+<code>timestamp</code> already exists it SHALL be coerced with <code>pd.to_datetime(..., utc=True)</code>; a frame with no
+resolvable timestamp SHALL be returned unfiltered and unsorted. Then: <code>trades</code> and <code>trades_raw</code>
+SHALL rename <code>qty</code> to <code>size</code> and derive <code>side</code> from <code>is_buyer_maker</code> (<code>True</code> -&gt; <code>sell</code>, <code>False</code> -&gt;
+<code>buy</code>), both only when the target column is absent; <code>klines</code> SHALL synthesise <code>volume_usd</code> when
+absent, preferring Binance's own <code>quote_volume</code> cast to float64 and only otherwise <code>close * volume</code>
+(if neither source exists the column stays absent); <code>funding</code> SHALL map <code>funding_time_ms</code> to
+<code>timestamp</code>; <code>markprice</code> SHALL rename <code>predicted_funding_rate</code> to <code>predicted_funding</code>;
+<code>liquidations</code> SHALL rename <code>cum_filled_qty</code> to <code>size</code> with a legacy <code>orig_qty</code> fallback used only
+when <code>cum_filled_qty</code> is missing, and SHALL promote <code>avg_price</code> into <code>price</code> as float (overwriting
+the order's requested price); <code>market_stats</code> SHALL coerce the nine known numeric columns
+(<code>open_interest</code>, <code>long_short_ratio</code>, <code>global_long_account_ratio</code>, <code>global_short_account_ratio</code>,
+<code>top_long_account_ratio</code>, <code>top_short_account_ratio</code>, <code>top_long_position_ratio</code>,
+<code>top_short_position_ratio</code>, <code>daily_interest_rate</code>) with <code>pd.to_numeric(errors="coerce")</code> so the
+object-dtype union of five differently shaped partitions never reaches the aggregator as strings.
+The side value is already lowercased by the parser DTO before the reader ever sees it (the reader
+does no case conversion). <code>ParquetFileReader</code>, <code>MockRawDataReader</code> and <code>LiveRawDataReader</code> SHALL NOT
+call this helper - they emit the normalised names directly.</p>
+<h4 id="scenario-liquidation-size-fallback">Scenario: Liquidation size fallback<a class="headerlink" href="#scenario-liquidation-size-fallback" title="Permanent link">&para;</a></h4>
+<ul>
+<li><strong>WHEN</strong> a legacy forceOrder shard has <code>orig_qty</code> but no <code>cum_filled_qty</code></li>
+<li><strong>THEN</strong> <code>orig_qty</code> is renamed to <code>size</code>, and when both exist only <code>cum_filled_qty</code> is used</li>
+</ul>
+<h4 id="scenario-quote-volume-preferred">Scenario: Quote volume preferred<a class="headerlink" href="#scenario-quote-volume-preferred" title="Permanent link">&para;</a></h4>
+<ul>
+<li><strong>WHEN</strong> a klines shard carries <code>quote_volume</code></li>
+<li><strong>THEN</strong> <code>volume_usd</code> is that column as float64, and the <code>close * volume</code> approximation is used
+  only when <code>quote_volume</code> is absent</li>
+</ul>
+<h4 id="scenario-historical-archive-side">Scenario: Historical archive side<a class="headerlink" href="#scenario-historical-archive-side" title="Permanent link">&para;</a></h4>
+<ul>
+<li><strong>WHEN</strong> a trades shard carries <code>is_buyer_maker</code> and no <code>side</code></li>
+<li><strong>THEN</strong> <code>side</code> becomes <code>sell</code> where the buyer was the maker and <code>buy</code> otherwise</li>
+</ul>
+<h3 id="requirement-mock-raw-data-generation">Requirement: Mock raw data generation<a class="headerlink" href="#requirement-mock-raw-data-generation" title="Permanent link">&para;</a></h3>
+<p><code>MockRawDataReader</code> SHALL generate structurally identical synthetic data for the five kinds it can
+synthesise (trades, orderbook, klines, funding, markprice); every other kind (liquidations,
+trades_v2, market_stats, trades_multilevel, maker_orders, trades_raw) SHALL return no tickers and a
+<code>None</code> read (deliberate kind-gating so go_metrics-backed strategies are skipped instead of crashing
+on missing keys). Defaults SHALL be <code>trades_per_30min=500</code>, <code>ob_snapshots_per_30min=5</code> (matching the
+parser's ~1 snapshot/bar order of magnitude; the historical 60 made 50 tickers x 30 days unusably
+slow), <code>seed=42</code>, window <code>2024-01-01</code> to <code>2024-03-01</code> UTC and the 50
+<code>mock_provider.DEFAULT_TICKERS</code>. One shared 30-minute GBM price path per ticker SHALL be
+pre-generated with per-step vol <code>0.03 / sqrt(48)</code> off <code>_BASE_PRICES</code>, so every kind of one ticker
+tells the same price story. Each <code>(exchange, kind, ticker)</code> frame SHALL be generated once, cached,
+and served sliced inclusively to <code>[since, until]</code> (the cache is consulted before the
+ticker-membership check); an unknown ticker or unsupported kind SHALL return <code>None</code>. Trades SHALL
+use Poisson counts per bar, lognormal USD notionals divided by price and a per-bar buy-probability
+jitter. Orderbook SHALL emit 50 levels per side per snapshot at offsets <code>arange(n_snaps) * 1800 /
+n_snaps</code> seconds after the bar start, sides labelled <code>bid</code> / <code>ask</code>, vectorised with a single
+<code>DataFrame</code> build, and SHALL convert the index through <code>datetime64[ns, UTC]</code> before taking the int64
+view (a raw <code>view("int64")</code> on a microsecond-backed tz-aware index silently lands every row in
+1970). Klines SHALL carry <code>volume_usd</code>; funding SHALL carry only <code>realized_funding</code>, stepped every
+16 bars (8h); markprice SHALL carry <code>mark_price</code>, <code>index_price</code>, <code>predicted_funding</code> and
+<code>next_funding_time_ms</code> on the 00/08/16 UTC settlement schedule.</p>
+<h4 id="scenario-kind-gating-in-mock-mode">Scenario: Kind gating in mock mode<a class="headerlink" href="#scenario-kind-gating-in-mock-mode" title="Permanent link">&para;</a></h4>
+<ul>
+<li><strong>WHEN</strong> a strategy requires the liquidations or trades_v2 kind on mock data</li>
+<li><strong>THEN</strong> <code>available_tickers</code> returns <code>[]</code> for that kind, the strategy is skipped by the gate, and
+  no synthetic panel is fabricated</li>
+</ul>
+<h4 id="scenario-deterministic-panels">Scenario: Deterministic panels<a class="headerlink" href="#scenario-deterministic-panels" title="Permanent link">&para;</a></h4>
+<ul>
+<li><strong>WHEN</strong> the same <code>(exchange, kind, ticker)</code> is read twice with different windows</li>
+<li><strong>THEN</strong> the cached frame is reused and only the inclusive <code>[since, until]</code> slice differs</li>
+</ul>
+<h3 id="requirement-mock-metric-provider">Requirement: Mock metric provider<a class="headerlink" href="#requirement-mock-metric-provider" title="Permanent link">&para;</a></h3>
+<p><code>mock_provider</code> SHALL also offer a metric-LEVEL mock that bypasses the readers and aggregators
+entirely: <code>MockMetricsDict</code> is a lazy dict keyed by metric name that fabricates a <code>timestamps x
+tickers</code> DataFrame on first access and caches it, and <code>MockExchangeData</code> wraps one such container
+per exchange (defaulting to <code>binance</code> and <code>binance-f</code>), offsetting the seed by the exchange index so
+the two venues do not carry identical panels. Defaults SHALL be the 50 <code>DEFAULT_TICKERS</code>, the window
+<code>2023-01-01</code> to <code>2025-01-01</code> UTC on the 30-minute grid, and <code>seed=42</code>. One shared GBM price path per
+ticker SHALL back every metric (<code>_generate_price_series</code>, per-step vol <code>0.03 / sqrt(48)</code> off
+<code>_BASE_PRICES</code>), generated lazily on the first metric access: <code>close_price</code> / <code>mark_price</code> /
+<code>index_price</code> are that path, <code>open_price</code> is it shifted one bar and back-filled, <code>high_price</code> /
+<code>low_price</code> scale it by <code>1 +/- U(0, 0.005)</code>, <code>volume</code> divides a lognormal USD notional by price, the
+funding legs are <code>N(0.0001, 0.0005)</code>, <code>next_funding_time_ms</code> broadcasts the bar index in epoch
+milliseconds, and the orderbook and trade families are dispatched by name substrings in a
+deliberately order-sensitive chain (<code>logreturn</code>, <code>vwap</code>, <code>midprice</code>, <code>cost</code>, <code>size</code>, <code>place</code>,
+<code>remove</code>, <code>spread</code>, <code>liq_shock</code>, <code>last_best_</code>, <code>best_</code>). Unlike <code>AggregatedMetricsDict</code> this
+container SHALL NEVER raise: an unrecognised metric name falls through to a generic lognormal
+trade-metric panel. <code>MockExchangeData</code> SHALL expose neither <code>has_kinds</code> nor <code>missing_kinds</code> and
+<code>MockMetricsDict</code> carries no <code>reader</code> attribute, so this pair is a strategy-level and test-level
+fixture rather than a pipeline data provider (<code>filter_runnable</code> calls both gating methods).</p>
+<h4 id="scenario-unknown-metric-never-raises">Scenario: Unknown metric never raises<a class="headerlink" href="#scenario-unknown-metric-never-raises" title="Permanent link">&para;</a></h4>
+<ul>
+<li><strong>WHEN</strong> a strategy asks <code>MockMetricsDict</code> for a name that matches no branch</li>
+<li><strong>THEN</strong> a generic synthetic panel is returned instead of the <code>KeyError</code> the real container raises</li>
+</ul>
+<h4 id="scenario-one-price-story-per-ticker">Scenario: One price story per ticker<a class="headerlink" href="#scenario-one-price-story-per-ticker" title="Permanent link">&para;</a></h4>
+<ul>
+<li><strong>WHEN</strong> several price-derived metrics are read for the same ticker</li>
+<li><strong>THEN</strong> they all derive from the single cached GBM path, so open, high, low and close stay
+  mutually consistent</li>
 </ul>
 <h3 id="requirement-metric-registry-and-lazy-container">Requirement: Metric registry and lazy container<a class="headerlink" href="#requirement-metric-registry-and-lazy-container" title="Permanent link">&para;</a></h3>
-<p>The system SHALL expose every aggregated metric through a lazy dict-like container (<code>AggregatedMetricsDict</code>) indexed by a 30-minute UTC <code>DatetimeIndex</code> over <code>[since, until]</code>. First access to any metric from a group SHALL trigger aggregation of ALL metrics of that group for ALL tickers, and the group result SHALL be cached. Metric-to-group resolution SHALL be deterministic with a fixed precedence: an exact registry lookup (<code>_METRIC_SOURCE</code> over the ten <code>*_METRICS</code> registries), then the explicit <code>liquidations_</code> prefix, the <code>maker_</code> prefix, the <code>aggressor_</code> / <code>buy_aggressor_</code> / <code>sell_aggressor_</code> prefixes, pattern rules for <code>bid_</code>/<code>ask_</code> (cost/size/vwap/levels/spread/logreturn), <code>best_</code>, <code>last_best_</code>, <code>liq_shock</code>, <code>vwap_*_midprice</code>, <code>buy_</code>/<code>sell_</code> with <code>_ml</code>/<code>_sl</code> (bare or <code>_ml_quantile_</code> / <code>_sl_quantile_</code> tags) routing to trades_multilevel and plain <code>buy_</code>/<code>sell_</code> to trades, <code>cost_imbalance</code>, <code>bid_ask_spread</code>, the klines names (<code>close_price</code>, <code>open_price</code>, <code>high_price</code>, <code>low_price</code>, <code>volume</code>, <code>volume_usd</code>), the markprice names, and finally any name containing <code>funding</code>. A metric matching no source SHALL raise <code>KeyError</code> (never silently return a NaN frame), and a metric known to a group that its aggregator failed to produce SHALL also raise <code>KeyError</code>. Per-ticker Series SHALL be pivoted into <code>timestamps x tickers</code> DataFrames with NaN-filled gaps. <code>ExchangeData</code> SHALL wrap one container per exchange (the python offline container) and SHALL support <code>has_kinds</code> / <code>missing_kinds</code> gating; <code>missing_kinds</code> lives on <code>ExchangeData</code> (no such method on <code>AggregatedMetricsDict</code>): it returns <code>set()</code> (fully permissive) only when the exchange's MetricsDict has no reader (<code>md.reader is None</code>, e.g. mock mode), otherwise it reflects the reader's <code>available_tickers</code> per kind. The probe-based <code>GoExchangeData</code> (<code>_KIND_PROBES</code> table checked against <code>store.has_key</code>, e.g. trades probes <code>vwap</code>/<code>buy_volume_q95</code>, klines <code>close</code>/<code>quote_volume</code>, markprice <code>close</code>, orderbook <code>ob__25pct__bid__cost__mean</code>, go_metrics <code>ob__minor__spread_bps__mean</code>/<code>vwap</code>) is NOT fully permissive and has no reader-None branch: kinds with no probe entry (liquidations, trades_v2, market_stats) are reported missing on the Go path too. <code>MockRawDataReader.available_tickers</code> deliberately returns <code>[]</code> for every kind except the five it can synthesize (trades, orderbook, klines, funding, markprice), so liquidations, trades_v2, market_stats, trades_multilevel, maker_orders and trades_raw are never synthesised in mock mode - by design, so go_metrics-backed strategies are skipped rather than crash.</p>
+<p>The system SHALL expose every aggregated metric through a lazy dict-like container
+(<code>AggregatedMetricsDict</code>) indexed by a 30-minute UTC <code>DatetimeIndex</code> over <code>[since, until]</code>. First
+access to any metric from a group SHALL trigger aggregation of ALL metrics of that group for ALL
+tickers, and the group result SHALL be cached. When no explicit ticker list is supplied the ticker
+universe SHALL be the union of <code>available_tickers</code> over ONLY the <code>trades</code> and <code>klines</code> kinds.
+Metric-to-group resolution SHALL be deterministic with a fixed precedence: an exact registry lookup
+(<code>_METRIC_SOURCE</code> over the ten <code>*_METRICS</code> registries), then the explicit <code>liquidations_</code> prefix,
+the <code>maker_</code> prefix, the <code>aggressor_</code> / <code>buy_aggressor_</code> / <code>sell_aggressor_</code> prefixes, pattern rules
+for <code>bid_</code>/<code>ask_</code> (cost/size/vwap/levels/spread/logreturn), <code>best_</code>, <code>last_best_</code>, <code>liq_shock</code>,
+<code>vwap_*_midprice</code>, <code>buy_</code>/<code>sell_</code> with <code>_ml</code>/<code>_sl</code> (bare or <code>_ml_quantile_</code> / <code>_sl_quantile_</code> tags)
+routing to trades_multilevel and plain <code>buy_</code>/<code>sell_</code> to trades, the defensive no-side ml/sl names
+(<code>mean_cost_ml</code>, <code>mean_cost_sl</code>, <code>mean_price_delta_ml_quantile_*</code>), <code>cost_imbalance</code>,
+<code>bid_ask_spread</code>, the klines names (<code>close_price</code>, <code>open_price</code>, <code>high_price</code>, <code>low_price</code>,
+<code>volume</code>, <code>volume_usd</code>), the markprice names (<code>mark_price</code>, <code>index_price</code>, <code>next_funding_time_ms</code>,
+<code>predicted_funding</code>), and finally any name containing <code>funding</code>. A metric matching no source SHALL
+raise <code>KeyError</code> (never silently return a NaN frame), and a metric known to a group that its
+aggregator failed to produce SHALL also raise <code>KeyError</code>; an unknown aggregation kind SHALL raise
+<code>ValueError</code>. Per-ticker Series SHALL be pivoted into <code>timestamps x tickers</code> DataFrames with
+NaN-filled gaps: one column per ticker in the container's ticker order, an all-NaN Series for a
+ticker that has no data or lacks that metric, and the frame index forced onto the canonical grid. A
+ticker whose read returns <code>None</code> or an empty frame SHALL be skipped (logged, sampled to roughly 20
+progress lines per group with the read/aggregate split), and a group where NO ticker produced data
+SHALL still be marked computed while storing nothing - so the pending access falls through to the
+"aggregator did not produce it" <code>KeyError</code>. The <code>trades_v2</code> group SHALL fan out a dual read
+(<code>trades</code> for aggressors plus <code>trades_raw</code> for per-fill detail), skip tickers with no aggregated
+data and substitute an empty <code>[timestamp, trade_id, price, size, side]</code> frame when the raw read
+returns <code>None</code>. The <code>maker_orders</code> group SHALL be gated by <code>emit_maker = exchange == "binance"</code>; on
+other exchanges one read-only empty panel object SHALL be shared by every ticker (never mutated
+downstream) at zero I/O cost. <code>ExchangeData</code> SHALL wrap one container per exchange (the python
+offline container, defaulting to <code>binance</code> and <code>binance-f</code>) and SHALL support <code>has_kinds</code> /
+<code>missing_kinds</code> gating; <code>missing_kinds</code> lives on <code>ExchangeData</code> (no such method on
+<code>AggregatedMetricsDict</code>): it returns <code>set()</code> (fully permissive) only when the exchange's MetricsDict
+has no reader (<code>md.reader is None</code>, e.g. mock mode), otherwise it reflects the reader's
+<code>available_tickers</code> per kind and marks a kind missing when that call raises (defensive fail-closed,
+a bad reader must not abort gating). The probe-based <code>GoExchangeData</code> (<code>_KIND_PROBES</code> table checked
+against <code>store.has_key</code>: trades probes <code>vwap</code>/<code>buy_volume_q95</code>, klines <code>close</code>/<code>quote_volume</code>,
+markprice <code>close</code>, orderbook <code>ob__25pct__bid__cost__mean</code>, go_metrics
+<code>ob__minor__spread_bps__mean</code>/<code>vwap</code>) is NOT fully permissive and has no reader-None branch: every
+kind absent from the probe table (liquidations, trades_v2, market_stats, funding, trades_raw,
+trades_multilevel, maker_orders) is reported missing on the Go path.
+<code>MockRawDataReader.available_tickers</code> deliberately returns <code>[]</code> for every kind except the five it
+can synthesize (trades, orderbook, klines, funding, markprice), so liquidations, trades_v2,
+market_stats, trades_multilevel, maker_orders and trades_raw are never synthesised in mock mode - by
+design, so go_metrics-backed strategies are skipped rather than crash.</p>
 <h4 id="scenario-unknown-metric-raises">Scenario: Unknown metric raises<a class="headerlink" href="#scenario-unknown-metric-raises" title="Permanent link">&para;</a></h4>
 <ul>
 <li><strong>WHEN</strong> a metric name matches no registered source</li>
@@ -2664,15 +3017,92 @@
 <li><strong>WHEN</strong> a ticker has no data for a bar</li>
 <li><strong>THEN</strong> its column holds NaN for that bar, keeping the full-index shape</li>
 </ul>
+<h4 id="scenario-group-with-no-data-at-all">Scenario: Group with no data at all<a class="headerlink" href="#scenario-group-with-no-data-at-all" title="Permanent link">&para;</a></h4>
+<ul>
+<li><strong>WHEN</strong> every ticker of a group reads back empty</li>
+<li><strong>THEN</strong> the group is marked computed, no frame is stored, and the access raises the "aggregator
+  did not produce it" <code>KeyError</code> instead of an all-NaN panel</li>
+</ul>
+<h4 id="scenario-reader-error-fails-closed">Scenario: Reader error fails closed<a class="headerlink" href="#scenario-reader-error-fails-closed" title="Permanent link">&para;</a></h4>
+<ul>
+<li><strong>WHEN</strong> <code>available_tickers</code> raises for one kind during gating</li>
+<li><strong>THEN</strong> that kind is reported missing and the strategy is skipped rather than run against
+  unverified data</li>
+</ul>
 <h3 id="requirement-klines-funding-and-markprice-alignment">Requirement: Klines, funding and markprice alignment<a class="headerlink" href="#requirement-klines-funding-and-markprice-alignment" title="Permanent link">&para;</a></h3>
-<p>The system SHALL aggregate the pre-aggregated kinds by alignment to the 30-minute grid: klines SHALL produce exactly <code>close_price</code>, <code>open_price</code>, <code>high_price</code>, <code>low_price</code>, <code>volume</code>, <code>volume_usd</code>; funding SHALL produce <code>realized_funding</code>; markprice SHALL produce <code>mark_price</code>, <code>index_price</code>, <code>predicted_funding</code>, <code>next_funding_time_ms</code>, reindexed onto the full bar grid with forward-fill so the metric stays alive across gaps - but only <code>mark_price</code> is mandatory in the source frame (missing <code>index_price</code> / <code>predicted_funding</code> / <code>next_funding_time_ms</code> columns are tolerated and simply absent from the output). <code>volume_usd</code> SHALL be emitted only when the source klines frame carries the column (a legacy reader without the normalised column raises <code>KeyError</code>). <code>mark_price</code> / <code>index_price</code> SHALL NOT be aliased to kline closes (each kind owns its metric names).</p>
+<p>The system SHALL aggregate the pre-aggregated kinds by alignment to the 30-minute grid: klines SHALL
+produce exactly <code>close_price</code>, <code>open_price</code>, <code>high_price</code>, <code>low_price</code>, <code>volume</code>, <code>volume_usd</code>;
+funding SHALL produce <code>realized_funding</code>; markprice SHALL produce <code>mark_price</code>, <code>index_price</code>,
+<code>predicted_funding</code>, <code>next_funding_time_ms</code>, reindexed onto the full bar grid with forward-fill so
+the metric stays alive across gaps - but only <code>mark_price</code> is mandatory in the source frame (missing
+<code>index_price</code> / <code>predicted_funding</code> / <code>next_funding_time_ms</code> columns are tolerated and simply absent
+from the output). Each aggregator SHALL coerce <code>timestamp</code> with <code>utc=True</code>, index by it, sort, and
+build the grid as <code>date_range(since, until, freq="30min", tz="UTC")</code>. Klines SHALL require <code>{open,
+high, low, close, volume}</code> and raise <code>ValueError</code> naming the missing columns; it SHALL classify the
+source as already-30-minute when the median timestamp gap is strictly between 25 and 35 minutes (and
+unconditionally when the frame has at most one row), in which case the frame is <code>reindex(grid,
+method="nearest", tolerance="15min")</code>; otherwise it SHALL <code>resample("30min")</code> with
+<code>first/max/min/last/sum</code> over OHLCV (plus <code>sum</code> on <code>volume_usd</code> when present) and reindex onto the
+grid. <code>volume</code> and <code>volume_usd</code> SHALL be <code>fillna(0)</code> after alignment while OHLC stays NaN on empty
+bars. <code>volume_usd</code> SHALL be emitted only when the source klines frame carries the column (a legacy
+reader without the normalised column raises <code>KeyError</code> on the metric). Funding SHALL require
+<code>realized_funding</code> (else <code>ValueError</code>) and align with <code>reindex(grid, method="ffill")</code> so the last
+settlement carries forward. Markprice SHALL require <code>mark_price</code> (else <code>ValueError</code>) and emit each
+present column of <code>MARKPRICE_METRICS</code> in registry order via <code>reindex(grid, method="ffill")</code>.
+<code>mark_price</code> / <code>index_price</code> SHALL NOT be aliased to kline closes (each kind owns its metric names);
+a backtest without a markprice partition sees NaN for them rather than a proxy.</p>
 <h4 id="scenario-markprice-forward-fill">Scenario: Markprice forward fill<a class="headerlink" href="#scenario-markprice-forward-fill" title="Permanent link">&para;</a></h4>
 <ul>
 <li><strong>WHEN</strong> mark-price rows are sparse</li>
-<li><strong>THEN</strong> the metric is forward-filled onto the 30-minute grid so later bars carry the last observed value</li>
+<li><strong>THEN</strong> the metric is forward-filled onto the 30-minute grid so later bars carry the last
+  observed value</li>
+</ul>
+<h4 id="scenario-fine-grained-klines">Scenario: Fine-grained klines<a class="headerlink" href="#scenario-fine-grained-klines" title="Permanent link">&para;</a></h4>
+<ul>
+<li><strong>WHEN</strong> the source klines are 1-minute bars (median gap outside 25-35 minutes)</li>
+<li><strong>THEN</strong> they are resampled with first/max/min/last/sum instead of nearest-reindexed, and <code>volume</code>
+  / <code>volume_usd</code> are summed</li>
+</ul>
+<h4 id="scenario-empty-kline-bar">Scenario: Empty kline bar<a class="headerlink" href="#scenario-empty-kline-bar" title="Permanent link">&para;</a></h4>
+<ul>
+<li><strong>WHEN</strong> the grid contains a bar with no source kline</li>
+<li><strong>THEN</strong> <code>volume</code> and <code>volume_usd</code> are 0.0 while <code>open_price</code> / <code>high_price</code> / <code>low_price</code> /
+  <code>close_price</code> stay NaN</li>
 </ul>
 <h3 id="requirement-trades-aggregation">Requirement: Trades aggregation<a class="headerlink" href="#requirement-trades-aggregation" title="Permanent link">&para;</a></h3>
-<p>The system SHALL compute 98 trade metrics per 30-minute bar from raw trades (<code>[timestamp, price, size, side]</code>): counts, volumes, quote volumes, per-side cost and size quantiles over the canonical set <code>{0.25, 0.5, 0.75, 0.9, 0.95}</code> (no <code>0.99</code>), OHLC computed by averaging buy-only and sell-only open/high/low/close prices (NaN if one side is empty, killing bid-ask bounce), Herfindahl over <code>size</code> (base-coin units), intra-bar volatility as the std of minute-VWAP log returns with <code>ddof=1</code> (NaN with fewer than 3 minute groups, because <code>ddof=1</code> needs at least 2 returns to be finite), Kyle's lambda as an OLS of log-return on signed volume across minute groups (NaN with fewer than 3 groups or zero signed-volume variance), and ASR (<code>asr_count</code> / <code>asr_volume</code>) using a 60-second look-ahead window that may cross the bar boundary.</p>
+<p>The system SHALL compute 98 trade metrics per 30-minute bar from raw trades (<code>[timestamp, price,
+size, side]</code>; a missing required column raises <code>ValueError</code>): counts, volumes, quote volumes,
+per-side cost and size quantiles over the canonical set <code>{0.25, 0.5, 0.75, 0.9, 0.95}</code> (no <code>0.99</code>),
+OHLC computed by averaging buy-only and sell-only open/high/low/close prices (NaN if one side is
+empty, killing bid-ask bounce), Herfindahl over <code>size</code> (base-coin units), intra-bar volatility as
+the std of minute-VWAP log returns with <code>ddof=1</code> (NaN with fewer than 3 minute groups, because
+<code>ddof=1</code> needs at least 2 returns to be finite), Kyle's lambda as an OLS of log-return on signed
+volume across minute groups (NaN with fewer than 3 groups or zero signed-volume variance), and ASR
+(<code>asr_count</code> / <code>asr_volume</code>) using a 60-second look-ahead window that may cross the bar boundary.
+Per-trade notional is <code>cost = price * size</code>. Side classification SHALL be a single equality test
+against <code>buy</code> with the sell mask as its complement (<code>sell_mask = ~buy_mask</code>), so any other value - a
+mis-cased label, an unexpected string - is booked as a sell rather than dropped; the signed-volume
+conventions of Kyle and ASR follow the same <code>buy -&gt; +1, else -1</code> rule. <code>{buy,sell}_count_above_{T}</code>
+SHALL use strict <code>cost &gt; T</code> over <code>T</code> in <code>{100, 1000, 10000, 100000, 1000000}</code>. Quantile boundaries
+SHALL come from <code>np.quantile</code> with default linear interpolation, computed per side from that side's
+own cost distribution and, for the no-side family, from the joint distribution; membership SHALL be
+at-or-above the boundary (<code>&gt;=</code>). For each quantile the emitted keys SHALL be
+<code>{side}_cost_quantile_q</code> (tail notional sum), <code>{side}_trade_cost_quantile_q</code> (the boundary value
+itself), <code>{side}_volume_quantile_q</code> (tail base-size sum), <code>{side}_volume_quantile_q_usd</code> (an exact
+alias of <code>{side}_cost_quantile_q</code>, kept for v1 sanity), <code>{side}_count_quantile_q</code>, plus the no-side
+<code>count_quantile_q</code>, <code>volume_quantile_q</code> and <code>volume_quantile_q_usd</code>. OHLC keys are the bare <code>open</code> /
+<code>high</code> / <code>low</code> / <code>close</code> (the <code>*_price</code> names belong to klines). VWAPs SHALL be NaN when the
+relevant size sum is not positive; Herfindahl SHALL be NaN on an empty or non-positive-total subset
+and 1.0 on a single entry; volatility and Kyle SHALL also NaN out when any minute VWAP is
+non-positive. ASR SHALL evaluate, for each bar trade, the latest trade in <code>(t, t + 60s]</code> across the
+bar plus the <code>(bar_end, bar_end + 60s]</code> slice taken from the whole raw frame (so an empty next bar
+does not truncate the window), count a loss when <code>(after_price - price) * sign(side) &lt; 0</code>, exclude
+trades with an empty look-ahead from BOTH numerator and denominator, and return NaN for both ratios
+when the included set is empty (<code>asr_volume</code> also NaN when the included size sum is zero). The
+empty-bar contract SHALL be additive-zero / distributional-NaN: <code>volume</code>, <code>{buy,sell}_volume</code>,
+<code>{buy,sell}_cost</code>, <code>{buy,sell}_count</code>, the <code>count_above_T</code> family and <code>max_{buy,sell}_trade_cost</code>
+default to <code>0.0</code>, everything else to NaN; bars of the grid with no trades at all SHALL carry exactly
+that default panel, and every Series SHALL be float-dtyped over the full grid.</p>
 <h4 id="scenario-buy-sell-ohlc-averaging">Scenario: Buy-sell OHLC averaging<a class="headerlink" href="#scenario-buy-sell-ohlc-averaging" title="Permanent link">&para;</a></h4>
 <ul>
 <li><strong>WHEN</strong> both sides have trades in a bar</li>
@@ -2680,11 +3110,49 @@
 </ul>
 <h4 id="scenario-undefined-volatility">Scenario: Undefined volatility<a class="headerlink" href="#scenario-undefined-volatility" title="Permanent link">&para;</a></h4>
 <ul>
-<li><strong>WHEN</strong> a bar has fewer than 3 minute-groups with trades (with exactly 2 groups there is only one log-return, which <code>ddof=1</code> cannot use)</li>
+<li><strong>WHEN</strong> a bar has fewer than 3 minute-groups with trades (with exactly 2 groups there is only one
+  log-return, which <code>ddof=1</code> cannot use)</li>
 <li><strong>THEN</strong> the volatility metric is NaN rather than a fabricated number</li>
 </ul>
+<h4 id="scenario-asr-look-ahead-is-empty">Scenario: ASR look-ahead is empty<a class="headerlink" href="#scenario-asr-look-ahead-is-empty" title="Permanent link">&para;</a></h4>
+<ul>
+<li><strong>WHEN</strong> no trade lands in <code>(t, t + 60s]</code> for a given trade</li>
+<li><strong>THEN</strong> that trade is dropped from both the numerator and the denominator, and both ASR ratios
+  are NaN when this holds for every trade in the bar</li>
+</ul>
+<h4 id="scenario-empty-bar-defaults">Scenario: Empty bar defaults<a class="headerlink" href="#scenario-empty-bar-defaults" title="Permanent link">&para;</a></h4>
+<ul>
+<li><strong>WHEN</strong> a bar in the grid has no trades</li>
+<li><strong>THEN</strong> additive keys (volumes, costs, counts, <code>count_above_T</code>, <code>max_*_trade_cost</code>) are 0.0 and
+  every distributional key (vwap, OHLC, quantiles, hh, kyle, asr, volatility) is NaN</li>
+</ul>
 <h3 id="requirement-orderbook-aggregation">Requirement: Orderbook aggregation<a class="headerlink" href="#requirement-orderbook-aggregation" title="Permanent link">&para;</a></h3>
-<p>The system SHALL compute orderbook metrics from L2 snapshot rows (<code>[timestamp, side, price, size]</code>, one row per price level) with two aggregation templates: the 9-aggregation template for per-snapshot bases (<code>_avg</code>, <code>_quantile_25/50/75/90/95</code>, <code>_skew</code> as the bias-corrected Fisher-Pearson skew computed in closed form - value-identical to <code>scipy.stats.skew(bias=False)</code> with no scipy dependency, <code>_min</code>, <code>_max</code>, no <code>_sum</code>), and the 10-aggregation template for cross-snapshot diff/logreturn bases (<code>_sum</code> included, applying a zero-drop in addition to the NaN-drop). The <code>liq_shock_{side}_{X}</code> metrics SHALL be computed per snapshot as <code>{side}_X_size[t] / mean({side}_X_size[t-W .. t])</code> with a fixed 10-second window inclusive of the current sample (one rolling window per side/offset, O(1) memory, no pandas dependency in the hot path), plus the <code>liq_shock_ratio_{X}</code> family <code>= bid / (bid + ask)</code> (NaN when either leg is NaN or both are zero) computed directly per snapshot - it shares only the 9-agg aggregation template, not the rolling window - all aggregated like any other 9-agg base metric.</p>
+<p>The system SHALL compute orderbook metrics from L2 snapshot rows (<code>[timestamp, side, price, size]</code>,
+one row per price level; a missing required column raises <code>ValueError</code>) with two aggregation
+templates: the 9-aggregation template for per-snapshot bases (<code>_avg</code>, <code>_quantile_25/50/75/90/95</code>,
+<code>_skew</code> as the bias-corrected Fisher-Pearson skew computed in closed form - value-identical to
+<code>scipy.stats.skew(bias=False)</code> with no scipy dependency, <code>_min</code>, <code>_max</code>, no <code>_sum</code>), and the
+10-aggregation template for cross-snapshot diff/logreturn bases (<code>_sum</code> included, applying a
+zero-drop in addition to the NaN-drop). Both templates SHALL first drop non-finite samples (NaN and
+infinities), return all-NaN (with <code>_sum = 0.0</code> on the 10-agg) when nothing remains, and compute
+quantiles with <code>np.quantile</code> linear interpolation; <code>_skew</code> SHALL be NaN for fewer than 3 samples and
+for near-constant input (population std exactly 0 or below <code>1e-12 * max(1, |mean|)</code>) so scipy's
+precision-loss regime is never surfaced as a number. Offsets SHALL be the 12 percent zones <code>OFFSETS
+= [0.01, 0.05, 0.1, 0.25, 0.5, 1, 2, 5, 10, 25, 50, 100]</code>, labelled by replacing <code>.</code> with <code>_</code> (<code>0.05
+-&gt; 0_05</code>, <code>25 -&gt; 25</code>), giving names such as <code>bid_0_05_cost_avg</code> and <code>ask_25_vwap_quantile_95</code>. The
+<code>liq_shock_{side}_{X}</code> metrics SHALL be computed per snapshot as <code>{side}_X_size[t] /
+mean({side}_X_size[t-W .. t])</code> with a fixed 10-second window inclusive of the current sample
+(<code>LIQ_SHOCK_WINDOW_SECONDS = 10.0</code>, one <code>LiqShockRollingWindow</code> per side/offset, O(1) memory, no
+pandas dependency in the hot path, NaN when the rolling mean is not positive), over the REDUCED
+offset set <code>LIQ_SHOCK_OFFSETS = [0.05, 0.1, 0.25, 0.5, 1, 5, 25, 50]</code> (8 zones, not the 12 used
+elsewhere), plus the <code>liq_shock_ratio_{X}</code> family <code>= bid / (bid + ask)</code> (NaN when either leg is NaN
+or both are zero) computed directly per snapshot - it shares only the 9-agg aggregation template,
+not the rolling window - all aggregated like any other 9-agg base metric. A snapshot whose own-side
+zone size is NaN SHALL NOT be pushed into that side's rolling window at all (pushing NaN would
+poison the baseline) and its <code>liq_shock</code> sample stays NaN. The emitted schema SHALL be exactly 210
+nine-agg bases, 88 ten-agg bases and the 2 end-of-bar <code>last_best_{bid,ask}_price</code> values - 2772 keys
+in <code>OB_METRICS</code> - with <code>_sum</code> defaulting to <code>0.0</code> and every other key to NaN on an empty bar, and
+every key present on every bar of the grid.</p>
 <h4 id="scenario-zero-drop-on-diff-bases">Scenario: Zero-drop on diff bases<a class="headerlink" href="#scenario-zero-drop-on-diff-bases" title="Permanent link">&para;</a></h4>
 <ul>
 <li><strong>WHEN</strong> a cross-snapshot diff base is aggregated</li>
@@ -2693,20 +3161,150 @@
 <h4 id="scenario-liq-shock-ratio">Scenario: Liq-shock ratio<a class="headerlink" href="#scenario-liq-shock-ratio" title="Permanent link">&para;</a></h4>
 <ul>
 <li><strong>WHEN</strong> a snapshot's zone volume diverges from its trailing 10-second baseline</li>
-<li><strong>THEN</strong> the <code>liq_shock</code> metric is the ratio of current zone volume to the rolling mean, with the current sample included in its own baseline</li>
+<li><strong>THEN</strong> the <code>liq_shock</code> metric is the ratio of current zone volume to the rolling mean, with the
+  current sample included in its own baseline</li>
+</ul>
+<h4 id="scenario-reduced-liq-shock-offsets">Scenario: Reduced liq-shock offsets<a class="headerlink" href="#scenario-reduced-liq-shock-offsets" title="Permanent link">&para;</a></h4>
+<ul>
+<li><strong>WHEN</strong> the per-offset liq_shock family is emitted</li>
+<li><strong>THEN</strong> only the 8 <code>LIQ_SHOCK_OFFSETS</code> zones exist (no <code>liq_shock_bid_0_01</code> and no
+  <code>liq_shock_bid_100</code>), while every other L2 family covers all 12 <code>OFFSETS</code></li>
+</ul>
+<h4 id="scenario-near-constant-skew">Scenario: Near-constant skew<a class="headerlink" href="#scenario-near-constant-skew" title="Permanent link">&para;</a></h4>
+<ul>
+<li><strong>WHEN</strong> a base metric is constant (or varies below the <code>1e-12 * max(1, |mean|)</code> threshold) across
+  the bar's snapshots</li>
+<li><strong>THEN</strong> <code>_skew</code> is NaN rather than a numerically meaningless value, and it is also NaN with fewer
+  than 3 finite samples</li>
+</ul>
+<h3 id="requirement-orderbook-per-snapshot-base-panel">Requirement: Orderbook per-snapshot base panel<a class="headerlink" href="#requirement-orderbook-per-snapshot-base-panel" title="Permanent link">&para;</a></h3>
+<p>The system SHALL derive every orderbook base metric per snapshot (rows grouped by exact <code>timestamp</code>,
+processed chronologically) before aggregating across the bar. A snapshot SHALL be SKIPPED entirely
+when either <code>best_bid_price</code> (max bid price) or <code>best_ask_price</code> (min ask price) is missing,
+mirroring the live book's <code>mid()</code> contract - <code>np.nanmean</code> over one side would bias the mid by half a
+spread - and a bar where no snapshot survives SHALL return the empty panel. <code>mid</code> SHALL be
+<code>(best_bid + best_ask) / 2</code>. Group A (L1, 9-agg): <code>best_{bid|ask}_price</code>, <code>best_{bid|ask}_size</code> (sum
+of size at the best price, NaN exactly when the matching best price is NaN), <code>bid_ask_spread_abs</code>
+(<code>best_ask - best_bid</code>, quote ccy) and <code>bid_ask_spread_rel</code> (<code>spread_abs / mid</code>). Group B (L2 depth
+per offset, 9-agg): for each side and offset, the zone SHALL keep bid levels with <code>price &gt;= best *
+(1 - X/100)</code> and ask levels with <code>price &lt;= best * (1 + X/100)</code> (located by <code>np.searchsorted</code> on the
+once-sorted price array, O(log n) per zone), emitting <code>{side}_{X}_cost</code> (sum notional), <code>_size</code> (sum
+base), <code>_vwap</code> (cost/size, NaN when size is not positive), <code>_levels_size_mean</code>, <code>_levels_size_count</code>
+and <code>_levels_size_count_nonzero</code>; a NaN best price or an empty zone SHALL make all six outputs NaN
+(never <code>0.0</code> - downstream aggregation cannot distinguish a fabricated zero from genuine zero
+liquidity). Per offset the panel SHALL also carry <code>cost_imbalance_{X}_ratio</code> (<code>bid_cost / ask_cost</code>,
+NaN when either cost is NaN or <code>ask_cost</code> is 0), <code>cost_imbalance_{X}_norm</code> (<code>bid_cost / (bid_cost +
+ask_cost)</code>, valid <code>0.0</code> / <code>1.0</code> at the edges and NaN only when both are 0) and <code>vwap_{X}_midprice</code>
+(<code>(bid_vwap + ask_vwap) / 2</code>, NaN if either leg is NaN). Group C (10-agg) SHALL be derived across
+snapshots: <code>{side}_{X}_cost_diff</code> and <code>{side}_{X}_size_diff</code> and <code>best_{side}_size_diff</code> as <code>v[t] -
+v[t-1]</code> with NaN at index 0, and <code>{side}_{X}_vwap_logreturn</code>, <code>best_{side}_price_logreturn</code>,
+<code>vwap_{X}_midprice_logreturn</code> as <code>log(v[t] / v[t-1])</code> with NaN at index 0 and wherever either
+operand is NaN or non-positive. <code>last_best_{bid|ask}_price</code> SHALL be taken from the LAST surviving
+snapshot of the bar and SHALL NOT be aggregated.</p>
+<h4 id="scenario-one-sided-snapshot">Scenario: One-sided snapshot<a class="headerlink" href="#scenario-one-sided-snapshot" title="Permanent link">&para;</a></h4>
+<ul>
+<li><strong>WHEN</strong> a snapshot carries only bids (or only asks)</li>
+<li><strong>THEN</strong> it is dropped from the bar's per-snapshot panel instead of contributing a
+  half-spread-biased mid</li>
+</ul>
+<h4 id="scenario-empty-zone-is-nan">Scenario: Empty zone is NaN<a class="headerlink" href="#scenario-empty-zone-is-nan" title="Permanent link">&para;</a></h4>
+<ul>
+<li><strong>WHEN</strong> no level falls inside the <code>0.01%</code> zone of the best price</li>
+<li><strong>THEN</strong> all six <code>{side}_0_01_*</code> base values are NaN for that snapshot, not zero</li>
 </ul>
 <h3 id="requirement-liquidations-aggregation">Requirement: Liquidations aggregation<a class="headerlink" href="#requirement-liquidations-aggregation" title="Permanent link">&para;</a></h3>
-<p>The system SHALL compute 50 liquidation metrics per bar from normalized <code>@forceOrder</code> rows (<code>[timestamp, side, size, price]</code> where <code>size = cum_filled_qty</code> with a legacy fallback renaming <code>orig_qty</code> to <code>size</code> when the column is absent, and <code>price = avg_price</code>, side lowercased by the parser DTO). The liquidation side SHALL be interpreted as the closing side (<code>sell</code> closes a long, <code>buy</code> closes a short). The metric pack SHALL include per-side counts, cost/notional totals and quantiles (no size or price quantiles), VWAP, OHLC, intra-bar volatility, Herfindahl, Kyle's lambda, and ASR - there are no imbalance keys and no size/price quantiles in the 50-key pack.</p>
+<p>The system SHALL compute 50 liquidation metrics per bar from normalized <code>@forceOrder</code> rows
+(<code>[timestamp, side, size, price]</code> where <code>size = cum_filled_qty</code> with a legacy fallback renaming
+<code>orig_qty</code> to <code>size</code> when the column is absent, and <code>price = avg_price</code>, side lowercased by the
+parser DTO). The liquidation side SHALL be interpreted as the closing side (<code>sell</code> closes a long,
+<code>buy</code> closes a short). The metric pack SHALL include per-side counts, cost/notional totals and
+quantiles (no size or price quantiles), VWAP, OHLC, intra-bar volatility, Herfindahl, Kyle's lambda,
+and ASR - there are no imbalance keys and no size/price quantiles in the 50-key pack - and every key
+SHALL carry the <code>liquidations_</code> prefix. Events with <code>size &lt;= 0</code> (FILLED with no fills) SHALL be
+dropped defensively BOTH on the whole frame before bar grouping (so ASR look-ahead slices never see
+them) and again per bar for callers that bypass the 30-minute entry point. A <code>None</code> or empty input
+frame, or a frame left empty by the size filter, SHALL yield the full default panel on every bar of
+the grid; only a non-empty frame is column-validated (<code>{timestamp, side, size, price}</code>, else
+<code>ValueError</code>). Rows SHALL be sorted by timestamp before use, and <code>_compute_asr</code> SHALL fail fast with
+<code>ValueError</code> if it is ever handed non-monotonic timestamps rather than silently mis-pairing
+look-aheads; the per-bar aggregator sorts with <code>kind="stable"</code> so equal-timestamp rows keep arrival
+order for the buy-only / sell-only OHLC first/last semantics, while the 30-minute entry point sorts
+with the default (unstable) <code>sort_values</code> before bucketing and building the cross-bar look-ahead
+slices. Side classification SHALL use the same <code>buy</code> / not-<code>buy</code> complement as trades (<code>sell_mask =
+~buy_mask</code>), so a mislabelled side counts as a sell-closing liquidation. Quantiles (<code>{0.25, 0.5,
+0.75, 0.9, 0.95}</code>), USD thresholds (<code>{100, 1000, 10000, 100000, 1000000}</code> with strict <code>&gt;</code>), the <code>&gt;=</code>
+boundary inclusion, the 60-second ASR look-ahead with its cross-bar slice and exclusion of
+empty-window events, the Herfindahl over base-coin <code>size</code>, the minute-VWAP <code>ddof=1</code> volatility and
+the minute-group Kyle regression SHALL match the trades-v2 template; Kyle SHALL additionally require
+at least 2 log-returns (3 minute groups) and a non-zero signed-volume variance. Empty-bar defaults
+SHALL be <code>0.0</code> for counts, <code>count_above_T</code>, <code>{buy,sell}_cost</code> and <code>max_{buy,sell}_trade_cost</code>, NaN
+for every distributional key. Because liquidations are a sparse stream, NaN on most bars for
+volatility / kyle / hh / OHLC is the expected regime, not a defect.</p>
 <h4 id="scenario-closing-side-semantics">Scenario: Closing-side semantics<a class="headerlink" href="#scenario-closing-side-semantics" title="Permanent link">&para;</a></h4>
 <ul>
 <li><strong>WHEN</strong> a <code>sell</code> force order is aggregated</li>
 <li><strong>THEN</strong> it contributes to the sell-closing side, which closes a long position</li>
 </ul>
+<h4 id="scenario-zero-fill-events-dropped">Scenario: Zero-fill events dropped<a class="headerlink" href="#scenario-zero-fill-events-dropped" title="Permanent link">&para;</a></h4>
+<ul>
+<li><strong>WHEN</strong> a forceOrder row has <code>size == 0</code></li>
+<li><strong>THEN</strong> it is filtered out before bar grouping, so it influences neither the bar's counters nor
+  any ASR look-ahead window</li>
+</ul>
 <h3 id="requirement-multilevel-reconstruction">Requirement: Multilevel reconstruction<a class="headerlink" href="#requirement-multilevel-reconstruction" title="Permanent link">&para;</a></h3>
-<p>The system SHALL reconstruct logical multilevel aggressions and maker fills from raw streams: <code>trades_v2</code> SHALL rebuild per-aggressor fill detail by reindexing the raw <code>@trade</code> stream (<code>kind="trades_raw"</code>) over the inclusive <code>[first_trade_id, last_trade_id]</code> range, skipping aggressors whose entire range is missing (no fallback to the aggregated price/qty); the historical download ships no per-fill source, so backtest-time reconstruction only works when the parser ran with <code>LIVE_RECONSTRUCT_MULTILEVEL=True</code>. <code>trades_multilevel</code> SHALL glue adjacent aggTrades into one <code>LogicalTrade</code> iff (strictly, epsilon 0) they share side and engine timestamp, <code>B.first_trade_id == A.last_trade_id + 1</code>, and price deepens monotonically along the hit side (up for buys, down for sells), emitting a 73-key ml/sl panel. The aggregator SHALL work when handed the aggTrade stream directly (<code>[timestamp, side, price, size, first_trade_id, last_trade_id]</code>), but <code>AggregatedMetricsDict</code> currently cannot serve this group end-to-end: its generic path reads <code>kind="trades_multilevel"</code>, which has no entry in the reader's <code>_KIND_TO_TYPES</code>, so the Hive lookup targets a nonexistent <code>type=trades_multilevel</code> partition, every ticker is skipped, and accessing the group raises <code>KeyError</code> (the code comment claiming it "reads the same aggregated trades stream as trades" is stale). <code>maker_orders</code> SHALL treat each raw fill as exactly one maker fill (the resting limit-order side, the dual of the taker view), emitting a 50-key panel; it SHALL be gated to spot (<code>emit_maker</code> only when the exchange is <code>binance</code>) - on futures every ticker receives the deterministic empty panel at zero I/O cost, keeping the schema stable across venues.</p>
+<p>The system SHALL reconstruct logical multilevel aggressions and maker fills from raw streams:
+<code>trades_v2</code> SHALL rebuild per-aggressor fill detail by reindexing the raw <code>@trade</code> stream
+(<code>kind="trades_raw"</code>, deduplicated on <code>trade_id</code> keeping the first) over the inclusive
+<code>[first_trade_id, last_trade_id]</code> range, skipping aggressors whose entire range is missing (no
+fallback to the aggregated price/qty) and tolerating partial ranges as a shorter fill list; an
+aggressor with <code>last_trade_id &lt; first_trade_id</code> is skipped outright. Its five per-aggressor bases
+SHALL be <code>aggressor_order_size</code> (sum fill size), <code>aggressor_order_cost</code> (sum price*size),
+<code>aggressor_order_levels</code> (fill count), <code>aggressor_order_price_range</code> (<code>(max_px - min_px) / min_px</code>,
+exactly <code>0.0</code> for a single fill, NaN when <code>min_px &lt;= 0</code>) and <code>aggressor_order_worst_slip</code> (signed by
+aggressor side so a buy paying up to <code>max_px</code> and a sell selling down to <code>min_px</code> both report a
+positive fraction, <code>0.0</code> for a single fill, NaN on a non-positive best price); the panel SHALL be
+150 keys - 50 from the 5 bases times the 10-suffix <code>AGG_SUFFIXES</code> pack and 100 from the same bases
+side-split into <code>buy_aggressor_order_*</code> / <code>sell_aggressor_order_*</code> - all through the shared
+<code>_multi_aggregate</code> (which is the 10-agg with its zero-drop), with <code>_sum</code> defaulting to <code>0.0</code> and
+every other suffix to NaN. The side split SHALL test both labels strictly (<code>side == "buy"</code> and <code>side
+== "sell"</code>), unlike the <code>buy</code> / not-<code>buy</code> complement used by trades and liquidations, so an
+aggressor carrying any other side value feeds the 50 unsided keys only and is absent from both
+side-split halves. Either input frame missing or empty SHALL emit the full empty panel for every bar
+BEFORE any column validation runs (the empty short-circuit returns first, so an empty frame never
+raises); only non-empty frames are column-validated (<code>ValueError</code> on missing columns) and bucketed
+by <code>floor("30min")</code>, with a bar's aggressors matched against that same bar's raw fills only. The
+historical download ships no per-fill source, so backtest-time reconstruction only works when the
+parser ran with <code>LIVE_RECONSTRUCT_MULTILEVEL=True</code>. <code>trades_multilevel</code> SHALL glue adjacent
+aggTrades into one <code>LogicalTrade</code> iff (strictly, epsilon 0) they share side and engine timestamp,
+<code>B.first_trade_id == A.last_trade_id + 1</code>, and price deepens monotonically along the hit side (up
+for buys, down for sells) relative to the chain's last price; a row that matches side, timestamp and
+contiguity but violates monotonicity SHALL be logged at DEBUG and start a new chain. Input SHALL be
+sorted by <code>(timestamp_ms, first_trade_id)</code> with a stable mergesort after deriving <code>timestamp_ms</code>
+through <code>datetime64[ns, UTC]</code> then integer-division by 1e6 (so a microsecond-backed source is not
+off by 1000), chains SHALL be reconstructed once over the whole frame and bucketed by
+<code>floor(timestamp_first, "30min")</code>, and each chain SHALL carry <code>n_levels</code>, <code>is_multilevel = n_levels &gt;=
+2</code>, <code>total_size</code>, <code>total_cost</code>, <code>vwap</code> (NaN when total size is not positive), <code>price_first</code>,
+<code>price_last</code> and <code>price_delta_pct</code> (<code>(price_last - price_first) * side_sign / price_first</code>, exactly
+<code>0.0</code> for single-level, NaN when <code>price_first == 0</code>). The emitted 73-key ml/sl panel SHALL be 4
+counts, 4 cost totals, 4 mean costs, 4 VWAPs, 20 <code>{side}_cost_{ml|sl}_quantile_q</code> tail sums, 20
+<code>{side}_trade_cost_{ml|sl}_quantile_q</code> boundaries, 10 <code>{side}_mean_price_delta_ml_quantile_q</code> (mean
+<code>price_delta_pct</code> restricted to the top-q% by total cost) and the 7 no-side aggregates
+(<code>mean_cost_ml</code>, <code>mean_cost_sl</code>, <code>mean_price_delta_ml_quantile_q</code>), with <code>&gt;=</code>-boundary membership,
+counts and cost totals defaulting to <code>0.0</code> and everything else to NaN. The aggregator SHALL work
+when handed the aggTrade stream directly (<code>[timestamp, side, price, size, first_trade_id,
+last_trade_id]</code>), but <code>AggregatedMetricsDict</code> currently cannot serve this group end-to-end: its
+generic path reads <code>kind="trades_multilevel"</code>, which has no entry in the reader's <code>_KIND_TO_TYPES</code>,
+so the Hive lookup targets a nonexistent <code>type=trades_multilevel</code> partition, every ticker is
+skipped, and accessing the group raises <code>KeyError</code> (the code comment claiming it "reads the same
+aggregated trades stream as trades" is stale). <code>maker_orders</code> SHALL treat each raw fill as exactly
+one maker fill (the resting limit-order side, the dual of the taker view), emitting a 50-key panel;
+it SHALL be gated to spot (<code>emit_maker</code> only when the exchange is <code>binance</code>) - on futures every
+ticker receives the deterministic empty panel at zero I/O cost, keeping the schema stable across
+venues.</p>
 <h4 id="scenario-logical-trade-gluing">Scenario: Logical trade gluing<a class="headerlink" href="#scenario-logical-trade-gluing" title="Permanent link">&para;</a></h4>
 <ul>
-<li><strong>WHEN</strong> two adjacent aggTrades have the same side and timestamp, contiguous fill ids, and deepening price</li>
+<li><strong>WHEN</strong> two adjacent aggTrades have the same side and timestamp, contiguous fill ids, and
+  deepening price</li>
 <li><strong>THEN</strong> they are combined into one logical multilevel trade for the ml/sl metrics</li>
 </ul>
 <h4 id="scenario-maker-gating-on-futures">Scenario: Maker gating on futures<a class="headerlink" href="#scenario-maker-gating-on-futures" title="Permanent link">&para;</a></h4>
@@ -2714,15 +3312,117 @@
 <li><strong>WHEN</strong> the exchange is not <code>binance</code></li>
 <li><strong>THEN</strong> every ticker gets the empty 50-key maker panel without reading any raw data</li>
 </ul>
+<h4 id="scenario-missing-raw-fill-range">Scenario: Missing raw fill range<a class="headerlink" href="#scenario-missing-raw-fill-range" title="Permanent link">&para;</a></h4>
+<ul>
+<li><strong>WHEN</strong> an aggressor's whole <code>[first_trade_id, last_trade_id]</code> range is absent from <code>trades_raw</code></li>
+<li><strong>THEN</strong> that aggressor contributes no sample at all, rather than being reconstructed from the
+  aggregated price and quantity</li>
+</ul>
+<h4 id="scenario-monotonicity-violation-closes-the-chain">Scenario: Monotonicity violation closes the chain<a class="headerlink" href="#scenario-monotonicity-violation-closes-the-chain" title="Permanent link">&para;</a></h4>
+<ul>
+<li><strong>WHEN</strong> an aggTrade matches side, engine timestamp and <code>last_trade_id + 1</code> but does not deepen
+  the price</li>
+<li><strong>THEN</strong> the in-flight chain is closed, a DEBUG line records the anomaly, and the row starts a new
+  logical trade</li>
+</ul>
+<h3 id="requirement-maker-orders-panel">Requirement: Maker-orders panel<a class="headerlink" href="#requirement-maker-orders-panel" title="Permanent link">&para;</a></h3>
+<p>The system SHALL build the maker view from the per-fill <code>trades_raw</code> feed by inverting the reader's
+taker-side label: taker <code>buy</code> means the maker was on the <code>ask</code>, taker <code>sell</code> means the maker was on
+the <code>bid</code>. Every trades-v2 formula SHALL then be applied to those maker fills with <code>buy -&gt; ask</code> /
+<code>sell -&gt; bid</code> renames and a mandatory <code>maker_</code> prefix on every key (the bare <code>ask_*</code> / <code>bid_*</code> names
+of the source spec would collide with the L2 orderbook namespace). The 50-key pack SHALL be
+<code>maker_{ask,bid}_count</code>, 10 <code>maker_{ask,bid}_count_above_{T}</code>, <code>maker_{ask,bid}_cost</code>, <code>maker_vwap</code>
+/ <code>maker_{ask,bid}_vwap</code>, <code>maker_{open,high,low,close}</code> (averaged per-side OHLC, NaN when either
+side is empty), <code>maker_volatility</code>, <code>maker_hh</code> / <code>maker_hh_{ask,bid}</code>, <code>maker_kyle_lambda</code>,
+<code>maker_asr_count</code> / <code>maker_asr_volume</code>, <code>maker_max_{ask,bid}_trade_cost</code> and, per quantile,
+<code>maker_{ask,bid}_cost_quantile_q</code> plus <code>maker_{ask,bid}_trade_cost_quantile_q</code> - deliberately no
+volume-quantile and no no-side quantile keys. Kyle's lambda SHALL use the maker-native signed-volume
+convention (<code>bid</code> maker <code>+1</code>, <code>ask</code> maker <code>-1</code>), which flips the coefficient sign relative to the
+taker version. ASR SHALL invert the taker sign convention (<code>sign = +1</code> for a bid maker, <code>-1</code> for an
+ask maker, so a bid maker is "right" when the price rises), otherwise keeping the 60-second
+look-ahead, the cross-bar <code>(bar_end, bar_end + 60s]</code> slice and the exclusion of empty-window fills.
+Empty or missing input SHALL emit the full panel with counts, costs and <code>max_*_trade_cost</code> at <code>0.0</code>
+and everything else NaN.</p>
+<h4 id="scenario-side-inversion">Scenario: Side inversion<a class="headerlink" href="#scenario-side-inversion" title="Permanent link">&para;</a></h4>
+<ul>
+<li><strong>WHEN</strong> a raw fill carries taker side <code>buy</code></li>
+<li><strong>THEN</strong> it is counted on the maker <code>ask</code> side, because the resting order that got hit was a sell</li>
+</ul>
+<h4 id="scenario-maker-asr-sign">Scenario: Maker ASR sign<a class="headerlink" href="#scenario-maker-asr-sign" title="Permanent link">&para;</a></h4>
+<ul>
+<li><strong>WHEN</strong> the price rises within 60 seconds after an ask-maker fill</li>
+<li><strong>THEN</strong> that fill counts as adversely selected, the mirror image of the taker convention</li>
+</ul>
 <h3 id="requirement-market-stats-aggregation">Requirement: Market-stats aggregation<a class="headerlink" href="#requirement-market-stats-aggregation" title="Permanent link">&para;</a></h3>
-<p>The system SHALL union the five market-stats partitions per symbol into one frame and expose <code>open_interest</code>, <code>global_long_accounts</code>, <code>top_long_accounts</code>, <code>top_long_positions</code>, <code>daily_interest_rate</code> as the latest non-null value per 30-minute bar (<code>resample("30min").last()</code>), forward-filled across short REST-polling gaps. Strategies needing raw bucket values without ffill SHALL read the partition directly through <code>RawDataReader</code>.</p>
+<p>The system SHALL union the five market-stats partitions per symbol into one frame and expose
+<code>open_interest</code>, <code>global_long_accounts</code>, <code>top_long_accounts</code>, <code>top_long_positions</code>,
+<code>daily_interest_rate</code> as the latest non-null value per 30-minute bar (<code>resample("30min").last()</code>),
+forward-filled across short REST-polling gaps. The raw-column-to-metric map SHALL be <code>open_interest
+-&gt; open_interest</code>, <code>global_long_account_ratio -&gt; global_long_accounts</code>, <code>top_long_account_ratio -&gt;
+top_long_accounts</code>, <code>top_long_position_ratio -&gt; top_long_positions</code>, <code>daily_interest_rate -&gt;
+daily_interest_rate</code>; the short-side columns the reader also coerces to float are NOT exported. A
+<code>timestamp</code> column, when present, SHALL be coerced to UTC and used as the index; each exported
+column SHALL be cast to float64 and <code>dropna()</code>-ed first, and a column that is absent or entirely
+null SHALL be omitted from the output (the container then fills that metric with NaN columns). Two
+forward-fills SHALL be applied and neither is redundant: <code>resample("30min").last().ffill()</code> closes
+NaN buckets interior to the source's own range (which a reindex-ffill cannot repair, since it only
+propagates existing labels), then <code>reindex(grid).ffill()</code> aligns to the canonical bar grid and fills
+the tail between the last observation and <code>until</code>. Strategies needing raw bucket values without
+ffill SHALL read the partition directly through <code>RawDataReader</code>.</p>
 <h4 id="scenario-sparse-poll-gap">Scenario: Sparse poll gap<a class="headerlink" href="#scenario-sparse-poll-gap" title="Permanent link">&para;</a></h4>
 <ul>
 <li><strong>WHEN</strong> a REST poll is missed for one bar</li>
 <li><strong>THEN</strong> the market-stats metric is forward-filled, then continues with the next observed value</li>
 </ul>
+<h4 id="scenario-partition-absent-for-a-symbol">Scenario: Partition absent for a symbol<a class="headerlink" href="#scenario-partition-absent-for-a-symbol" title="Permanent link">&para;</a></h4>
+<ul>
+<li><strong>WHEN</strong> the union carries no <code>daily_interest_rate</code> column (or only nulls) for a symbol</li>
+<li><strong>THEN</strong> the metric key is omitted from that ticker's panel and the container supplies an all-NaN
+  column instead of a fabricated value</li>
+</ul>
 <h3 id="requirement-orderbook-updates-diff-counters">Requirement: Orderbook updates diff counters<a class="headerlink" href="#requirement-orderbook-updates-diff-counters" title="Permanent link">&para;</a></h3>
-<p>The system SHALL provide <code>OrderBookUpdatesAggregator</code>, an observer registered on the parser's <code>OrderBookManager</code> that fires BEFORE the book mutates (so <code>prev_size</code> is visible), receiving <code>(symbol, raw_data, prev_levels_snapshot, current_mid)</code> with <code>prev_levels_snapshot</code> covering only the touched price levels (per-event cost O(diff_size)). Each <code>(price, qty)</code> pair SHALL be classified into one of four cases: <code>qty == 0</code> -&gt; removal of the previous size; <code>qty &gt; prev_size</code> -&gt; placed volume <code>qty - prev_size</code>; <code>0 &lt; qty &lt; prev_size</code> -&gt; partial removal <code>prev_size - qty</code>; <code>qty == prev_size</code> -&gt; no-op (Binance re-confirm); a brand-new price with <code>qty == 0</code> (previous size 0 or less) is a fifth no-op that records nothing. The aggregator SHALL accumulate per-bar diff counts and flush them on each bar boundary (<code>flush_for_bar(bar_ts)</code>), feeding the live bar evaluation in the trading runtime. The flush SHALL emit all 180 metrics (36 NSC-49 base + 144 NSC-50 per-zone) per observed symbol: 12 base counters <code>{bid|ask}_{place|remove}_{cost|size|count}</code>, 24 VWAPs and 24 place-size skews <code>{bid|ask}_{offset}_place_vwap</code> / <code>_place_size_skew</code> over the 12 OFFSETS <code>[0.01, 0.05, 0.1, 0.25, 0.5, 1, 2, 5, 10, 25, 50, 100]</code>, and 120 remove quantiles <code>{bid|ask}_{offset}_remove_quantile_{25|50|75|90|95}</code>; but symbols with no diffs in the bar are absent from the output entirely (they are not zero-filled - downstream callers treat absence as "no signal this bar"); a symbol with any activity gets all 180 keys including explicit zeros for the inactive side.</p>
+<p>The system SHALL provide <code>OrderBookUpdatesAggregator</code>, an observer registered on the parser's
+<code>OrderBookManager</code> that fires BEFORE the book mutates (so <code>prev_size</code> is visible), receiving
+<code>(symbol, raw_data, prev_levels_snapshot, current_mid)</code> with <code>prev_levels_snapshot</code> covering only
+the touched price levels (per-event cost O(diff_size)) and returning immediately when the payload
+carries neither <code>b</code> nor <code>a</code> entries. Each <code>(price, qty)</code> pair SHALL be classified into one of four
+cases: <code>qty == 0</code> -&gt; removal of the previous size; <code>qty &gt; prev_size</code> -&gt; placed volume <code>qty -
+prev_size</code>; <code>0 &lt; qty &lt; prev_size</code> -&gt; partial removal <code>prev_size - qty</code>; <code>qty == prev_size</code> -&gt; no-op
+(Binance re-confirm); a brand-new price with <code>qty == 0</code> (previous size 0 or less) is a fifth no-op
+that records nothing. A pair with the wrong shape or non-numeric price/qty SHALL be counted into a
+per-symbol <code>dropped_pairs</code> tally that does NOT mark the symbol dirty and SHALL be reported as a
+WARNING at flush ("counters are understated") rather than vanishing. Base counters SHALL accumulate
+<code>cost = Sum price * delta</code>, <code>size = Sum delta</code> and <code>count</code> = number of classified events. The
+aggregator SHALL accumulate per-bar diff counts and flush them on each bar boundary
+(<code>flush_for_bar(bar_ts)</code>, whose <code>bar_ts</code> is accepted for symmetry with
+<code>LiveRawDataReader.mark_bar_processed</code> and unused), feeding the live bar evaluation in the trading
+runtime; <code>flush_for_bar</code> SHALL reset all counters itself while the separately callable
+<code>mark_bar_processed</code> stays available and idempotent, and <code>snapshot(symbol)</code> SHALL expose the running
+values without resetting (an unobserved symbol yields base counters <code>0.0</code> and every other key NaN).
+The flush SHALL emit all 180 metrics per observed symbol (12 base counters + 24 place VWAPs + 24
+place-size skews + 120 remove quantiles, as enumerated by <code>all_metric_names()</code>; the module and
+<code>flush_for_bar</code> docstrings still quote a stale 82-metric / 10-VWAP count from a 5-offset era and the
+emitted schema, not the docstring, is normative): 12 base counters
+<code>{bid|ask}_{place|remove}_{cost|size|count}</code>, 24 VWAPs and 24 place-size skews
+<code>{bid|ask}_{offset}_place_vwap</code> / <code>_place_size_skew</code> over the 12 OFFSETS <code>[0.01, 0.05, 0.1, 0.25,
+0.5, 1, 2, 5, 10, 25, 50, 100]</code> (imported from the orderbook aggregator, same <code>.</code> to <code>_</code> labelling),
+and 120 remove quantiles <code>{bid|ask}_{offset}_remove_quantile_{25|50|75|90|95}</code>; the outer dict
+always carries all 180 metric names, but symbols with no diffs in the bar are absent from every
+inner dict (they are not zero-filled - downstream callers treat absence as "no signal this bar"),
+while a symbol with any activity gets all 180 keys including explicit zeros for the inactive side,
+since dirty-tracking is per symbol and never per side. Zone bucketing SHALL require a usable mid: a
+place lands in <code>{side}_{X}</code> iff <code>price &gt;= mid * (1 - X/100)</code> (bid) or <code>price &lt;= mid * (1 + X/100)</code>
+(ask), and when <code>mid</code> is <code>None</code> or non-positive, or the delta is non-positive, the per-zone
+accumulators are skipped while the base counters still increment. <code>{side}_{X}_place_vwap</code> SHALL be
+<code>Sum price*dq / Sum dq</code> within the zone and NaN when the denominator is zero; only places feed VWAP
+and skew, only removes feed the quantiles. <code>_place_size_skew</code> SHALL call
+<code>scipy.stats.skew(bias=False)</code> on the per-zone place-size list, returning NaN for fewer than 3
+samples or near-constant input (std 0 or below <code>1e-12 * max(1, |mean|)</code>); <code>_remove_quantile_QQ</code>
+SHALL be <code>np.quantile</code> at <code>[0.25, 0.5, 0.75, 0.9, 0.95]</code> and NaN when the zone saw no removal. The
+hot path (<code>on_diff</code>) SHALL be lock-free because the parser's WS dispatch is single-threaded by
+contract, while <code>flush_for_bar</code> and <code>mark_bar_processed</code> SHALL take the instance lock around
+snapshot-and-zero for cross-thread consumers; the per-zone sample lists are the only non-O(1) state
+and are cleared on every reset.</p>
 <h4 id="scenario-level-removal">Scenario: Level removal<a class="headerlink" href="#scenario-level-removal" title="Permanent link">&para;</a></h4>
 <ul>
 <li><strong>WHEN</strong> a diff row carries <code>qty == 0</code></li>
@@ -2733,12 +3433,172 @@
 <li><strong>WHEN</strong> a diff row's qty equals the previous size</li>
 <li><strong>THEN</strong> it is counted as a no-op and contributes nothing</li>
 </ul>
+<h4 id="scenario-no-mid-available">Scenario: No mid available<a class="headerlink" href="#scenario-no-mid-available" title="Permanent link">&para;</a></h4>
+<ul>
+<li><strong>WHEN</strong> a diff arrives while the live book has only one side (mid is <code>None</code>)</li>
+<li><strong>THEN</strong> the 12 base counters still increment but no per-zone VWAP, skew or quantile sample is
+  recorded for that event</li>
+</ul>
+<h4 id="scenario-malformed-depth-pair">Scenario: Malformed depth pair<a class="headerlink" href="#scenario-malformed-depth-pair" title="Permanent link">&para;</a></h4>
+<ul>
+<li><strong>WHEN</strong> a depth pair has a bad shape or a non-numeric price/qty</li>
+<li><strong>THEN</strong> it is dropped, tallied in <code>dropped_pairs</code>, does not mark the symbol dirty, and is
+  surfaced as a WARNING at the next flush</li>
+</ul>
 <h3 id="requirement-backend-go-precomputed-metrics">Requirement: Backend-go precomputed metrics<a class="headerlink" href="#requirement-backend-go-precomputed-metrics" title="Permanent link">&para;</a></h3>
-<p>The system SHALL read already-aggregated 30-minute metrics written by Backend-go from Hive parquet (<code>{root}/market=spot/type=metrics/dt=YYYY-MM-DD/symbol={SYMBOL}/part-*.parquet</code>) via <code>GoMetricsStore</code>, exploding each file's <code>keys</code> list (<code>~790</code> <code>(metric_name, float)</code> pairs per bar, plus <code>ts</code> and <code>symbol</code> columns) into wide <code>timestamps x tickers</code> DataFrames exposed through the same dict-like interface the strategies use. Multiple roots SHALL be combinable: at load time every key is added to every root that carries it, and roots are loaded in order so a later root's values overwrite an earlier root's for the same key (last root wins - not first); a key carried by no root SHALL be served as a NaN frame with a warning (no <code>KeyError</code> - <code>GoMetricsStore</code> has no raise path for unpopulated keys). An alias layer SHALL map alpha-engine names to Backend-go names, resolved by <code>go_name</code>: price-like aliases (<code>close_price</code>-&gt;<code>close</code>, <code>open/high/low_price</code>-&gt;<code>open/high/low</code>, <code>last_price</code>, <code>vwap</code>; on spot <code>mark_price</code>/<code>index_price</code> proxy to <code>close</code> while on usdm they pass through to the real mark/index keys), flow aliases (<code>volume</code>-&gt;<code>volume</code>, <code>volume_usd</code>-&gt;<code>quote_volume</code>, <code>buy_cost</code>/<code>sell_cost</code>-&gt;<code>buy_quote_volume</code>/<code>sell_quote_volume</code>, quantile size names), the <code>bid_</code>/<code>ask_</code> pattern to <code>ob__{pct}pct__{side}__{feat}__{stat}</code> with <code>avg</code>-&gt;<code>mean</code> (both <code>_avg</code> and <code>__mean</code> accepted), and raw Backend-go keys pass through unchanged. <code>predicted_funding</code> SHALL be served as an unconditional zero frame (spot has no such metric; a zero frame keeps the funding leg alive - it is never an alias or a NaN frame). <code>realized_funding</code> SHALL NOT be served as a plain alias: it is settled once per 8 hours on the 00/08/16 UTC bars only, taken from the bar immediately before settlement (<code>shift(1)</code>), and zero elsewhere (so per-bar consumers charge each settlement period exactly once); spot datasets carry no funding key and fall back to zeros. Price-like metrics SHALL undergo zero-&gt;NaN-&gt;ffill: a <code>0.0</code> value in the Go writer means "not populated this bar", so <code>GoMetricsDict</code> replaces zeros with NaN and forward-fills for price-like keys (never surfacing 0.0 as a real price). <code>GoExchangeData</code> SHALL map both <code>binance</code> and <code>binance-f</code> exchanges to the SAME spot-backed container, so futures metrics are proxied by their spot analogs. This SHALL be the data provider for <code>--metrics-roots</code> backtests and the legacy live per-bar path.</p>
+<p>The system SHALL read already-aggregated 30-minute metrics written by Backend-go from Hive parquet
+(<code>{root}/market={market}/type=metrics/dt=YYYY-MM-DD/symbol={SYMBOL}/part-*.parquet</code>, <code>market</code>
+defaulting to <code>spot</code>) via <code>GoMetricsStore</code>, exploding each file's <code>keys</code> list (the canonical 791-key
+schema of <code>metrics_engine/keys.py</code>, <code>(metric_name, float)</code> pairs per bar, alongside the <code>ts</code> int64
+epoch-millisecond and <code>symbol</code> columns; only <code>ts</code> and <code>keys</code> are actually read) into wide
+<code>timestamps x tickers</code> DataFrames exposed through the same dict-like interface the strategies use.
+Multiple roots SHALL be combinable: at load time every key is added to every root that carries it,
+and roots are loaded in order so a later root's values overwrite an earlier root's for the same key
+(last root wins - not first); a key carried by no root SHALL be served as a NaN frame with a warning
+(no <code>KeyError</code> - <code>GoMetricsStore</code> has no raise path for unpopulated keys), and that NaN frame SHALL
+be memoized in memory only, never written to the disk cache, so a later run over a root that does
+populate the key is not served an empty panel. An alias layer SHALL map alpha-engine names to
+Backend-go names, resolved by <code>go_name</code> in <code>metrics_engine/keys.py</code>: price-like aliases
+(<code>close_price</code>-&gt;<code>close</code>, <code>open/high/low_price</code>-&gt;<code>open/high/low</code>, <code>last_price</code>, <code>vwap</code>; on spot
+<code>mark_price</code>/<code>index_price</code> proxy to <code>close</code> while on any non-spot market they pass through to the
+real mark/index keys, because marking futures PnL at close diverges from how the venue values
+margin), flow aliases (<code>volume</code>-&gt;<code>volume</code>, <code>volume_usd</code>-&gt;<code>quote_volume</code>,
+<code>buy_cost</code>/<code>sell_cost</code>-&gt;<code>buy_quote_volume</code>/<code>sell_quote_volume</code>, and the quantile trade-size family
+where <code>buy_cost_0.95</code>, <code>buy_cost_quantile_0.95</code> and <code>buy_volume_quantile_0.95_usd</code> all resolve to
+<code>buy_volume_q95</code> for the q50/q95/q99 triple on both sides), the <code>bid_</code>/<code>ask_</code> pattern
+<code>{side}_{pct}_{feat}_{stat}</code> to <code>ob__{pct}pct__{side}__{feat}__{stat}</code> over <code>feat</code> in
+<code>cost|vwap|size|slope|imbalance|depth_ratio|levels_count|microprice</code> and <code>stat</code> in
+<code>avg|mean|median|min|max|sum|q95|skew</code> with <code>avg</code>-&gt;<code>mean</code> (both <code>_avg</code> and <code>__mean</code> accepted) and
+<code>price_like</code> true only for <code>vwap</code> / <code>microprice</code>, and raw Backend-go keys pass through unchanged
+(<code>go_name</code> never raises despite its docstring). <code>predicted_funding</code> SHALL be served as an
+unconditional zero frame (spot has no such metric; a zero frame keeps the funding leg alive - it is
+never an alias or a NaN frame). <code>realized_funding</code> SHALL NOT be served as a plain alias: it is
+settled once per 8 hours on the 00/08/16 UTC bars only (<code>FUNDING_SETTLEMENT_HOURS</code>, matched on
+<code>minute == 0</code>), taken from the bar immediately before settlement (<code>shift(1)</code>, NaN filled with 0.0),
+and zero elsewhere (so per-bar consumers charge each settlement period exactly once); spot datasets
+carry no funding key and fall back to an all-zero frame. Price-like metrics SHALL undergo
+zero-&gt;NaN-&gt;ffill: a <code>0.0</code> value in the Go writer means "not populated this bar", so <code>GoMetricsDict</code>
+replaces zeros with NaN and forward-fills for price-like keys (never surfacing 0.0 as a real price).
+<code>GoMetricsDict</code> SHALL expose <code>reader = None</code>, cache each resolved frame in itself, and offer
+<code>preload(metrics)</code> that resolves aliases (skipping zero-served names) and batch-loads their Go keys
+in one disk pass. <code>GoExchangeData</code> SHALL map both <code>binance</code> and <code>binance-f</code> exchanges to the SAME
+shared spot-backed <code>GoMetricsDict</code> instance, so futures metrics are proxied by their spot analogs,
+and SHALL preload its <code>_PRELOAD</code> list (<code>close_price</code>, <code>open_price</code>, <code>volume_usd</code>, <code>vwap</code>,
+<code>mark_price</code>, <code>buy_cost</code>, <code>sell_cost</code>, <code>buy_cost_0.95</code>, <code>sell_cost_0.95</code>, <code>bid_25_cost_mean</code>,
+<code>ask_25_cost_mean</code>, <code>bid_25_vwap_mean</code>, <code>ask_25_vwap_mean</code>, <code>ob__minor__spread_bps__mean</code>) at
+construction unless <code>preload=False</code>. This SHALL be the data provider for <code>--metrics-roots</code> backtests
+and the legacy live per-bar path.</p>
 <h4 id="scenario-multi-root-probing">Scenario: Multi-root probing<a class="headerlink" href="#scenario-multi-root-probing" title="Permanent link">&para;</a></h4>
 <ul>
 <li><strong>WHEN</strong> several metric roots are given</li>
-<li><strong>THEN</strong> every root that carries a key is loaded, in order, so a later root overwrites an earlier root's values for the same key (last root wins), probed from sample files at initialization</li>
+<li><strong>THEN</strong> every root that carries a key is loaded, in order, so a later root overwrites an earlier
+  root's values for the same key (last root wins), probed from sample files at initialization</li>
+</ul>
+<h4 id="scenario-funding-settlement-semantics">Scenario: Funding settlement semantics<a class="headerlink" href="#scenario-funding-settlement-semantics" title="Permanent link">&para;</a></h4>
+<ul>
+<li><strong>WHEN</strong> <code>realized_funding</code> is requested on a dataset that carries the key</li>
+<li><strong>THEN</strong> only the 00:00 / 08:00 / 16:00 UTC bars carry a rate, taken from the preceding bar, and
+  every other bar is exactly 0.0</li>
+</ul>
+<h4 id="scenario-price-like-zero-is-not-a-price">Scenario: Price-like zero is not a price<a class="headerlink" href="#scenario-price-like-zero-is-not-a-price" title="Permanent link">&para;</a></h4>
+<ul>
+<li><strong>WHEN</strong> a Go bar reports <code>close = 0.0</code></li>
+<li><strong>THEN</strong> the served <code>close_price</code> frame turns that cell into NaN and forward-fills the last real
+  price instead of reporting a zero price</li>
+</ul>
+<h4 id="scenario-unpopulated-key">Scenario: Unpopulated key<a class="headerlink" href="#scenario-unpopulated-key" title="Permanent link">&para;</a></h4>
+<ul>
+<li><strong>WHEN</strong> a requested Go key is not populated in any configured root</li>
+<li><strong>THEN</strong> a NaN frame over the full grid is served with a warning, never a <code>KeyError</code></li>
+</ul>
+<h3 id="requirement-go-metrics-store-discovery-caching-and-loading">Requirement: Go metrics store discovery, caching and loading<a class="headerlink" href="#requirement-go-metrics-store-discovery-caching-and-loading" title="Permanent link">&para;</a></h3>
+<p><code>GoMetricsStore</code> SHALL, at construction, keep only the roots whose <code>market={market}/type=metrics</code>
+partition exists (warning per skipped root) and raise <code>FileNotFoundError</code> when none does; select the
+<code>dt=</code> day directories overlapping the window with the same <code>day + 1 day &gt;= since and day &lt;= until</code>
+rule; discover symbols from the FIRST and LAST day directory only, intersect them with an explicit
+<code>tickers</code> list when given, union in <code>extra_tickers</code> (symbols served by other sources, carried as NaN
+columns so every metric shares one column set), and raise <code>ValueError("No symbols found in the
+requested window")</code> when the result is empty; and build the 30-minute UTC index over <code>[since,
+until]</code>. It SHALL probe which keys each root actually populates (<code>_probe_nonzero</code>) by reading the
+first symbol file of up to three day directories sampled at the &frac14;, &frac12; and &frac34; positions of the
+window and marking every key whose value is neither <code>0.0</code> nor NaN - the Go writer emits the full key
+schema everywhere, zero-filled for groups it did not compute - exposing the result through <code>has_key</code>
+and <code>populated_keys</code>; an unreadable sample is skipped silently. Frames SHALL be cached on disk under
+<code>cache_dir</code> (default <code>.metrics_cache</code>) keyed by a sha1 over the root list, window, ticker list, a
+data fingerprint and the Go key, where the fingerprint is <code>{shard_count}:{newest_mtime_ns}</code> computed
+from directory stats only (so an in-place dataset rebuild invalidates every cached frame that a
+roots/window/tickers-only key would have served stale); a cached frame SHALL be accepted only when
+its columns and length still match, and a cache write failure SHALL be logged as a warning and
+otherwise ignored. Shard extraction SHALL run over a <code>ThreadPoolExecutor</code> (<code>workers</code>, default 8,
+<code>chunksize=16</code>), skipping unreadable shards with a warning; per symbol the collected <code>{ts: value}</code>
+map SHALL be converted with <code>unit="ms", utc=True</code>, deduplicated keeping the last value per
+timestamp, sorted and reindexed onto the bar grid, while a symbol with no rows for that key gets an
+all-NaN column. <code>load</code> SHALL deduplicate the requested key list and skip keys already materialised,
+so repeated preloads cost nothing, and shard listing SHALL visit only <code>symbol=</code> directories inside
+the store's ticker set - <code>extra_tickers</code> therefore always come back as all-NaN columns rather than
+being read. <code>frame(go_key)</code> SHALL lazily <code>load</code> a single key on demand.</p>
+<h4 id="scenario-rebuilt-dataset-invalidates-the-cache">Scenario: Rebuilt dataset invalidates the cache<a class="headerlink" href="#scenario-rebuilt-dataset-invalidates-the-cache" title="Permanent link">&para;</a></h4>
+<ul>
+<li><strong>WHEN</strong> a metrics root is regenerated in place and the same window is requested again</li>
+<li><strong>THEN</strong> the shard-count/newest-mtime fingerprint changes, every cached frame key changes with it,
+  and the data is re-read instead of served stale</li>
+</ul>
+<h4 id="scenario-no-metrics-partition">Scenario: No metrics partition<a class="headerlink" href="#scenario-no-metrics-partition" title="Permanent link">&para;</a></h4>
+<ul>
+<li><strong>WHEN</strong> none of the supplied roots contains <code>market={market}/type=metrics</code></li>
+<li><strong>THEN</strong> construction raises <code>FileNotFoundError</code> rather than yielding an empty store</li>
+</ul>
+<h3 id="requirement-consumer-contract-for-pipeline-and-live-runtime">Requirement: Consumer contract for pipeline and live runtime<a class="headerlink" href="#requirement-consumer-contract-for-pipeline-and-live-runtime" title="Permanent link">&para;</a></h3>
+<p>The aggregation layer SHALL be consumed through one uniform dict-of-dicts view:
+<code>data[exchange][metric] -&gt; DataFrame(timestamps x tickers)</code>. <code>AlphaPipeline</code> SHALL require exactly
+one data source and raise <code>ValueError</code> when neither <code>data_reader</code> nor <code>data_provider</code> is given: with
+a <code>RawDataReader</code> it builds <code>ExchangeData(reader, since, until, exchanges, tickers)</code>, with a
+prebuilt provider (e.g. <code>GoExchangeData</code>) it uses that container as-is. Strategy gating
+(<code>filter_runnable</code>, default exchange <code>binance-f</code>) SHALL call <code>has_kinds</code> / <code>missing_kinds</code> on the
+container and log a WARNING per skipped strategy naming its missing kinds, so a book-depth alpha
+never runs silently against an empty orderbook partition. <code>run_strategies</code> SHALL then best-effort
+batch-<code>preload</code> the union of the runnable alphas' <code>required_metrics</code> on <code>data["binance-f"]</code> when
+that container exposes <code>preload</code> (the Go container does; <code>AggregatedMetricsDict</code> does not),
+swallowing any failure at DEBUG so the lazy per-metric path stays the fallback. <code>LiveEngine.step</code>
+SHALL rebuild an <code>ExchangeData</code> over <code>[bar_ts - lookback_days, bar_ts]</code> on every bar boundary
+against <code>LiveRawDataReader</code> and call <code>reader.mark_bar_processed(bar_ts)</code> after a successful step.
+<code>LiveRawDataReader</code> SHALL implement the same <code>RawDataReader</code> interface over per-<code>(exchange, kind,
+ticker)</code> deques so the identical aggregators run live, emitting already-normalised column names:
+<code>aggtrades</code> -&gt; <code>kind="trades"</code> rows <code>[timestamp, price, size, side, agg_id, first_trade_id,
+last_trade_id]</code>; raw <code>@trade</code> -&gt; <code>kind="trades_raw"</code> rows <code>[timestamp, trade_id, price, size, side]</code>
+and ONLY when <code>config.settings.LIVE_RECONSTRUCT_MULTILEVEL</code> is true (unimportable settings default
+the flag off with a DEBUG line), so the canonical trades deque stays aggtrade-only; <code>forceorder</code> -&gt;
+<code>kind="liquidations"</code> rows <code>[timestamp, side, size, price]</code> where <code>size</code> is the event's <code>orig_qty</code>
+(the live route differs from the offline normaliser, which prefers <code>cum_filled_qty</code>); closed klines
+only -&gt; <code>kind="klines"</code> with <code>volume_usd = close * volume</code>; <code>booksnapshot</code> -&gt; <code>kind="orderbook"</code>
+expanded to one long-format row per side/price/size; <code>funding</code> -&gt; <code>realized_funding</code>; <code>markprice</code> -&gt;
+<code>[mark_price, index_price, predicted_funding, next_funding_time_ms]</code>; depth diff updates are ignored
+(they are not snapshots). <code>read</code> SHALL evict rows older than <code>since - eviction_grace</code>, materialise
+the deque, tz-localise naive timestamps to UTC, filter <code>[since, until]</code> inclusively and return
+<code>None</code> when the buffer is empty or carries no timestamp column; retention SHALL default to a 60-day
+lookback plus a 1-day grace with a per-kind override capping <code>orderbook</code> at 1 day (full-depth 1 Hz
+books would otherwise be terabytes), with background eviction every 10000 buffered rows.
+<code>bootstrap_from(MultiFileParquetReader, ...)</code> SHALL warm-start the deques over <code>trades</code>,
+<code>trades_raw</code>, <code>orderbook</code>, <code>klines</code>, <code>funding</code>, <code>markprice</code>, <code>liquidations</code>, <code>available_tickers</code>
+SHALL report only symbols actually observed (uppercased), and events arriving with a timestamp
+before the last processed bar SHALL be counted as late and logged every 100 occurrences.</p>
+<h4 id="scenario-missing-data-kind-skips-the-strategy">Scenario: Missing data kind skips the strategy<a class="headerlink" href="#scenario-missing-data-kind-skips-the-strategy" title="Permanent link">&para;</a></h4>
+<ul>
+<li><strong>WHEN</strong> an alpha declares a <code>required_kinds</code> entry the container cannot back</li>
+<li><strong>THEN</strong> it is filtered out of the run with a WARNING naming the missing kinds instead of
+  producing all-NaN weights</li>
+</ul>
+<h4 id="scenario-live-and-offline-share-the-aggregators">Scenario: Live and offline share the aggregators<a class="headerlink" href="#scenario-live-and-offline-share-the-aggregators" title="Permanent link">&para;</a></h4>
+<ul>
+<li><strong>WHEN</strong> <code>LiveEngine.step</code> builds an <code>ExchangeData</code> over the live reader</li>
+<li><strong>THEN</strong> the same <code>aggregate_*_30min</code> functions run on in-memory frames that already carry the
+  normalised column names, so live and backtest panels are computed by identical code</li>
+</ul>
+<h4 id="scenario-raw-fills-gated-by-the-parser-flag">Scenario: Raw fills gated by the parser flag<a class="headerlink" href="#scenario-raw-fills-gated-by-the-parser-flag" title="Permanent link">&para;</a></h4>
+<ul>
+<li><strong>WHEN</strong> <code>LIVE_RECONSTRUCT_MULTILEVEL</code> is false or unavailable</li>
+<li><strong>THEN</strong> raw <code>@trade</code> events are dropped instead of entering either deque, keeping the
+  aggtrade-only invariant and leaving trades_v2 / maker_orders with empty panels</li>
 </ul>
 
 

@@ -2239,6 +2239,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#requirement-go-metrics-window-reader-for-the-trader" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Requirement: Go metrics window reader for the trader
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#requirement-trader-bar-loop" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2261,10 +2272,43 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#requirement-execution-layer" class="md-nav__link">
+  <a href="#requirement-order-sizing-and-paper-execution" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Requirement: Execution layer
+        Requirement: Order sizing and paper execution
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#requirement-binance-usd-m-futures-client" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Requirement: Binance USD-M futures client
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#requirement-real-futures-execution-and-reconciliation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Requirement: Real futures execution and reconciliation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#requirement-maker-post-only-execution" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Requirement: Maker (post-only) execution
       
     </span>
   </a>
@@ -2579,6 +2623,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#requirement-go-metrics-window-reader-for-the-trader" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Requirement: Go metrics window reader for the trader
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#requirement-trader-bar-loop" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2601,10 +2656,43 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#requirement-execution-layer" class="md-nav__link">
+  <a href="#requirement-order-sizing-and-paper-execution" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Requirement: Execution layer
+        Requirement: Order sizing and paper execution
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#requirement-binance-usd-m-futures-client" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Requirement: Binance USD-M futures client
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#requirement-real-futures-execution-and-reconciliation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Requirement: Real futures execution and reconciliation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#requirement-maker-post-only-execution" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Requirement: Maker (post-only) execution
       
     </span>
   </a>
@@ -2672,10 +2760,31 @@
   <h1>Live Trading</h1>
 
 <h2 id="purpose">Purpose<a class="headerlink" href="#purpose" title="Permanent link">&para;</a></h2>
-<p>Defines the live trading runtime of <code>alpha_engine</code> (<code>live/</code>): the CLI entry (<code>main.py live-trade</code>), the component wiring in <code>LiveService</code> (tick bus, order book manager, snapshot loops, warm-start reader, bar orchestrator), the UTC-aligned <code>BarClock</code> with exchange drift correction (<code>BinanceTimeSync</code>), the signal-only bar evaluation loop (<code>LiveEngine</code>), and the full trader loop (<code>LiveTrader</code>, <code>RiskGuard</code>, <code>OrderExecutor</code>, <code>LiveBlotter</code>, <code>StateStore</code>) that Phase 3 wires into paper execution. Phase 1 is signal-only by contract: <code>signal_only=True</code> is hard-coded at the CLI, and any non-signal-only invocation raises <code>NotImplementedError</code>.</p>
+<p>Defines the live trading runtime of <code>alpha_engine</code> (<code>live/</code>): the CLI entry (<code>main.py live-trade</code>),
+the component wiring in <code>run_live</code> (tick bus, order book manager, snapshot loops, warm-start reader,
+bar orchestrator), the UTC-aligned <code>BarClock</code> with exchange drift correction (<code>BinanceTimeSync</code>),
+the signal-only bar evaluation loop (<code>LiveEngine</code>), and the full trader loop (<code>LiveTrader</code>,
+<code>LiveGoMetricsReader</code>, <code>RiskGuard</code>, <code>OrderExecutor</code> / <code>PaperExecutor</code> / <code>BinanceFuturesExecutor</code> /
+<code>MakerFuturesExecutor</code>, <code>LiveBlotter</code>, <code>StateStore</code>) driven by the standalone operator entry <code>python
+-m alpha_engine.live.run_trader</code>. The <code>main.py</code> path is signal-only by contract: <code>signal_only=True</code>
+is hard-coded at the CLI and any non-signal-only invocation raises <code>NotImplementedError</code>; real
+execution is reached only through <code>run_trader</code>.</p>
 <h2 id="requirements">Requirements<a class="headerlink" href="#requirements" title="Permanent link">&para;</a></h2>
 <h3 id="requirement-live-cli-contract">Requirement: Live CLI contract<a class="headerlink" href="#requirement-live-cli-contract" title="Permanent link">&para;</a></h3>
-<p>The system SHALL expose a <code>live-trade</code> subcommand in the root <code>main.py</code> (and treat a flag-only or empty invocation as <code>live-trade</code> for backwards compatibility) accepting <code>--alphas</code> (nargs+, choices from <code>ALPHA_REGISTRY</code>, default <code>trade_imbalance</code>), <code>--symbols</code> (default: the parser's configured symbols), <code>--bar-minutes</code> (default 30), <code>--settlement-seconds</code> (default 5.0), <code>--lookback-days</code> (default 30), <code>--max-w</code> (default 0.03), <code>--end-range</code> (default 50), <code>--market</code> (<code>spot</code>|<code>usdm</code>, default <code>spot</code>), <code>--no-order-book</code>, <code>--snapshot-interval-ms</code>, <code>--data-root</code> (default <code>./data</code>), and <code>--log-level</code>. The invocation SHALL always run in signal-only mode (Phase 1); attempting to disable it SHALL raise <code>NotImplementedError</code> because execution lands in Phases &frac34;.</p>
+<p>The system SHALL expose a <code>live-trade</code> subcommand in the root <code>main.py</code> (and treat a flag-only or
+empty invocation as <code>live-trade</code> for backwards compatibility) accepting <code>--alphas</code> (nargs+, choices
+from <code>ALPHA_REGISTRY</code>, default <code>trade_imbalance</code>), <code>--symbols</code> (nargs+, default <code>None</code> meaning the
+parser's configured <code>SYMBOLS</code>, which is <code>["BTCUSDT", "ETHUSDT"]</code>), <code>--bar-minutes</code> (default 30),
+<code>--settlement-seconds</code> (default 5.0), <code>--lookback-days</code> (default 30), <code>--max-w</code> (default 0.03),
+<code>--end-range</code> (default 50), <code>--market</code> (<code>spot</code>|<code>usdm</code>, default <code>spot</code>), <code>--no-order-book</code>,
+<code>--snapshot-interval-ms</code> (default <code>None</code>), <code>--data-root</code> (default <code>None</code>, resolved to the <code>data/</code>
+directory that sits next to <code>binance_parser/</code>, NOT a CWD-relative path), and <code>--log-level</code> (default
+<code>INFO</code>; an unrecognised level name falls back to <code>INFO</code> rather than erroring). Symbols SHALL be
+accepted either as repeated arguments or as a single comma-separated string (<code>parse_symbols</code>), and
+SHALL be uppercased. The invocation SHALL always run in signal-only mode (Phase 1): no flag exposes
+execution and <code>run_live(signal_only=False)</code> SHALL raise <code>NotImplementedError</code>. <code>KeyboardInterrupt</code>
+SHALL print <code>[Main] Stopped.</code> and exit with status 0. The heavy parser imports SHALL be deferred
+into <code>_run_live</code> so <code>--help</code> does not pull parser dependencies.</p>
 <h4 id="scenario-default-invocation">Scenario: Default invocation<a class="headerlink" href="#scenario-default-invocation" title="Permanent link">&para;</a></h4>
 <ul>
 <li><strong>WHEN</strong> <code>python main.py</code> is run with no subcommand</li>
@@ -2683,35 +2792,124 @@
 </ul>
 <h4 id="scenario-execution-mode-not-implemented">Scenario: Execution mode not implemented<a class="headerlink" href="#scenario-execution-mode-not-implemented" title="Permanent link">&para;</a></h4>
 <ul>
-<li><strong>WHEN</strong> the engine is asked to run with execution enabled</li>
+<li><strong>WHEN</strong> <code>run_live</code> is called with <code>signal_only=False</code></li>
 <li><strong>THEN</strong> it raises <code>NotImplementedError</code> (Phases &frac34;)</li>
 </ul>
+<h4 id="scenario-operator-interrupt">Scenario: Operator interrupt<a class="headerlink" href="#scenario-operator-interrupt" title="Permanent link">&para;</a></h4>
+<ul>
+<li><strong>WHEN</strong> the operator sends Ctrl-C to a running <code>live-trade</code></li>
+<li><strong>THEN</strong> the process prints <code>[Main] Stopped.</code> and exits 0 instead of dumping a traceback</li>
+</ul>
 <h3 id="requirement-live-service-wiring">Requirement: Live service wiring<a class="headerlink" href="#requirement-live-service-wiring" title="Permanent link">&para;</a></h3>
-<p>The system SHALL compose the live runtime in <code>run_live</code> in a fixed order: uppercase the symbols; resolve the venue tag (<code>spot -&gt; "binance"</code>, <code>usdm -&gt; "binance-f"</code>); build a <code>LiveTickBus</code> with a <code>FileWriter</code> sink (excluding <code>booksnapshot</code>); create a shared <code>HealthCounters</code>; build the <code>OrderBookManager</code> unless <code>enable_order_book</code> is false; register the <code>OrderBookUpdatesAggregator</code> as a diff observer when the book is enabled; build <code>LiveRawDataReader</code> with a lookback of <code>lookback_days + 30</code>; warm-start it from parquet under <code>data-root</code> (missing root logs a warning and continues; a warm-start exception is logged and the reader proceeds with empty deques); construct <code>LiveEngine</code> with its config, <code>BinanceTimeSync</code>, and a 30-minute <code>Bar</code>; validate symbols with the parser's pre-flight check; then start everything in one <code>asyncio.TaskGroup</code>: file writer, time sync poller, WS listener, order book manager plus watchdog, order-book parquet snapshot loop (UTC bar-aligned interval, 30 minutes from the parser's live-snapshot setting unless overridden by <code>--snapshot-interval-ms</code>; skipped entirely when the effective interval is &lt;= 0), order-book bus snapshot loop (1 Hz default; skipped when &lt;= 0), reader consumer, and engine. All snapshot cadences: the parquet loop simply runs at the effective interval - the "5000 ms fallback" in the stale <code>run_live</code> docstring does not exist in code (the parser allows no interval and the loop is skipped) - and the loop must keep serving snapshots because the live reader needs them to populate the orderbook deque; the bus snapshot stream never lands on disk (the FileWriter sink excludes <code>booksnapshot</code>).</p>
+<p>The system SHALL compose the live runtime in <code>run_live</code> in a fixed order: reject non-signal-only
+mode; uppercase the symbols; resolve the venue tag (<code>spot -&gt; "binance"</code>, <code>usdm -&gt; "binance-f"</code>,
+falling back to the raw market string for an unknown market); build a <code>LiveTickBus</code> and attach a
+<code>FileWriter</code> sink with <code>exclude_types={"booksnapshot"}</code>; create a single shared <code>HealthCounters</code>
+that is passed to the <code>OrderBookManager</code>, the WS listener and <code>BinanceTimeSync</code>; build the
+<code>OrderBookManager</code> only when <code>enable_order_book</code> is true; register an <code>OrderBookUpdatesAggregator</code>
+as a diff observer when the book is enabled; build <code>LiveRawDataReader</code> with <code>max_lookback_days =
+lookback_days + 30</code>; warm-start it from parquet under the resolved data root; construct
+<code>LiveEngineConfig</code> + <code>LiveEngine</code>, a <code>BinanceTimeSync</code> for the market, and a <code>BarClock</code> using
+<code>bar_minutes</code> and the config's <code>settlement_seconds</code> with <code>time_source=time_sync.now</code>; run the
+parser's pre-flight symbol validation; print a banner; subscribe the reader to the bus with the
+publish-edge event filter; then start every long-running task inside one <code>asyncio.TaskGroup</code>.</p>
+<p>The task set SHALL be: file writer, time-sync poller, WS listener, and - only when the book is
+enabled - the order book manager, its watchdog loop, the order-book parquet snapshot loop and the
+order-book bus snapshot loop; plus the reader consumer and the engine. The parquet snapshot loop
+SHALL use <code>--snapshot-interval-ms</code> when given and otherwise the parser's
+<code>LIVE_ORDERBOOK_SNAPSHOT_INTERVAL_MS</code> (1_800_000 ms = 30 minutes, UTC-aligned), and SHALL be skipped
+entirely when that effective value is &lt;= 0. The bus snapshot loop SHALL use the parser's
+<code>LIVE_ORDERBOOK_BUS_INTERVAL_MS</code> (1_000 ms = 1 Hz) only - <code>--snapshot-interval-ms</code> does NOT override
+it - and SHALL be skipped when that value is &lt;= 0. Both loops sleep to the next epoch-aligned tick,
+floor the interval at 0.01 s, and snapshot only books that report <code>is_ready()</code>; the parquet loop
+writes straight to the <code>FileWriter</code> (bypassing the bus) while the bus loop writes to the bus, whose
+<code>FileWriter</code> sink excludes <code>booksnapshot</code>, so the 1 Hz stream never lands on disk. The bus snapshot
+loop SHALL keep running because it is the only live source that populates the reader's <code>orderbook</code>
+deque.</p>
+<p>Warm-start SHALL be best effort: a data root that does not exist logs a warning and continues with
+no warm-start; a successful bootstrap logs the buffer count and total row count and logs an extra
+warning when 0 rows were loaded; any exception during bootstrap is logged with a traceback and the
+reader proceeds with empty deques. The <code>OrderBookUpdatesAggregator</code> registration SHALL only keep
+per-bar diff counters running - nothing consumes <code>flush_for_bar</code> yet, so its metrics do not reach
+strategies (TODO NSC-48). Because all tasks share one <code>TaskGroup</code>, an unhandled exception in any
+task SHALL cancel the whole runtime rather than leave a partially-live system.</p>
 <h4 id="scenario-warm-start-failure">Scenario: Warm-start failure<a class="headerlink" href="#scenario-warm-start-failure" title="Permanent link">&para;</a></h4>
 <ul>
 <li><strong>WHEN</strong> the warm-start bootstrap raises or finds no rows under the data root</li>
-<li><strong>THEN</strong> the runtime logs the failure and starts with empty deques rather than aborting</li>
+<li><strong>THEN</strong> the runtime logs the failure or a 0-row warning and starts with empty deques rather than
+  aborting</li>
 </ul>
 <h4 id="scenario-book-disabled">Scenario: Book disabled<a class="headerlink" href="#scenario-book-disabled" title="Permanent link">&para;</a></h4>
 <ul>
 <li><strong>WHEN</strong> <code>--no-order-book</code> is given</li>
 <li><strong>THEN</strong> no <code>OrderBookManager</code>, watchdog, snapshot loops, or diff-observer are created</li>
 </ul>
+<h4 id="scenario-snapshot-interval-override-scope">Scenario: Snapshot interval override scope<a class="headerlink" href="#scenario-snapshot-interval-override-scope" title="Permanent link">&para;</a></h4>
+<ul>
+<li><strong>WHEN</strong> <code>--snapshot-interval-ms 0</code> is given</li>
+<li><strong>THEN</strong> the parquet snapshot loop is not started while the 1 Hz bus snapshot loop still runs at
+  <code>LIVE_ORDERBOOK_BUS_INTERVAL_MS</code></li>
+</ul>
+<h4 id="scenario-soft-pre-flight-validation">Scenario: Soft pre-flight validation<a class="headerlink" href="#scenario-soft-pre-flight-validation" title="Permanent link">&para;</a></h4>
+<ul>
+<li><strong>WHEN</strong> the parser's <code>_validate_symbols</code> finds a symbol that is not TRADING, or the exchangeInfo
+  request fails</li>
+<li><strong>THEN</strong> it prints a warning and the runtime proceeds anyway - validation never aborts the run</li>
+</ul>
 <h3 id="requirement-live-tick-bus">Requirement: Live tick bus<a class="headerlink" href="#requirement-live-tick-bus" title="Permanent link">&para;</a></h3>
-<p>The system SHALL fan out every parser event through <code>LiveTickBus</code>, which implements the same <code>write(market, record)</code> contract as the parser's <code>FileWriter</code> so it can serve as the WS listener's writer. Every written event SHALL be delivered to each subscriber (one <code>asyncio.Queue</code> each) and forwarded inline to every attached sink. Backpressure SHALL be lossy: a subscriber whose queue is full (default 10,000 events) SHALL drop the event, increment its <code>dropped</code> counter, and log at power-of-two thresholds, while the other subscribers still receive the event. A subscription SHALL optionally restrict <code>event_types</code> at the publish edge so high-rate streams (e.g. raw orderbook diffs) never consume queue slots. Sinks SHALL support <code>exclude_types</code> (canonical use: <code>booksnapshot</code> excluded from the parquet writer because the dedicated snapshot loop writes parquet snapshots at a different cadence). The live reader's subscription SHALL be filtered to <code>aggtrades, klines, booksnapshot, funding, markprice, forceorder, trades</code>, deliberately excluding raw orderbook diffs.</p>
+<p>The system SHALL fan out every parser event through <code>LiveTickBus</code>, which implements the same
+<code>write(market, record)</code> contract as the parser's <code>FileWriter</code> so it can serve as the WS listener's
+writer and as a snapshot-loop writer. Every written event SHALL be offered to each subscriber (one
+<code>asyncio.Queue</code> each) and then awaited inline on every attached sink, so sinks share the listener's
+backpressure. Backpressure toward subscribers SHALL be lossy: a subscriber whose queue is full
+(default 10,000 events, <code>DEFAULT_QUEUE_SIZE</code>) SHALL drop the event, increment its <code>dropped</code> counter,
+and log a warning only when the drop count is a power of two, while the other subscribers still
+receive the event. A subscription SHALL optionally restrict <code>event_types</code> at the publish edge so
+high-rate streams (e.g. raw orderbook diffs) never consume queue slots; events rejected by that
+filter SHALL NOT count as drops. Sinks SHALL support <code>exclude_types</code> (canonical use: <code>booksnapshot</code>
+excluded from the parquet writer because the dedicated snapshot loop writes parquet snapshots at a
+different cadence). The live reader's subscription SHALL be filtered to <code>aggtrades, klines,
+booksnapshot, funding, markprice, forceorder, trades</code>, deliberately excluding raw orderbook diffs.
+<code>write</code> SHALL be a no-op once the bus is closed; <code>close()</code> SHALL push a sentinel into every
+subscription so iteration exits cleanly; <code>flush()</code> SHALL forward to sinks only; <code>start()</code> SHALL be
+an idle keep-alive loop so a caller can spawn it as a task; and the bus SHALL expose
+<code>subscriber_count</code> and <code>total_dropped</code> for diagnostics.</p>
 <h4 id="scenario-slow-subscriber-drop">Scenario: Slow subscriber drop<a class="headerlink" href="#scenario-slow-subscriber-drop" title="Permanent link">&para;</a></h4>
 <ul>
 <li><strong>WHEN</strong> a subscriber's queue fills</li>
-<li><strong>THEN</strong> the event is dropped for that subscriber only and the drop counter increments</li>
+<li><strong>THEN</strong> the event is dropped for that subscriber only, the drop counter increments, and a warning
+  is logged only on power-of-two drop counts</li>
 </ul>
 <h4 id="scenario-publish-edge-filter">Scenario: Publish-edge filter<a class="headerlink" href="#scenario-publish-edge-filter" title="Permanent link">&para;</a></h4>
 <ul>
 <li><strong>WHEN</strong> a subscription specifies <code>event_types</code></li>
-<li><strong>THEN</strong> events outside the set are not enqueued, saving queue slots for the events that matter</li>
+<li><strong>THEN</strong> events outside the set are not enqueued and are not counted as drops, saving queue slots
+  for the events that matter</li>
 </ul>
 <h3 id="requirement-bar-clock-and-time-synchronization">Requirement: Bar clock and time synchronization<a class="headerlink" href="#requirement-bar-clock-and-time-synchronization" title="Permanent link">&para;</a></h3>
-<p><code>BarClock</code> SHALL yield one <code>pd.Timestamp</code> per UTC-aligned bar boundary, strictly after the current time, computed as <code>base + (floor(minutes_into_hour / bar_minutes) + 1) * bar_minutes</code> where <code>base</code> is the current minute-zero UTC; each yield SHALL be delayed by <code>settlement_seconds</code> (default 5.0) after the boundary so the WS can deliver the last ticks of the just-closed bar. <code>bar_minutes &lt;= 0</code> or <code>settlement_seconds &lt; 0</code> SHALL raise <code>ValueError</code>. The clock SHALL accept an injectable <code>time_source</code> so boundaries align to the exchange even on a host with a skewed clock. <code>BinanceTimeSync</code> SHALL poll the exchange server-time endpoint once per minute (<code>/api/v3/time</code> on spot, <code>/fapi/v1/time</code> on USD-M), timestamp local time at request start and end (midpoint correction), maintain an EWMA of the <code>server - local</code> offset with <code>alpha=0.3</code>, and expose <code>now()</code> / <code>now_ms()</code>. Until the first sample the offset SHALL be 0 (fall back to local clock); a poll failure SHALL keep the previous EWMA rather than resetting. A drift over 500 ms SHALL log a warning; over 2000 ms SHALL log an error and record a clock-drift alert on the shared <code>HealthCounters</code>.</p>
+<p><code>BarClock</code> SHALL yield one <code>pd.Timestamp</code> per UTC-aligned bar boundary, strictly after the current
+time, computed as <code>base + (floor(minutes_into_hour / bar_minutes) + 1) * bar_minutes</code> where
+<code>minutes_into_hour</code> includes the sub-minute fraction and <code>base</code> is the current hour truncated to
+minute zero; each yield SHALL be delayed by <code>settlement_seconds</code> (default 5.0) past the boundary so
+the WS can deliver the last ticks of the just-closed bar, and the sleep SHALL be skipped when the
+computed wake time is already in the past. <code>bar_minutes &lt;= 0</code> or <code>settlement_seconds &lt; 0</code> SHALL
+raise <code>ValueError</code>. The clock SHALL accept an injectable <code>time_source</code> (default
+<code>datetime.now(timezone.utc)</code>) so boundaries align to the exchange even on a host with a skewed
+clock, and it SHALL re-read <code>time_source</code> after computing the boundary so an injected offset is
+honoured. <code>FakeBarClock</code> SHALL exist as the test harness that yields whatever <code>tick(ts)</code> supplies
+and stops on <code>close()</code>.</p>
+<p><code>BinanceTimeSync</code> SHALL poll the exchange server-time endpoint every <code>poll_interval_sec</code> (default
+60) inside a single <code>aiohttp.ClientSession</code> (<code>/api/v3/time</code> on spot base <code>https://api.binance.com</code>,
+<code>/fapi/v1/time</code> on USD-M base <code>https://fapi.binance.com</code>, 5-second total request timeout), timestamp
+local time at request start and end and use the midpoint as the local reference, then feed <code>server -
+local_mid</code> into an EWMA with <code>alpha = 0.3</code> - except that the FIRST sample is adopted verbatim (no
+smoothing). It SHALL expose <code>offset_ms()</code> (integer-truncated), <code>now_ms()</code>, <code>now()</code>, <code>has_sample</code> and
+<code>n_samples</code>. Until the first sample the offset SHALL be 0 (fall back to the local clock); a poll
+failure SHALL log a warning, return <code>None</code> and keep the previous EWMA rather than resetting. The
+smoothed absolute drift SHALL be compared against thresholds: over 500 ms (<code>WARN_DRIFT_MS</code>) logs a
+warning; over 2000 ms (<code>ERROR_DRIFT_MS</code>) logs an error AND calls
+<code>HealthCounters.record_clock_drift()</code> on the shared counters. Construction SHALL raise <code>ValueError</code>
+for an unknown market or a non-positive poll interval.</p>
 <h4 id="scenario-settlement-delay">Scenario: Settlement delay<a class="headerlink" href="#scenario-settlement-delay" title="Permanent link">&para;</a></h4>
 <ul>
 <li><strong>WHEN</strong> a bar boundary is reached</li>
@@ -2720,10 +2918,47 @@
 <h4 id="scenario-cold-start-clock">Scenario: Cold-start clock<a class="headerlink" href="#scenario-cold-start-clock" title="Permanent link">&para;</a></h4>
 <ul>
 <li><strong>WHEN</strong> no server-time sample has landed yet</li>
-<li><strong>THEN</strong> <code>BinanceTimeSync.now()</code> falls back to the local clock unchanged, and the engine still starts immediately</li>
+<li><strong>THEN</strong> <code>BinanceTimeSync.now()</code> falls back to the local clock unchanged, and the engine still
+  starts immediately</li>
+</ul>
+<h4 id="scenario-transient-poll-failure">Scenario: Transient poll failure<a class="headerlink" href="#scenario-transient-poll-failure" title="Permanent link">&para;</a></h4>
+<ul>
+<li><strong>WHEN</strong> a server-time request raises</li>
+<li><strong>THEN</strong> a warning is logged, <code>sample_once</code> returns <code>None</code>, and the previously smoothed offset is
+  retained instead of being reset to 0</li>
 </ul>
 <h3 id="requirement-live-raw-data-reader">Requirement: Live raw data reader<a class="headerlink" href="#requirement-live-raw-data-reader" title="Permanent link">&para;</a></h3>
-<p><code>LiveRawDataReader</code> SHALL serve the aggregator contract (DataFrame views over <code>[since, until]</code>, same column normalization as the parquet reader) from rolling in-memory deques keyed by <code>(exchange, kind, ticker)</code>, fed from a bus subscription. Event routing SHALL be fixed: <code>aggtrades</code> -&gt; aggregated <code>trades</code> (canonical), raw <code>trades</code> -&gt; <code>trades_raw</code> only when the parser flag <code>LIVE_RECONSTRUCT_MULTILEVEL</code> is set (otherwise dropped, preventing double-counting), <code>forceorder</code> -&gt; <code>liquidations</code>, closed <code>klines</code> only, <code>booksnapshot</code> -&gt; long-form <code>orderbook</code> rows (one per bid/ask level at the snapshot timestamp), <code>funding</code> -&gt; <code>realized_funding</code> column only, <code>markprice</code> -&gt; all four mark-price columns, and raw orderbook diff updates SHALL be ignored. <code>bootstrap_from</code> SHALL seed the deques from prior parquets (<code>trades, trades_raw, orderbook, klines, funding, markprice, liquidations</code>). Eviction SHALL be lazy: rows older than <code>since - grace</code> are dropped during <code>read()</code>, plus periodic global eviction after every 10,000 accumulated rows (the counter advances by <code>len(rows)</code> per event, so a full-depth booksnapshot counts as hundreds of rows, not one event), using per-kind retention (the orderbook deque SHALL keep only 1 day because full-depth 1 Hz books are too large for the general 60-day lookback). Late-event accounting SHALL count events with timestamps strictly before the last processed bar after <code>mark_bar_processed(bar_ts)</code>, logging periodically, so an operator can watch for WS reconnect/load spikes.</p>
+<p><code>LiveRawDataReader</code> SHALL serve the <code>RawDataReader</code> contract (DataFrame views over <code>[since, until]</code>,
+inclusive at both ends, with the same column normalization as the parquet reader) from rolling
+in-memory deques keyed by <code>(exchange, kind, ticker)</code>, fed from a bus subscription tagged with the
+venue's <code>exchange</code> at <code>consume(...)</code> time. Event routing SHALL be fixed: <code>aggtrades</code> -&gt; <code>trades</code>
+rows carrying <code>timestamp, price, size, side, agg_id, first_trade_id, last_trade_id</code>; raw <code>trades</code> -&gt;
+<code>trades_raw</code> (with <code>trade_id</code>) only when the parser flag <code>LIVE_RECONSTRUCT_MULTILEVEL</code> is true,
+otherwise dropped to prevent double-counting - and if the parser package is not importable the flag
+SHALL be treated as false with a debug log; <code>forceorder</code> -&gt; <code>liquidations</code> rows (<code>timestamp, side,
+size</code> from <code>orig_qty</code>, <code>price</code>); <code>klines</code> -&gt; <code>klines</code> rows keyed by <code>open_time</code> with a derived
+<code>volume_usd = close * volume</code>, and only when the kline is closed; <code>booksnapshot</code> -&gt; long-form
+<code>orderbook</code> rows, one per bid and ask level at the snapshot timestamp with full depth preserved;
+<code>funding</code> -&gt; <code>realized_funding</code> only, timestamped by <code>funding_time_ms</code> (the REST row's <code>mark_price</code>
+is deliberately dropped as a settlement-time snapshot); <code>markprice</code> -&gt; <code>mark_price</code>, <code>index_price</code>,
+<code>predicted_funding</code>, <code>next_funding_time_ms</code>; and raw orderbook diff updates SHALL be ignored.
+<code>bootstrap_from</code> SHALL seed the deques from prior parquets for the kinds <code>trades, trades_raw,
+orderbook, klines, funding, markprice, liquidations</code>, defaulting <code>until</code> to now and <code>since</code> to
+<code>until - max_lookback</code>.</p>
+<p>Eviction SHALL be lazy and two-tiered: <code>read()</code> drops leading rows older than <code>since -
+eviction_grace</code> (grace default 1 day, no per-kind override on this path), and a periodic global
+<code>_evict_all</code> runs once <code>evict_every_n_events</code> (default 10,000) rows have accumulated - the counter
+advances by <code>len(rows)</code> per event, so one full-depth booksnapshot counts as hundreds of rows, not
+one event - using the per-kind cutoff <code>now - lookback - grace</code>, where <code>KIND_LOOKBACK_OVERRIDES</code>
+gives <code>orderbook</code> a 1-day lookback while every other kind uses <code>max_lookback_days</code> (constructor
+default 60; the live service passes <code>lookback_days + 30</code>). <code>read()</code> SHALL return <code>None</code> (not an
+empty frame) when the key is unknown, the deque is empty after eviction, or the rows carry no
+<code>timestamp</code> column, and SHALL tz-localize naive timestamps to UTC before slicing. Late-event
+accounting SHALL count rows whose timestamp is strictly before the last bar passed to
+<code>mark_bar_processed(bar_ts)</code> (which only ever moves forward), exposing <code>late_events_dropped</code> and
+logging a warning every <code>late_event_log_every</code> (default 100) additional late rows, so an operator
+can watch for WS reconnect/load spikes. <code>available_tickers</code> SHALL return the sorted set of tickers
+seen per <code>(exchange, kind)</code> and <code>buffer_sizes()</code> SHALL expose per-key row counts.</p>
 <h4 id="scenario-double-count-protection">Scenario: Double-count protection<a class="headerlink" href="#scenario-double-count-protection" title="Permanent link">&para;</a></h4>
 <ul>
 <li><strong>WHEN</strong> a raw <code>trades</code> event arrives and <code>LIVE_RECONSTRUCT_MULTILEVEL</code> is off</li>
@@ -2732,15 +2967,39 @@
 <h4 id="scenario-orderbook-memory-bound">Scenario: Orderbook memory bound<a class="headerlink" href="#scenario-orderbook-memory-bound" title="Permanent link">&para;</a></h4>
 <ul>
 <li><strong>WHEN</strong> full-depth booksnapshots accumulate</li>
-<li><strong>THEN</strong> the orderbook deque is bounded by a 1-day window while cheaper kinds keep the 60-day window</li>
+<li><strong>THEN</strong> the periodic eviction bounds the orderbook deque by a 1-day window while cheaper kinds
+  keep the general lookback window</li>
 </ul>
 <h4 id="scenario-late-event-accounting">Scenario: Late event accounting<a class="headerlink" href="#scenario-late-event-accounting" title="Permanent link">&para;</a></h4>
 <ul>
 <li><strong>WHEN</strong> an event's timestamp is strictly before the last bar the engine has processed</li>
-<li><strong>THEN</strong> it is counted as late and logged periodically, not silently mixed into the wrong bar</li>
+<li><strong>THEN</strong> it is counted as late and logged every 100 further late rows, not silently mixed into the
+  wrong bar</li>
+</ul>
+<h4 id="scenario-unknown-key-read">Scenario: Unknown key read<a class="headerlink" href="#scenario-unknown-key-read" title="Permanent link">&para;</a></h4>
+<ul>
+<li><strong>WHEN</strong> an aggregator reads a <code>(exchange, kind, ticker)</code> triple that has never been seen</li>
+<li><strong>THEN</strong> <code>read</code> returns <code>None</code> rather than an empty DataFrame</li>
 </ul>
 <h3 id="requirement-bar-boundary-evaluation-signal-engine">Requirement: Bar boundary evaluation (signal engine)<a class="headerlink" href="#requirement-bar-boundary-evaluation-signal-engine" title="Permanent link">&para;</a></h3>
-<p><code>LiveEngine</code> SHALL run once per bar: build an <code>ExchangeData</code> view over <code>[bar_ts - lookback_days, bar_ts]</code> via the live reader, run all configured strategies through <code>run_strategies</code>, take the latest weight row at or before <code>bar_ts</code> per strategy, combine (single strategy -&gt; pass-through; multiple -&gt; equal-weight blend across the union of tickers; PnL-driven Markowitz is deferred to Phase 3), log the bar summary (bar number, strategy count, gross, non-zero count, late-events count - the weight vector itself is not logged), signal <code>mark_bar_processed(bar_ts)</code>, and record the bar in <code>weights_history</code>. Strategy evaluation failure at a bar SHALL log the exception and return <code>None</code> (no opinion) rather than crashing the loop, and a bar whose strategies produce no rows SHALL also yield <code>None</code>.</p>
+<p><code>LiveEngine</code> SHALL run once per bar: build an <code>ExchangeData</code> view over <code>[bar_ts - lookback_days,
+bar_ts]</code> via the live reader, run all configured strategies through <code>run_strategies</code> (which itself
+skips any strategy whose <code>required_kinds</code> are not backed by data, logging a warning), take the
+latest weight row at or before <code>bar_ts</code> per strategy, then combine - a single surviving strategy
+passes through as a copy; multiple strategies are blended equal-weight across the sorted union of
+tickers with missing tickers filled as 0 (PnL-driven Markowitz is deferred). It SHALL then, in
+order, append <code>(bar_ts, combined)</code> to <code>weights_history</code>, increment <code>bar_count</code>, call
+<code>reader.mark_bar_processed(bar_ts)</code>, and log the bar summary (bar timestamp, bar number, strategy
+count, gross, non-zero count, cumulative late-event count) - the weight vector itself is never
+logged - and return the combined Series.</p>
+<p>Failure handling SHALL be narrow by design: only the <code>run_strategies</code> call is wrapped, so a strategy
+exception logs and returns <code>None</code>, and a bar where no strategy produced a usable row logs and
+returns <code>None</code>. In both <code>None</code> cases <code>bar_count</code>, <code>weights_history</code> and <code>mark_bar_processed</code> SHALL
+be left untouched. <code>LiveEngine.run</code> SHALL simply iterate the bar clock and await <code>step</code>, with NO
+catch-all - an exception raised outside <code>run_strategies</code> (e.g. in the blend) propagates and, via the
+shared <code>TaskGroup</code>, tears the runtime down. <code>LiveEngineConfig</code> defaults SHALL be
+<code>exchanges=["binance", "binance-f"]</code>, <code>max_w=0.03</code>, <code>end_range=50</code>, <code>lookback_days=30</code>,
+<code>settlement_seconds=5.0</code>.</p>
 <h4 id="scenario-multiple-strategies-blend">Scenario: Multiple strategies blend<a class="headerlink" href="#scenario-multiple-strategies-blend" title="Permanent link">&para;</a></h4>
 <ul>
 <li><strong>WHEN</strong> two or more strategies produce weights for a bar</li>
@@ -2748,64 +3007,318 @@
 </ul>
 <h4 id="scenario-strategy-failure-is-not-fatal">Scenario: Strategy failure is not fatal<a class="headerlink" href="#scenario-strategy-failure-is-not-fatal" title="Permanent link">&para;</a></h4>
 <ul>
-<li><strong>WHEN</strong> strategy evaluation raises at a bar</li>
-<li><strong>THEN</strong> the bar logs the exception and continues no-op; the loop keeps running</li>
+<li><strong>WHEN</strong> <code>run_strategies</code> raises at a bar</li>
+<li><strong>THEN</strong> the bar logs the exception, returns <code>None</code>, and neither the bar counter nor the
+  late-event boundary advances; the loop keeps running</li>
+</ul>
+<h3 id="requirement-go-metrics-window-reader-for-the-trader">Requirement: Go metrics window reader for the trader<a class="headerlink" href="#requirement-go-metrics-window-reader-for-the-trader" title="Permanent link">&para;</a></h3>
+<p><code>LiveGoMetricsReader</code> SHALL serve the trader a <code>GoExchangeData</code> over <code>[bar_ts - lookback_days,
+bar_ts]</code> built from the Go parser's <code>market=&lt;market&gt;/type=metrics</code> parquet (market default <code>usdm</code>),
+by default rebuilding a <code>GoMetricsStore</code> per bar. Disk caching SHALL default to OFF
+(<code>cache_dir=None</code>) because the store's cache key contains the moving <code>(since, until)</code> window, so a
+live cache never hits while rewriting most frames per bar. <code>preload_window(since, until)</code> SHALL load
+one store for a whole offline run; subsequent <code>exchange_data</code> calls whose window falls inside the
+preloaded range SHALL be served as a <code>_SlicedExchangeData</code> view that truncates every frame to
+<code>[since, until]</code> (so <code>frame.iloc[-1]</code> lands on the bar with no look-ahead), while any window outside
+the preloaded range SHALL fall back to building a fresh store. <code>latest_metric_ts()</code> SHALL scan <code>dt=</code>
+partitions newest-first, skip empty days with only a directory glob, return the max <code>ts</code> of the
+first populated day as a UTC timestamp, log a warning and skip a day whose shards are unreadable,
+and return <code>None</code> when no metrics exist. The result SHALL be cached after the first successful scan
+and never refreshed for the rest of the process - correct for offline dry-runs where the newest
+on-disk bar does not move, but in a live run the dashboard's <code>parser_last_metric_ts</code> reflects the
+state at first call, not the newest bar.</p>
+<h4 id="scenario-offline-preload">Scenario: Offline preload<a class="headerlink" href="#scenario-offline-preload" title="Permanent link">&para;</a></h4>
+<ul>
+<li><strong>WHEN</strong> <code>preload_window</code> has covered the run and the trader asks for a bar inside it</li>
+<li><strong>THEN</strong> the reader returns a cheap in-memory sliced view instead of re-reading the lake</li>
+</ul>
+<h4 id="scenario-unreadable-metrics-day">Scenario: Unreadable metrics day<a class="headerlink" href="#scenario-unreadable-metrics-day" title="Permanent link">&para;</a></h4>
+<ul>
+<li><strong>WHEN</strong> the newest populated <code>dt=</code> partition has a corrupt shard</li>
+<li><strong>THEN</strong> <code>latest_metric_ts</code> logs a warning and continues to the next-older day instead of raising</li>
 </ul>
 <h3 id="requirement-trader-bar-loop">Requirement: Trader bar loop<a class="headerlink" href="#requirement-trader-bar-loop" title="Permanent link">&para;</a></h3>
-<p><code>LiveTrader</code> SHALL run the full round-trip bar loop (paper mode, Phase 3): read a rolling metrics window from its reader - the file-based <code>LiveGoMetricsReader</code>, which rebuilds a <code>GoMetricsStore</code> over <code>[bar_ts - lookback_days, bar_ts]</code> from the Go parser's <code>type=metrics</code> parquet per bar, or serves cheap in-memory slices from a single <code>preload_window</code> store for offline dry-runs (<code>run_trader --bars N</code>); the reader's <code>latest_metric_ts</code> SHALL report the newest metrics bar on disk for parser-health display (cached after the first successful scan: the value is frozen for the rest of the run, which is fine for offline dry-runs where the newest on-disk bar never moves, but in a live run it reflects the state at first call, not the newest bar). (The in-process <code>LiveMetricsBridge</code> of <code>alpha-engine/metrics-engine</code> supersedes this file handoff on the signal-only path.) - then compute the target via an injectable <code>weight_fn</code> (default: run the named alphas and combine with <code>risk_parity</code> - the estimation-free default, since on short histories the Markowitz tangency chases noise; <code>markowitz</code> / <code>ew</code> selectable); enforce a predictability freshness guard that drops symbols whose order-book metrics are frozen (fewer than 2 distinct values over the last 6 bars of <code>ob__minor__imbalance_top25__mean</code>) - and if every symbol is stale, HOLD (return <code>None</code>) instead of liquidating; optionally rescale to a <code>target_leverage</code> gross when &gt; 0; apply execution smoothing toward the current marked book by at most <code>smooth_delta</code> weight per symbol per bar (live mirror of the backtest's cap smoothing; empty targets still wind down at the same rate); then reconcile/mark prices, run the risk check, rebalance via the executor, re-reconcile, and persist state. Semantics: <code>None</code> from the weight function means "no opinion this bar - HOLD the current book" and never trades; an explicit (possibly empty) Series is a real target (an empty one flattens every position); the two cases SHALL stay distinct so warm-up or degenerate input cannot accidentally flatten a live book. A failing bar SHALL be non-fatal for the trader: <code>LiveTrader.run</code> wraps each bar in a catch-all, logs <code>LiveTrader.step failed at &lt;bar&gt;</code>, and continues the loop - an exception in the weight function or executor never kills the loop (state is simply not persisted for that bar).</p>
+<p><code>LiveTrader.step</code> SHALL run the full round-trip bar: read the metrics window from
+<code>LiveGoMetricsReader</code>, compute the target via an injectable <code>weight_fn</code>, resolve prices, reconcile,
+risk-check, trade, re-reconcile and persist state, in that order.</p>
+<p><code>make_portfolio_weight_fn</code> SHALL be the default weight function: run the named alphas via
+<code>run_strategies</code> (returning <code>None</code> when no strategy ran); pass a single strategy through; for
+multiple strategies call <code>combine_strategies</code> with prices taken from the hard-coded
+<code>data["binance-f"]["mark_price"]</code> frame (NOT <code>TraderConfig.price_key</code>), <code>method=combine</code> (default
+<code>risk_parity</code> - the estimation-free default, since on short histories the Markowitz tangency chases
+noise; <code>markowitz</code> and <code>ew</code> are the other choices) and <code>lookback=mk_lookback_bars</code> (default <code>48 *
+30</code> bars). Only <code>ValueError</code> and <code>numpy.linalg.LinAlgError</code> from the combiner SHALL be caught,
+logged and turned into a HOLD (<code>None</code>); any other exception propagates. It SHALL then take the last
+row at or before <code>bar_ts</code>, <code>dropna()</code> it, and return <code>None</code> if empty. A predictability freshness
+guard SHALL then drop symbols whose order-book metrics are frozen - fewer than 2 distinct values
+over the last 6 bars of <code>ob__minor__imbalance_top25__mean</code> on the <code>binance-f</code> frame - and if the
+lookup itself fails or the recent window is empty the guard SHALL be skipped entirely (every symbol
+kept); if every symbol is stale it SHALL log and HOLD (<code>None</code>) instead of emitting an empty target
+that would liquidate the book. Only after the guard SHALL <code>target_leverage &gt; 0</code> rescale the book so
+<code>sum|w| == target_leverage</code>.</p>
+<p><code>step</code> SHALL treat <code>None</code> as "no opinion this bar - HOLD the current book": the target becomes an
+empty Series, no rebalance is issued, and the log line is suffixed <code>HOLD</code>; an explicit (possibly
+empty) Series is a real target and an empty one flattens every position - the two cases SHALL stay
+distinct so warm-up or degenerate input cannot accidentally flatten a live book. Prices SHALL be
+taken from the last row of <code>data["binance-f"][price_key]</code> (<code>TraderConfig.price_key</code>, default
+<code>mark_price</code>) over the union of that row's index, the target index and the currently held symbols,
+keeping only finite strictly-positive values. <code>executor.reconcile</code> SHALL run BEFORE the risk check
+so equity, positions and daily drawdown reflect venue reality, and again after trading so an
+ambiguous fill self-corrects before the snapshot is persisted; <code>mark_to_market</code> follows each
+reconcile. Trading SHALL happen only when the price map is non-empty: a latched kill-switch
+rebalances toward an empty target (an immediate flatten that bypasses smoothing), otherwise a
+decision that is neither <code>held</code> nor a HOLD rebalances toward
+<code>_smooth_toward(decision.approved_weights, prices)</code>. Execution smoothing SHALL move from the
+blotter's current marked weights toward the approved target by at most <code>smooth_delta</code>
+(<code>TraderConfig.smooth_delta</code>, default 0.005, <code>0</code>/<code>None</code> disables) per symbol per bar, dropping
+exactly-zero entries from the result; an empty target still winds down at the same rate. <code>step</code>
+SHALL then increment <code>bar_count</code>, record the fills, and write the state file with
+<code>decision.approved_weights</code> as <code>target_weights</code> and <code>reader.latest_metric_ts()</code> as
+<code>parser_last_metric_ts</code>. <code>LiveTrader.run</code> SHALL wrap each bar in a catch-all that logs
+<code>LiveTrader.step failed at &lt;bar&gt;</code> and continues, so an exception in the weight function, executor,
+reconcile or state write never kills the loop (state is simply not persisted for that bar).</p>
 <h4 id="scenario-stale-book-freshness-guard">Scenario: Stale-book freshness guard<a class="headerlink" href="#scenario-stale-book-freshness-guard" title="Permanent link">&para;</a></h4>
 <ul>
-<li><strong>WHEN</strong> a symbol's orderbook metric is identical across the last 6 bars (dead depth stream)</li>
-<li><strong>THEN</strong> the symbol is dropped from the target; if every symbol is stale the loop holds the book</li>
+<li><strong>WHEN</strong> a symbol's <code>ob__minor__imbalance_top25__mean</code> is identical across the last 6 bars (dead
+  depth stream)</li>
+<li><strong>THEN</strong> the symbol is dropped from the target before leverage scaling; if every symbol is stale
+  the loop holds the book</li>
 </ul>
 <h4 id="scenario-hold-vs-flatten">Scenario: HOLD vs flatten<a class="headerlink" href="#scenario-hold-vs-flatten" title="Permanent link">&para;</a></h4>
 <ul>
-<li><strong>WHEN</strong> the combiner is degenerate during warm-up</li>
-<li><strong>THEN</strong> the weight function returns <code>None</code> (hold the book) rather than an empty target that would liquidate every position</li>
+<li><strong>WHEN</strong> the combiner is degenerate during warm-up and raises <code>ValueError</code> or <code>LinAlgError</code></li>
+<li><strong>THEN</strong> the weight function returns <code>None</code> (hold the book) rather than an empty target that would
+  liquidate every position</li>
 </ul>
 <h4 id="scenario-execution-smoothing">Scenario: Execution smoothing<a class="headerlink" href="#scenario-execution-smoothing" title="Permanent link">&para;</a></h4>
 <ul>
 <li><strong>WHEN</strong> the target moves by more than <code>smooth_delta</code> per symbol</li>
-<li><strong>THEN</strong> the executor receives only the clipped step toward the target (except the kill-switch flatten path, which bypasses smoothing because safety exits must be immediate)</li>
+<li><strong>THEN</strong> the executor receives only the clipped step toward the target (except the kill-switch
+  flatten path, which bypasses smoothing because safety exits must be immediate)</li>
+</ul>
+<h4 id="scenario-no-usable-prices">Scenario: No usable prices<a class="headerlink" href="#scenario-no-usable-prices" title="Permanent link">&para;</a></h4>
+<ul>
+<li><strong>WHEN</strong> the price frame yields no finite positive price for the bar</li>
+<li><strong>THEN</strong> no rebalance is attempted at all, yet the bar is still counted and the state file is
+  still written</li>
 </ul>
 <h3 id="requirement-risk-guard">Requirement: Risk guard<a class="headerlink" href="#requirement-risk-guard" title="Permanent link">&para;</a></h3>
-<p>Every target weight vector SHALL pass through <code>RiskGuard.check</code> before execution, failing safe toward less risk: non-finite weights SHALL be scrubbed to 0; <code>|w_i|</code> SHALL be clipped to <code>max_per_symbol_pct</code> (0.05); the gross <code>sum|w|</code> SHALL be scaled down to <code>max_total_leverage</code> (1.0) when over; net exposure beyond <code>max_net_exposure</code> (0.20) SHALL be recorded as a warning (not corrected); rebalance within <code>min_rebalance_seconds</code> SHALL return a "held" decision that keeps the current actual weights (the knob defaults to 0.0, i.e. the rate limit is disabled unless explicitly configured); and a daily drawdown breaching <code>max_daily_drawdown_pct</code> (0.02) SHALL LATCH a kill-switch: from then on every check returns an all-zero flatten target until manually <code>reset()</code> - and the latch SHALL be re-applied from persisted state on restart (<code>latch()</code>), so a crash cannot silently re-arm trading inside a losing day. NAV SHALL be the smaller of the blotter's equity and <code>max_nav_usd</code> (default 200.0) passed to the executor.</p>
-<h4 id="scenario-kill-switch-lattice">Scenario: Kill-switch lattice<a class="headerlink" href="#scenario-kill-switch-lattice" title="Permanent link">&para;</a></h4>
+<p>Every target weight vector SHALL pass through <code>RiskGuard.check</code> before execution, failing safe
+toward less risk and in this order: roll the blotter's day reference when <code>ts</code> is given; return a
+flat, <code>nav_usd=0.0</code>, <code>killed=True</code> decision if the kill-switch is already latched; latch the
+kill-switch and return the same flat decision when <code>blotter.daily_drawdown() &lt;=
+-abs(max_daily_drawdown_pct)</code> (0.02); return a <code>held</code> decision carrying the blotter's current actual
+weights reindexed onto the target's index when <code>min_rebalance_seconds &gt; 0</code> and the previous
+rebalance was more recent than that (the knob defaults to 0.0, i.e. the rate limit is disabled
+unless explicitly configured); then scrub non-finite weights to 0; clip <code>|w_i|</code> to
+<code>max_per_symbol_pct</code> (0.05); scale the whole vector down when gross <code>sum|w|</code> exceeds
+<code>max_total_leverage</code> (1.0); and record - without correcting - a violation when <code>|sum w|</code> exceeds
+<code>max_net_exposure</code> (0.20). NAV SHALL be <code>min(blotter.equity, max_nav_usd)</code> (default 200.0) and is
+0.0 on both kill paths. <code>_last_rebalance_ts</code> SHALL be updated at the end of any non-kill, non-held
+check where <code>ts</code> was supplied, whether or not trading actually follows. Every applied correction
+SHALL append a human-readable string to <code>RiskDecision.violations</code>, which the state file publishes.
+The kill-switch SHALL latch permanently until <code>reset()</code> is called by an operator, and SHALL be
+re-appliable from persisted state on restart via <code>latch()</code>, so a crash cannot silently re-arm
+trading inside a losing day.</p>
+<h4 id="scenario-kill-switch-latch">Scenario: Kill-switch latch<a class="headerlink" href="#scenario-kill-switch-latch" title="Permanent link">&para;</a></h4>
 <ul>
 <li><strong>WHEN</strong> the daily drawdown breaches the threshold</li>
-<li><strong>THEN</strong> the kill-switch latches and every later check returns a flat target until an operator resets it</li>
+<li><strong>THEN</strong> the kill-switch latches and every later check returns a flat target with <code>nav_usd=0.0</code>
+  until an operator resets it</li>
 </ul>
 <h4 id="scenario-rate-limited-hold">Scenario: Rate-limited hold<a class="headerlink" href="#scenario-rate-limited-hold" title="Permanent link">&para;</a></h4>
 <ul>
-<li><strong>WHEN</strong> two rebalances land within <code>min_rebalance_seconds</code></li>
-<li><strong>THEN</strong> the second is a <code>held</code> decision that trades nothing</li>
+<li><strong>WHEN</strong> two rebalances land within <code>min_rebalance_seconds</code> and that knob is greater than 0</li>
+<li><strong>THEN</strong> the second is a <code>held</code> decision carrying the current actual weights, so nothing trades</li>
 </ul>
-<h3 id="requirement-execution-layer">Requirement: Execution layer<a class="headerlink" href="#requirement-execution-layer" title="Permanent link">&para;</a></h3>
-<p>The system SHALL trade each target vector through an <code>OrderExecutor</code> that diffs target quantity against the blotter's current quantity and trades only the difference, skipping dust below <code>min_notional_usd</code> (default 5.0). <code>target_quantities(weights, prices, nav)</code> SHALL map missing/invalid prices or NaN weights to 0.0. <code>PaperExecutor</code> SHALL model fills at <code>price * (1 +- slippage_bps / 1e4)</code> charged against trade direction (default 1.0 bps) plus a fee of <code>|delta| * fill_price * fee_rate</code> (default 1.6 bps), mirroring the backtest cost model so paper PnL tracks the backtest net PnL; its <code>reconcile</code> SHALL be a no-op (the paper blotter is authoritative). The real <code>BinanceFuturesExecutor</code> SHALL be testnet-by-default (<code>testnet.binancefuture.com</code> unless <code>testnet=False</code>), SIGNED by signed REST with timestamp + <code>recvWindow</code> + HMAC-SHA256, round quantities DOWN to the symbol's step size with a min-notional check before sending, rebalance only the delta between the exchange's reported position and the target (a restart reconciles rather than double-trades), and its <code>reconcile</code> SHALL overwrite the blotter from the venue's real positions/equity each bar so ambiguous order states self-correct. Until the first successful account mirror (<code>_reconciled_once</code>), <code>rebalance</code> SHALL return no orders rather than size a restart book off the blank initial snapshot. Positions whose symbol vanished from the universe SHALL be priced from the venue's <code>mark_prices()</code> so their target (0) still values them for closing (orphan guard). Target position notional SHALL be capped to the exchange's tightest leverage bracket for that symbol (<code>max_notional_cap</code>), so thin symbols can never trigger a <code>-2027</code> "exceeded max position at current leverage" rejection.</p>
+<h3 id="requirement-order-sizing-and-paper-execution">Requirement: Order sizing and paper execution<a class="headerlink" href="#requirement-order-sizing-and-paper-execution" title="Permanent link">&para;</a></h3>
+<p>The system SHALL express execution through the abstract <code>OrderExecutor</code>, whose <code>rebalance</code> diffs a
+target against the current book and whose <code>reconcile</code> defaults to a no-op (paper trading has no
+external venue and its blotter is authoritative). <code>target_quantities(weights, prices, nav)</code> SHALL
+map each weight to <code>w * nav / price</code> and SHALL yield 0.0 for a <code>None</code>/NaN weight or a missing,
+non-positive or NaN price. <code>PaperExecutor</code> SHALL mark to market, compute target quantities, walk the
+sorted union of target symbols and currently held symbols, skip any symbol without a valid positive
+price (so a held position with no price cannot be closed that bar), and trade only the delta,
+skipping any delta whose notional is below <code>min_notional_usd</code> (class default 5.0). Fills SHALL be
+modelled at <code>price * (1 + sign(delta) * slippage_bps / 1e4)</code> (class default 1.0 bps, charged against
+the trade direction) with a fee of <code>|delta| * fill_price * fee_rate</code> (class default 1.6e-4),
+mirroring the backtest cost model so paper PnL tracks backtest net PnL. Note that <code>run_trader</code>
+constructs <code>PaperExecutor</code> from its own CLI defaults (<code>--fee-bps 4.0</code> -&gt; 4e-4, <code>--slippage-bps 1.0</code>,
+<code>--min-notional 5.0</code>), so the operator-facing fee default is 4 bps, not the class default.</p>
 <h4 id="scenario-dust-skipped">Scenario: Dust skipped<a class="headerlink" href="#scenario-dust-skipped" title="Permanent link">&para;</a></h4>
 <ul>
 <li><strong>WHEN</strong> the delta for a symbol is below <code>min_notional_usd</code> in notional terms</li>
 <li><strong>THEN</strong> no order is placed for that symbol</li>
 </ul>
+<h4 id="scenario-unpriced-holding">Scenario: Unpriced holding<a class="headerlink" href="#scenario-unpriced-holding" title="Permanent link">&para;</a></h4>
+<ul>
+<li><strong>WHEN</strong> a currently held symbol has no valid price in the bar's price map</li>
+<li><strong>THEN</strong> the paper executor skips it entirely rather than filling at a bogus price</li>
+</ul>
+<h3 id="requirement-binance-usd-m-futures-client">Requirement: Binance USD-M futures client<a class="headerlink" href="#requirement-binance-usd-m-futures-client" title="Permanent link">&para;</a></h3>
+<p><code>BinanceFuturesClient</code> SHALL be testnet-by-default: the base URL is
+<code>https://testnet.binancefuture.com</code> unless <code>testnet=False</code>, which selects
+<code>https://fapi.binance.com</code>. Signed requests SHALL append <code>timestamp</code> and <code>recvWindow</code> (default 5000)
+and an HMAC-SHA256 signature over the urlencoded parameters, and SHALL be sent with the
+<code>X-MBX-APIKEY</code> header; public requests SHALL send no headers. The HTTP transport SHALL be injectable
+(default <code>requests</code> with a 10-second timeout and <code>raise_for_status</code>, imported lazily) so signing and
+rebalance logic are testable without a network. The client SHALL keep a venue clock offset:
+<code>sync_time()</code> samples <code>/fapi/v1/time</code>, RTT-corrects via the request midpoint, warns when the host is
+more than 1000 ms off, and on failure keeps the previous offset while still backing off; <code>_signed</code>
+SHALL auto-sync when no explicit <code>time_fn</code> was injected and the last sync is older than
+<code>SYNC_INTERVAL_S</code> (1800 s). Endpoints SHALL cover <code>/fapi/v2/account</code>, <code>/fapi/v2/positionRisk</code>
+(non-flat positions only), <code>/fapi/v1/premiumIndex</code> mark prices (unparseable rows warn and are
+omitted), <code>/fapi/v1/income</code> with <code>incomeType=TRANSFER</code> and <code>limit=1000</code> for day transfers,
+<code>/fapi/v1/exchangeInfo</code> filters (<code>step_size</code>, <code>min_qty</code>, <code>min_notional</code> from <code>MIN_NOTIONAL</code> or
+<code>NOTIONAL</code>, <code>tick_size</code>, <code>qty_precision</code>, <code>price_precision</code>, <code>status</code>), <code>/fapi/v1/leverageBracket</code>
+(the per-symbol MINIMUM <code>notionalCap</code>, best effort - a failure logs a warning and returns an empty
+map), <code>POST /fapi/v1/order</code> for MARKET and GTX/GTC LIMIT orders with <code>newOrderRespType=RESULT</code> (so
+the response carries the final executed qty and average price instead of a bare ACK), <code>GET</code>/<code>DELETE
+/fapi/v1/order</code>, <code>/fapi/v1/ticker/bookTicker</code>, and <code>/fapi/v1/userTrades</code>. Quantities SHALL be
+serialised as fixed-point strings because Binance rejects scientific notation, and <code>round_step</code>
+SHALL round magnitude DOWN to the step while preserving sign.</p>
+<h4 id="scenario-testnet-by-default">Scenario: Testnet by default<a class="headerlink" href="#scenario-testnet-by-default" title="Permanent link">&para;</a></h4>
+<ul>
+<li><strong>WHEN</strong> a client is constructed without <code>testnet=False</code></li>
+<li><strong>THEN</strong> every request targets <code>testnet.binancefuture.com</code>; mainnet must be chosen explicitly</li>
+</ul>
+<h4 id="scenario-clock-offset-compensation">Scenario: Clock offset compensation<a class="headerlink" href="#scenario-clock-offset-compensation" title="Permanent link">&para;</a></h4>
+<ul>
+<li><strong>WHEN</strong> the host clock has drifted and a signed request is about to be sent more than 1800 s
+  after the last sync</li>
+<li><strong>THEN</strong> the client re-syncs against <code>/fapi/v1/time</code> and signs with the offset-corrected
+  timestamp, so orders do not fail with <code>-1021</code></li>
+</ul>
+<h3 id="requirement-real-futures-execution-and-reconciliation">Requirement: Real futures execution and reconciliation<a class="headerlink" href="#requirement-real-futures-execution-and-reconciliation" title="Permanent link">&para;</a></h3>
+<p><code>BinanceFuturesExecutor</code> SHALL rebalance real USD-M positions toward the target. Until the first
+successful account mirror (<code>_reconciled_once</code>), <code>rebalance</code> SHALL log a warning and return no orders
+rather than size a restart book off the blank initial snapshot. It SHALL lazily load exchange
+filters once (attaching <code>max_notional_cap</code> from the leverage brackets, with a warning when brackets
+are unavailable), mark to market, and read the venue's signed positions as the source of truth for
+"current". Positions whose symbol vanished from the universe SHALL be priced from <code>mark_prices()</code> so
+their target (0) still values them for closing (orphan guard); if that call fails the executor SHALL
+log an error and leave those positions unmanaged. Per symbol it SHALL skip symbols without a valid
+price, skip symbols absent from <code>exchangeInfo</code> or whose <code>status</code> is not <code>TRADING</code>, cap the TARGET
+notional to <code>max_notional_cap</code> so a thin symbol cannot trigger a <code>-2027</code> "exceeded max position at
+current leverage" rejection, diff against the venue position, round the delta DOWN to <code>step_size</code>,
+additionally clamp it to <code>qty_precision</code> decimals when the step size was missing (avoiding <code>-1111</code>),
+skip a zero delta, and skip any delta whose notional is below <code>max(config.min_notional_usd, filter
+min_notional)</code>. <code>reduce_only</code> SHALL be sent only when <code>reduce_only_on_decrease</code> is enabled and the
+trade strictly shrinks a same-signed position.</p>
+<p>Order failures SHALL never retry: a <code>-1007</code>/408/timeout body logs a warning and is left for the
+post-rebalance reconcile (the order may have executed, so a retry risks a double fill); any other
+error logs at error level; both continue to the next symbol. Fills SHALL be booked from
+<code>executedQty</code> and <code>avgPrice</code> (falling back to the bar price), with a zero-executed response logged
+as "order not filled" and left for reconcile. Fees SHALL come from <code>/fapi/v1/userTrades</code> for the
+order when every commission is paid in a quote asset (<code>USDT</code>, <code>USDC</code>, <code>BUSD</code>, <code>FDUSD</code>), otherwise
+from the response's <code>fills[]</code> commissions, otherwise estimated as <code>notional * default_fee_rate</code>
+(4e-4 taker, 2e-4 maker).</p>
+<p><code>reconcile</code> SHALL overwrite the blotter from one <code>/fapi/v2/account</code> call - positions with entry
+prices, <code>totalMarginBalance</code> as equity, <code>totalWalletBalance</code> as wallet, <code>totalUnrealizedProfit</code> as
+unrealized - plus today's net transfers from <code>day_transfers</code> since UTC midnight (a failure there
+logs a warning and keeps the previous transfer adjustment), and SHALL set <code>_reconciled_once</code>. An
+<code>account()</code> API error SHALL be swallowed with a warning, keeping local state; but an unparseable
+<code>positionAmt</code> SHALL log an error and RE-RAISE out of <code>reconcile</code> (rather than silently dropping a
+live position), which aborts the bar via <code>LiveTrader.run</code>'s catch-all and leaves <code>_reconciled_once</code>
+unchanged. An unparseable <code>entryPrice</code> SHALL warn and fall back to 0.0.</p>
 <h4 id="scenario-restart-reconciliation">Scenario: Restart reconciliation<a class="headerlink" href="#scenario-restart-reconciliation" title="Permanent link">&para;</a></h4>
 <ul>
 <li><strong>WHEN</strong> the executor starts with an already-open venue position</li>
-<li><strong>THEN</strong> it trades only the difference between the venue's position and the target, never re-opening the full position</li>
+<li><strong>THEN</strong> the first <code>rebalance</code> is skipped until <code>reconcile</code> succeeds, after which it trades only
+  the difference between the venue's position and the target, never re-opening the full position</li>
+</ul>
+<h4 id="scenario-ambiguous-order-timeout">Scenario: Ambiguous order timeout<a class="headerlink" href="#scenario-ambiguous-order-timeout" title="Permanent link">&para;</a></h4>
+<ul>
+<li><strong>WHEN</strong> an order request fails with <code>-1007</code>/timeout</li>
+<li><strong>THEN</strong> the executor logs a warning, does not retry, and lets the post-rebalance reconcile read
+  the venue's real position</li>
+</ul>
+<h3 id="requirement-maker-post-only-execution">Requirement: Maker (post-only) execution<a class="headerlink" href="#requirement-maker-post-only-execution" title="Permanent link">&para;</a></h3>
+<p><code>MakerFuturesExecutor</code> SHALL extend the futures executor by replacing the single market order with a
+post-only-first flow: price at the touch on our own side (best bid for BUY, best ask for SELL) from
+<code>bookTicker</code>, rounded DOWN to <code>tick_size</code> and formatted to <code>price_precision</code>, and post a GTX limit.
+A GTX bounce - the venue rejecting with <code>-5022</code>/"Post Only" or the response reporting status
+<code>EXPIRED</code> - SHALL be repriced and re-posted up to <code>reprice_attempts</code> (default 2, floored at 1
+attempt) and only then fall back to a market order; any other order exception SHALL propagate to the
+caller's per-symbol error handler. A resting order SHALL be polled every <code>poll_seconds</code> (default
+2.0) until its status is one of <code>FILLED, CANCELED, EXPIRED, REJECTED</code> or <code>wait_seconds</code> (default
+45.0) elapses, with a failed poll logged and the previous state retained; a still-open order is then
+cancelled and the remainder sent to market. If the cancel races a fill (<code>-2011</code>) the order SHALL be
+re-queried; if BOTH the cancel and the re-query fail the final state is unknown and the market
+fallback SHALL be deliberately skipped (fail-closed - the order is left for the next reconcile to
+settle). The market fallback SHALL size only <code>qty - executedQty</code>, rounded down to the step, and
+SHALL be skipped when that remainder is below <code>max(min_notional_usd, filter min_notional)</code>.
+<code>MakerExecConfig</code> SHALL inherit the futures config and default <code>default_fee_rate</code> to 2e-4 (maker).</p>
+<h4 id="scenario-gtx-bounce-reprice">Scenario: GTX bounce reprice<a class="headerlink" href="#scenario-gtx-bounce-reprice" title="Permanent link">&para;</a></h4>
+<ul>
+<li><strong>WHEN</strong> the venue rejects the post-only limit as crossing, or returns status <code>EXPIRED</code></li>
+<li><strong>THEN</strong> the executor reprices at the new touch and retries up to <code>reprice_attempts</code> before
+  falling back to a market order</li>
+</ul>
+<h4 id="scenario-unknown-final-state-fails-closed">Scenario: Unknown final state fails closed<a class="headerlink" href="#scenario-unknown-final-state-fails-closed" title="Permanent link">&para;</a></h4>
+<ul>
+<li><strong>WHEN</strong> both the cancel and the follow-up query of a resting maker order fail</li>
+<li><strong>THEN</strong> no market fallback is sent and the order is left for the next reconcile to settle</li>
 </ul>
 <h3 id="requirement-position-and-pnl-accounting">Requirement: Position and PnL accounting<a class="headerlink" href="#requirement-position-and-pnl-accounting" title="Permanent link">&para;</a></h3>
-<p><code>LiveBlotter</code> SHALL book every fill with the average-cost method: same-direction fills weight the average entry; reducing, closing, or flipping fills realize PnL on the closed quantity as <code>(exit_price - avg_entry) * closed_qty * direction</code>; a flip leaves the leftover quantity at the open price; fees are non-negative and reduce equity. Equity SHALL be <code>initial_capital + realized + unrealized - total_fees</code>, with unrealized marked from the latest prices. The daily drawdown reference SHALL reset at each UTC date change (<code>roll_day_if_needed</code>), be restored from persisted state on restart (<code>restore_day_reference</code>), and adjust for net wallet transfers so deposits are not profit and withdrawals are not loss. In live-venue mode the exchange is the source of truth: <code>reconcile_from_exchange</code> overwrites positions/marks/equity/wallet/unrealized, WITHOUT corrupting <code>initial_capital</code> (kept as true deposit so PnL stays meaningful). <code>snapshot()</code> SHALL return a plain dict consumed by the dashboard and the state file.</p>
+<p><code>LiveBlotter</code> SHALL require a positive <code>initial_capital</code> and book every fill with the average-cost
+method: same-direction (or from-flat) fills recompute the weighted average entry; reducing, closing,
+or flipping fills realize <code>(exit_price - avg_entry) * closed_qty * direction</code> on the closed
+quantity; a position within 1e-15 of zero snaps to flat with a zero entry; a flip leaves the
+leftover quantity at the fill price. <code>apply_fill</code> SHALL raise <code>ValueError</code> on a negative fee or a
+NaN quantity/price, SHALL accumulate per-symbol and total fees, SHALL update that symbol's mark to
+the fill price, and SHALL append to the fill log. <code>mark_to_market</code> SHALL ignore missing, NaN or
+non-positive prices.</p>
+<p>In paper mode equity SHALL be <code>initial_capital + realized + unrealized - total_fees</code>, with
+unrealized marked from the latest prices (falling back to the average entry when no mark exists). In
+live-venue mode the exchange is the source of truth: after <code>reconcile_from_exchange</code> the equity is
+the venue's margin balance, realized PnL becomes <code>wallet - initial_capital</code>, and unrealized is the
+venue's figure - all WITHOUT corrupting <code>initial_capital</code> (kept as the true deposit so PnL stays
+meaningful). Flat or NaN venue positions SHALL be dropped from the mirrored book. Leverage SHALL be
+<code>gross_exposure / equity</code>, or infinity when equity is non-positive, and <code>actual_weights</code> SHALL
+return all-zero weights when equity is non-positive. The daily drawdown reference SHALL reset at
+each UTC date change (<code>roll_day_if_needed</code>, which also zeroes the day's transfers), be restorable
+from persisted state on restart (<code>restore_day_reference</code>), and adjust for net wallet transfers so
+deposits are not profit and withdrawals are not loss; the result SHALL be clamped to &lt;= 0 and SHALL
+be 0.0 when the day reference or the deposit-adjusted base is non-positive. <code>snapshot()</code> SHALL
+return a plain dict (including <code>day_utc</code>, <code>day_start_equity</code>, <code>n_fills</code> and a per-symbol position
+table) consumed by the dashboard and the state file.</p>
 <h4 id="scenario-average-cost-entry">Scenario: Average-cost entry<a class="headerlink" href="#scenario-average-cost-entry" title="Permanent link">&para;</a></h4>
 <ul>
 <li><strong>WHEN</strong> a position is increased in the same direction</li>
-<li><strong>THEN</strong> the average entry price is recalculated weighted by the new fill; realized PnL is not booked</li>
+<li><strong>THEN</strong> the average entry price is recalculated weighted by the new fill; realized PnL is not
+  booked</li>
 </ul>
 <h4 id="scenario-flip-realized-pnl">Scenario: Flip realized PnL<a class="headerlink" href="#scenario-flip-realized-pnl" title="Permanent link">&para;</a></h4>
 <ul>
 <li><strong>WHEN</strong> a fill flips a position from long to short</li>
-<li><strong>THEN</strong> realized PnL books on the closed long quantity and the leftover short opens at the fill price</li>
+<li><strong>THEN</strong> realized PnL books on the closed long quantity and the leftover short opens at the fill
+  price</li>
+</ul>
+<h4 id="scenario-deposit-adjusted-drawdown">Scenario: Deposit-adjusted drawdown<a class="headerlink" href="#scenario-deposit-adjusted-drawdown" title="Permanent link">&para;</a></h4>
+<ul>
+<li><strong>WHEN</strong> a mid-day wallet transfer is mirrored from the venue</li>
+<li><strong>THEN</strong> the daily drawdown nets the transfer out of today's PnL and out of the capital base, so a
+  deposit cannot blind the kill-switch and a withdrawal cannot false-trigger it</li>
 </ul>
 <h3 id="requirement-state-contract-for-the-dashboard">Requirement: State contract for the dashboard<a class="headerlink" href="#requirement-state-contract-for-the-dashboard" title="Permanent link">&para;</a></h3>
-<p>The system SHALL persist one JSON state file per run, written atomically (temp file + <code>os.replace</code>) once per bar - fills are folded into the same bar's update and there is no fill-triggered write - with the schema: <code>updated_ts</code>, <code>mode</code>, <code>bar_count</code>, <code>last_bar_ts</code>, <code>next_bar_eta_s</code>, <code>parser_last_metric_ts</code>, <code>killed</code>, <code>risk_violations</code>, <code>account</code> (initial/equity/realized/unrealized/total fees/gross/leverage/daily dd/day baseline/<code>n_fills</code>), <code>positions[]</code>, <code>target_weights</code>, <code>actual_weights</code>, <code>equity_curve</code> (capped at 5000 points), <code>recent_fills</code> (capped at 200), <code>weight_history</code> (capped at 96 entries). A restart SHALL seed the rolling history from the existing file (so the equity curve and weight tape survive frequent restarts); an unreadable/corrupt file SHALL warn and start empty rather than crash. The file SHALL be read-only for the dashboard process and never written by it.</p>
+<p>The system SHALL persist one JSON state file per run, written atomically (a temp file created in the
+same directory, then <code>os.replace</code>; on any failure the temp file is unlinked and the error re-raised)
+once per bar - fills are folded into the same bar's update via <code>record_fills</code> and there is no
+fill-triggered write - with the schema: <code>updated_ts</code>, <code>mode</code>, <code>bar_count</code>, <code>last_bar_ts</code>,
+<code>next_bar_eta_s</code>, <code>parser_last_metric_ts</code>, <code>killed</code>, <code>risk_violations</code>, <code>account</code>
+(initial_capital/equity/realized_pnl/unrealized_pnl/total_fees/gross_exposure/leverage/
+daily_drawdown/day_utc/day_start_equity/<code>n_fills</code>), <code>positions[]</code>, <code>target_weights</code>,
+<code>actual_weights</code>, <code>equity_curve</code> (capped at 5000 points), <code>recent_fills</code> (capped at 200), and
+<code>weight_history</code> (capped at 96 entries, about 48 h of 30-minute bars). <code>target_weights</code> SHALL be
+serialised as a dict with NaN and exactly-zero entries removed. The equity-curve and weight-history
+points SHALL be appended only when <code>bar_ts</code> is not <code>None</code>. The parent directory SHALL be created on
+construction. JSON SHALL be written with <code>allow_nan=False</code>, so a non-finite value in the snapshot
+raises rather than emitting invalid JSON. A restart SHALL seed the rolling history from the existing
+file (so the equity curve, fills tape and weight tape survive frequent restarts); an unreadable or
+corrupt file SHALL log a warning and start empty rather than crash, and individual malformed history
+entries SHALL be skipped. <code>StateStore.read</code> SHALL return an empty dict for a missing file. The file
+SHALL be read-only for the dashboard process and never written by it.</p>
 <h4 id="scenario-restart-seeding">Scenario: Restart seeding<a class="headerlink" href="#scenario-restart-seeding" title="Permanent link">&para;</a></h4>
 <ul>
 <li><strong>WHEN</strong> the trader restarts and a state file exists</li>
@@ -2817,16 +3330,56 @@
 <li><strong>THEN</strong> the trader warns and continues with empty history instead of crashing</li>
 </ul>
 <h3 id="requirement-standalone-trader-entry">Requirement: Standalone trader entry<a class="headerlink" href="#requirement-standalone-trader-entry" title="Permanent link">&para;</a></h3>
-<p>The system SHALL provide an operator entry point (<code>python -m alpha_engine.live.run_trader</code>) with explicit safety-ordered modes <code>--mode paper|testnet|mainnet</code> (paper default, no exchange contact), <code>--bars N</code> offline dry-run over the latest N metric bars instead of waiting on live boundaries, and testnet/mainnet reading API keys from env (<code>BINANCE_API_KEY</code> / <code>BINANCE_API_SECRET</code>). <code>--execution taker|maker</code> SHALL select the rebalance flow: <code>taker</code> uses the base <code>BinanceFuturesExecutor</code> (marketable diff), <code>maker</code> uses <code>MakerFuturesExecutor</code>, which posts post-only GTX limit orders at the touch; the fallback to a market order has three distinct outcomes - a GTX bounce (the venue rejects the limit as crossing or reports status <code>EXPIRED</code>) is repriced and re-posted up to <code>reprice_attempts</code> (default 2) and only then falls back to market; a resting order still unfilled after <code>--maker-wait</code> seconds (default 45) is cancelled and the remainder is sent to market; and if the resting order's final state is unknown after both cancel and re-query fail, the market fallback is deliberately skipped (fail-closed: the order is left for the next reconcile to settle). The standalone trader SHALL drive its <code>BarClock</code> with <code>settlement_seconds = 10.0</code> (the CLI and <code>BarClock</code> default of 5.0 does not apply here), and in testnet/mainnet live runs the clock SHALL be venue-synced: <code>client.sync_time()</code> is called on startup and a <code>time_source</code> shifts the clock by <code>client.offset_ms()</code>, so bar boundaries align to the venue rather than a drifted host clock (mirroring the <code>BinanceTimeSync</code> contract used on the signal path). On startup the runtime SHALL re-apply persisted safety state, but only when the persisted <code>mode</code> matches the current <code>--mode</code> (safety state never leaks across paper/testnet/mainnet): a previously latched kill-switch SHALL stay latched unless <code>--reset-kill</code> is given, and the persisted day-start drawdown baseline SHALL be restored when it belongs to the current UTC day (a next-day restart deliberately skips the restore, since a stale baseline would corrupt the new day's drawdown reference) - so a crash-restart inside a losing day cannot silently reset the daily kill reference.</p>
+<p>The system SHALL provide an operator entry point (<code>python -m alpha_engine.live.run_trader</code>) with
+explicit safety-ordered modes <code>--mode paper|testnet|mainnet</code> (paper default, no exchange contact;
+mainnet additionally logs a warning naming the NAV cap, leverage and DD kill), a required repeatable
+<code>--metrics-root</code>, and these defaults: <code>--market usdm</code>, <code>--symbols ""</code> (comma-separated; empty means
+all), <code>--alphas book_depth_imbalance</code> (comma-separated), <code>--combine risk_parity</code>
+(<code>markowitz|risk_parity|ew</code>), <code>--price-key mark_price</code>, <code>--capital 10000.0</code>, <code>--max-nav 200.0</code>,
+<code>--max-per-symbol 0.05</code>, <code>--max-leverage 1.0</code>, <code>--target-leverage 0.0</code>, <code>--max-daily-dd 0.02</code>,
+<code>--fee-bps 4.0</code>, <code>--slippage-bps 1.0</code>, <code>--min-notional 5.0</code>, <code>--execution taker</code>, <code>--maker-wait
+45.0</code>, <code>--lookback-days 30</code>, <code>--alloc-lookback-days 14</code>, <code>--smooth-delta 0.005</code> (0 disables),
+<code>--state-file live_state.json</code>, <code>--reset-kill</code>, <code>--bars 0</code>, <code>--bar-minutes 30</code>, <code>--log-level INFO</code>.
+The combiner's bar lookback SHALL be derived as <code>alloc_lookback_days * (1440 // bar_minutes)</code>. An
+empty <code>--alphas</code> list SHALL leave <code>weight_fn</code> unset so <code>LiveTrader</code> builds the default one from its
+config. <code>min_rebalance_seconds</code> SHALL NOT be exposed, so the risk guard's rate limit stays disabled.</p>
+<p><code>--bars N</code> SHALL run an offline dry-run: anchor on <code>latest_metric_ts()</code> floored to the bar size
+(exiting with <code>SystemExit</code> when no metrics exist), build the last N bar timestamps, preload the
+whole window once, step each bar without waiting on boundaries or contacting an exchange, and print
+a completion line with the final equity and the state-file path. Otherwise the run SHALL be live on
+a <code>BarClock</code> with <code>settlement_seconds = 10.0</code> (the CLI and <code>BarClock</code> default of 5.0 does not apply
+here); when the executor exposes a <code>client</code> with <code>offset_ms</code> (testnet/mainnet), <code>client.sync_time()</code>
+SHALL be called on startup and a <code>time_source</code> SHALL shift the local clock by <code>client.offset_ms()</code>
+so bar boundaries align to the venue - in paper mode no client exists and the local clock is used
+unchanged. <code>--execution</code> SHALL select the rebalance flow: <code>taker</code> uses <code>BinanceFuturesExecutor</code>,
+<code>maker</code> uses <code>MakerFuturesExecutor</code> with <code>--maker-wait</code> as its rest window. Testnet and mainnet
+SHALL read <code>BINANCE_API_KEY</code> / <code>BINANCE_API_SECRET</code> from the environment and SHALL exit with
+<code>SystemExit</code> when either is missing.</p>
+<p>On startup the runtime SHALL re-apply persisted safety state, but only when the persisted <code>mode</code>
+matches the current <code>--mode</code> (safety state never leaks across paper/testnet/mainnet): a previously
+latched kill-switch SHALL stay latched with a CRITICAL log unless <code>--reset-kill</code> is given (which
+logs a warning and re-arms), and the persisted day-start drawdown baseline SHALL be restored only
+when its <code>day_utc</code> is the current UTC day (a next-day restart deliberately skips the restore, since
+a stale baseline would corrupt the new day's drawdown reference) - so a crash-restart inside a
+losing day cannot silently reset the daily kill reference.</p>
 <h4 id="scenario-offline-dry-run">Scenario: Offline dry-run<a class="headerlink" href="#scenario-offline-dry-run" title="Permanent link">&para;</a></h4>
 <ul>
 <li><strong>WHEN</strong> <code>--bars N</code> is given</li>
-<li><strong>THEN</strong> the trader runs over the latest N metric bars without waiting on bar boundaries and without exchange contact</li>
+<li><strong>THEN</strong> the trader preloads the metrics window once and runs over the latest N metric bars
+  without waiting on bar boundaries and without exchange contact</li>
 </ul>
 <h4 id="scenario-persisted-kill-switch-survives-restart">Scenario: Persisted kill-switch survives restart<a class="headerlink" href="#scenario-persisted-kill-switch-survives-restart" title="Permanent link">&para;</a></h4>
 <ul>
-<li><strong>WHEN</strong> the trader restarts inside a losing day and the persisted state has <code>killed: true</code></li>
-<li><strong>THEN</strong> the kill-switch stays latched unless <code>--reset-kill</code> is given, and the day's drawdown baseline is restored so the daily kill can still fire</li>
+<li><strong>WHEN</strong> the trader restarts inside a losing day and the persisted state has <code>killed: true</code> and
+  the same <code>mode</code></li>
+<li><strong>THEN</strong> the kill-switch stays latched unless <code>--reset-kill</code> is given, and the day's drawdown
+  baseline is restored so the daily kill can still fire</li>
+</ul>
+<h4 id="scenario-missing-api-credentials">Scenario: Missing API credentials<a class="headerlink" href="#scenario-missing-api-credentials" title="Permanent link">&para;</a></h4>
+<ul>
+<li><strong>WHEN</strong> <code>--mode testnet</code> or <code>--mode mainnet</code> is used without <code>BINANCE_API_KEY</code> and
+  <code>BINANCE_API_SECRET</code></li>
+<li><strong>THEN</strong> the process exits with <code>SystemExit</code> before any executor is constructed</li>
 </ul>
 
 

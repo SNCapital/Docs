@@ -2540,14 +2540,28 @@
   <h1>Historical download</h1>
 
 <h2 id="purpose">Purpose<a class="headerlink" href="#purpose" title="Permanent link">&para;</a></h2>
-<p>Defines the historical bulk-download pipeline of <code>binance_parser</code>: the standalone <code>tools/history.py</code> CLI (<code>download</code> and <code>funding</code> subcommands), per-market file address resolution on the public data archive (<code>data.binance.vision</code>), batch download with checkpoint resume and SHA-256 verification, CSV-to-parquet conversion, and the funding-rate REST backfill.</p>
+<p>Defines the historical bulk-download pipeline of <code>binance_parser</code>: the standalone <code>tools/history.py</code>
+CLI (<code>download</code> and <code>funding</code> subcommands), per-market file address resolution on the public data
+archive (<code>data.binance.vision</code>), batch download with checkpoint resume and SHA-256 verification,
+CSV-to-parquet conversion, and the funding-rate REST backfill.</p>
 <h2 id="requirements">Requirements<a class="headerlink" href="#requirements" title="Permanent link">&para;</a></h2>
 <h3 id="requirement-history-cli-contract">Requirement: History CLI contract<a class="headerlink" href="#requirement-history-cli-contract" title="Permanent link">&para;</a></h3>
-<p>The system SHALL expose a standalone tool at <code>binance_parser/tools/history.py</code> that boots its own <code>sys.path</code> so it works both as <code>python tools/history.py ...</code> and <code>python -m tools.history ...</code>, owning only the CLI surface while delegating logic to the download service. It SHALL offer a <code>download</code> subcommand with <code>--market</code> (spot|usdm|both, default spot), <code>--group</code> (all|major, default all), <code>--symbols</code> (explicit list that overrides the group), <code>--types</code> (defaults to klines, aggTrades and bookTicker), <code>--months</code> (default 12), <code>--intervals</code> (defaults to 1s and 1m; applied to klines only), <code>--workers</code> (default 8), <code>--dry-run</code>, and <code>-y/--yes</code>. It SHALL offer a <code>funding</code> subcommand with <code>--group</code> (all|major, default major), <code>--symbols</code>, <code>--months</code>, and <code>--dry-run</code>. Symbols passed explicitly SHALL be checked against the static pair list with a warning for unknown ones; without <code>--symbols</code> the group resolves to the major pair list (or all pairs for <code>all</code>).</p>
+<p>The system SHALL expose a standalone tool at <code>binance_parser/tools/history.py</code> that boots its own
+<code>sys.path</code> so it works both as <code>python tools/history.py ...</code> and <code>python -m tools.history ...</code>,
+owning only the CLI surface while delegating logic to the download service. It SHALL offer a
+<code>download</code> subcommand with <code>--market</code> (spot|usdm|both, default spot), <code>--group</code> (all|major, default
+all), <code>--symbols</code> (explicit list that overrides the group), <code>--types</code> (defaults to klines, aggTrades
+and bookTicker), <code>--months</code> (default 12), <code>--intervals</code> (defaults to 1s and 1m; applied to klines
+only), <code>--workers</code> (default 8), <code>--dry-run</code>, and <code>-y/--yes</code>. It SHALL offer a <code>funding</code> subcommand
+with <code>--group</code> (all|major, default major), <code>--symbols</code>, <code>--months</code>, and <code>--dry-run</code>. Symbols passed
+explicitly SHALL be checked against the static pair list with a warning for unknown ones; without
+<code>--symbols</code> the group resolves to the major pair list (or all pairs for <code>all</code>).</p>
 <h4 id="scenario-default-download-run">Scenario: Default download run<a class="headerlink" href="#scenario-default-download-run" title="Permanent link">&para;</a></h4>
 <ul>
 <li><strong>WHEN</strong> <code>python tools/history.py download</code> is run with no flags</li>
-<li><strong>THEN</strong> it resolves the spot market, the <code>all</code> group (all pairs), the default types (klines, aggTrades, bookTicker), the default kline intervals (1s, 1m), and 12 months of lookback, then prepares download entries</li>
+<li><strong>THEN</strong> it resolves the spot market, the <code>all</code> group (all pairs), the default types (klines,
+  aggTrades, bookTicker), the default kline intervals (1s, 1m), and 12 months of lookback, then
+  prepares download entries</li>
 </ul>
 <h4 id="scenario-dry-run-estimate">Scenario: Dry-run estimate<a class="headerlink" href="#scenario-dry-run-estimate" title="Permanent link">&para;</a></h4>
 <ul>
@@ -2565,16 +2579,26 @@
 <li><strong>THEN</strong> the tool prints a warning naming the unknown symbols</li>
 </ul>
 <h3 id="requirement-download-address-resolution">Requirement: Download address resolution<a class="headerlink" href="#requirement-download-address-resolution" title="Permanent link">&para;</a></h3>
-<p>The system SHALL build one download entry per (market, symbol, data type, period) via the spec builder. Past months SHALL resolve to a single monthly ZIP; the current month SHALL resolve to one daily ZIP per day up to and including today. Klines SHALL be multiplied by the configured intervals; all other data types SHALL be single un-intervaled entries. Address bases SHALL come from the venue map: spot <code>https://data.binance.vision/data/spot</code>, usdm <code>https://data.binance.vision/data/futures/um</code>. Interval filenames SHALL omit the data type (<code>BTCUSDT-1m-2024-03.zip</code>); un-intervaled filenames SHALL be <code>SYM-{data_type}-{period}.zip</code>. Every ZIP SHALL have a sibling <code>.CHECKSUM</code> address.</p>
+<p>The system SHALL build one download entry per (market, symbol, data type, period) via the spec
+builder. Past months SHALL resolve to a single monthly ZIP; the current month SHALL resolve to one
+daily ZIP per day up to and including today. Klines SHALL be multiplied by the configured intervals;
+all other data types SHALL be single un-intervaled entries. Address bases SHALL come from the venue
+map: spot <code>https://data.binance.vision/data/spot</code>, usdm
+<code>https://data.binance.vision/data/futures/um</code>. Interval filenames SHALL omit the data type
+(<code>BTCUSDT-1m-2024-03.zip</code>); un-intervaled filenames SHALL be <code>SYM-{data_type}-{period}.zip</code>. Every
+ZIP SHALL have a sibling <code>.CHECKSUM</code> address.</p>
 <h4 id="scenario-monthly-archive-file">Scenario: Monthly archive file<a class="headerlink" href="#scenario-monthly-archive-file" title="Permanent link">&para;</a></h4>
 <ul>
 <li><strong>WHEN</strong> a spot klines entry targets a past month for BTCUSDT with interval 1m</li>
-<li><strong>THEN</strong> the address is <code>https://data.binance.vision/data/spot/monthly/klines/BTCUSDT/1m/BTCUSDT-1m-2024-03.zip</code> with sibling <code>BTCUSDT-1m-2024-03.zip.CHECKSUM</code></li>
+<li><strong>THEN</strong> the address is
+  <code>https://data.binance.vision/data/spot/monthly/klines/BTCUSDT/1m/BTCUSDT-1m-2024-03.zip</code> with
+  sibling <code>BTCUSDT-1m-2024-03.zip.CHECKSUM</code></li>
 </ul>
 <h4 id="scenario-daily-archive-file">Scenario: Daily archive file<a class="headerlink" href="#scenario-daily-archive-file" title="Permanent link">&para;</a></h4>
 <ul>
 <li><strong>WHEN</strong> a usdm aggTrades entry targets a day in the current month</li>
-<li><strong>THEN</strong> the address is <code>https://data.binance.vision/data/futures/um/daily/aggTrades/BTCUSDT/BTCUSDT-aggTrades-2024-03-01.zip</code></li>
+<li><strong>THEN</strong> the address is
+  <code>https://data.binance.vision/data/futures/um/daily/aggTrades/BTCUSDT/BTCUSDT-aggTrades-2024-03-01.zip</code></li>
 </ul>
 <h4 id="scenario-kline-intervals-only">Scenario: Kline intervals only<a class="headerlink" href="#scenario-kline-intervals-only" title="Permanent link">&para;</a></h4>
 <ul>
@@ -2582,21 +2606,36 @@
 <li><strong>THEN</strong> it carries no interval and its filename has no interval segment</li>
 </ul>
 <h3 id="requirement-download-verification-and-conversion-loop">Requirement: Download, verification, and conversion loop<a class="headerlink" href="#requirement-download-verification-and-conversion-loop" title="Permanent link">&para;</a></h3>
-<p>The system SHALL download entries concurrently with a worker pool, skipping any entry whose output parquet already exists. Each ZIP SHALL be fetched together with its sibling <code>.CHECKSUM</code> file and verified with SHA-256. A <code>404</code> for the ZIP SHALL return no path (the file is not on the archive); the batch loop SHALL count it as a failed entry (there is no separate not-found counter). A checksum fetch that raises (connection error or timeout) SHALL log a warning and proceed WITHOUT verification (a documented trade-off); a non-200 checksum response (e.g. a 404 on the <code>.CHECKSUM</code> itself) SHALL be treated silently as unavailable and verification SHALL be skipped without a log. A checksum mismatch SHALL retry the entry, and after three failed attempts SHALL log it as failed. The CSV SHALL be parsed from the first <code>.csv</code> inside the ZIP with fixed column names per data type (12 for klines including the <code>ignore</code> column; 7 for aggTrades; 7 for trades; 7 for bookTicker), cast to the anchored parquet schema, and written atomically; schema-less fallback writing SHALL be unreachable because all four data types have schemas. Columns absent from the anchored schema (such as <code>ignore</code>) SHALL be dropped.</p>
+<p>The system SHALL download entries concurrently with a worker pool, skipping any entry whose output
+parquet already exists. Each ZIP SHALL be fetched together with its sibling <code>.CHECKSUM</code> file and
+verified with SHA-256. A <code>404</code> for the ZIP SHALL return no path (the file is not on the archive);
+the batch loop SHALL count it as a failed entry (there is no separate not-found counter). A checksum
+fetch that raises (connection error or timeout) SHALL log a warning and proceed WITHOUT verification
+(a documented trade-off); a non-200 checksum response (e.g. a 404 on the <code>.CHECKSUM</code> itself) SHALL
+be treated silently as unavailable and verification SHALL be skipped without a log. A checksum
+mismatch SHALL retry the entry, and after three failed attempts SHALL log it as failed. The CSV
+SHALL be parsed from the first <code>.csv</code> inside the ZIP with fixed column names per data type (12 for
+klines including the <code>ignore</code> column; 7 for aggTrades; 7 for trades; 7 for bookTicker), cast to the
+anchored parquet schema, and written atomically; schema-less fallback writing SHALL be unreachable
+because all four data types have schemas. Columns absent from the anchored schema (such as <code>ignore</code>)
+SHALL be dropped.</p>
 <h4 id="scenario-existing-output-skipped">Scenario: Existing output skipped<a class="headerlink" href="#scenario-existing-output-skipped" title="Permanent link">&para;</a></h4>
 <ul>
 <li><strong>WHEN</strong> the output parquet path already exists</li>
-<li><strong>THEN</strong> the entry is resolved without any network I/O and counted as done (only entries already recorded in the checkpoint are counted as skipped on a resumed run)</li>
+<li><strong>THEN</strong> the entry is resolved without any network I/O and counted as done (only entries already
+  recorded in the checkpoint are counted as skipped on a resumed run)</li>
 </ul>
 <h4 id="scenario-checksum-mismatch-retry">Scenario: Checksum mismatch retry<a class="headerlink" href="#scenario-checksum-mismatch-retry" title="Permanent link">&para;</a></h4>
 <ul>
 <li><strong>WHEN</strong> the downloaded binary does not match its checksum</li>
-<li><strong>THEN</strong> the entry is downloaded again, and after three failed attempts it is logged as failed and counted as a failure</li>
+<li><strong>THEN</strong> the entry is downloaded again, and after three failed attempts it is logged as failed and
+  counted as a failure</li>
 </ul>
 <h4 id="scenario-missing-archive-file">Scenario: Missing archive file<a class="headerlink" href="#scenario-missing-archive-file" title="Permanent link">&para;</a></h4>
 <ul>
 <li><strong>WHEN</strong> the archive returns 404 for a ZIP</li>
-<li><strong>THEN</strong> the entry logs the not-found at debug level and returns no path; the batch loop counts it in the failure counter (there is no separate not-found counter)</li>
+<li><strong>THEN</strong> the entry logs the not-found at debug level and returns no path; the batch loop counts it
+  in the failure counter (there is no separate not-found counter)</li>
 </ul>
 <h4 id="scenario-checksum-fetch-unavailable">Scenario: Checksum fetch unavailable<a class="headerlink" href="#scenario-checksum-fetch-unavailable" title="Permanent link">&para;</a></h4>
 <ul>
@@ -2606,7 +2645,13 @@
 <li><strong>THEN</strong> no log is emitted at all and the parquet is written unverified</li>
 </ul>
 <h3 id="requirement-checkpoint-and-resume">Requirement: Checkpoint and resume<a class="headerlink" href="#requirement-checkpoint-and-resume" title="Permanent link">&para;</a></h3>
-<p>The system SHALL persist a checkpoint JSON file listing the URLs of successfully downloaded entries after every 50 successful downloads and again on shutdown; on restart it SHALL skip already-done URLs. The checkpoint SHALL live at the data root as <code>.download_checkpoint.json</code>, keyed by full URL so spot and usdm entries do not collide. A corrupt or unreadable checkpoint SHALL log a warning, rename the file to a <code>.corrupt</code> sibling, and start over. SIGINT SHALL trigger a graceful shutdown: remaining tasks are canceled, already-finished results are checkpointed, a final checkpoint is saved, and a later invocation resumes.</p>
+<p>The system SHALL persist a checkpoint JSON file listing the URLs of successfully downloaded entries
+after every 50 successful downloads and again on shutdown; on restart it SHALL skip already-done
+URLs. The checkpoint SHALL live at the data root as <code>.download_checkpoint.json</code>, keyed by full URL
+so spot and usdm entries do not collide. A corrupt or unreadable checkpoint SHALL log a warning,
+rename the file to a <code>.corrupt</code> sibling, and start over. SIGINT SHALL trigger a graceful shutdown:
+remaining tasks are canceled, already-finished results are checkpointed, a final checkpoint is
+saved, and a later invocation resumes.</p>
 <h4 id="scenario-interrupted-run-resumes">Scenario: Interrupted run resumes<a class="headerlink" href="#scenario-interrupted-run-resumes" title="Permanent link">&para;</a></h4>
 <ul>
 <li><strong>WHEN</strong> a download run is interrupted with Ctrl+C and restarted</li>
@@ -2618,11 +2663,19 @@
 <li><strong>THEN</strong> the system warns, renames/resets it, and redownloads from scratch without crashing</li>
 </ul>
 <h3 id="requirement-funding-rate-rest-backfill">Requirement: Funding-rate REST backfill<a class="headerlink" href="#requirement-funding-rate-rest-backfill" title="Permanent link">&para;</a></h3>
-<p>The <code>funding</code> subcommand SHALL backfill USD-M funding rates from the REST API for the resolved symbol set over the requested months, paginating with a fixed page size and an exclusive cursor (<code>last funding time + 1</code>). Pagination SHALL stop when a page is shorter than the page size or when the cursor passes the requested end; a non-advancing cursor SHALL break the loop instead of looping forever. Rows SHALL be bucketed by UTC day and written as <code>part-backfill.parquet</code> per (day, symbol) under <code>type=funding</code>. Rate-limit responses SHALL be honored via <code>Retry-After</code>, and transient errors SHALL use a bounded backoff. A <code>--dry-run</code> run SHALL print an estimated row count (about 3 rows per symbol per month) and exit.</p>
+<p>The <code>funding</code> subcommand SHALL backfill USD-M funding rates from the REST API for the resolved
+symbol set over the requested months, paginating with a fixed page size and an exclusive cursor
+(<code>last funding time + 1</code>). Pagination SHALL stop when a page is shorter than the page size or when
+the cursor passes the requested end; a non-advancing cursor SHALL break the loop instead of looping
+forever. Rows SHALL be bucketed by UTC day and written as <code>part-backfill.parquet</code> per (day, symbol)
+under <code>type=funding</code>. Rate-limit responses SHALL be honored via <code>Retry-After</code>, and transient errors
+SHALL use a bounded backoff. A <code>--dry-run</code> run SHALL print an estimated row count (about 3 rows per
+symbol per month) and exit.</p>
 <h4 id="scenario-funding-dry-run">Scenario: Funding dry-run<a class="headerlink" href="#scenario-funding-dry-run" title="Permanent link">&para;</a></h4>
 <ul>
 <li><strong>WHEN</strong> <code>funding</code> runs with <code>--dry-run</code></li>
-<li><strong>THEN</strong> it prints an estimated row count (roughly months times 3 rows per symbol) and exits without requests</li>
+<li><strong>THEN</strong> it prints an estimated row count (roughly months times 3 rows per symbol) and exits
+  without requests</li>
 </ul>
 <h4 id="scenario-non-advancing-pagination-cursor">Scenario: Non-advancing pagination cursor<a class="headerlink" href="#scenario-non-advancing-pagination-cursor" title="Permanent link">&para;</a></h4>
 <ul>
@@ -2635,11 +2688,19 @@
 <li><strong>THEN</strong> pagination stops because that was the last available funding rate</li>
 </ul>
 <h3 id="requirement-output-layout-and-request-policy">Requirement: Output layout and request policy<a class="headerlink" href="#requirement-output-layout-and-request-policy" title="Permanent link">&para;</a></h3>
-<p>The system SHALL write parquet under the data root with the partitioned layout <code>market={market}/type={data_type}/dt={YYYY-MM-DD}/symbol={SYM}/part-{granularity}[-{interval}].parquet</code>, where the granularity is <code>monthly</code> or <code>daily</code> and the interval suffix appears for klines only; month-long entries SHALL use <code>dt=YYYY-MM-01</code>. Each entry SHALL be attempted at most three times with an effective backoff of 2 then 5 seconds, the third attempt being terminal (the 15-second value from the shared backoff constant is unused). The pipeline SHALL depend on <code>aiohttp</code> for downloads, <code>pandas</code>/<code>pyarrow</code> for CSV-to-parquet conversion, and the stdlib <code>hashlib</code>/<code>zipfile</code> for verification and unpacking (no <code>aiofiles</code>).</p>
+<p>The system SHALL write parquet under the data root with the partitioned layout
+<code>market={market}/type={data_type}/dt={YYYY-MM-DD}/symbol={SYM}/part-{granularity}[-{interval}].parquet</code>,
+where the granularity is <code>monthly</code> or <code>daily</code> and the interval suffix appears for klines only;
+month-long entries SHALL use <code>dt=YYYY-MM-01</code>. Each entry SHALL be attempted at most three times with
+an effective backoff of 2 then 5 seconds, the third attempt being terminal (the 15-second value from
+the shared backoff constant is unused). The pipeline SHALL depend on <code>aiohttp</code> for downloads,
+<code>pandas</code>/<code>pyarrow</code> for CSV-to-parquet conversion, and the stdlib <code>hashlib</code>/<code>zipfile</code> for
+verification and unpacking (no <code>aiofiles</code>).</p>
 <h4 id="scenario-monthly-dt-bucket">Scenario: Monthly dt bucket<a class="headerlink" href="#scenario-monthly-dt-bucket" title="Permanent link">&para;</a></h4>
 <ul>
 <li><strong>WHEN</strong> a monthly entry is written</li>
-<li><strong>THEN</strong> its path uses <code>dt=YYYY-MM-01</code> and a part name of <code>part-monthly</code> (or <code>part-monthly-1m</code> for klines)</li>
+<li><strong>THEN</strong> its path uses <code>dt=YYYY-MM-01</code> and a part name of <code>part-monthly</code> (or <code>part-monthly-1m</code> for
+  klines)</li>
 </ul>
 <h4 id="scenario-daily-part-naming">Scenario: Daily part naming<a class="headerlink" href="#scenario-daily-part-naming" title="Permanent link">&para;</a></h4>
 <ul>

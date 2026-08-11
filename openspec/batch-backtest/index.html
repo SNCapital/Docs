@@ -2321,6 +2321,28 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#requirement-backtest-cli-data-source-selection" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Requirement: Backtest CLI data source selection
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#requirement-pipeline-construction-and-validation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Requirement: Pipeline construction and validation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#requirement-pipeline-execution-phases" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2354,6 +2376,28 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#requirement-book-sleeve-weight-funnels" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Requirement: Book sleeve weight funnels
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#requirement-reusable-weight-operators" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Requirement: Reusable weight operators
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#requirement-universe-volume-filter" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2369,6 +2413,17 @@
     <span class="md-ellipsis">
       
         Requirement: PnL and cost kernel
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#requirement-cost-rate-and-spread-sourcing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Requirement: Cost rate and spread sourcing
       
     </span>
   </a>
@@ -2409,10 +2464,54 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#requirement-run-summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Requirement: Run summary
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#requirement-plotting-surface" class="md-nav__link">
     <span class="md-ellipsis">
       
         Requirement: Plotting surface
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#requirement-raw-tick-data-sources" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Requirement: Raw-tick data sources
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#requirement-precomputed-metrics-data-source" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Requirement: Precomputed metrics data source
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#requirement-backtest-outputs-and-side-effects" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Requirement: Backtest outputs and side effects
       
     </span>
   </a>
@@ -2447,44 +2546,233 @@
   <h1>Batch Backtest</h1>
 
 <h2 id="purpose">Purpose<a class="headerlink" href="#purpose" title="Permanent link">&para;</a></h2>
-<p>Defines the vectorised batch backtester of <code>alpha_engine</code>: the <code>tools/backtest.py</code> CLI entry point, the <code>AlphaPipeline</code> orchestration (metrics -&gt; alpha strategies -&gt; optional Markowitz combination -&gt; PnL), the <code>AlphaStrategy</code> interface and the <code>ALPHA_REGISTRY</code>, weight normalization and universe-filtering operators, the PnL / cost kernel (<code>backtest/pnl.py</code>), weight smoothing, strategy combination (<code>portfolio/markowitz.py</code>), turnover diagnostics, and the plotting surface. It covers the offline path only; the live runtime is specified separately under <code>alpha-engine/live-trading</code>.</p>
+<p>Defines the vectorised batch backtester of <code>alpha_engine</code>: the <code>tools/backtest.py</code> CLI entry point,
+the <code>AlphaPipeline</code> orchestration (metrics -&gt; alpha strategies -&gt; optional rolling combination -&gt;
+execution smoothing -&gt; PnL), the <code>AlphaStrategy</code> interface and the <code>ALPHA_REGISTRY</code>, the weight
+operators in <code>operators.py</code>, the universe volume filter, the PnL / cost kernel (<code>backtest/pnl.py</code>),
+weight smoothing (<code>backtest/smooth.py</code>), strategy combination (<code>portfolio/markowitz.py</code>, which also
+hosts <code>risk_parity</code> and <code>ew</code>), turnover diagnostics (<code>backtest/turnover.py</code>), the <code>summary()</code> result
+dict, and the plotting surface (<code>backtest/plots.py</code>). It covers the offline path only; the live
+runtime is specified separately under <code>alpha-engine/live-trading</code>.</p>
 <h2 id="requirements">Requirements<a class="headerlink" href="#requirements" title="Permanent link">&para;</a></h2>
 <h3 id="requirement-backtest-cli-contract">Requirement: Backtest CLI contract<a class="headerlink" href="#requirement-backtest-cli-contract" title="Permanent link">&para;</a></h3>
-<p>The system SHALL expose a standalone <code>tools/backtest.py</code> tool (runnable both as <code>python tools/backtest.py</code> and <code>python -m tools.backtest</code>) that accepts <code>--since</code> / <code>--until</code> (UTC <code>YYYY-MM-DD</code>, defaults <code>2023-06-01</code> / <code>2024-06-01</code>), <code>--alphas</code> (nargs+, choices from <code>ALPHA_REGISTRY</code>, default <code>funding_reversion</code>), <code>--data-root</code> (default <code>data</code>, Hive-layout parquet), <code>--mock</code> (synthetic data), <code>--metrics-roots</code> (Backend-go precomputed metric roots, bypassing raw-tick aggregation), <code>--tickers</code>, <code>--execution</code> (<code>close</code>|<code>vwap</code>, default <code>vwap</code>), <code>--max-w</code> (default <code>0.03</code>), <code>--fee-bps</code> (default <code>1.6</code>), <code>--slippage-bps</code> (default <code>0.0</code>), <code>--spread-default-bps</code> (default <code>2.0</code>), <code>--combine</code> (<code>markowitz</code>|<code>risk_parity</code>|<code>ew</code>, default <code>markowitz</code>), <code>--max-strategy-weight</code> (default <code>0.5</code>), <code>--alloc-lookback-days</code> (default <code>30</code>), <code>--no-plot</code>, and <code>--log-level</code>. The tool SHALL run the pipeline, print <code>pipeline.summary()</code>, and display the dashboard plot unless <code>--no-plot</code> is given.</p>
+<p>The system SHALL expose a standalone <code>tools/backtest.py</code> tool (runnable both as <code>python
+tools/backtest.py</code>, thanks to a <code>sys.path</code> bootstrap that inserts the repo root, and as <code>python -m
+tools.backtest</code>) whose <code>argparse</code> surface is exactly: <code>--since</code> (default <code>2023-06-01</code>), <code>--until</code>
+(default <code>2024-06-01</code>), both declared <code>type=str</code> and converted to <code>pd.Timestamp(..., tz="UTC")</code> only
+later and separately inside <code>_run_backtest</code>, <code>_resolve_backtest_reader</code> and
+<code>_build_go_metrics_provider</code> (so a malformed date surfaces as a pandas parse error mid-run, not as
+an argparse error); <code>--alphas</code> (nargs+, <code>choices=list(ALPHA_REGISTRY)</code>, default
+<code>["funding_reversion"]</code>); <code>--data-root</code> (default <code>data</code>, Hive-layout parquet); <code>--mock</code>
+(store_true); <code>--metrics-roots</code> (nargs+, default <code>None</code>); <code>--tickers</code> (nargs+, default <code>None</code>);
+<code>--execution</code> (<code>close</code>|<code>vwap</code>, default <code>vwap</code>); <code>--max-w</code> (float, default <code>0.03</code>); <code>--fee-bps</code>
+(float, default <code>1.6</code>); <code>--slippage-bps</code> (float, default <code>0.0</code>); <code>--spread-default-bps</code> (float,
+default <code>2.0</code>); <code>--combine</code> (<code>markowitz</code>|<code>risk_parity</code>|<code>ew</code>, default <code>markowitz</code>);
+<code>--max-strategy-weight</code> (float, default <code>0.5</code>); <code>--alloc-lookback-days</code> (int, default <code>30</code>);
+<code>--no-plot</code> (store_true); <code>--log-level</code> (default <code>INFO</code>). <code>--fee-bps</code> SHALL be converted to the
+pipeline's fractional <code>fee_rate</code> by dividing by <code>1e4</code> (so the default 1.6 bps becomes <code>0.00016</code>),
+while <code>--slippage-bps</code> and <code>--spread-default-bps</code> SHALL be passed through in basis points and
+converted inside the kernel. <code>--alloc-lookback-days</code> SHALL be passed as <code>lookback_days</code> (bars = days *
+48). <code>--log-level</code> SHALL configure the root logger through <code>logging.basicConfig</code> with the format
+<code>%(asctime)s %(levelname)s [%(name)s] %(message)s</code>; an unrecognised level name SHALL silently fall
+back to <code>INFO</code> via <code>getattr(logging, name.upper(), logging.INFO)</code>. The tool SHALL run the pipeline,
+print <code>Multi-strategy summary:</code> followed by <code>pipeline.summary()</code>, print a timing line reporting
+data-source init seconds, pipeline run seconds, and their total, and then render
+<code>pipeline.plot("dashboard")</code> plus <code>plt.show()</code> unless <code>--no-plot</code> is given. A <code>KeyboardInterrupt</code>
+SHALL print <code>[Backtest] Stopped.</code> and exit with status 0.</p>
+<p>The CLI SHALL NOT expose several pipeline knobs, which therefore keep their <code>AlphaPipeline</code> defaults
+on every CLI run: <code>end_range=50</code>, <code>smooth_delta=0.005</code>, <code>smooth_method="cap"</code> (so execution
+smoothing is always ON for a CLI backtest), <code>rebalance_hours=24</code> (48 bars), <code>min_strategy_weight</code>
+(fixed at <code>combine_strategies</code>' <code>0.0</code>), <code>exchanges=None</code> (which becomes <code>["binance", "binance-f"]</code>),
+<code>compute_alpha_pnl_correlation=True</code>, and <code>seed=42</code> (stored on the instance and never read - a dead
+knob).</p>
 <h4 id="scenario-default-backtest-run">Scenario: Default backtest run<a class="headerlink" href="#scenario-default-backtest-run" title="Permanent link">&para;</a></h4>
 <ul>
 <li><strong>WHEN</strong> <code>tools/backtest.py</code> is run with no flags</li>
-<li><strong>THEN</strong> it backtests <code>funding_reversion</code> on raw parquet under <code>data/</code> from <code>2023-06-01</code> to <code>2024-06-01</code> with VWAP execution (single strategy, so the combination step is skipped)</li>
+<li><strong>THEN</strong> it backtests <code>funding_reversion</code> on raw parquet under <code>data/</code> from <code>2023-06-01</code> to
+  <code>2024-06-01</code> with VWAP execution, <code>markowitz</code> selected but unused (single strategy, so the
+  combination step is skipped), and cap smoothing at <code>delta=0.005</code> applied to the resulting weights</li>
 </ul>
+<h4 id="scenario-knob-not-on-the-command-line">Scenario: Knob not on the command line<a class="headerlink" href="#scenario-knob-not-on-the-command-line" title="Permanent link">&para;</a></h4>
+<ul>
+<li><strong>WHEN</strong> an operator wants a different <code>end_range</code>, smoothing setting, rebalance cadence, or
+  <code>min_strategy_weight</code></li>
+<li><strong>THEN</strong> there is no flag for it and the CLI run uses the <code>AlphaPipeline</code> default, so the change
+  requires constructing <code>AlphaPipeline</code> directly</li>
+</ul>
+<h3 id="requirement-backtest-cli-data-source-selection">Requirement: Backtest CLI data source selection<a class="headerlink" href="#requirement-backtest-cli-data-source-selection" title="Permanent link">&para;</a></h3>
+<p>The system SHALL resolve the backtest data source in a fixed precedence: <code>--metrics-roots</code> first
+(checked as <code>if args.metrics_roots:</code>), which builds <code>GoMetricsStore(roots, since, until,
+tickers=args.tickers)</code> wrapped in <code>GoExchangeData</code> and passes it as <code>data_provider</code> together with
+<code>tickers=args.tickers</code>; otherwise <code>_resolve_backtest_reader</code> returns <code>MockRawDataReader(since,
+until)</code> when <code>--mock</code> is given, or <code>MultiFileParquetReader(data_root)</code> when the root exists. Because
+<code>--metrics-roots</code> is tested first, it SHALL override <code>--mock</code> and <code>--data-root</code> rather than
+conflicting with them. A <code>--data-root</code> that does not exist and no <code>--mock</code> SHALL raise <code>SystemExit</code>
+with an actionable three-option message (populate it with <code>binance_parser</code>, repoint <code>--data-root</code>,
+or pass <code>--mock</code>) before any pipeline work. <code>--tickers</code> SHALL be honoured only on the
+<code>--metrics-roots</code> path (it reaches both <code>GoMetricsStore</code> and <code>AlphaPipeline.tickers</code>); on the
+<code>--data-root</code> and <code>--mock</code> paths it is silently dropped, so an operator restricting the universe
+there gets the full universe with no warning. On the <code>--metrics-roots</code> path the restriction takes
+effect only through <code>GoMetricsStore</code>: <code>--tickers</code> is also forwarded as <code>AlphaPipeline(tickers=...)</code>,
+but <code>_load_data</code> returns the supplied provider unchanged, so the pipeline-level <code>tickers</code> (like
+<code>since</code>, <code>until</code> and <code>exchanges</code>) is never read there.</p>
 <h4 id="scenario-missing-data-root-without-mock">Scenario: Missing data root without mock<a class="headerlink" href="#scenario-missing-data-root-without-mock" title="Permanent link">&para;</a></h4>
 <ul>
-<li><strong>WHEN</strong> <code>--data-root</code> points to a missing directory and <code>--mock</code> is not given</li>
+<li><strong>WHEN</strong> <code>--data-root</code> points to a missing directory and neither <code>--mock</code> nor <code>--metrics-roots</code> is
+  given</li>
 <li><strong>THEN</strong> the tool exits with an actionable error message instead of crashing inside the pipeline</li>
 </ul>
 <h4 id="scenario-precomputed-metric-roots">Scenario: Precomputed metric roots<a class="headerlink" href="#scenario-precomputed-metric-roots" title="Permanent link">&para;</a></h4>
 <ul>
 <li><strong>WHEN</strong> <code>--metrics-roots</code> is given</li>
-<li><strong>THEN</strong> the tool reads Backend-go precomputed metrics via <code>GoMetricsStore</code> wrapped in <code>GoExchangeData</code> and passes it as the pipeline data provider, skipping raw-tick aggregation</li>
+<li><strong>THEN</strong> the tool reads Backend-go precomputed metrics via <code>GoMetricsStore</code> wrapped in
+  <code>GoExchangeData</code> and passes it as the pipeline data provider, skipping raw-tick aggregation, even
+  if <code>--mock</code> was also passed</li>
 </ul>
-<h3 id="requirement-pipeline-execution-phases">Requirement: Pipeline execution phases<a class="headerlink" href="#requirement-pipeline-execution-phases" title="Permanent link">&para;</a></h3>
-<p>The system SHALL execute <code>AlphaPipeline.run()</code> in four logged phases: load data, generate strategy weights, combine weights (skipped for a single strategy), and compute PnL. The pipeline SHALL validate its configuration up front: <code>combine</code> restricted to <code>markowitz</code>|<code>risk_parity</code>|<code>ew</code>, <code>execution</code> restricted to <code>close</code>|<code>vwap</code>, at least one of <code>data_reader</code> / <code>data_provider</code> provided, and every alpha name resolvable in <code>ALPHA_REGISTRY</code> (unknown names raise <code>ValueError</code> listing available names). It SHALL expose result attributes <code>strategy_weights</code>, <code>combined_weights</code>, <code>allocations</code>, <code>pnl</code>, and <code>alpha_pnls</code>, and SHALL finish with a headline summary (cumulative net PnL, annualized Sharpe from daily-resampled net PnL with <code>sqrt(365)</code>, bar and ticker counts) that is re-raised on failure rather than silently swallowed.</p>
-<h4 id="scenario-single-strategy-run-skips-combination">Scenario: Single-strategy run skips combination<a class="headerlink" href="#scenario-single-strategy-run-skips-combination" title="Permanent link">&para;</a></h4>
+<h4 id="scenario-ticker-restriction-on-a-raw-source">Scenario: Ticker restriction on a raw source<a class="headerlink" href="#scenario-ticker-restriction-on-a-raw-source" title="Permanent link">&para;</a></h4>
 <ul>
-<li><strong>WHEN</strong> exactly one alpha is selected</li>
-<li><strong>THEN</strong> the combined weights are the strategy's own weights, <code>allocations</code> is <code>None</code>, and the Markowitz step is skipped</li>
+<li><strong>WHEN</strong> <code>--tickers BTCUSDT</code> is combined with <code>--data-root</code> or <code>--mock</code></li>
+<li><strong>THEN</strong> the flag is dropped without a warning and the backtest runs the full discovered universe</li>
+</ul>
+<h3 id="requirement-pipeline-construction-and-validation">Requirement: Pipeline construction and validation<a class="headerlink" href="#requirement-pipeline-construction-and-validation" title="Permanent link">&para;</a></h3>
+<p>The system SHALL validate <code>AlphaPipeline</code> configuration in the constructor, before any computation:
+<code>combine</code> restricted to <code>markowitz</code>|<code>risk_parity</code>|<code>ew</code> (else <code>ValueError</code>), <code>execution</code> restricted
+to <code>close</code>|<code>vwap</code> (else <code>ValueError</code>), at least one of <code>data_reader</code> / <code>data_provider</code> supplied
+(else <code>ValueError</code> naming both accepted forms), and every entry of <code>alpha_names</code> present in
+<code>ALPHA_REGISTRY</code> (else <code>ValueError</code> listing the available names). Constructor defaults SHALL be
+<code>since=2023-01-01 UTC</code> and <code>until=2025-01-01 UTC</code> when omitted (deliberately wider than the CLI
+defaults), <code>tickers=None</code>, <code>alpha_names=None</code> (meaning the entire <code>ALPHA_REGISTRY</code>),
+<code>exchanges=None</code>, <code>max_w=0.03</code>, <code>end_range=50</code>, <code>lookback_days=30</code>, <code>rebalance_hours=24</code>,
+<code>max_strategy_weight=0.5</code>, <code>combine="markowitz"</code>, <code>seed=42</code>, <code>execution="close"</code> (the CLI overrides
+this to <code>vwap</code>), <code>fee_rate=0.00016</code>, <code>slippage_bps=0.0</code>, <code>spread_default_bps=2.0</code>,
+<code>smooth_delta=0.005</code>, <code>smooth_method="cap"</code>, and <code>compute_alpha_pnl_correlation=True</code>. Derived state
+SHALL be <code>self.lookback = lookback_days * 48</code> bars and <code>self.rebalance_every = rebalance_hours * 2</code>
+bars. Data loading SHALL return <code>data_provider</code> unchanged when one was supplied (its own window,
+ticker list and exchange mapping win, and <code>since</code>/<code>until</code>/<code>tickers</code>/<code>exchanges</code> on the pipeline are
+then ignored); otherwise it SHALL build <code>ExchangeData(reader, since, until, exchanges, tickers)</code>,
+which defaults to the two exchanges <code>binance</code> and <code>binance-f</code> and lays every metric on a
+<code>pd.date_range(since, until, freq="30min", tz="UTC")</code> grid. Each exchange gets its own
+<code>AggregatedMetricsDict</code>, whose universe - when <code>tickers</code> is <code>None</code> - is the sorted union of the
+reader's available tickers for the <code>trades</code> and <code>klines</code> kinds only (no other kind can introduce a
+ticker). A metric read SHALL lazily aggregate that metric's whole source group for every ticker at
+once and cache it; a metric name matching no registered source SHALL raise <code>KeyError</code> rather than
+return a NaN frame; a ticker with no data for a group SHALL get an all-NaN column; and a group where
+NO ticker had data SHALL still be marked aggregated, so every later key from it raises <code>KeyError</code> -
+which is exactly the signal the <code>vwap</code> and spread fallbacks in the pipeline key off.</p>
+<p><code>AlphaPipeline</code> SHALL NOT copy or subset the container: the same object is reused for prices,
+funding, spreads and every strategy read, so a metric loaded once is paid for once.</p>
+<h4 id="scenario-unknown-metric-name">Scenario: Unknown metric name<a class="headerlink" href="#scenario-unknown-metric-name" title="Permanent link">&para;</a></h4>
+<ul>
+<li><strong>WHEN</strong> a strategy asks the raw-parquet container for a metric that matches no registered
+  aggregator source</li>
+<li><strong>THEN</strong> the container raises <code>KeyError</code> instead of silently serving a NaN frame</li>
 </ul>
 <h4 id="scenario-invalid-combine-method">Scenario: Invalid combine method<a class="headerlink" href="#scenario-invalid-combine-method" title="Permanent link">&para;</a></h4>
 <ul>
 <li><strong>WHEN</strong> <code>combine</code> is set to an unsupported value</li>
 <li><strong>THEN</strong> the pipeline raises <code>ValueError</code> before any computation</li>
 </ul>
+<h4 id="scenario-invalid-execution-model">Scenario: Invalid execution model<a class="headerlink" href="#scenario-invalid-execution-model" title="Permanent link">&para;</a></h4>
+<ul>
+<li><strong>WHEN</strong> <code>execution</code> is neither <code>close</code> nor <code>vwap</code></li>
+<li><strong>THEN</strong> the constructor raises <code>ValueError("Unknown execution model ...")</code></li>
+</ul>
 <h4 id="scenario-unknown-alpha-name">Scenario: Unknown alpha name<a class="headerlink" href="#scenario-unknown-alpha-name" title="Permanent link">&para;</a></h4>
 <ul>
 <li><strong>WHEN</strong> an alpha name is not present in <code>ALPHA_REGISTRY</code></li>
 <li><strong>THEN</strong> the pipeline raises <code>ValueError</code> listing the available names</li>
 </ul>
+<h4 id="scenario-no-data-source">Scenario: No data source<a class="headerlink" href="#scenario-no-data-source" title="Permanent link">&para;</a></h4>
+<ul>
+<li><strong>WHEN</strong> neither <code>data_reader</code> nor <code>data_provider</code> is passed</li>
+<li><strong>THEN</strong> the constructor raises <code>ValueError</code> naming <code>MultiFileParquetReader</code> and <code>GoExchangeData</code>
+  as the two accepted forms</li>
+</ul>
+<h3 id="requirement-pipeline-execution-phases">Requirement: Pipeline execution phases<a class="headerlink" href="#requirement-pipeline-execution-phases" title="Permanent link">&para;</a></h3>
+<p>The system SHALL execute <code>AlphaPipeline.run()</code> in four logged phases - <code>[1/4]</code> load data (lazy: the
+log line states that real reads happen on first metric access), <code>[2/4]</code> generate strategy weights,
+<code>[3/4]</code> combine weights (skipped for a single selected alpha), <code>[4/4]</code> compute PnL - plus an
+unlabelled "Layer 3.5" execution-smoothing step between combine and PnL. Before phase 1 it SHALL log
+the alpha list, exchanges, window, and a smoothing description that reads <code>off</code> when <code>smooth_delta
+is None</code> or <code>smooth_method == "off"</code>. Phase 2 SHALL branch on <code>_compute_alpha_pnl_correlation and
+set(alpha_names) == set(ALPHA_REGISTRY)</code>: when both hold it runs <code>_run_strategies_all</code> over
+<code>list(ALPHA_REGISTRY)</code> and sets <code>strategy_weights</code> to the entries whose names are in the selected
+list; otherwise it runs only the selected alphas and sets <code>all_strategy_weights =
+dict(strategy_weights)</code>. Because the branch condition already requires the selected set to equal the
+whole registry, the two paths produce the same alpha set - the "correlation panel" branch SHALL
+never widen the run beyond the alphas the operator selected. Both branches SHALL log a <code>[2/4]</code> line
+naming the alpha count and a completion line listing the names selected for combination.</p>
+<p>Drift and Markowitz prices SHALL be <code>data["binance-f"]["mark_price"]</code>, read fresh from the container
+at run time (and again in <code>summary()</code> and <code>plot()</code>). After smoothing, the pipeline SHALL pre-compute
+<code>price_ret = prices.pct_change().fillna(0)</code> and <code>funding_aligned =
+realized_funding.reindex(index=price_ret.index, columns=price_ret.columns).fillna(0)</code> once and reuse
+them for the combined PnL and for every per-alpha PnL. It SHALL then compute <code>self.pnl</code> for the
+combined book and <code>self.alpha_pnls[name]</code> for every frame in <code>all_strategy_weights</code>, each first
+passed through the same <code>_maybe_smooth</code>.</p>
+<p><code>_compute_pnl</code> SHALL, on every call, re-read <code>data["binance-f"]["realized_funding"]</code> and pass it as
+<code>funding</code> even though a supplied <code>funding_aligned</code> takes precedence inside the kernel and makes it
+dead; SHALL resolve <code>exec_prices</code> from <code>data["binance-f"]["vwap"]</code> only when <code>execution == "vwap"</code>;
+and SHALL resolve the spread frame exactly once per pipeline instance, caching it on <code>_spread_cache</code>
+via a <code>hasattr</code> guard so a <code>None</code> result is cached too and the (potentially expensive) probe is paid
+on the FIRST call - the combined book - and never repeated for the per-alpha frames. Because the
+funding frame is aligned to the mark-price return grid while <code>w_shift</code> is 2 under VWAP execution,
+the funding leg SHALL be charged on the same 2-bar-lagged weights as the gross leg, and the
+pre-computed <code>price_ret</code> SHALL simply be discarded by the kernel in that mode.</p>
+<p>It SHALL expose result attributes <code>data</code>, <code>strategy_weights</code>, <code>all_strategy_weights</code>,
+<code>combined_weights</code>, <code>allocations</code>, <code>pnl</code>, and <code>alpha_pnls</code>, and SHALL return the (smoothed) combined
+weights. It SHALL finish with a headline INFO line (elapsed seconds, cumulative net PnL, annualized
+Sharpe of daily-resampled <code>pnl_net</code> scaled by <code>sqrt(365)</code> - <code>0.0</code> when the daily standard deviation
+is not <code>&gt; 0</code>, which includes the single-row case where it is NaN - bar count and ticker count); any
+exception while building that headline SHALL be logged with a traceback via <code>logger.exception</code> and
+re-raised so the run exits non-zero rather than reporting success on a suspect result.</p>
+<h4 id="scenario-single-strategy-run-skips-combination">Scenario: Single-strategy run skips combination<a class="headerlink" href="#scenario-single-strategy-run-skips-combination" title="Permanent link">&para;</a></h4>
+<ul>
+<li><strong>WHEN</strong> exactly one alpha is selected</li>
+<li><strong>THEN</strong> <code>combined_weights</code> is a copy of that strategy's weight frame, <code>allocations</code> is <code>None</code>,
+  <code>combine_strategies</code> is never called, and the copy is still passed through smoothing before PnL</li>
+</ul>
+<h4 id="scenario-headline-summary-failure">Scenario: Headline summary failure<a class="headerlink" href="#scenario-headline-summary-failure" title="Permanent link">&para;</a></h4>
+<ul>
+<li><strong>WHEN</strong> the final headline computation raises (for example the PnL frame is empty and <code>iloc[-1]</code>
+  fails)</li>
+<li><strong>THEN</strong> the pipeline logs the traceback at ERROR and re-raises instead of returning a suspect
+  result</li>
+</ul>
 <h3 id="requirement-strategy-gating-and-registry">Requirement: Strategy gating and registry<a class="headerlink" href="#requirement-strategy-gating-and-registry" title="Permanent link">&para;</a></h3>
-<p>The system SHALL gate strategies by their declared data-kind requirements before running: a strategy is runnable only if the data layer has every kind in its <code>required_kinds</code> for the futures exchange; otherwise it is skipped with a WARNING log naming the missing kinds (never silently emitting NaN weights). If EVERY selected strategy is skipped the run does not degrade gracefully: a single selected but skipped strategy makes <code>run()</code> raise <code>KeyError</code> when copying its weights, and two or more skipped strategies raise <code>ValueError("Need at least one strategy")</code> from <code>combine_strategies</code> - the operator gets an unhandled traceback, not NaN weights. The <code>ALPHA_REGISTRY</code> SHALL map CLI names to strategy classes by the class <code>name</code> attribute. Sleeve families from the 2026 books (<code>wf_*_all</code>, <code>wf2_*</code>, <code>wf4_*</code>) SHALL declare the <code>go_metrics</code> kind and are therefore skipped, with a warning, when the backtest runs on raw-tick parquet sources instead of <code>--metrics-roots</code>.</p>
+<p>The system SHALL gate strategies by their declared data-kind requirements before running:
+<code>filter_runnable(names, data, exchange="binance-f")</code> looks each name up in <code>ALPHA_REGISTRY</code> and
+keeps it only when <code>data.has_kinds("binance-f", cls.required_kinds)</code> is true; otherwise it records
+the missing kinds and <code>run_strategies</code> logs <code>Skipping strategy '&lt;name&gt;' - missing data kinds: [...]</code>
+at WARNING (never silently emitting NaN weights). Gating SHALL be fully permissive for containers
+whose metrics dict exposes no <code>reader</code> (<code>ExchangeData.missing_kinds</code> returns an empty set), while
+<code>GoExchangeData</code> SHALL instead probe its store for per-kind key sets (<code>trades</code>, <code>klines</code>,
+<code>markprice</code>, <code>orderbook</code>, and <code>go_metrics</code>, the last probing <code>ob__minor__spread_bps__mean</code> and
+<code>vwap</code>) and mark any kind it does not know as missing. If EVERY selected strategy is skipped the run
+does not degrade gracefully: a single selected but skipped strategy makes <code>run()</code> raise <code>KeyError</code>
+when copying its weights, and two or more skipped strategies raise <code>ValueError("Need at least one
+strategy")</code> from <code>combine_strategies</code> - the operator gets an unhandled traceback, not NaN weights.
+When two or more alphas are selected and exactly one survives gating, <code>combine_strategies</code> SHALL
+short-circuit and return that strategy's frame with a constant <code>1.0</code> allocation column (so
+<code>allocations</code> is a DataFrame, not <code>None</code>). The <code>ALPHA_REGISTRY</code> SHALL map CLI names to strategy
+classes keyed by the class <code>name</code> attribute and SHALL contain 18 entries: the seven hand-written
+alphas (<code>ob_mispricing</code>, <code>vol_ob_entropy</code>, <code>funding_reversion</code>, <code>trade_imbalance</code>,
+<code>vol_mean_reversion</code>, <code>book_depth_imbalance</code>, <code>flow_book_divergence</code>) plus <code>BOOK_CLASSES</code>
+(<code>wf_*_all</code>, 6), <code>BOOK_V2_CLASSES</code> (<code>wf2_*</code>, 3), and <code>BOOK_V4_CLASSES</code> (<code>wf4_*</code>, 2). All eleven
+sleeve families declare <code>required_kinds = {"klines", "go_metrics"}</code> and are therefore skipped, with
+a warning, whenever the backtest runs on raw-tick parquet or mock sources instead of
+<code>--metrics-roots</code>. <code>run_strategies(data, alpha_names, max_w=0.03, end_range=50)</code> SHALL be the single
+entry point shared by the batch pipeline and the live engine (<code>alpha_engine/live/engine.py</code> and
+<code>alpha_engine/live/trader.py</code> import it directly), and SHALL best-effort batch-preload the union of
+every runnable class's <code>required_metrics()</code> through <code>data["binance-f"].preload(...)</code> in one disk
+pass, swallowing any exception at DEBUG level (containers without a <code>preload</code> method, such as
+<code>AggregatedMetricsDict</code>, simply fall back to the lazy per-key path). The preload SHALL be skipped
+when the union is empty or the container exposes no <code>preload</code>, and the whole preload block -
+including the <code>data["binance-f"]</code> lookup itself - SHALL be inside the swallowing <code>try</code>, so a
+spot-only container without a <code>binance-f</code> entry degrades to the lazy path instead of raising.
+Strategies SHALL be instantiated with <code>data</code>, <code>max_w</code> and <code>end_range</code> only, so <code>spot_exchange</code> and
+<code>futures_exchange</code> always keep their <code>binance</code> / <code>binance-f</code> defaults in the batch path. Iteration
+order SHALL follow <code>alpha_names</code>, and <code>filter_runnable</code> SHALL raise <code>KeyError</code> on a name absent from
+<code>ALPHA_REGISTRY</code> (the pipeline constructor validates first, so only direct callers can hit this).</p>
 <h4 id="scenario-skipped-strategy-logs-missing-kinds">Scenario: Skipped strategy logs missing kinds<a class="headerlink" href="#scenario-skipped-strategy-logs-missing-kinds" title="Permanent link">&para;</a></h4>
 <ul>
 <li><strong>WHEN</strong> a selected strategy's <code>required_kinds</code> are not available in the data</li>
@@ -2492,78 +2780,422 @@
 </ul>
 <h4 id="scenario-go-metrics-sleeve-on-raw-tick-source">Scenario: Go-metrics sleeve on raw-tick source<a class="headerlink" href="#scenario-go-metrics-sleeve-on-raw-tick-source" title="Permanent link">&para;</a></h4>
 <ul>
-<li><strong>WHEN</strong> a <code>wf_*</code> book sleeve is selected but the data source is raw tick parquet</li>
-<li><strong>THEN</strong> the sleeve is skipped with a warning because <code>go_metrics</code> data is absent</li>
+<li><strong>WHEN</strong> a <code>wf_*</code>, <code>wf2_*</code>, or <code>wf4_*</code> sleeve is selected but the data source is raw tick parquet
+  or <code>--mock</code></li>
+<li><strong>THEN</strong> the sleeve is skipped with a warning because the reader reports no tickers for the
+  <code>go_metrics</code> kind</li>
+</ul>
+<h4 id="scenario-preload-unavailable">Scenario: Preload unavailable<a class="headerlink" href="#scenario-preload-unavailable" title="Permanent link">&para;</a></h4>
+<ul>
+<li><strong>WHEN</strong> the data container has no <code>preload</code> method or preloading raises</li>
+<li><strong>THEN</strong> the failure is logged at DEBUG and the run continues on the lazy per-metric read path</li>
 </ul>
 <h3 id="requirement-strategy-weight-contract">Requirement: Strategy weight contract<a class="headerlink" href="#requirement-strategy-weight-contract" title="Permanent link">&para;</a></h3>
-<p>The system SHALL define <code>AlphaStrategy</code> as the strategy interface: <code>gen_weights_raw()</code> produces a raw un-normalized signal (positive = long bias, negative = short bias), and <code>gen_weights()</code> SHALL normalize every strategy's output to be dollar-neutral (row sum ~ 0) with unit gross exposure (<code>|w|.sum() == 1</code> per row), applying a per-ticker cap <code>max_w</code> via <code>trunc_normalize</code> (clip-and-renormalize fixed-point iteration with a tolerance of <code>1e-9</code>, terminating early when converged; after the iteration limit the final clip wins and the gross is <code>N_active * max_w</code> when the cap is infeasible). The fixed point SHALL require <code>N_active * max_w &gt;= 1</code>. The book-2026 sleeves (<code>wf_*_all</code>) SHALL deviate from the uniform cap: they cap at <code>min(1.0, CAP_MULT / n)</code> with <code>CAP_MULT = 2.125</code> (ignoring <code>max_w``) and then pass the frame through a no-trade band filter (</code>BAND = 0.6<code>) that holds the previous weight until the target moves by at least</code>0.6 * cap<code>(turnover filter, cuts turnover ~3x). Reusable operators (</code>rank<code>,</code>normalize<code>,</code>trunc_normalize<code>,</code>ts_return<code>,</code>ts_logreturn<code>,</code>ts_ema<code>,</code>ts_std<code>,</code>ts_zscore<code>,</code>norm_ratio<code>,</code>set_entropy<code>,</code>set_mean`) SHALL operate row-wise on timestamps x tickers DataFrames, and zero-variance denominators SHALL produce NaN, not crashes.</p>
+<p>The system SHALL define <code>AlphaStrategy</code> as the strategy interface. Subclasses implement
+<code>gen_weights_raw()</code>, which returns a raw un-normalized signal (positive = long bias, negative =
+short bias) on a timestamps x tickers frame. The base <code>gen_weights()</code> SHALL apply exactly three
+steps in order: <code>gen_weights_raw()</code>, then <code>_cut_to_top_by_volume</code>, then <code>trunc_normalize(w,
+self.max_w)</code>. <code>trunc_normalize</code> SHALL first <code>normalize</code> (subtract the row mean, then divide by the
+row's absolute sum with a zero sum replaced by NaN, giving a dollar-neutral row summing to
+<code>|w|.sum() == 1</code>), then run a clip-and-renormalize fixed-point iteration bounded at <code>iters=10</code>: each
+pass clips to <code>[-max_w, max_w]</code> and returns immediately once EVERY row's gross is within <code>1e-9</code> of 1
+(the tolerance is a global max across rows, so one non-converging row keeps the loop running for all
+rows); otherwise it renormalizes by the clipped gross and iterates, and after the last pass returns
+the clipped frame, so the final clip wins and the gross lands at <code>N_active * max_w</code> when the cap is
+infeasible. The fixed point SHALL only exist when <code>N_active * max_w &gt;= 1</code>. Constructor defaults
+SHALL be <code>spot_exchange="binance"</code>, <code>futures_exchange="binance-f"</code>, <code>max_w=0.03</code>, <code>end_range=50</code>,
+and the base <code>required_kinds</code> SHALL be <code>frozenset({"klines"})</code> (every strategy implicitly needs
+klines for the volume filter) with <code>required_metrics()</code> returning <code>("volume_usd", "close_price")</code>.
+Rows that are entirely NaN after the volume cut (or entirely zero before it) SHALL stay NaN rather
+than raise; the downstream smoothing and PnL kernel both convert NaN to 0.</p>
 <h4 id="scenario-normalization-of-a-raw-signal">Scenario: Normalization of a raw signal<a class="headerlink" href="#scenario-normalization-of-a-raw-signal" title="Permanent link">&para;</a></h4>
 <ul>
-<li><strong>WHEN</strong> a raw signal DataFrame is normalized</li>
+<li><strong>WHEN</strong> a raw signal DataFrame is normalized with a feasible cap</li>
 <li><strong>THEN</strong> every row sums to ~0 and the absolute weights sum to 1, with no weight exceeding <code>max_w</code></li>
 </ul>
 <h4 id="scenario-infeasible-cap">Scenario: Infeasible cap<a class="headerlink" href="#scenario-infeasible-cap" title="Permanent link">&para;</a></h4>
 <ul>
 <li><strong>WHEN</strong> <code>N_active * max_w &lt; 1</code></li>
-<li><strong>THEN</strong> <code>trunc_normalize</code> returns the clipped result with gross exposure equal to <code>N_active * max_w</code> rather than failing</li>
+<li><strong>THEN</strong> <code>trunc_normalize</code> returns the clipped result with gross exposure equal to <code>N_active *
+  max_w</code> rather than failing</li>
+</ul>
+<h3 id="requirement-book-sleeve-weight-funnels">Requirement: Book sleeve weight funnels<a class="headerlink" href="#requirement-book-sleeve-weight-funnels" title="Permanent link">&para;</a></h3>
+<p>The system SHALL let the 2026 book sleeves override <code>gen_weights</code> with their own funnels, which
+deviate from the base contract. The <code>wf_*_all</code> sleeves (<code>book2026._Sleeve</code>) SHALL run signal -&gt;
+<code>ts_ema(span = 48 * span_days)</code> -&gt; volume cut -&gt; <code>trunc_normalize</code> at <code>cap = min(1.0, CAP_MULT /
+w.shape[1])</code> with <code>CAP_MULT = 2.125</code> (a per-name cap derived from the frame's COLUMN count, i.e. the
+whole served universe rather than the post-cut active count, and ignoring the configured <code>max_w</code> and
+<code>--max-w</code>) -&gt; <code>no_trade_band(w, BAND, cap)</code> with <code>BAND = 0.6</code>. The band SHALL be a stateful
+per-ticker filter over bars: NaN targets are first converted to 0, the carried position starts at
+zeros, and each bar the position moves to the new target only where <code>|target - prev| &gt;= 0.6 * cap</code>,
+otherwise the previous weight is held (a turnover filter measured to cut turnover ~3x). Because the
+band emits held weights, sleeve output is NOT re-normalized: neither exact dollar-neutrality nor
+unit gross survives it. The <code>wf2_*</code> and <code>wf4_*</code> sleeves (<code>book2026v2._SleeveV2</code>, which <code>book2026v4</code>
+reuses via <code>_make</code>) SHALL instead run signal -&gt; <code>ts_ema(span = 48 * span_days)</code> -&gt; volume cut -&gt;
+explicit cross-sectional demean (<code>w.sub(w.mean(axis=1), axis=0)</code>) -&gt; <code>trunc_normalize(w,
+self.max_w)</code>, using the configured <code>max_w</code> (CLI <code>--max-w</code>, default 0.03) and NO no-trade band; on a
+small universe this cap is infeasible and the sleeve runs at <code>N_active * max_w</code> gross. Both sleeve
+families SHALL declare <code>required_metrics()</code> as <code>("volume_usd", "close_price", "mark_price")</code> plus
+their signal's Backend-go order-book keys from <code>BASE_METRICS</code>, and both read signals from
+<code>self.data[self.futures_exchange]</code>, which <code>GoExchangeData</code> resolves to the same spot-backed
+container as <code>binance</code>.</p>
+<p>Each sleeve class SHALL be produced by a <code>type()</code> factory that fixes only <code>name</code>, <code>base</code> and
+<code>span_days</code>, so the EMA span is <code>48 * span_days</code> with <code>mass_dist</code>=3, <code>depth_carry</code>=7, <code>mom_9d</code>=10,
+<code>lean_persist</code>=3, <code>notional_top1</code>=3, <code>skew_carry</code>=7, <code>wf2_retskew_pos</code>=7, <code>wf2_accel_fade</code>=3,
+<code>wf2_mass_tilt</code>=14, <code>wf4_sharpe_mom5</code>=14 and <code>wf4_accel_e1</code>=1. <code>book2026v4</code> SHALL carry no signal
+table of its own: importing it MUTATES <code>book2026v2.SIGNALS</code> in place (adding <code>sharpe_mom5</code> and
+binding <code>accel_e1</code> to the SAME lambda object as <code>accel_fade</code>, so the two sleeves differ only in EMA
+span), and because the v4 bases are absent from <code>book2026v2.BASE_METRICS</code> the v4 sleeves'
+<code>required_metrics()</code> adds no order-book keys at all. <code>no_trade_band</code> SHALL return its input
+unchanged when <code>band</code> is falsy - unreachable with the shipped <code>BAND = 0.6</code>. The module-level
+<code>BOOK_NAMES</code>, <code>BOOK_V2_WIDE</code> and <code>BOOK_V4</code> name lists SHALL be reference book compositions only:
+nothing in the batch path reads them, so selecting a book is entirely the operator's <code>--alphas</code>.</p>
+<h4 id="scenario-book-sleeve-cap">Scenario: Book sleeve cap<a class="headerlink" href="#scenario-book-sleeve-cap" title="Permanent link">&para;</a></h4>
+<ul>
+<li><strong>WHEN</strong> a <code>wf_*_all</code> sleeve generates weights on a frame with <code>n</code> ticker columns</li>
+<li><strong>THEN</strong> the per-name cap is <code>min(1.0, 2.125 / n)</code> regardless of <code>--max-w</code>, and the frame is then
+  passed through the 0.6-of-cap no-trade band</li>
+</ul>
+<h4 id="scenario-v2-sleeve-funnel">Scenario: v2 sleeve funnel<a class="headerlink" href="#scenario-v2-sleeve-funnel" title="Permanent link">&para;</a></h4>
+<ul>
+<li><strong>WHEN</strong> a <code>wf2_*</code> or <code>wf4_*</code> sleeve generates weights</li>
+<li><strong>THEN</strong> it demeans cross-sectionally and applies <code>trunc_normalize</code> at the configured <code>max_w</code> with
+  no no-trade band</li>
+</ul>
+<h3 id="requirement-reusable-weight-operators">Requirement: Reusable weight operators<a class="headerlink" href="#requirement-reusable-weight-operators" title="Permanent link">&para;</a></h3>
+<p>The system SHALL provide the operator helpers in <code>alpha_engine/operators.py</code> used by every strategy.
+Cross-sectional (row-wise, <code>axis=1</code>) operators SHALL be <code>rank</code> (percentile rank 0..1), <code>normalize</code>
+(demean then scale to <code>|w|.sum() == 1</code>, with a zero absolute sum replaced by NaN so the row becomes
+NaN instead of dividing by zero), and <code>trunc_normalize</code>. Time-series (column-wise, along the
+timestamp index) operators SHALL be <code>ts_return</code> (<code>pct_change(periods)</code>), <code>ts_logreturn</code> (<code>log(x /
+x.shift(periods))</code>), <code>ts_ema</code> (<code>ewm(span, min_periods=1).mean()</code>), <code>ts_std</code> (<code>rolling(window,
+min_periods=1).std()</code>), and <code>ts_zscore</code> (<code>(x - rolling mean) / rolling std</code> with both rollings at
+<code>min_periods=1</code> and a zero std replaced by NaN) - all of them therefore emit partial-window values
+from the very first bars rather than NaN warm-ups. Element-wise helpers SHALL be <code>norm_ratio</code> (<code>(a -
+b) / (a + b)</code> with a zero denominator replaced by NaN), <code>set_entropy</code> (Shannon-like entropy across
+frames, zero shares and a zero total replaced by NaN, with the result finally <code>fillna(0)</code>), and
+<code>set_mean</code> (<code>np.nanmean</code> over the stacked <code>.values</code>, so it assumes the inputs are already aligned
+and takes index/columns from the first frame). Zero-variance and zero-sum denominators SHALL produce
+NaN, never a crash or a division-by-zero warning path.</p>
+<h4 id="scenario-zero-variance-denominator">Scenario: Zero-variance denominator<a class="headerlink" href="#scenario-zero-variance-denominator" title="Permanent link">&para;</a></h4>
+<ul>
+<li><strong>WHEN</strong> <code>ts_zscore</code> or <code>norm_ratio</code> hits a zero standard deviation or a zero denominator</li>
+<li><strong>THEN</strong> the affected cells become NaN and the computation continues</li>
+</ul>
+<h4 id="scenario-partial-warm-up-window">Scenario: Partial warm-up window<a class="headerlink" href="#scenario-partial-warm-up-window" title="Permanent link">&para;</a></h4>
+<ul>
+<li><strong>WHEN</strong> a rolling or EMA operator is evaluated on the first bars of the window</li>
+<li><strong>THEN</strong> it returns a value computed from the partial window because <code>min_periods=1</code>, not NaN</li>
 </ul>
 <h3 id="requirement-universe-volume-filter">Requirement: Universe volume filter<a class="headerlink" href="#requirement-universe-volume-filter" title="Permanent link">&para;</a></h3>
-<p>The system SHALL restrict every strategy's tradable universe to the top-<code>end_range</code> tickers (default 50) by rolling USD volume, computed as the rolling mean over a 48-by-30 bar window (one month of 30-min bars, <code>min_periods=1</code>); rows whose volumes are entirely NaN (early bars) SHALL use a zero threshold so the whole row is filtered out rather than crashing.</p>
+<p>The system SHALL restrict every strategy's tradable universe to the top-<code>end_range</code> tickers (default 50)
+by rolling USD volume. <code>_cut_to_top_by_volume</code> SHALL read <code>volume_usd</code> from the FUTURES exchange
+container, reindex it onto the weight frame's columns with <code>fill_value=0</code> (so a ticker absent from
+the volume panel scores zero volume), and take <code>rolling(window=48*30, min_periods=1).mean()</code> - a
+1440-bar (30-day) mean of 30-min bars, despite the in-code comment calling it a day. Per row it
+SHALL compute the threshold as <code>row.nlargest(end_range).min()</code> when the row has any non-NaN value,
+else <code>0.0</code>, then keep cells where <code>rolling_vol &gt;= threshold</code> and set the rest to NaN via
+<code>w.where(mask)</code>. Because the comparison is <code>&gt;=</code>, ties at the threshold SHALL keep more than
+<code>end_range</code> names. Rows whose volumes are entirely NaN (early bars) SHALL use the zero threshold,
+which - since <code>NaN &gt;= 0</code> is False - NaNs the entire row out rather than crashing. The filter SHALL
+never drop columns; it only masks cells, so the frame's column count (used by the <code>wf_*_all</code> cap
+rule) is unchanged.</p>
 <h4 id="scenario-top-n-cut-by-volume">Scenario: Top-N cut by volume<a class="headerlink" href="#scenario-top-n-cut-by-volume" title="Permanent link">&para;</a></h4>
 <ul>
-<li><strong>WHEN</strong> a weights row contains more than <code>end_range</code> tickers</li>
-<li><strong>THEN</strong> only the <code>end_range</code> tickers with the highest rolling USD volume remain; the rest are set to NaN</li>
+<li><strong>WHEN</strong> a weights row contains more than <code>end_range</code> tickers with distinct volumes</li>
+<li><strong>THEN</strong> only the <code>end_range</code> tickers with the highest rolling USD volume remain; the rest are set
+  to NaN</li>
+</ul>
+<h4 id="scenario-all-nan-volume-row">Scenario: All-NaN volume row<a class="headerlink" href="#scenario-all-nan-volume-row" title="Permanent link">&para;</a></h4>
+<ul>
+<li><strong>WHEN</strong> the rolling volume row is entirely NaN (earliest bars)</li>
+<li><strong>THEN</strong> the threshold is <code>0.0</code>, the mask is all-False, and the whole weight row becomes NaN
+  instead of raising</li>
 </ul>
 <h3 id="requirement-pnl-and-cost-kernel">Requirement: PnL and cost kernel<a class="headerlink" href="#requirement-pnl-and-cost-kernel" title="Permanent link">&para;</a></h3>
-<p>The system SHALL compute per-bar PnL through the single kernel in <code>backtest/pnl.py</code> (<code>pnl_core</code> + <code>compute_pnl</code>), which SHALL NOT be re-implemented elsewhere. Gross return SHALL be <code>(w.shift(w_shift).fillna(0) * ret).sum(axis=1)</code>. Costs SHALL be charged on traded notional <code>|w_t - prev * price_change|</code> (with NaN price drift resolved at the inputs: a fresh position pays full <code>|w_t|</code>, an unknown drift on an existing position charges <code>|dw|</code>) times a per-ticker cost rate. Two execution models SHALL be supported: instant fill at the signal bar's close (<code>w_shift=1</code>), and VWAP fill at the next bar (<code>w_shift=2</code>, decision at <code>t</code>, fill at VWAP(<code>t+1</code>), earn VWAP(<code>t+1</code>) -&gt; VWAP(<code>t+2</code>)). Requesting <code>execution="vwap"</code> while the data carries no <code>vwap</code> metric SHALL log a warning and degrade silently to close-fill PnL rather than fail. The cost rate SHALL be <code>fee_rate + slippage/1e4</code>, plus half the effective spread derived from tape VWAPs (<code>effective_spread_bps</code> = rolling median over <code>48*7</code> bars of <code>(buy_vwap - sell_vwap)/vwap * 1e4</code>, clipped to <code>[0.2, 50.0]</code> bps); when the tape spread is unavailable, the fallback chain SHALL first use the quoted L2 metric <code>ob__minor__spread_bps__mean</code> and only then the flat <code>spread_default_bps</code> (default 2.0), which fills NaN cells inside a provided spread frame - and if no spread frame exists at all (all three sources absent), no spread cost is charged. <code>--tickers</code> SHALL restrict the universe only on the <code>--metrics-roots</code> path; on the raw-parquet (<code>--data-root</code>) and <code>--mock</code> paths it is silently dropped, so an operator restricting the universe there gets the full universe with no warning. Funding SHALL be charged as <code>(-funding_aligned * w_aligned.shift(w_shift)).sum(axis=1)</code>. Net PnL SHALL be <code>gross - costs + funding</code>, and the output SHALL expose exactly the columns <code>pnl_gross</code>, <code>cumulative_pnl_gross</code>, <code>pnl_net</code>, <code>cumulative_pnl_net</code>.</p>
+<p>The system SHALL compute per-bar PnL through the single kernel in <code>backtest/pnl.py</code> (<code>pnl_core</code> +
+<code>compute_pnl</code>), which SHALL NOT be re-implemented elsewhere (<code>tests/test_backtest_kernel.py</code> pins it
+against a frozen reference); the only other return computation in the batch path is the allocator's
+cost-free <code>_strategy_returns</code>. <code>compute_pnl</code> SHALL select the return series and lag in a fixed
+precedence: <code>exec_prices</code> given -&gt; <code>ret = exec_prices.pct_change().fillna(0)</code> and <code>w_shift = 2</code>
+(decide at <code>t</code>, fill at VWAP(<code>t+1</code>), earn VWAP(<code>t+1</code>) -&gt; VWAP(<code>t+2</code>)), ignoring any supplied
+<code>price_ret</code>; else a pre-computed <code>price_ret</code> is used as-is with <code>w_shift = 1</code>; else <code>ret =
+prices.pct_change().fillna(0)</code> with <code>w_shift = 1</code> (instant fill at the signal bar's close). Weights
+SHALL then be <code>reindex(index=ret.index, columns=ret.columns, fill_value=0).fillna(0)</code>, so unknown
+bars/tickers and NaN cells all become zero positions. Gross return SHALL be
+<code>(w.shift(w_shift).fillna(0) * ret).sum(axis=1)</code>. Traded notional SHALL be <code>|w_t -
+w.shift(1).fillna(0) * price_change.fillna(1.0)|</code> where <code>price_change = prices / prices.shift(1)</code> is
+always derived from the drift price argument (mark price), never from <code>exec_prices</code>, and where the
+previous-position lag is always 1 bar regardless of <code>w_shift</code>; NaN is resolved at the inputs so that
+a fresh position pays full <code>|w_t|</code> and an unknown drift on an existing position charges only <code>|dw|</code>
+(never a free trade at a price gap). Costs SHALL be <code>(traded * cost_rate).sum(axis=1)</code>. Funding
+SHALL be <code>(-funding_aligned * w.shift(w_shift).fillna(0)).sum(axis=1)</code>, using <code>funding_aligned</code> when
+supplied (it takes precedence over <code>funding</code>), else <code>funding.reindex_like(w).fillna(0)</code>, else a zero
+Series when both are absent. Net PnL SHALL be <code>gross - costs + funding</code>, and the returned frame
+SHALL expose exactly the columns <code>pnl_gross</code>, <code>cumulative_pnl_gross</code> (cumsum), <code>pnl_net</code>,
+<code>cumulative_pnl_net</code> (cumsum), all as unlevered fractions of notional. <code>pnl_core</code> SHALL also return
+the per-ticker <code>traded</code> frame, which <code>compute_pnl</code> discards.</p>
+<p><code>pnl_core(w_aligned, ret, w_shift, price_change, cost_rate)</code> SHALL accept <code>cost_rate</code> as either a
+scalar or a per-ticker/per-bar frame and SHALL assume <code>w_aligned</code> is already reindexed onto <code>ret</code>
+and NaN-free - it performs no alignment or NaN-filling of its own beyond the two documented
+<code>fillna</code>s. Its <code>traded</code> output SHALL therefore be NaN-free, and <code>costs</code> non-negative for any
+non-negative <code>cost_rate</code>. There SHALL be no leverage, no position sizing, no compounding and no
+per-bar equity curve: <code>cumulative_*</code> is a plain <code>cumsum</code> of per-bar fractional returns, so drawdowns
+and totals are additive, not geometric. The kernel SHALL be indifferent to bar spacing - nothing in
+it assumes 30-min bars; the 48-bars-per-day convention lives entirely in the callers.</p>
+<h4 id="scenario-weights-outside-the-price-grid">Scenario: Weights outside the price grid<a class="headerlink" href="#scenario-weights-outside-the-price-grid" title="Permanent link">&para;</a></h4>
+<ul>
+<li><strong>WHEN</strong> the weight frame carries bars or tickers the price frame does not</li>
+<li><strong>THEN</strong> they are reindexed away with <code>fill_value=0</code> and contribute no return, no cost and no
+  funding, instead of raising or producing NaN</li>
+</ul>
 <h4 id="scenario-vwap-execution-shifts-fills">Scenario: VWAP execution shifts fills<a class="headerlink" href="#scenario-vwap-execution-shifts-fills" title="Permanent link">&para;</a></h4>
 <ul>
 <li><strong>WHEN</strong> <code>exec_prices</code> (VWAP) are provided</li>
-<li><strong>THEN</strong> the position taken at bar <code>t</code> is filled at the VWAP of bar <code>t+1</code> and earns the move from <code>t+1</code> to <code>t+2</code></li>
+<li><strong>THEN</strong> the position taken at bar <code>t</code> is filled at the VWAP of bar <code>t+1</code> and earns the move from
+  <code>t+1</code> to <code>t+2</code>, while costs are still charged against the 1-bar-lagged drifted position</li>
 </ul>
-<h4 id="scenario-spread-default-fill">Scenario: Spread default fill<a class="headerlink" href="#scenario-spread-default-fill" title="Permanent link">&para;</a></h4>
+<h4 id="scenario-missing-vwap-metric">Scenario: Missing vwap metric<a class="headerlink" href="#scenario-missing-vwap-metric" title="Permanent link">&para;</a></h4>
 <ul>
-<li><strong>WHEN</strong> no tape spread is available for a bar</li>
-<li><strong>THEN</strong> the fallback chain first uses the quoted L2 spread metric; only NaN cells inside a provided spread frame fall back to <code>spread_default_bps / 2 / 1e4</code>, and an entirely absent spread frame charges no spread cost at all</li>
+<li><strong>WHEN</strong> <code>execution="vwap"</code> is requested but <code>data["binance-f"]["vwap"]</code> raises <code>KeyError</code> (only
+  the raw-parquet / mock container raises; a <code>--metrics-roots</code> container serves an all-NaN frame
+  instead, which yields zero exec returns and therefore zero gross PnL with no warning)</li>
+<li><strong>THEN</strong> the pipeline logs a WARNING and silently degrades to close-fill PnL (<code>w_shift = 1</code>)
+  instead of failing</li>
 </ul>
 <h4 id="scenario-funding-leg">Scenario: Funding leg<a class="headerlink" href="#scenario-funding-leg" title="Permanent link">&para;</a></h4>
 <ul>
 <li><strong>WHEN</strong> funding data is present</li>
-<li><strong>THEN</strong> net PnL includes the funding leg charged on the lagged weight, and absent funding contributes zero</li>
+<li><strong>THEN</strong> net PnL includes the funding leg charged on the lagged weight, and absent funding
+  contributes exactly zero</li>
+</ul>
+<h4 id="scenario-zero-weights">Scenario: Zero weights<a class="headerlink" href="#scenario-zero-weights" title="Permanent link">&para;</a></h4>
+<ul>
+<li><strong>WHEN</strong> the weight frame is all zeros</li>
+<li><strong>THEN</strong> both <code>pnl_gross</code> and <code>pnl_net</code> are exactly zero on every bar</li>
+</ul>
+<h3 id="requirement-cost-rate-and-spread-sourcing">Requirement: Cost rate and spread sourcing<a class="headerlink" href="#requirement-cost-rate-and-spread-sourcing" title="Permanent link">&para;</a></h3>
+<p>The system SHALL build the per-ticker, per-bar cost rate as <code>fee_rate + slippage_bps / 1e4</code> (a flat
+frame over the aligned weight index and columns) plus, when a spread frame is supplied,
+<code>spread_bps.reindex_like(w).clip(lower=0.0, upper=50.0) / 2 / 1e4</code> with remaining NaN cells filled
+from <code>spread_default_bps / 2 / 1e4</code>. When no spread frame is supplied at all, no spread cost is
+charged and the rate is fee plus slippage only. Half the spread SHALL be charged on every unit of
+traded notional (one side per trade), and the whole cost rate SHALL apply to <code>traded</code>, never to the
+held position - a book that does not trade pays nothing.</p>
+<p>The pipeline SHALL choose the spread frame once per instance (cached as <code>_spread_cache</code>), best basis
+first: (1) the EFFECTIVE spread from the tape, <code>effective_spread_bps(buy_vwap, sell_vwap, vwap)</code>
+where the two VWAP legs (but NOT the denominator <code>vwap</code>) have zeros replaced by NaN first; (2) on
+<code>KeyError</code>, the quoted L2 metric <code>ob__minor__spread_bps__mean</code>; (3) on <code>KeyError</code> again, <code>None</code>,
+which leaves only the flat <code>spread_default_bps</code> fallback for a frame that does not exist - i.e. no
+spread cost at all. The quoted L2 metric SHALL be documented as the less trusted basis (negative or
+zero on BTC, roughly 2x inflated on thin alts versus what takers actually paid), which is why the
+tape-derived effective spread is preferred.</p>
+<p><code>effective_spread_bps(buy_vwap, sell_vwap, vwap, window=48*7, floor_bps=0.2, cap_bps=50.0)</code> SHALL
+compute <code>(buy_vwap - sell_vwap) / vwap * 1e4</code>, then <code>rolling(window, min_periods=window // 7)
+.median()</code>, then <code>clip(lower=floor_bps, upper=cap_bps)</code>. <code>min_periods</code> SHALL be derived as <code>window
+// 7</code>, which is 48 only because the pipeline always uses the default 7-day window; the warm-up is
+therefore the first 47 bars, which stay NaN and fall back to <code>spread_default_bps</code> inside
+<code>compute_pnl</code>. Note the floor of 0.2 bps applies to the frame while <code>compute_pnl</code> re-clips it to a
+floor of 0.0, so the effective-spread basis can never reach zero but a caller-supplied frame can.</p>
+<p>The <code>KeyError</code>-based fallback chain SHALL be understood as a raw-parquet-path mechanism only. On the
+<code>--metrics-roots</code> path the Go name resolver passes unknown metric names through unchanged, so a key
+that no root populates yields an all-NaN frame plus a WARNING rather than a <code>KeyError</code>: the pipeline
+then keeps that all-NaN effective-spread frame as its chosen basis, and every cell falls back to
+<code>spread_default_bps / 2 / 1e4</code>. The quoted-metric branch is unreachable there.</p>
+<h4 id="scenario-effective-spread-unavailable-on-precomputed-metrics">Scenario: Effective spread unavailable on precomputed metrics<a class="headerlink" href="#scenario-effective-spread-unavailable-on-precomputed-metrics" title="Permanent link">&para;</a></h4>
+<ul>
+<li><strong>WHEN</strong> the <code>--metrics-roots</code> dataset does not populate <code>buy_vwap</code> / <code>sell_vwap</code></li>
+<li><strong>THEN</strong> the store logs a WARNING and serves NaN frames, the pipeline caches that all-NaN spread
+  basis, and every bar is costed at the flat <code>spread_default_bps</code> half-spread instead of falling
+  through to the quoted L2 metric</li>
+</ul>
+<h4 id="scenario-spread-default-fill">Scenario: Spread default fill<a class="headerlink" href="#scenario-spread-default-fill" title="Permanent link">&para;</a></h4>
+<ul>
+<li><strong>WHEN</strong> a provided spread frame has NaN cells (warm-up bars or data holes)</li>
+<li><strong>THEN</strong> those cells cost <code>spread_default_bps / 2 / 1e4</code> per unit traded, while an entirely absent
+  spread frame charges no spread cost at all</li>
+</ul>
+<h4 id="scenario-spread-clipping">Scenario: Spread clipping<a class="headerlink" href="#scenario-spread-clipping" title="Permanent link">&para;</a></h4>
+<ul>
+<li><strong>WHEN</strong> a spread frame carries a negative or extreme value</li>
+<li><strong>THEN</strong> <code>compute_pnl</code> clips it into <code>[0.0, 50.0]</code> bps before halving it into the cost rate</li>
 </ul>
 <h3 id="requirement-weight-smoothing">Requirement: Weight smoothing<a class="headerlink" href="#requirement-weight-smoothing" title="Permanent link">&para;</a></h3>
-<p>The system SHALL smooth combined weights to simulate real portfolio transition limits: <code>smooth_weights</code> SHALL always replace NaN with 0 before anything else (even when smoothing is off, so NaN never leaks into the cost kernel). With <code>method="cap"</code> each ticker's per-bar change SHALL be clipped to <code>+/-delta</code> against the price-drifted previous position; with <code>method="normalize"</code> the whole delta vector SHALL be scaled so the maximum change is <code>delta</code>; <code>delta=None</code> SHALL pass through unchanged regardless of <code>method</code> (the method check never runs, so no error if <code>method="cap"</code> with <code>delta=None</code>); with <code>delta</code> set, <code>method="off"</code> passes through unchanged and any other method SHALL raise <code>ValueError</code>.</p>
+<p>The system SHALL smooth combined weights to simulate real portfolio transition limits.
+<code>smooth_weights(w, prices, delta, method="cap")</code> SHALL always <code>fillna(0.0)</code> first (even when
+smoothing is off, so NaN never leaks into the cost kernel and flips <code>pnl_net</code> to NaN), and SHALL
+return that frame unchanged when <code>delta is None</code> or <code>method == "off"</code> - this short-circuit happens
+BEFORE method validation, so an unknown method name is only rejected when <code>delta</code> is set and <code>method
+!= "off"</code>, in which case anything outside <code>{"cap", "normalize"}</code> raises <code>ValueError</code>. With smoothing
+active it SHALL reindex <code>prices</code> onto the weight frame, <code>ffill</code> it, and drift the carried position
+by <code>ratio = (px / px.shift(1)).fillna(1.0)</code>, iterating bar by bar with the carried position starting
+at zeros and the first bar deliberately not drifted (<code>prev_drifted = prev</code> when <code>i == 0</code>). With
+<code>method="cap"</code> each ticker's per-bar change SHALL be clipped independently to <code>+/-delta</code> against the
+drifted previous position; with <code>method="normalize"</code> the whole delta vector SHALL be scaled by
+<code>delta / max|dw|</code> only when <code>max|dw| &gt; delta</code> and <code>max|dw| &gt; 0</code>. The result SHALL be the drifted
+previous position plus the adjusted delta, and it SHALL NOT be re-normalized, so gross exposure can
+sit below 1 while the book is still transitioning. <code>AlphaPipeline._maybe_smooth</code> SHALL always
+delegate to <code>smooth_weights</code> (never skip the call) and SHALL be applied both to the combined weights
+and to each per-alpha frame before its PnL.</p>
+<p>The loop SHALL be a plain Python bar loop over a float64 numpy copy, and the result SHALL be rebuilt
+as a DataFrame carrying the WEIGHT frame's index and columns, so smoothing never changes the frame's
+shape, order or labels. <code>prices</code> SHALL be reindexed on BOTH axes onto the weight frame before the
+<code>ffill</code>, so a ticker the price panel does not carry becomes an all-NaN price column whose drift
+<code>ratio</code> is <code>fillna(1.0)</code>-ed to 1.0 - such a position is carried at constant weight rather than
+dropped. Neither method SHALL cap the LEVEL of a weight: <code>delta</code> bounds only the per-bar change, so
+a smoothed book can exceed <code>max_w</code> on a name only if the unsmoothed target already did.</p>
 <h4 id="scenario-cap-smoothing">Scenario: Cap smoothing<a class="headerlink" href="#scenario-cap-smoothing" title="Permanent link">&para;</a></h4>
 <ul>
 <li><strong>WHEN</strong> smoothing is active with <code>method="cap"</code> and <code>delta=0.005</code></li>
-<li><strong>THEN</strong> no ticker's weight changes by more than 0.005 per bar relative to its drifted prior position</li>
+<li><strong>THEN</strong> no ticker's weight changes by more than 0.005 per bar relative to its drifted prior
+  position</li>
 </ul>
 <h4 id="scenario-nan-handling-with-smoothing-off">Scenario: NaN handling with smoothing off<a class="headerlink" href="#scenario-nan-handling-with-smoothing-off" title="Permanent link">&para;</a></h4>
 <ul>
 <li><strong>WHEN</strong> <code>delta</code> is <code>None</code> (smoothing off)</li>
-<li><strong>THEN</strong> the weights still pass through a NaN-to-zero normalization</li>
+<li><strong>THEN</strong> the weights still pass through the NaN-to-zero normalization and are returned unchanged,
+  without validating <code>method</code></li>
 </ul>
 <h3 id="requirement-strategy-combination">Requirement: Strategy combination<a class="headerlink" href="#requirement-strategy-combination" title="Permanent link">&para;</a></h3>
-<p>The system SHALL combine per-strategy weight frames into one portfolio via <code>combine_strategies</code> with methods <code>markowitz</code>, <code>risk_parity</code>, or <code>ew</code>. A single-strategy run SHALL short-circuit to that strategy with a trivial allocation of 1.0. <code>ew</code> SHALL hold constant <code>1/n_strategies</code>. The rolling methods SHALL estimate on daily-resampled strategy PnL over a <code>48*30</code>-bar lookback, rebalance every <code>48</code> bars, hold the previous allocation between rebalances, and start from equal weight during the warm-up (never silently flattening to zero). Markowitz SHALL solve the Tobin tangency <code>w* = V^-1 mu / (e^T V^-1 mu)</code> with a <code>1e-12</code> ridge, enforce box constraints <code>[min_strategy_weight, max_strategy_weight]</code> by active-set water-filling, and SHALL fall back to equal weight when the solve fails (non-finite denominator, infeasible constraints, or a linear-algebra error). The combined portfolio SHALL be <code>sum(w_name.fillna(0) * allocation_name)</code> per name, with NaN weight cells logged as warnings.</p>
+<p>The system SHALL combine per-strategy weight frames into one portfolio via
+<code>combine_strategies(strategy_weights, prices, method, lookback=48*30, rebalance_every=48,
+max_strategy_weight=0.5, min_strategy_weight=0.0)</code>, with an unknown method raising <code>ValueError</code>, an
+empty dict raising <code>ValueError("Need at least one strategy")</code>, and a single entry short-circuiting
+to that frame with a constant <code>1.0</code> allocation column. The common index and ticker columns SHALL be
+taken from the FIRST strategy's frame; every other strategy is reindexed onto it with
+<code>fill_value=0</code>. <code>ew</code> SHALL hold a constant <code>1 / n_strategies</code> on every row. The rolling methods
+(<code>markowitz</code>, <code>risk_parity</code>) SHALL derive per-strategy PnL with <code>_strategy_returns</code> as
+<code>sum(w.shift(1) * prices.pct_change().fillna(0))</code> - gross, cost-free, and always 1-bar-lagged
+regardless of the pipeline's <code>--execution</code> setting - reindexed onto the common index with
+<code>fill_value=0</code>; then walk bars, holding the previous allocation whenever <code>i &lt; lookback</code> or <code>i %
+rebalance_every != 0</code> and starting from equal weight so the warm-up trades an EW book instead of
+silently flattening to zero. On a rebalance bar the estimator SHALL use <code>strat_returns.iloc[i -
+lookback : i]</code> (strictly prior bars, no look-ahead) resampled to daily sums, because raw 30-min bars
+are too noisy for a mean estimate; the resulting allocation is applied from bar <code>i</code> itself.
+Markowitz SHALL solve the Tobin tangency <code>w* = V^-1 mu / (e^T V^-1 mu)</code> on a covariance stabilised
+by a <code>1e-12</code> ridge, raise when <code>e^T V^-1 mu</code> is non-finite or <code>|.| &lt; 1e-15</code>, reject infeasible boxes
+(<code>min*n &gt; 1</code> or <code>max*n &lt; 1</code>), enforce <code>[min_strategy_weight, max_strategy_weight]</code> by active-set
+water-filling that pins the single worst violator per pass and redistributes the remaining mass
+proportionally to the tangency direction, and raise if the pinned result sums to a non-positive
+total; the caller SHALL catch <code>ValueError</code> and <code>np.linalg.LinAlgError</code> and fall back to equal weight
+for that window. <code>risk_parity</code> SHALL allocate proportionally to <code>1 / vol</code> of the daily-resampled
+window (zero-vol strategies get 0) and fall back to equal weight when the inverse-vol sum is not
+positive. The combined portfolio SHALL be <code>sum(w_name.fillna(0) * allocation_name)</code> per name, with
+the number of NaN weight cells per strategy logged as a WARNING so a broken strategy silently
+zeroing out is distinguishable from a legitimate all-zero row. <code>markowitz_combine</code> SHALL remain as a
+thin backwards-compatible wrapper returning only the combined frame.</p>
+<p>The single-strategy short-circuit SHALL return the caller's frame object itself, not a copy (the
+pipeline's own single-alpha path is the one that copies). The <code>allocations</code> frame SHALL be created
+all-NaN and then fully written: <code>ew</code> assigns every row, and the rolling methods assign every row too
+(warm-up and hold bars get the carried allocation), so no NaN survives into <code>allocations</code> for any
+method. <code>_strategy_returns</code> SHALL recompute <code>prices.pct_change().fillna(0)</code> itself rather than reuse
+the pipeline's <code>price_ret</code>, and SHALL reindex each strategy onto that return frame's index and
+columns with <code>fill_value=0</code> before shifting.</p>
+<p>Beyond the documented tangency and box failures, <code>_solve_markowitz</code> SHALL also raise <code>ValueError</code>
+for an empty <code>mu</code>, for a <code>cov</code> whose shape is not <code>(n, n)</code>, when the free subset's tangency
+direction sums to ~0 during water-filling, and when the pin loop runs <code>n + 1</code> passes without
+converging; it SHALL skip box handling entirely when the box is exactly <code>(-inf, +inf)</code>. Every one of
+these is caught by <code>combine_strategies</code> and turned into an equal-weight allocation for that window,
+so no solver failure can abort a backtest. <code>risk_parity</code> SHALL have no box constraint at all -
+<code>max_strategy_weight</code> and <code>min_strategy_weight</code> are markowitz-only.</p>
 <h4 id="scenario-markowitz-solver-failure-fallback">Scenario: Markowitz solver failure fallback<a class="headerlink" href="#scenario-markowitz-solver-failure-fallback" title="Permanent link">&para;</a></h4>
 <ul>
-<li><strong>WHEN</strong> the tangency solve fails (e.g. singular covariance or infeasible box)</li>
+<li><strong>WHEN</strong> the tangency solve fails (singular covariance, undefined tangency denominator, or an
+  infeasible box)</li>
 <li><strong>THEN</strong> the allocation for that window falls back to equal weight instead of aborting</li>
 </ul>
 <h4 id="scenario-warm-up-allocation">Scenario: Warm-up allocation<a class="headerlink" href="#scenario-warm-up-allocation" title="Permanent link">&para;</a></h4>
 <ul>
 <li><strong>WHEN</strong> fewer than <code>lookback</code> bars of history are available</li>
-<li><strong>THEN</strong> allocations hold equal weight rather than zero, so the portfolio is not flattened during warm-up</li>
+<li><strong>THEN</strong> allocations hold equal weight rather than zero or NaN, so the portfolio is not flattened
+  during warm-up</li>
+</ul>
+<h4 id="scenario-between-rebalances">Scenario: Between rebalances<a class="headerlink" href="#scenario-between-rebalances" title="Permanent link">&para;</a></h4>
+<ul>
+<li><strong>WHEN</strong> a bar index is not a multiple of <code>rebalance_every</code></li>
+<li><strong>THEN</strong> the previous allocation is carried forward unchanged</li>
 </ul>
 <h3 id="requirement-turnover-diagnostics">Requirement: Turnover diagnostics<a class="headerlink" href="#requirement-turnover-diagnostics" title="Permanent link">&para;</a></h3>
-<p>The system SHALL compute turnover from drifted positions: <code>per_bar_turnover</code> SHALL be <code>sum(|w_t - w_{t-1} * price_change|)</code> per bar (the "real trade" after price drift), and <code>daily_turnover</code> SHALL be the per-bar series resampled to daily sums.</p>
+<p>The system SHALL compute turnover from drifted positions: <code>per_bar_turnover(weights, prices)</code> SHALL
+reindex prices like the weights, form <code>price_change = prices / prices.shift(1)</code>, and return
+<code>sum(|w_t - w_{t-1} * price_change|)</code> per bar - the "real trade" after price drift. It SHALL NOT
+fill NaN, so NaN cells (masked-out universe names) are skipped by the sum and the first bar sums to
+<code>0.0</code>; this deliberately differs from the cost kernel, which fills the previous position with 0 and
+the drift with 1.0 and therefore charges entries the kernel sees as real trades. <code>daily_turnover</code>
+SHALL be the per-bar series resampled to daily sums, and it is what the summary and the turnover
+plot report. Turnover SHALL be a pure diagnostic: nothing feeds it back into weights, costs or PnL,
+so a fee or spread change moves PnL without moving reported turnover. Both callers SHALL pass the
+SMOOTHED <code>combined_weights</code> and the mark price, so the reported number describes the executed book
+rather than the raw alpha targets.</p>
 <h4 id="scenario-turnover-of-a-held-position">Scenario: Turnover of a held position<a class="headerlink" href="#scenario-turnover-of-a-held-position" title="Permanent link">&para;</a></h4>
 <ul>
 <li><strong>WHEN</strong> weights are unchanged but prices move</li>
 <li><strong>THEN</strong> per-bar turnover reflects only the drifted difference, not the full weight</li>
 </ul>
+<h4 id="scenario-first-bar">Scenario: First bar<a class="headerlink" href="#scenario-first-bar" title="Permanent link">&para;</a></h4>
+<ul>
+<li><strong>WHEN</strong> turnover is computed for the first bar of the frame</li>
+<li><strong>THEN</strong> the shifted weights are NaN and the row sums to <code>0.0</code> rather than to the full opening
+  notional</li>
+</ul>
+<h3 id="requirement-run-summary">Requirement: Run summary<a class="headerlink" href="#requirement-run-summary" title="Permanent link">&para;</a></h3>
+<p>The system SHALL expose <code>AlphaPipeline.summary()</code>, which raises <code>RuntimeError("Call .run() first")</code>
+before a run and otherwise returns a dict with <code>n_strategies</code> and <code>strategy_names</code> (from
+<code>strategy_weights</code>, i.e. the RUNNABLE subset of the selected alphas - a gated-out alpha silently
+drops out of this list), <code>n_tickers</code> and <code>n_timestamps</code> (shape of the smoothed <code>combined_weights</code>),
+<code>date_range</code> as <code>"&lt;first&gt; -&gt; &lt;last&gt;"</code>, <code>smoothing</code> rendered as <code>"&lt;method&gt; (delta=&lt;delta&gt;)"</code> or
+<code>"off"</code>, <code>mean_daily_turnover</code> and <code>median_daily_turnover</code> from <code>daily_turnover(combined_weights,
+mark_price)</code>, and two nested blocks <code>gross</code> and <code>net</code>, each holding <code>total_pnl</code> (last cumulative
+value), <code>annualized_sharpe</code> (daily-resampled mean/std times <code>sqrt(365)</code>, <code>0</code> when the daily std is
+not <code>&gt; 0</code>), and <code>max_drawdown</code> (minimum of <code>cumulative - cumulative.cummax()</code>, so a non-positive
+number). The CLI SHALL print this dict verbatim.</p>
+<p>The summary SHALL report NO cost breakdown, NO per-strategy or per-ticker attribution, NO win rate,
+NO exposure or leverage statistic, and NO holding period: the only cost visibility is the
+gross-minus- net gap the caller computes for itself. It SHALL recompute turnover on every call
+(nothing is cached) and SHALL read <code>mark_price</code> from the container again, so calling <code>summary()</code> on
+a pipeline whose data container has been mutated can disagree with the run's own headline line.</p>
+<h4 id="scenario-summary-before-run">Scenario: Summary before run<a class="headerlink" href="#scenario-summary-before-run" title="Permanent link">&para;</a></h4>
+<ul>
+<li><strong>WHEN</strong> <code>summary()</code> is called before <code>run()</code></li>
+<li><strong>THEN</strong> it raises <code>RuntimeError</code> telling the caller to run first</li>
+</ul>
+<h4 id="scenario-flat-daily-pnl">Scenario: Flat daily PnL<a class="headerlink" href="#scenario-flat-daily-pnl" title="Permanent link">&para;</a></h4>
+<ul>
+<li><strong>WHEN</strong> the daily-resampled PnL has zero or NaN standard deviation (for example a single-bar
+  backtest)</li>
+<li><strong>THEN</strong> the reported annualized Sharpe is <code>0</code> rather than an infinity or NaN</li>
+</ul>
 <h3 id="requirement-plotting-surface">Requirement: Plotting surface<a class="headerlink" href="#requirement-plotting-surface" title="Permanent link">&para;</a></h3>
-<p>The system SHALL expose <code>AlphaPipeline.plot(kind, top_n)</code> supporting kinds <code>dashboard</code>, <code>pnl</code>, <code>drawdown</code>, <code>weights</code>, <code>turnover</code>, <code>allocations</code>, and <code>correlation</code>, each returning a <code>matplotlib</code> Figure. Calling <code>plot</code> before <code>run()</code> SHALL raise <code>RuntimeError</code>; <code>allocations</code> on a single-strategy run SHALL raise <code>ValueError</code>; unknown kinds SHALL raise <code>ValueError</code>. The dashboard SHALL compose PnL, drawdown, turnover, and a weights heatmap, plus allocations when present. The correlation view SHALL show per-alpha PnL correlations as daily and 30-min heatmaps and requires the selected alpha set to equal the full <code>ALPHA_REGISTRY</code>: only then the pipeline runs every registered strategy (not just the chosen subset) to feed the panel, and the per-alpha PnL used there SHALL come from post-smoothing weights (<code>_maybe_smooth</code>). A single active alpha falls back to a top-N bar chart instead of a heatmap.</p>
+<p>The system SHALL expose <code>AlphaPipeline.plot(kind="dashboard", top_n=10)</code> supporting kinds
+<code>dashboard</code>, <code>pnl</code>, <code>drawdown</code>, <code>weights</code>, <code>turnover</code>, <code>allocations</code>, and <code>correlation</code>, each
+returning a single <code>matplotlib</code> Figure. Calling <code>plot</code> before <code>run()</code> SHALL raise
+<code>RuntimeError("Call .run() first")</code>; <code>allocations</code> on a single-strategy run SHALL raise
+<code>ValueError("No allocations (single-strategy run)")</code>; unknown kinds SHALL raise <code>ValueError</code>. The
+dashboard SHALL stack, in order, cumulative PnL (gross and net), net drawdown, daily turnover
+(annotated with its mean), and a weights heatmap of the top 30 tickers by mean absolute weight,
+appending an allocations stack-plot only when <code>allocations</code> is not <code>None</code>; <code>plot_dashboard</code> returns
+<code>(main_fig, corr_fig)</code> where <code>corr_fig</code> is built only when more than one alpha PnL exists, and
+<code>AlphaPipeline.plot</code> SHALL discard that second handle to keep the uniform single-Figure return,
+leaving the caller unable to close it. The correlation view SHALL dispatch on <code>allocations is None</code>:
+a multi-strategy run gets side-by-side 30-min and daily pairwise <code>pnl_net</code> correlation heatmaps with
+the diagonal masked to gray, and a single-strategy run gets a top-<code>top_n</code> horizontal bar chart of
+alphas correlated with the active alpha, annotated with each alpha's <code>sqrt(365)</code> daily Sharpe.
+<code>plot_pnl_correlation</code> SHALL raise <code>RuntimeError</code> when <code>alpha_pnls</code> is empty. The panel is fed by
+<code>alpha_pnls</code>, which covers every registered alpha only when <code>compute_alpha_pnl_correlation</code> is true
+AND the selected alpha set equals the whole <code>ALPHA_REGISTRY</code>; otherwise it covers just the selected
+alphas. Consequently the single-strategy bar chart has no comparison set under the current wiring
+(one selected alpha implies one entry in <code>alpha_pnls</code>) and renders empty, and the dashboard skips
+the correlation figure entirely in that case. Per-alpha PnL used in these panels SHALL come from
+post-smoothing weights (<code>_maybe_smooth</code>), so it represents achievable rather than paper performance.</p>
+<p><code>plot_dashboard</code> SHALL itself raise <code>RuntimeError("Call pipeline.run() first")</code> when <code>pnl</code> is
+<code>None</code>, and SHALL lay out its rows with height ratios <code>[2, 1, 1, 3]</code> plus a trailing <code>1</code> only when
+allocations exist. The Sharpe annotations on the correlation bar chart SHALL come from
+<code>_alpha_sharpe</code>, which returns <code>0.0</code> whenever the daily-resampled series has zero standard deviation
+OR fewer than two daily points - a stricter guard than the <code>summary()</code> and headline versions, which
+only test <code>std &gt; 0</code>. The pairwise heatmaps SHALL be built from <code>pnl_net</code> only (gross is never
+correlated), at both raw 30-min and daily-summed resolutions, and the bar chart SHALL sort
+descending by correlation and keep the top <code>top_n</code> on each resolution independently. No plotting
+function SHALL write a file: every one returns a Figure and only the CLI's <code>plt.show()</code> displays it.</p>
 <h4 id="scenario-plot-before-run">Scenario: Plot before run<a class="headerlink" href="#scenario-plot-before-run" title="Permanent link">&para;</a></h4>
 <ul>
 <li><strong>WHEN</strong> <code>plot</code> is called before <code>run()</code></li>
@@ -2573,6 +3205,105 @@
 <ul>
 <li><strong>WHEN</strong> <code>plot("allocations")</code> is called on a single-strategy run</li>
 <li><strong>THEN</strong> it raises <code>ValueError</code> because allocations are undefined</li>
+</ul>
+<h4 id="scenario-correlation-panel-on-a-subset-of-alphas">Scenario: Correlation panel on a subset of alphas<a class="headerlink" href="#scenario-correlation-panel-on-a-subset-of-alphas" title="Permanent link">&para;</a></h4>
+<ul>
+<li><strong>WHEN</strong> several but not all registered alphas are selected</li>
+<li><strong>THEN</strong> only those alphas are run and the correlation heatmaps cover just that subset</li>
+</ul>
+<h3 id="requirement-raw-tick-data-sources">Requirement: Raw-tick data sources<a class="headerlink" href="#requirement-raw-tick-data-sources" title="Permanent link">&para;</a></h3>
+<p>The system SHALL support two raw-tick backtest sources behind the <code>RawDataReader</code> interface
+(<code>read(...) -&gt; DataFrame | None</code> and <code>available_tickers(exchange, kind) -&gt; list[str]</code>).
+<code>MultiFileParquetReader</code> SHALL read the binance_parser Hive layout
+(<code>market={spot|usdm}/type={event}/dt=YYYY-MM-DD/symbol={SYMBOL}/part-*.parquet</code>), mapping the
+alpha-engine exchange tags <code>binance -&gt; market=spot</code> and <code>binance-f -&gt; market=usdm</code> and each
+<code>RawDataKind</code> to one or more <code>type=</code> partitions; it SHALL prune by <code>dt=</code> partition before opening
+any file, keep a day whose span overlaps <code>[since, until]</code>, normalise the live-writer column names to
+what the aggregators expect, then re-filter and sort by timestamp. An unparseable <code>dt=</code> directory or
+an unreadable shard SHALL be skipped with a WARNING (never silently), and a query with no matching
+files SHALL return <code>None</code>, which the aggregator treats as "this ticker has no data" and turns into
+an all-NaN column.</p>
+<p><code>MockRawDataReader</code> SHALL synthesise structurally identical data from one seeded random walk per
+ticker (default <code>seed=42</code>, 500 trades per 30-min bar, 5 order-book snapshots per bar of 50 levels a
+side) and SHALL claim ONLY the kinds it can synthesise - <code>trades</code>, <code>orderbook</code>, <code>klines</code>, <code>funding</code>,
+<code>markprice</code> - returning an empty ticker list for anything else. That is what makes <code>required_kinds</code>
+gating meaningful on <code>--mock</code>: a <code>go_metrics</code> sleeve is skipped with a warning instead of crashing
+on a missing key. The CLI SHALL construct it with the run window only, so the universe is the module
+default ticker list.</p>
+<h4 id="scenario-unreadable-shard">Scenario: Unreadable shard<a class="headerlink" href="#scenario-unreadable-shard" title="Permanent link">&para;</a></h4>
+<ul>
+<li><strong>WHEN</strong> one parquet shard in the requested window cannot be read</li>
+<li><strong>THEN</strong> the reader logs a WARNING, skips that shard, and returns the remaining data instead of
+  aborting the backtest</li>
+</ul>
+<h4 id="scenario-mock-source-and-kind-gating">Scenario: Mock source and kind gating<a class="headerlink" href="#scenario-mock-source-and-kind-gating" title="Permanent link">&para;</a></h4>
+<ul>
+<li><strong>WHEN</strong> the backtest runs with <code>--mock</code></li>
+<li><strong>THEN</strong> only trades / orderbook / klines / funding / markprice strategies are runnable and every
+  <code>go_metrics</code> sleeve is skipped with a warning</li>
+</ul>
+<h3 id="requirement-precomputed-metrics-data-source">Requirement: Precomputed metrics data source<a class="headerlink" href="#requirement-precomputed-metrics-data-source" title="Permanent link">&para;</a></h3>
+<p>The system SHALL serve the <code>--metrics-roots</code> backtest from <code>GoMetricsStore</code> + <code>GoExchangeData</code> over
+Backend-go Hive parquet (<code>{root}/market={market}/type=metrics/dt=*/symbol=*/part-*.parquet</code>, one
+<code>keys</code> list-of-(name, value) column per 30-min bar). The store SHALL default to <code>market="spot"</code>,
+<code>cache_dir=".metrics_cache"</code> and <code>workers=8</code>, SHALL log a WARNING and skip any supplied root without
+the <code>market=/type=metrics</code> partition, SHALL raise <code>FileNotFoundError</code> when NO root has it, and SHALL
+raise <code>ValueError("No symbols found in the requested window")</code> when the symbol scan comes back empty
+after the optional <code>tickers</code> filter. Symbols SHALL be discovered from the first and last day
+directory of each root only (an upper-cased set intersection with <code>tickers</code>), and the bar index
+SHALL be <code>pd.date_range(since, until, freq="30min", tz="UTC")</code> - every served frame is reindexed
+onto it, so a gap becomes NaN rather than a missing row.</p>
+<p>Because the Go writer emits the full key schema everywhere, zero-filled for groups it did not
+compute, the store SHALL probe up to three sampled day directories per root to learn which keys that
+root actually populates non-zero, and SHALL read each requested key only from roots that carry it. A
+key populated by NO root SHALL produce an all-NaN frame plus a WARNING - never a <code>KeyError</code>.</p>
+<p><code>GoExchangeData</code> SHALL map BOTH <code>binance</code> and <code>binance-f</code> to ONE shared <code>GoMetricsDict</code> (the Go
+datasets are spot-only), SHALL batch-preload a fixed metric tuple at construction unless
+<code>preload=False</code>, and SHALL gate <code>required_kinds</code> from its own <code>_KIND_PROBES</code> table rather than from
+a reader. Name resolution SHALL alias alpha-engine names to Go keys (<code>close_price</code>/<code>mark_price</code> from
+<code>close</code> on spot, <code>volume_usd</code> from <code>quote_volume</code>, <code>buy_cost</code>/<code>sell_cost</code> from the quote-volume
+legs, <code>bid_25_cost_avg</code>-style names to <code>ob__..pct__..__..__mean</code>), SHALL serve <code>predicted_funding</code>
+as a zero frame, and SHALL PASS THROUGH any unrecognised name as a raw Go key - which is why a
+misspelled or unpopulated metric surfaces as a NaN frame instead of an error on this path.
+Price-like frames SHALL have <code>0.0</code> replaced by NaN and then forward-filled, since <code>0.0</code> is the Go
+writer's "no data this bar" marker.</p>
+<p><code>realized_funding</code> SHALL be served with settlement semantics: zero on every bar except the 00/08/16
+UTC settlement bars, which carry the value observed in the bar immediately BEFORE settlement; a
+dataset without the key SHALL serve an all-zero frame. This exists so <code>compute_pnl</code>, which charges
+funding every bar, charges each 8h period exactly once instead of ~16x.</p>
+<h4 id="scenario-key-absent-from-every-root">Scenario: Key absent from every root<a class="headerlink" href="#scenario-key-absent-from-every-root" title="Permanent link">&para;</a></h4>
+<ul>
+<li><strong>WHEN</strong> a strategy or the cost model asks for a Go key no configured root populates</li>
+<li><strong>THEN</strong> the store logs a WARNING and serves an all-NaN frame on the standard index, and the
+  backtest continues with NaN-driven zeros rather than failing</li>
+</ul>
+<h4 id="scenario-funding-on-a-settlement-bar">Scenario: Funding on a settlement bar<a class="headerlink" href="#scenario-funding-on-a-settlement-bar" title="Permanent link">&para;</a></h4>
+<ul>
+<li><strong>WHEN</strong> a bar is 00:00, 08:00 or 16:00 UTC and the dataset carries <code>realized_funding</code></li>
+<li><strong>THEN</strong> that bar carries the previous bar's rate and every other bar carries <code>0.0</code>, so the PnL
+  funding leg charges each 8h period once</li>
+</ul>
+<h3 id="requirement-backtest-outputs-and-side-effects">Requirement: Backtest outputs and side effects<a class="headerlink" href="#requirement-backtest-outputs-and-side-effects" title="Permanent link">&para;</a></h3>
+<p>The system SHALL treat the batch backtest as an in-memory, side-effect-free job: no module in
+<code>alpha_engine/pipeline.py</code>, <code>alpha_engine/backtest/</code>, <code>alpha_engine/portfolio/</code>,
+<code>alpha_engine/strategies/</code>, <code>alpha_engine/operators.py</code>, or <code>tools/backtest.py</code> writes a report,
+CSV, parquet, or image to disk. Results SHALL be surfaced only through the returned/attached
+objects, the log lines, the printed <code>summary()</code> dict, and the interactive <code>plt.show()</code> window. The
+single persistent artifact in the whole path SHALL be the <code>GoMetricsStore</code> per-key frame cache on
+the <code>--metrics-roots</code> path: one parquet per Go metric key under <code>cache_dir</code> (default
+<code>.metrics_cache</code> relative to the working directory), keyed by a SHA1 over roots, window, ticker
+list, a data fingerprint (shard count plus newest mtime), and the key name, so a rebuilt dataset
+invalidates it; a failed cache write SHALL log a WARNING and continue.</p>
+<h4 id="scenario-no-files-produced">Scenario: No files produced<a class="headerlink" href="#scenario-no-files-produced" title="Permanent link">&para;</a></h4>
+<ul>
+<li><strong>WHEN</strong> a backtest completes with <code>--no-plot</code></li>
+<li><strong>THEN</strong> nothing is written to disk except (on the <code>--metrics-roots</code> path) the <code>.metrics_cache</code>
+  parquet frames, and all results live in the pipeline object and stdout</li>
+</ul>
+<h4 id="scenario-cache-write-failure">Scenario: Cache write failure<a class="headerlink" href="#scenario-cache-write-failure" title="Permanent link">&para;</a></h4>
+<ul>
+<li><strong>WHEN</strong> writing a cached metric frame fails</li>
+<li><strong>THEN</strong> the store logs a WARNING and the backtest proceeds by reading the shards</li>
 </ul>
 
 
