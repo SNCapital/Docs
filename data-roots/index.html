@@ -2380,6 +2380,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#cold-archive-backblaze-b2-raw-data-is-stored-as-tar-not-parquet" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Cold archive: Backblaze B2 -- raw data is stored as TAR, not parquet
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#provenance-rule-of-thumb" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2484,11 +2495,66 @@ fixtures for the parser pipeline. Never used in research.</p>
 <h2 id="server-roots-for-completeness">Server roots (for completeness)<a class="headerlink" href="#server-roots-for-completeness" title="Permanent link">&para;</a></h2>
 <ul>
 <li><code>/opt/trading/Backend-go/data</code> -- the live parser's output: raw ticks
-  (1-day retention) + long-term <code>type=metrics</code> for spot+usdm, top-100
-  each, compacted nightly (trading-compact.timer).</li>
+  (short retention, see below) + long-term <code>type=metrics</code> for spot+usdm,
+  top-100 each, compacted nightly (trading-compact.timer).</li>
 <li><code>/opt/trading/shadow/frames</code> -- server copy of <code>futures-history/frames</code>
   for the round-5 shadow book.</li>
 </ul>
+<h2 id="cold-archive-backblaze-b2-raw-data-is-stored-as-tar-not-parquet">Cold archive: Backblaze B2 -- <strong>raw data is stored as TAR, not parquet</strong><a class="headerlink" href="#cold-archive-backblaze-b2-raw-data-is-stored-as-tar-not-parquet" title="Permanent link">&para;</a></h2>
+<p>Read this before trying to query anything out of the bucket.</p>
+<p><strong>Bucket:</strong> <code>binance-marketdata-eu-a7f3c921</code>, endpoint
+<code>https://s3.eu-central-003.backblazeb2.com</code> (region <code>eu-central-003</code>),
+prefix <code>binance-parser/</code>. Credentials live only on the server in
+<code>/opt/trading/secrets/s3.env</code> (0600) -- never in the repo.</p>
+<p><strong>Two different object shapes live in that bucket:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Object</th>
+<th>Shape</th>
+<th>How it got there</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>binance-parser/market=*/type=*/dt=*.tar</code></td>
+<td><strong>one tar per day-partition</strong></td>
+<td>the normal path for raw ticks (<code>ARCHIVE_PACK=tar</code>, the default)</td>
+</tr>
+<tr>
+<td><code>binance-parser/market=*/type=*/dt=*/symbol=*/part-*.parquet</code></td>
+<td>loose parquet files</td>
+<td>the first, abandoned run of the per-file archiver (2026-08-30/31) -- ~426k objects of <code>type=depth/trade/kline</code>. Left as-is; harmless, just a different shape</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Why tar.</strong> A single raw day-partition holds ~850k parquet files of 4-12 KB
+(<code>usdm/markprice</code> alone: 282k files for 1.1 GB). Per-file upload measured
+<strong>~15 objects/s</strong> against B2 -- 65+ hours to clear one backlog while the next
+day adds another 16, i.e. it can never catch up. One tar per partition turns
+~850k objects/day into ~8. Parquet is already zstd-compressed, so the tar is
+stored <strong>uncompressed</strong> (<code>tar -cf</code>).</p>
+<p><strong>How to restore a day:</strong></p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># one stream for one day</span>
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>aws<span class="w"> </span>s3<span class="w"> </span>cp<span class="w"> </span>--endpoint-url<span class="w"> </span>https://s3.eu-central-003.backblazeb2.com<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span>s3://binance-marketdata-eu-a7f3c921/binance-parser/market<span class="o">=</span>usdm/type<span class="o">=</span>trade/dt<span class="o">=</span><span class="m">2026</span>-08-28.tar<span class="w"> </span>.
+</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>mkdir<span class="w"> </span>-p<span class="w"> </span>data/market<span class="o">=</span>usdm/type<span class="o">=</span>trade/dt<span class="o">=</span><span class="m">2026</span>-08-28
+</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>tar<span class="w"> </span>-xf<span class="w"> </span><span class="nv">dt</span><span class="o">=</span><span class="m">2026</span>-08-28.tar<span class="w"> </span>-C<span class="w"> </span>data/market<span class="o">=</span>usdm/type<span class="o">=</span>trade/dt<span class="o">=</span><span class="m">2026</span>-08-28
+</span></code></pre></div>
+<p>Members are stored relative to the partition (<code>symbol=BTCUSDT/part-*.parquet</code>),
+so extracting into the matching <code>dt=</code> directory reproduces the exact local
+layout the replay pipeline expects.</p>
+<p><strong>What is NOT archived:</strong> <code>type=metrics</code> (<code>ARCHIVE_EXCLUDE_TYPES=metrics</code>).
+Metrics stay local forever -- the live trader reads a 30-day metrics window
+every bar and research reads the same tree.</p>
+<p><strong>Retention chain on the server (all UTC):</strong></p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>00:15  trading-compact.timer   merge closed-day metrics part files (Go binary)
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>00:30  trading-archive.timer   tar raw partitions older than 1 day -&gt; B2, then delete
+</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a> ...   trading-prune.timer     BACKSTOP: hard-delete raw older than 3 days
+</span></code></pre></div>
+<p><code>prune</code> only ever fires on data the archiver failed to ship, so a broken
+archiver costs disk, never the trading loop. Cost at current volume
+(~6-9 GB/day) is ~<span class="arithmatex">\(1.6/mo now, ~\)</span>19/mo after a year at B2's $6.95/TB.</p>
 <h2 id="provenance-rule-of-thumb">Provenance rule of thumb<a class="headerlink" href="#provenance-rule-of-thumb" title="Permanent link">&para;</a></h2>
 <p>Everything Binance gives away free (klines, tick trades, futures book
 bands, funding/OI/LSR) comes from <strong>data.binance.vision</strong>. The single

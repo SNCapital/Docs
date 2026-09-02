@@ -1089,10 +1089,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#cli-full-reference" class="md-nav__link">
+  <a href="#configuration-live_configyaml" class="md-nav__link">
     <span class="md-ellipsis">
       
-        CLI — full reference
+        Configuration — live_config.yaml
       
     </span>
   </a>
@@ -2568,10 +2568,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#cli-full-reference" class="md-nav__link">
+  <a href="#configuration-live_configyaml" class="md-nav__link">
     <span class="md-ellipsis">
       
-        CLI — full reference
+        Configuration — live_config.yaml
       
     </span>
   </a>
@@ -2741,14 +2741,14 @@ your first bar already has the full <code>lookback_days</code> of history — no
 <div class="language-text highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>Warm-start complete: 12 (exchange,kind,ticker) buffers seeded, 387 654 rows total
 </span></code></pre></div>
 <p>If <code>total_rows == 0</code> the warning suggests you check the parser's Hive
-layout. The most common cause is pointing <code>--data-root</code> at a directory
-that exists but doesn't contain <code>market=…/type=…/dt=…/symbol=…/</code>.</p>
+layout. The most common cause is a warm-start root that exists but doesn't
+contain <code>market=…/type=…/dt=…/symbol=…/</code>.</p>
 <h2 id="subscribing-to-specific-event-types">Subscribing to specific event types<a class="headerlink" href="#subscribing-to-specific-event-types" title="Permanent link">&para;</a></h2>
 <p>The bus subscriber is created with an <code>event_types</code> filter:</p>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="n">_READER_EVENT_TYPES</span> <span class="o">=</span> <span class="p">(</span>
-</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>    <span class="s2">&quot;aggtrades&quot;</span><span class="p">,</span> <span class="s2">&quot;trades&quot;</span><span class="p">,</span> <span class="s2">&quot;klines&quot;</span><span class="p">,</span> <span class="s2">&quot;booksnapshot&quot;</span><span class="p">,</span> <span class="s2">&quot;funding&quot;</span><span class="p">,</span>
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>    <span class="s2">"aggtrades"</span><span class="p">,</span> <span class="s2">"trades"</span><span class="p">,</span> <span class="s2">"klines"</span><span class="p">,</span> <span class="s2">"booksnapshot"</span><span class="p">,</span> <span class="s2">"funding"</span><span class="p">,</span>
 </span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="p">)</span>
-</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="n">sub</span> <span class="o">=</span> <span class="n">bus</span><span class="o">.</span><span class="n">subscribe</span><span class="p">(</span><span class="s2">&quot;live-reader&quot;</span><span class="p">,</span> <span class="n">event_types</span><span class="o">=</span><span class="n">_READER_EVENT_TYPES</span><span class="p">)</span>
+</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="n">sub</span> <span class="o">=</span> <span class="n">bus</span><span class="o">.</span><span class="n">subscribe</span><span class="p">(</span><span class="s2">"live-reader"</span><span class="p">,</span> <span class="n">event_types</span><span class="o">=</span><span class="n">_READER_EVENT_TYPES</span><span class="p">)</span>
 </span></code></pre></div>
 <p>This drops raw <code>orderbook</code> diffs at the publishing edge — they're the
 hottest stream (hundreds/sec across symbols) and the live reader only
@@ -2756,23 +2756,23 @@ cares about periodic <code>booksnapshot</code> events anyway. Without the filter
 the per-subscriber queue fills with diffs and the reader starts dropping
 trade/kline events.</p>
 <h2 id="local-order-book-in-live-mode">Local order book in live mode<a class="headerlink" href="#local-order-book-in-live-mode" title="Permanent link">&para;</a></h2>
-<p>If <code>--no-order-book</code> is <strong>not</strong> passed (the default), the live runtime
-spins up <code>OrderBookManager</code> and a <code>snapshot_loop</code>. The snapshot loop
-calls <code>book_manager.snapshot_top(...)</code> every
+<p>The live runtime always spins up <code>OrderBookManager</code> and a <code>snapshot_loop</code>.
+The snapshot loop calls <code>book_manager.snapshot_top(...)</code> every
 <code>snapshot_interval_ms</code> (default 1 s since NSC-10, configurable in
 <code>config/settings.py::LIVE_ORDERBOOK_SNAPSHOT_INTERVAL_MS</code>) and emits
 <code>BookSnapshotEvent</code> records to the bus. Those snapshots are what the
 orderbook aggregator consumes.</p>
-<p>If you disable snapshots (either <code>--no-order-book</code> or
-<code>--snapshot-interval-ms 0</code>), strategies whose <code>required_kinds</code> include
-<code>"orderbook"</code> will be <strong>skipped</strong> at each bar boundary with a
+<p>If you disable snapshots with <code>snapshot_interval_ms: 0</code> in <code>live_config.yaml</code>,
+strategies whose
+<code>required_kinds</code> include <code>"orderbook"</code> will be <strong>skipped</strong> at each bar
+boundary with a
 <code>WARNING Skipping strategy '&lt;name&gt;' — missing data kinds: ['orderbook']</code>
 log line. This is the explicit failure mode that replaces the silent-NaN
 behaviour of the pre-NSC-10 engine.</p>
 <h2 id="required_kinds-contract"><code>required_kinds</code> contract<a class="headerlink" href="#required_kinds-contract" title="Permanent link">&para;</a></h2>
 <p>Each strategy declares the set of raw-data kinds it needs:</p>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="k">class</span><span class="w"> </span><span class="nc">BookDepthImbalance</span><span class="p">(</span><span class="n">AlphaStrategy</span><span class="p">):</span>
-</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>    <span class="n">required_kinds</span> <span class="o">=</span> <span class="nb">frozenset</span><span class="p">({</span><span class="s2">&quot;klines&quot;</span><span class="p">,</span> <span class="s2">&quot;orderbook&quot;</span><span class="p">})</span>
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>    <span class="n">required_kinds</span> <span class="o">=</span> <span class="nb">frozenset</span><span class="p">({</span><span class="s2">"klines"</span><span class="p">,</span> <span class="s2">"orderbook"</span><span class="p">})</span>
 </span></code></pre></div>
 <p>Before instantiating a strategy, <code>run_strategies</code> queries
 <code>reader.available_tickers(exchange, kind)</code> for every candidate kind and
@@ -2795,32 +2795,22 @@ producing an inscrutable NaN PnL.</p>
 is no built-in retry; restart the process.</p>
 <p><code>Ctrl+C</code> from <code>python main.py live-trade</code> propagates a <code>KeyboardInterrupt</code>,
 which <code>main.main()</code> swallows with a clean print.</p>
-<h2 id="cli-full-reference">CLI — full reference<a class="headerlink" href="#cli-full-reference" title="Permanent link">&para;</a></h2>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>python main.py live-trade [-h]
-</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>    --alphas {ob_mispricing,vol_ob_entropy,funding_reversion,
-</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>              trade_imbalance,vol_mean_reversion,book_depth_imbalance} …
-</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>    [--symbols SYMBOLS …]            # default: parser SYMBOLS
-</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>    [--bar-minutes BAR_MINUTES]      # default 30
-</span><span id="__span-3-6"><a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>    [--lookback-days LOOKBACK_DAYS]  # default 30
-</span><span id="__span-3-7"><a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>    [--max-w MAX_W]                  # default 0.03
-</span><span id="__span-3-8"><a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>    [--end-range END_RANGE]          # default 50
-</span><span id="__span-3-9"><a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>    [--market {spot,usdm}]           # default spot
-</span><span id="__span-3-10"><a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>    [--no-order-book]                # disable local L2 book
-</span><span id="__span-3-11"><a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>    [--snapshot-interval-ms MS]      # override snapshot cadence
-</span><span id="__span-3-12"><a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>    [--data-root DATA_ROOT]          # warm-start root, default ./data
-</span><span id="__span-3-13"><a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>    [--log-level LEVEL]              # default INFO
+<h2 id="configuration-live_configyaml">Configuration — <code>live_config.yaml</code><a class="headerlink" href="#configuration-live_configyaml" title="Permanent link">&para;</a></h2>
+<p>The live trader takes <strong>no CLI flags and no env vars</strong> — it is configured
+entirely by <code>live_config.yaml</code> at the repo root (loaded by
+<code>alpha_engine/live/config.py</code>). Env is reserved for <code>BINANCE_*</code> secrets. Every
+parameter — strategy, universe, bar cadence, mode, risk caps, and the on-disk
+paths (<code>metrics_root</code>, <code>state_path</code>) — lives in that file.</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># 1) edit live_config.yaml (alphas, symbols, market, mode, risk caps, ...)</span>
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="c1"># 2) run:</span>
+</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>python<span class="w"> </span>main.py<span class="w"> </span>live-trade<span class="w">        </span><span class="c1"># or `python main.py live` (Docker entrypoint alias)</span>
 </span></code></pre></div>
-<p>Examples:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># USD-M, single strategy, no book (signal-only loop on funding)</span>
-</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>python<span class="w"> </span>main.py<span class="w"> </span>live-trade<span class="w"> </span>--market<span class="w"> </span>usdm<span class="w"> </span>--alphas<span class="w"> </span>funding_reversion<span class="w"> </span>--no-order-book
-</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
-</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># Spot, two strategies on a custom universe, debug logging</span>
-</span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>python<span class="w"> </span>main.py<span class="w"> </span>live-trade<span class="w"> </span>--alphas<span class="w"> </span>trade_imbalance<span class="w"> </span>ob_mispricing<span class="w"> </span><span class="se">\</span>
-</span><span id="__span-4-6"><a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="w">    </span>--symbols<span class="w"> </span>BTCUSDT<span class="w"> </span>ETHUSDT<span class="w"> </span>SOLUSDT<span class="w"> </span>--log-level<span class="w"> </span>DEBUG
-</span><span id="__span-4-7"><a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>
-</span><span id="__span-4-8"><a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="c1"># Faster bar cadence (signal-only — keep an eye on noise)</span>
-</span><span id="__span-4-9"><a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>python<span class="w"> </span>main.py<span class="w"> </span>live-trade<span class="w"> </span>--bar-minutes<span class="w"> </span><span class="m">5</span><span class="w"> </span>--alphas<span class="w"> </span>trade_imbalance
-</span></code></pre></div>
+<p>Resolution is file-only: a missing file, a missing required key, a null
+required key, or an unparseable/invalid value <strong>fails loud</strong> (the process
+exits) — nothing falls back to a hidden in-code default. To run a different
+profile, edit the single repo-root <code>live_config.yaml</code> or bind-mount a different
+file over <code>/app/live_config.yaml</code> in Docker. The annotated <code>live_config.yaml</code>
+is the canonical key list.</p>
 <h2 id="operational-notes">Operational notes<a class="headerlink" href="#operational-notes" title="Permanent link">&para;</a></h2>
 <ul>
 <li><strong>Bar cadence ≠ trade cadence.</strong> Phase 1 doesn't trade. Phase 4 will

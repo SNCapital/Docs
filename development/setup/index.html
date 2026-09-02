@@ -2526,7 +2526,7 @@
 scipy, matplotlib for backtest; aiohttp, websockets, sortedcontainers
 for the parser.</p>
 <p>For the docs site (this site) — install the doc tooling separately:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>pip<span class="w"> </span>install<span class="w"> </span><span class="s1">&#39;mkdocs-material&gt;=9.5&#39;</span><span class="w"> </span><span class="s1">&#39;pymdown-extensions&gt;=10&#39;</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>pip<span class="w"> </span>install<span class="w"> </span><span class="s1">'mkdocs-material&gt;=9.5'</span><span class="w"> </span><span class="s1">'pymdown-extensions&gt;=10'</span>
 </span></code></pre></div>
 <h2 id="smoke-test">Smoke test<a class="headerlink" href="#smoke-test" title="Permanent link">&para;</a></h2>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>pytest<span class="w">                                 </span><span class="c1"># 100 passing</span>
@@ -2542,10 +2542,10 @@ for the parser.</p>
 </ul>
 <p>Recommended VS Code settings:</p>
 <div class="language-text highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>{
-</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>  &quot;python.defaultInterpreterPath&quot;: &quot;.venv/bin/python&quot;,
-</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>  &quot;python.testing.pytestEnabled&quot;: true,
-</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>  &quot;python.testing.pytestArgs&quot;: [&quot;.&quot;],
-</span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>  &quot;editor.formatOnSave&quot;: false
+</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>  "python.defaultInterpreterPath": ".venv/bin/python",
+</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>  "python.testing.pytestEnabled": true,
+</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>  "python.testing.pytestArgs": ["."],
+</span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>  "editor.formatOnSave": false
 </span><span id="__span-4-6"><a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>}
 </span></code></pre></div>
 <h2 id="optional-tools">Optional tools<a class="headerlink" href="#optional-tools" title="Permanent link">&para;</a></h2>
@@ -2558,13 +2558,13 @@ for the parser.</p>
 <li><strong>DuckDB</strong> for poking at parquet without loading the engine:</li>
 </ul>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>pip<span class="w"> </span>install<span class="w"> </span>duckdb
-</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>duckdb<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;</span>
+</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>duckdb<span class="w"> </span>-c<span class="w"> </span><span class="s2">"</span>
 </span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="s2">  SELECT symbol, count(*)</span>
-</span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="s2">  FROM read_parquet(&#39;data/market=usdm/type=trades/**/*.parquet&#39;, hive_partitioning=1)</span>
-</span><span id="__span-5-5"><a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="s2">  WHERE dt = &#39;2026-04-25&#39;</span>
+</span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="s2">  FROM read_parquet('data/market=usdm/type=trades/**/*.parquet', hive_partitioning=1)</span>
+</span><span id="__span-5-5"><a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="s2">  WHERE dt = '2026-04-25'</span>
 </span><span id="__span-5-6"><a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="s2">  GROUP BY 1</span>
 </span><span id="__span-5-7"><a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="s2">  ORDER BY 2 DESC</span>
-</span><span id="__span-5-8"><a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="s2">&quot;</span>
+</span><span id="__span-5-8"><a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="s2">"</span>
 </span></code></pre></div>
 <h2 id="a-note-about-the-parsers-bare-imports">A note about the parser's bare imports<a class="headerlink" href="#a-note-about-the-parsers-bare-imports" title="Permanent link">&para;</a></h2>
 <p><code>binance_parser/</code> imports its own subpackages without the package
@@ -2579,7 +2579,7 @@ from anywhere.</p>
 <p>If you write new code in the alpha engine that needs the parser, you
 have <strong>two equivalent options</strong>:</p>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Either: copy the sys.path trick (see alpha_engine/live/service.py)</span>
-</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span><span class="o">.</span><span class="n">resolve</span><span class="p">()</span><span class="o">.</span><span class="n">parents</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">/</span> <span class="s2">&quot;binance_parser&quot;</span><span class="p">))</span>
+</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span><span class="o">.</span><span class="n">resolve</span><span class="p">()</span><span class="o">.</span><span class="n">parents</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">/</span> <span class="s2">"binance_parser"</span><span class="p">))</span>
 </span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="kn">from</span><span class="w"> </span><span class="nn">models.events</span><span class="w"> </span><span class="kn">import</span> <span class="n">MarketEvent</span>
 </span><span id="__span-6-4"><a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>
 </span><span id="__span-6-5"><a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="c1"># Or: use the namespaced form (also works because of conftest)</span>
@@ -2618,7 +2618,7 @@ clearer in code review. Pick one and be consistent within a file.</p>
 </tr>
 <tr>
 <td>Run with debug logging</td>
-<td><code>python main.py live-trade --log-level DEBUG …</code></td>
+<td>set <code>log_level: DEBUG</code> in <code>live_config.yaml</code>, then <code>python main.py live-trade</code></td>
 </tr>
 </tbody>
 </table>

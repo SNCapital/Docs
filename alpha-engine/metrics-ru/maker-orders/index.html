@@ -2646,11 +2646,11 @@ maker-fills, которые taker съел на одном уровне цены
 <p>Для каждого raw trade record создаём один логический «maker fill»:</p>
 <div class="language-text highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>maker_fill = {
 </span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>    timestamp     : trade.timestamp_ms,
-</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>    side          : &quot;ask&quot; if not trade.is_buyer_maker  # maker продавал → был на ask
-</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>                    else &quot;bid&quot;,                         # maker покупал → был на bid
+</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>    side          : "ask" if not trade.is_buyer_maker  # maker продавал → был на ask
+</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>                    else "bid",                         # maker покупал → был на bid
 </span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>    price         : trade.price,
-</span><span id="__span-2-6"><a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>    size          : trade.qty,                          # размер этого fill&#39;а maker&#39;а
-</span><span id="__span-2-7"><a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>                                                          # (= размер raw trade&#39;а)
+</span><span id="__span-2-6"><a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>    size          : trade.qty,                          # размер этого fill'а maker'а
+</span><span id="__span-2-7"><a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>                                                          # (= размер raw trade'а)
 </span><span id="__span-2-8"><a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>    notional      : trade.price × trade.qty,
 </span><span id="__span-2-9"><a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>}
 </span></code></pre></div>
@@ -2909,7 +2909,7 @@ public schema, регистрируется в <code>metrics_dict._METRIC_SOURCE
 </span><span id="__span-16-11"><a id="__codelineno-16-11" name="__codelineno-16-11" href="#__codelineno-16-11"></a>                                                 #   уровне ровно один maker)
 </span><span id="__span-16-12"><a id="__codelineno-16-12" name="__codelineno-16-12" href="#__codelineno-16-12"></a>
 </span><span id="__span-16-13"><a id="__codelineno-16-13" name="__codelineno-16-13" href="#__codelineno-16-13"></a>maker_kyle_lambda = -kyle_lambda(taker)         # signed-volume convention inverted (anti-identity)
-</span><span id="__span-16-14"><a id="__codelineno-16-14" name="__codelineno-16-14" href="#__codelineno-16-14"></a>maker_asr_count   ≠ asr_count(taker)            # ASR sign inverted: ask-maker &quot;right&quot; on price fall
+</span><span id="__span-16-14"><a id="__codelineno-16-14" name="__codelineno-16-14" href="#__codelineno-16-14"></a>maker_asr_count   ≠ asr_count(taker)            # ASR sign inverted: ask-maker "right" on price fall
 </span></code></pre></div>
 <p>То есть <code>*_cost</code>, <code>*_volume</code>, <code>vwap</code> совпадают между maker и taker
 вьюхами — это <strong>identity</strong> с разной перспективы. А <code>*_count</code> для

@@ -2724,9 +2724,9 @@
 <p>Для произвольной per-snapshot скалярной метрики <code>M(t)</code> — массив бара:</p>
 <div class="language-text highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>S_M(B)  = [ M(t_1), M(t_2), ..., M(t_N) ]            # упорядоченный массив длины N, может содержать NaN
 </span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>F_M(B)  = [ M(t_i) : 1 ≤ i ≤ N, M(t_i) finite ]      # подпоследовательность без NaN (с дубликатами)
-</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>F&#39;_M(B) = [ M(t_i) : 1 ≤ i ≤ N, M(t_i) finite AND M(t_i) ≠ 0 ]   # без NaN и без нулей
+</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>F'_M(B) = [ M(t_i) : 1 ≤ i ≤ N, M(t_i) finite AND M(t_i) ≠ 0 ]   # без NaN и без нулей
 </span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>n_M(B)  = len(F_M(B))                                # число валидных значений
-</span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>n&#39;_M(B) = len(F&#39;_M(B))                               # число валидных и ненулевых
+</span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>n'_M(B) = len(F'_M(B))                               # число валидных и ненулевых
 </span></code></pre></div>
 <p>Это <strong>мульти-наборы</strong> (списки с дубликатами), не математические множества. На стабильном рынке <code>best_bid_price(t)</code> много секунд подряд может быть одним и тем же числом — все эти повторы попадают в <code>F_M(B)</code>, и <code>mean</code> считается с правильным весом.</p>
 <h3 id="9-per-snapshot">9-агрегационный шаблон (для базовых per-snapshot метрик)<a class="headerlink" href="#9-per-snapshot" title="Permanent link">&para;</a></h3>
@@ -2740,7 +2740,7 @@
 </span><span id="__span-5-6"><a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>                 = NaN                                  otherwise
 </span><span id="__span-5-7"><a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>
 </span><span id="__span-5-8"><a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>Q = {0.25, 0.5, 0.75, 0.9, 0.95}      # фиксированный набор перцентилей
-</span><span id="__span-5-9"><a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>ε = 1e-12 × max(1, |mean(F_M(B))|)    # порог &quot;почти константа&quot; для skew
+</span><span id="__span-5-9"><a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>ε = 1e-12 × max(1, |mean(F_M(B))|)    # порог "почти константа" для skew
 </span></code></pre></div>
 <p>Произвольные <code>quantile_q</code> (вне <code>Q</code>) не поддерживаются.</p>
 <p><code>_sum</code> к базовым метрикам <strong>не применяется</strong> — он зарезервирован для
@@ -2749,13 +2749,13 @@ diff/logreturn (см. ниже).</p>
 <p>Применяется к L1.5, L1.6. Для cross-snapshot метрики <code>M(t)</code> —
 <strong>нулевые значения отбрасываются вместе с NaN</strong>. Используется
 <code>F'_M(B)</code> (без NaN и без нулей):</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>M_avg(B)         = mean(F&#39;_M(B))                        if n&#39;_M(B) &gt; 0 else NaN
-</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>M_min(B)         = min(F&#39;_M(B))                         if n&#39;_M(B) &gt; 0 else NaN
-</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>M_max(B)         = max(F&#39;_M(B))                         if n&#39;_M(B) &gt; 0 else NaN
-</span><span id="__span-6-4"><a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>M_quantile_q(B)  = quantile(F&#39;_M(B), q),  q ∈ Q          if n&#39;_M(B) &gt; 0 else NaN
-</span><span id="__span-6-5"><a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>M_skew(B)        = skew(F&#39;_M(B), bias=False)            if n&#39;_M(B) ≥ 3 and std(F&#39;_M(B)) &gt; ε
+<div class="language-text highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>M_avg(B)         = mean(F'_M(B))                        if n'_M(B) &gt; 0 else NaN
+</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>M_min(B)         = min(F'_M(B))                         if n'_M(B) &gt; 0 else NaN
+</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>M_max(B)         = max(F'_M(B))                         if n'_M(B) &gt; 0 else NaN
+</span><span id="__span-6-4"><a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>M_quantile_q(B)  = quantile(F'_M(B), q),  q ∈ Q          if n'_M(B) &gt; 0 else NaN
+</span><span id="__span-6-5"><a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>M_skew(B)        = skew(F'_M(B), bias=False)            if n'_M(B) ≥ 3 and std(F'_M(B)) &gt; ε
 </span><span id="__span-6-6"><a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>                 = NaN                                   otherwise
-</span><span id="__span-6-7"><a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>M_sum(B)         = sum(F&#39;_M(B))                         (всегда определена; пустая сумма = 0.0)
+</span><span id="__span-6-7"><a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>M_sum(B)         = sum(F'_M(B))                         (всегда определена; пустая сумма = 0.0)
 </span></code></pre></div>
 <p><code>_sum</code> определён всегда — на пустом массиве равен <code>0.0</code>.</p>
 <p>Обоснование zero-drop: для diff/logreturn нулевое значение означает
@@ -2789,10 +2789,10 @@ diff/logreturn (см. ниже).</p>
 <h2 id="l12-best_askbid_size">L1.2 — <code>best_{ask/bid}_size</code><a class="headerlink" href="#l12-best_askbid_size" title="Permanent link">&para;</a></h2>
 <p><strong>Смысл.</strong> Объём (в монете) на best-уровне в момент <code>t</code>.</p>
 <h3 id="per-snapshot_1">Per-snapshot<a class="headerlink" href="#per-snapshot_1" title="Permanent link">&para;</a></h3>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>best_bid_size(t) = size_at(t, &quot;bid&quot;, best_bid_price(t))   if best_bid_price(t) ≠ NaN
+<div class="language-text highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>best_bid_size(t) = size_at(t, "bid", best_bid_price(t))   if best_bid_price(t) ≠ NaN
 </span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>                 = NaN                                     otherwise
 </span><span id="__span-9-3"><a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>
-</span><span id="__span-9-4"><a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>best_ask_size(t) = size_at(t, &quot;ask&quot;, best_ask_price(t))   if best_ask_price(t) ≠ NaN
+</span><span id="__span-9-4"><a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>best_ask_size(t) = size_at(t, "ask", best_ask_price(t))   if best_ask_price(t) ≠ NaN
 </span><span id="__span-9-5"><a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>                 = NaN                                     otherwise
 </span></code></pre></div>
 <p>Парность <code>(price, size)</code>: <code>best_*_price = NaN ⟺ best_*_size = NaN</code>.</p>

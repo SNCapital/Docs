@@ -2565,11 +2565,11 @@
 <p>После нормализации reader'ом:</p>
 <div class="language-text highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>timestamp_ms      : int64    # время срабатывания liquidation engine
 </span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>symbol            : string
-</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>side              : string   # сторона ликвидационного ордера (&quot;buy&quot; | &quot;sell&quot;)
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>side              : string   # сторона ликвидационного ордера ("buy" | "sell")
 </span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>price             : float    # initial price ликвидационного ордера
 </span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>avg_price         : float    # средняя цена исполнения (после fills)
 </span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>orig_qty          : float    # запрошенный объём ликвидации (base coin)
-</span><span id="__span-1-7"><a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>last_filled_qty   : float    # объём последнего fill&#39;а
+</span><span id="__span-1-7"><a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>last_filled_qty   : float    # объём последнего fill'а
 </span><span id="__span-1-8"><a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>cum_filled_qty    : float    # суммарно исполненный объём
 </span><span id="__span-1-9"><a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>order_status      : string   # FILLED | PARTIALLY_FILLED | etc.
 </span></code></pre></div>
@@ -2598,7 +2598,7 @@
 <p>Чтобы переиспользовать формулы из <code>trades-v2.md</code>, каждое forceOrder
 событие маппится в trade-record:</p>
 <div class="language-text highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>trade.timestamp = forceOrder.timestamp_ms
-</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>trade.side      = forceOrder.side                    # &quot;buy&quot; | &quot;sell&quot;
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>trade.side      = forceOrder.side                    # "buy" | "sell"
 </span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>trade.price     = forceOrder.avg_price               # средняя по fills
 </span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>trade.size      = forceOrder.cum_filled_qty          # фактически исполнено
 </span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>                                                       (для FILLED статуса = orig_qty)

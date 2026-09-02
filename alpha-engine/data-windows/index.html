@@ -2345,7 +2345,7 @@
 
 <h1 id="data-windows">Data windows<a class="headerlink" href="#data-windows" title="Permanent link">&para;</a></h1>
 <p>How much history each component actually needs, and why the live
-<code>--lookback-days</code> default is 30.</p>
+<code>lookback_days</code> (in <code>live_config.yaml</code>) default is 30.</p>
 <h2 id="rolling-windows-by-component">Rolling windows by component<a class="headerlink" href="#rolling-windows-by-component" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
@@ -2410,7 +2410,7 @@ else fits in 14 days or less.</p>
 - Markowitz default lookback (overridden to 14 in live via
   <code>--alloc-lookback-days</code>)</p>
 <h2 id="recommendation">Recommendation<a class="headerlink" href="#recommendation" title="Permanent link">&para;</a></h2>
-<p><code>--lookback-days 21</code> is sufficient for all current strategies and cuts
+<p><code>lookback_days: 21</code> is sufficient for all current strategies and cuts
 live I/O by ~30 % versus the default.</p>
 <h2 id="related">Related<a class="headerlink" href="#related" title="Permanent link">&para;</a></h2>
 <ul>

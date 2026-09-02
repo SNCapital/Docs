@@ -3409,7 +3409,7 @@ best_bid сам в зоне). Для top_x — всегда x (число сло
 </span><span id="__span-14-3"><a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>                                   = NaN if best_bid NaN
 </span><span id="__span-14-4"><a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a>
 </span><span id="__span-14-5"><a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a># top_x
-</span><span id="__span-14-6"><a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a>bid_top_x_levels_size_count_nonzero(t) = | { i : size_at(t, &quot;bid&quot;, p_i) &gt; 0,  i = 1..x } |
+</span><span id="__span-14-6"><a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a>bid_top_x_levels_size_count_nonzero(t) = | { i : size_at(t, "bid", p_i) &gt; 0,  i = 1..x } |
 </span><span id="__span-14-7"><a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a>                                       = NaN  if mid(t) = NaN
 </span></code></pre></div>
 <p>Для процентного <code>_count</code> и <code>_count_nonzero</code> идентичны (в L2-снапшотах
@@ -3566,8 +3566,8 @@ in-process в реальном времени. Bar-level аккумулятор�
 <code>mid(t_event)</code>, <code>best_bid(t_event)</code>, <code>best_ask(t_event)</code> из локальной
 книги. Для каждого оффсета X проверяет:</p>
 <div class="language-text highlight"><pre><span></span><code><span id="__span-19-1"><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>in_zone_pct_X(price, side, t) =
-</span><span id="__span-19-2"><a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a>    (side == &quot;bid&quot; AND price ≥ best_bid(t) × (1 − X/100))
-</span><span id="__span-19-3"><a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a>  OR (side == &quot;ask&quot; AND price ≤ best_ask(t) × (1 + X/100))
+</span><span id="__span-19-2"><a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a>    (side == "bid" AND price ≥ best_bid(t) × (1 − X/100))
+</span><span id="__span-19-3"><a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a>  OR (side == "ask" AND price ≤ best_ask(t) × (1 + X/100))
 </span><span id="__span-19-4"><a id="__codelineno-19-4" name="__codelineno-19-4" href="#__codelineno-19-4"></a>
 </span><span id="__span-19-5"><a id="__codelineno-19-5" name="__codelineno-19-5" href="#__codelineno-19-5"></a>in_zone_top_x(price, side, t) =
 </span><span id="__span-19-6"><a id="__codelineno-19-6" name="__codelineno-19-6" href="#__codelineno-19-6"></a>    price ∈ zone_{side}_top_x(t)            # тиковые позиции грида
@@ -3579,19 +3579,19 @@ in-process в реальном времени. Bar-level аккумулятор�
 <h4 id="1-bidask_x_place_vwap">1. <code>{bid/ask}_X_place_vwap</code><a class="headerlink" href="#1-bidask_x_place_vwap" title="Permanent link">&para;</a></h4>
 <p>VWAP всех <strong>place</strong>-событий в зоне X за бар:</p>
 <div class="language-text highlight"><pre><span></span><code><span id="__span-20-1"><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a>bid_X_place_vwap(B) = (Σ price × delta) / (Σ delta)
-</span><span id="__span-20-2"><a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a>                       где сумма по всем bid PLACE событиям с in_zone(price, &quot;bid&quot;, t_event)
+</span><span id="__span-20-2"><a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a>                       где сумма по всем bid PLACE событиям с in_zone(price, "bid", t_event)
 </span><span id="__span-20-3"><a id="__codelineno-20-3" name="__codelineno-20-3" href="#__codelineno-20-3"></a>                    = NaN  if  Σ delta = 0  (нет place-событий в зоне)
 </span></code></pre></div>
 <p>(<code>remove_vwap</code> не определена в спеке — пропускаем.)</p>
 <h4 id="2-bidask_x_place_size_skew">2. <code>{bid/ask}_X_place_size_skew</code><a class="headerlink" href="#2-bidask_x_place_size_skew" title="Permanent link">&para;</a></h4>
 <p>Скос распределения размеров place-событий в зоне:</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-21-1"><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a>deltas_bid_X(B) = [delta : bid PLACE events with in_zone(price, &quot;bid&quot;, t_event)]
+<div class="language-text highlight"><pre><span></span><code><span id="__span-21-1"><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a>deltas_bid_X(B) = [delta : bid PLACE events with in_zone(price, "bid", t_event)]
 </span><span id="__span-21-2"><a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a>bid_X_place_size_skew(B) = scipy.stats.skew(deltas_bid_X(B), bias=False)
 </span><span id="__span-21-3"><a id="__codelineno-21-3" name="__codelineno-21-3" href="#__codelineno-21-3"></a>                         = NaN  if  | deltas | &lt; 3  OR  std(deltas) ≈ 0
 </span></code></pre></div>
 <h4 id="3-bidask_x_remove_quantile_q">3. <code>{bid/ask}_X_remove_quantile_q</code><a class="headerlink" href="#3-bidask_x_remove_quantile_q" title="Permanent link">&para;</a></h4>
 <p>Квантиль распределения размеров remove-событий в зоне:</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-22-1"><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a>deltas_bid_remove_X(B) = [delta : bid REMOVE events with in_zone(price, &quot;bid&quot;, t_event)]
+<div class="language-text highlight"><pre><span></span><code><span id="__span-22-1"><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a>deltas_bid_remove_X(B) = [delta : bid REMOVE events with in_zone(price, "bid", t_event)]
 </span><span id="__span-22-2"><a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a>bid_X_remove_quantile_q(B) = numpy.quantile(deltas_bid_remove_X(B), q)
 </span><span id="__span-22-3"><a id="__codelineno-22-3" name="__codelineno-22-3" href="#__codelineno-22-3"></a>                           = NaN  if  deltas пустой
 </span></code></pre></div>

@@ -2604,12 +2604,12 @@
 <p>Тот же что у <code>trades-v2</code>: партиции <code>type=aggtrades/</code> (live) +
 <code>type=aggTrades/</code> (historical). Reader через <code>kind="trades"</code>.</p>
 <p>Используемые поля aggTrade (после нормализации):</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>timestamp_ms        # время engine&#39;а, миллисекунды UTC
-</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>side                # сторона агрессора: &quot;buy&quot; if !is_buyer_maker else &quot;sell&quot;
+<div class="language-text highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>timestamp_ms        # время engine'а, миллисекунды UTC
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>side                # сторона агрессора: "buy" if !is_buyer_maker else "sell"
 </span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>price               # цена уровня
 </span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>size                # объём агрегата на этой цене
-</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>first_trade_id      # id первого raw fill&#39;а в агрегате
-</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>last_trade_id       # id последнего raw fill&#39;а в агрегате
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>first_trade_id      # id первого raw fill'а в агрегате
+</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>last_trade_id       # id последнего raw fill'а в агрегате
 </span></code></pre></div>
 <hr />
 <h2 id="_3">Алгоритм реконструкции<a class="headerlink" href="#_3" title="Permanent link">&para;</a></h2>
@@ -2619,7 +2619,7 @@
 </span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>    same_side       = (A.side == B.side)                              # обязательно
 </span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>    same_timestamp  = (A.timestamp_ms == B.timestamp_ms)               # ML.A: ε = 0, строго
 </span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>    contiguous_ids  = (B.first_trade_id == A.last_trade_id + 1)        # обязательно
-</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>    price_monotonic = (B.price &gt; A.price  if  A.side == &quot;buy&quot;
+</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>    price_monotonic = (B.price &gt; A.price  if  A.side == "buy"
 </span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>                       else B.price &lt; A.price)                         # ML.C: проверяем
 </span><span id="__span-1-7"><a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>
 </span><span id="__span-1-8"><a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>    return same_side AND same_timestamp AND contiguous_ids AND price_monotonic
@@ -2660,7 +2660,7 @@ engine разнёс их на ±1мс из-за внутреннего jitter'а
 <h2 id="logicaltrade">LogicalTrade<a class="headerlink" href="#logicaltrade" title="Permanent link">&para;</a></h2>
 <p>Каждая chain после реконструкции = один LogicalTrade со свойствами:</p>
 <div class="language-text highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>LT = {
-</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>    side               : &quot;buy&quot; | &quot;sell&quot;               # = chain[0].side
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>    side               : "buy" | "sell"               # = chain[0].side
 </span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>    timestamp_first    : int                          # = chain[0].timestamp_ms
 </span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>    timestamp_last     : int                          # = chain[-1].timestamp_ms
 </span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>                                                      #   при ε=0 равен timestamp_first
@@ -2721,8 +2721,8 @@ sl — кто-то «ломится» через стакан, ожидаемо 
 <hr />
 <h2 id="_7">Нотация<a class="headerlink" href="#_7" title="Permanent link">&para;</a></h2>
 <div class="language-text highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>LogicalTrades(B) = [LT : LT.timestamp_first ∈ B]
-</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>BuyLT(B)     = [LT ∈ LogicalTrades(B) : LT.side == &quot;buy&quot;]
-</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>SellLT(B)    = [LT ∈ LogicalTrades(B) : LT.side == &quot;sell&quot;]
+</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>BuyLT(B)     = [LT ∈ LogicalTrades(B) : LT.side == "buy"]
+</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>SellLT(B)    = [LT ∈ LogicalTrades(B) : LT.side == "sell"]
 </span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>
 </span><span id="__span-5-5"><a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>BuyLT_ML(B)  = [LT ∈ BuyLT(B)  : LT.is_multilevel]
 </span><span id="__span-5-6"><a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>BuyLT_SL(B)  = [LT ∈ BuyLT(B)  : not LT.is_multilevel]

@@ -2709,8 +2709,8 @@ v2 склеивает несколько aggTrades в один логическ�
 - <code>T ∈ {100, 1000, 10_000, 100_000, 1_000_000}</code> (USD)</p>
 <h3 id="_4">Нотация<a class="headerlink" href="#_4" title="Permanent link">&para;</a></h3>
 <div class="language-text highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Trades(B) = [(t_1, side_1, price_1, size_1), ...]   # все трейды в баре B, t_1 &lt; t_2 &lt; ...
-</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>BuyTrades(B)  = [trade ∈ Trades(B) : trade.side == &quot;buy&quot;]
-</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>SellTrades(B) = [trade ∈ Trades(B) : trade.side == &quot;sell&quot;]
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>BuyTrades(B)  = [trade ∈ Trades(B) : trade.side == "buy"]
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>SellTrades(B) = [trade ∈ Trades(B) : trade.side == "sell"]
 </span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
 </span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>notional(trade) = trade.price × trade.size
 </span></code></pre></div>
@@ -2835,7 +2835,7 @@ sell-агрегаторами</strong>, чтобы нивелировать bid-
 <div class="language-text highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>hh(B) = Σ (size_i / total_volume)²    for trade_i ∈ Trades(B)
 </span><span id="__span-11-2"><a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>        where total_volume = Σ size_j for j ∈ Trades(B)
 </span><span id="__span-11-3"><a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>      = NaN  if Trades(B) is empty (total_volume = 0)
-</span><span id="__span-11-4"><a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>      = 1.0  if there&#39;s only one trade
+</span><span id="__span-11-4"><a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>      = 1.0  if there's only one trade
 </span><span id="__span-11-5"><a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>
 </span><span id="__span-11-6"><a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>hh_buy(B)  = Σ (size_i / buy_volume)²    for trade_i ∈ BuyTrades(B)
 </span><span id="__span-11-7"><a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a>           = NaN if BuyTrades(B) empty
@@ -2854,7 +2854,7 @@ sell-агрегаторами</strong>, чтобы нивелировать bid-
 <ol>
 <li>Сгруппировать <code>Trades(B)</code> по минутам (≤ 30 групп).</li>
 <li>Для каждой минуты <code>m</code> с трейдами:
-   <div class="language-text highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>signed_volume_m = Σ (size  if side == &quot;buy&quot;  else  -size)
+   <div class="language-text highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>signed_volume_m = Σ (size  if side == "buy"  else  -size)
 </span><span id="__span-12-2"><a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>                  for trade in минуте m
 </span><span id="__span-12-3"><a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>vwap_m          = VWAP трейдов минуты m
 </span></code></pre></div></li>
@@ -2880,8 +2880,8 @@ sell-агрегаторами</strong>, чтобы нивелировать bid-
 если через 60 секунд после неё цена пошла <strong>против</strong> агрессора.</p>
 <h3 id="t2f-lookahead-window">Алгоритм (по решению T2.F — вариант (а), lookahead-window)<a class="headerlink" href="#t2f-lookahead-window" title="Permanent link">&para;</a></h3>
 <p>Окно фиксировано <strong>60 секунд</strong>.</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-16-1"><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>side_sign(side) = +1  if side == &quot;buy&quot;
-</span><span id="__span-16-2"><a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>                = −1  if side == &quot;sell&quot;
+<div class="language-text highlight"><pre><span></span><code><span id="__span-16-1"><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>side_sign(side) = +1  if side == "buy"
+</span><span id="__span-16-2"><a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>                = −1  if side == "sell"
 </span><span id="__span-16-3"><a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a>
 </span><span id="__span-16-4"><a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a># Для каждого trade ∈ Trades(B) с timestamp t:
 </span><span id="__span-16-5"><a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a>window_trades(trade) = [tr ∈ AllTrades : t &lt; tr.timestamp ≤ t + 60s]
@@ -2896,7 +2896,7 @@ sell-агрегаторами</strong>, чтобы нивелировать bid-
 </span><span id="__span-16-14"><a id="__codelineno-16-14" name="__codelineno-16-14" href="#__codelineno-16-14"></a>    is_loss(trade) = (after_price - trade.price) × side_sign(trade.side) &lt; 0
 </span><span id="__span-16-15"><a id="__codelineno-16-15" name="__codelineno-16-15" href="#__codelineno-16-15"></a>                     # buy убыточна, если цена упала; sell — если выросла
 </span><span id="__span-16-16"><a id="__codelineno-16-16" name="__codelineno-16-16" href="#__codelineno-16-16"></a>
-</span><span id="__span-16-17"><a id="__codelineno-16-17" name="__codelineno-16-17" href="#__codelineno-16-17"></a># Считаем по непустым trade&#39;ам:
+</span><span id="__span-16-17"><a id="__codelineno-16-17" name="__codelineno-16-17" href="#__codelineno-16-17"></a># Считаем по непустым trade'ам:
 </span><span id="__span-16-18"><a id="__codelineno-16-18" name="__codelineno-16-18" href="#__codelineno-16-18"></a>included = [trade ∈ Trades(B) : window_trades(trade) ≠ ∅]
 </span><span id="__span-16-19"><a id="__codelineno-16-19" name="__codelineno-16-19" href="#__codelineno-16-19"></a>
 </span><span id="__span-16-20"><a id="__codelineno-16-20" name="__codelineno-16-20" href="#__codelineno-16-20"></a>asr_count(B)  = |{ trade ∈ included : is_loss(trade) }| / |included|
@@ -2907,11 +2907,11 @@ sell-агрегаторами</strong>, чтобы нивелировать bid-
 </span><span id="__span-16-25"><a id="__codelineno-16-25" name="__codelineno-16-25" href="#__codelineno-16-25"></a>              = NaN  if included is empty  OR  total size = 0
 </span></code></pre></div>
 <h3 id="_6">Семантика «убыточной»<a class="headerlink" href="#_6" title="Permanent link">&para;</a></h3>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-17-1"><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>trade.side = &quot;buy&quot;, trade.price = 95000:
+<div class="language-text highlight"><pre><span></span><code><span id="__span-17-1"><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>trade.side = "buy", trade.price = 95000:
 </span><span id="__span-17-2"><a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>   after_price = 95005  →  Δ = +5,  side_sign = +1,  Δ × sign = +5  →  ✓ выигрыш (не loss)
 </span><span id="__span-17-3"><a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a>   after_price = 94990  →  Δ = -10, side_sign = +1,  Δ × sign = -10 →  ✗ убыток (loss)
 </span><span id="__span-17-4"><a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a>
-</span><span id="__span-17-5"><a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a>trade.side = &quot;sell&quot;, trade.price = 95000:
+</span><span id="__span-17-5"><a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a>trade.side = "sell", trade.price = 95000:
 </span><span id="__span-17-6"><a id="__codelineno-17-6" name="__codelineno-17-6" href="#__codelineno-17-6"></a>   after_price = 95005  →  Δ = +5,  side_sign = -1,  Δ × sign = -5  →  ✗ убыток (loss)
 </span><span id="__span-17-7"><a id="__codelineno-17-7" name="__codelineno-17-7" href="#__codelineno-17-7"></a>   after_price = 94990  →  Δ = -10, side_sign = -1,  Δ × sign = +10 →  ✓ выигрыш
 </span></code></pre></div>

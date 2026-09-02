@@ -2446,10 +2446,10 @@
    страничкой <code>limit=1000</code> по <code>startTime</code>/<code>endTime</code>.</li>
 </ol>
 <h3 id="_3">Используемые поля<a class="headerlink" href="#_3" title="Permanent link">&para;</a></h3>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>funding_time_ms : int64    # время settlement&#39;а в мс UTC
+<div class="language-text highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>funding_time_ms : int64    # время settlement'а в мс UTC
 </span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>symbol          : string
 </span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>funding_rate    : float    # ставка за settlement (доля; например 0.0001 = 1bp)
-</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>mark_price      : float    # mark-price на момент settlement&#39;а (опционально, иногда NaN)
+</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>mark_price      : float    # mark-price на момент settlement'а (опционально, иногда NaN)
 </span></code></pre></div>
 <p><code>mark_price</code> из этой партиции — <strong>снимок на момент settlement'а</strong>,
 не путать с метрикой <code>mark_price</code> из markprice-блока (та live с 1Hz).</p>
@@ -2464,7 +2464,7 @@
 <div class="language-text highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>funding_at_settlement[t]  = funding_rate from row at funding_time_ms = t
 </span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>realized_funding(B)        = funding_at_settlement[t*]
 </span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>                              where t* = max{t : funding_time_ms ≤ B.start, t ≤ now}
-</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>                           = NaN  if нет ни одного settlement&#39;а до B.start
+</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>                           = NaN  if нет ни одного settlement'а до B.start
 </span></code></pre></div>
 <p>То есть для бара <code>14:00:00–14:30:00</code> берём ставку с самого последнего
 settlement'а в <code>[..., 14:00:00]</code>. Если последний settlement был в

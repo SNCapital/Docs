@@ -11,13 +11,9 @@
       
       
       
-        <link rel="canonical" href="https://sncapital.github.io/Docs/binance-parser/">
+        <link rel="canonical" href="https://sncapital.github.io/Docs/docker/">
       
       
-        <link rel="prev" href="../alpha-engine/live-trading/">
-      
-      
-        <link rel="next" href="live/">
       
       
         
@@ -28,7 +24,7 @@
     
     
       
-        <title>Binance parser - SN Capital — Backend</title>
+        <title>Docker - live contour + dashboard (NSC-87) - SN Capital — Backend</title>
       
     
     
@@ -81,7 +77,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#binance-parser" class="md-skip">
+        <a href="#docker-live-contour-dashboard-nsc-87" class="md-skip">
           Skip to content
         </a>
       
@@ -117,7 +113,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Binance parser
+              Docker - live contour + dashboard (NSC-87)
             
           </span>
         </div>
@@ -300,13 +296,11 @@
   
   
   
-    
-  
   
     
     
-      <li class="md-tabs__item md-tabs__item--active">
-        <a href="./" class="md-tabs__link">
+      <li class="md-tabs__item">
+        <a href="../binance-parser/" class="md-tabs__link">
           
   
   
@@ -953,8 +947,6 @@
       
   
   
-    
-  
   
   
     
@@ -978,23 +970,22 @@
     
     
       
-        
-        
-      
       
         
       
     
     
-    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" checked>
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4" >
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="./" class="md-nav__link md-nav__link--active">
+            <a href="../binance-parser/" class="md-nav__link ">
               
   
   
@@ -1012,13 +1003,13 @@
             </a>
             
               
-              <label class="md-nav__link md-nav__link--active" for="__nav_4" id="__nav_4_label" tabindex="">
+              <label class="md-nav__link " for="__nav_4" id="__nav_4_label" tabindex="0">
                 <span class="md-nav__icon md-icon"></span>
               </label>
             
           </div>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="true">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_4">
             <span class="md-nav__icon md-icon"></span>
             
@@ -1038,7 +1029,7 @@
   
   
     <li class="md-nav__item">
-      <a href="live/" class="md-nav__link">
+      <a href="../binance-parser/live/" class="md-nav__link">
         
   
   
@@ -1066,7 +1057,7 @@
   
   
     <li class="md-nav__item">
-      <a href="historical/" class="md-nav__link">
+      <a href="../binance-parser/historical/" class="md-nav__link">
         
   
   
@@ -1094,7 +1085,7 @@
   
   
     <li class="md-nav__item">
-      <a href="storage/" class="md-nav__link">
+      <a href="../binance-parser/storage/" class="md-nav__link">
         
   
   
@@ -1122,7 +1113,7 @@
   
   
     <li class="md-nav__item">
-      <a href="order-book/" class="md-nav__link">
+      <a href="../binance-parser/order-book/" class="md-nav__link">
         
   
   
@@ -1150,7 +1141,7 @@
   
   
     <li class="md-nav__item">
-      <a href="extending/" class="md-nav__link">
+      <a href="../binance-parser/extending/" class="md-nav__link">
         
   
   
@@ -2289,10 +2280,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#file-level-layout" class="md-nav__link">
+  <a href="#data-path-one-source-of-truth" class="md-nav__link">
     <span class="md-ellipsis">
       
-        File-level layout
+        Data path - one source of truth
       
     </span>
   </a>
@@ -2300,10 +2291,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#why-this-design" class="md-nav__link">
+  <a href="#quick-start-on-a-clean-server" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Why this design
+        Quick start on a clean server
       
     </span>
   </a>
@@ -2311,10 +2302,71 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#cli-quick-reference" class="md-nav__link">
+  <a href="#services" class="md-nav__link">
     <span class="md-ellipsis">
       
-        CLI quick reference
+        Services
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Services">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#live-healthcheck" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Live healthcheck
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#secrets" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Secrets
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#archiver-retention" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Archiver (retention)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#overriding-for-local-bind-mounts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Overriding for local bind mounts
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#notes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Notes
       
     </span>
   </a>
@@ -2341,135 +2393,154 @@
   
 
 
-<h1 id="binance-parser">Binance parser<a class="headerlink" href="#binance-parser" title="Permanent link">&para;</a></h1>
-<p>Binance market-data pipeline for <strong>spot</strong> and <strong>USD-M perpetual futures</strong>.
-Three runtime modes — <strong>live</strong> (WebSocket), <strong>historical</strong> (ZIP download
-from <code>data.binance.vision</code>), and <strong>funding</strong> (REST backfill of USD-M
-funding rates). A local L2 <strong>order book</strong> is opt-in for live mode.</p>
+<h1 id="docker-live-contour-dashboard-nsc-87">Docker - live contour + dashboard (NSC-87)<a class="headerlink" href="#docker-live-contour-dashboard-nsc-87" title="Permanent link">&para;</a></h1>
+<p>The root <code>main.py</code> is the entrypoint for the live contour (<code>python main.py
+live</code>): it embeds the WS parser, streams raw ticks through the in-process
+Python metrics engine (<code>LiveMetricsBridge</code> - no Go handoff), and runs the
+<code>LiveTrader</code> on the computed metrics. Execution defaults to <strong>paper</strong> (no
+exchange contact, no keys); <code>mode: testnet|mainnet</code> in <code>live_config.yaml</code> opts
+into real orders. The trader is configured only by that single repo-root file
+(the image ships it at <code>/app/live_config.yaml</code>; compose bind-mounts
+<code>./live_config.yaml</code> over it so edits take effect without a rebuild); env
+carries <code>BINANCE_*</code> secrets only.
+The dashboard runs as a separate read-only container sharing only the
+trader-state volume. Data retention (upload old parquet to S3, then delete
+locally) is an opt-in <code>archiver</code> service that runs the parser's own
+<code>python main.py archive</code> (<code>binance_parser/services/archive.py</code>).</p>
+<h2 id="data-path-one-source-of-truth">Data path - one source of truth<a class="headerlink" href="#data-path-one-source-of-truth" title="Permanent link">&para;</a></h2>
+<p>The parser's <code>FileWriter</code> writes to <code>binance_parser/data</code> (hardcoded in
+<code>binance_parser/config/settings.py</code>). So the <code>raw_data</code> volume mounts at
+<code>/app/binance_parser/data</code>, so the live writer, the warm-start reader and the
+archiver all operate on the same partitions and data survives container
+recreation.</p>
+<h2 id="quick-start-on-a-clean-server">Quick start on a clean server<a class="headerlink" href="#quick-start-on-a-clean-server" title="Permanent link">&para;</a></h2>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>git<span class="w"> </span>clone<span class="w"> </span>&lt;repo&gt;<span class="w"> </span>backend<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">cd</span><span class="w"> </span>backend
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>cp<span class="w"> </span>.env.example<span class="w"> </span>.env<span class="w">        </span><span class="c1"># fill BINANCE_API_KEY / DASH_PASS (+ B2_* for archiving)</span>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>docker<span class="w"> </span>compose<span class="w"> </span>build
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>docker<span class="w"> </span>compose<span class="w"> </span>up<span class="w"> </span>-d<span class="w">        </span><span class="c1"># live + dashboard</span>
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>
+</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="c1"># check</span>
+</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>docker<span class="w"> </span>compose<span class="w"> </span>ps
+</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>curl<span class="w"> </span>-s<span class="w"> </span>http://localhost:8000/healthz<span class="w">   </span><span class="c1"># dashboard health</span>
+</span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>docker<span class="w"> </span>compose<span class="w"> </span>logs<span class="w"> </span>-f<span class="w"> </span>live
+</span><span id="__span-0-10"><a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>docker<span class="w"> </span>compose<span class="w"> </span>logs<span class="w"> </span>-f<span class="w"> </span>dashboard
+</span><span id="__span-0-11"><a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>
+</span><span id="__span-0-12"><a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="c1"># retention is opt-in and needs S3 storage configured (see Archiver):</span>
+</span><span id="__span-0-13"><a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>docker<span class="w"> </span>compose<span class="w"> </span>--profile<span class="w"> </span>archive<span class="w"> </span>up<span class="w"> </span>-d<span class="w"> </span>archiver
+</span></code></pre></div>
+<p>Stop without losing data:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>docker<span class="w"> </span>compose<span class="w"> </span>down<span class="w">         </span><span class="c1"># volumes (raw_data, trader_state) stay</span>
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>docker<span class="w"> </span>compose<span class="w"> </span>up<span class="w"> </span>-d<span class="w">        </span><span class="c1"># data survives recreation</span>
+</span></code></pre></div>
+<h2 id="services">Services<a class="headerlink" href="#services" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
 <tr>
-<th>Page</th>
-<th>What it covers</th>
+<th>service</th>
+<th>image</th>
+<th>command</th>
+<th>volumes (RW unless :ro)</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td><a href="live/">Live WebSocket</a></td>
-<td>The streaming pipeline: ws_client → writer → parquet</td>
+<td>live</td>
+<td>backend-live</td>
+<td><code>python main.py live</code></td>
+<td>raw_data:/app/binance_parser/data, metrics:/app/data/metrics, trader_state:/app/data/state</td>
 </tr>
 <tr>
-<td><a href="historical/">Historical download</a></td>
-<td>ZIP download + funding REST backfill</td>
+<td>dashboard</td>
+<td>backend-live</td>
+<td><code>uvicorn dashboard ...</code></td>
+<td>trader_state:/app/data/state:ro</td>
 </tr>
 <tr>
-<td><a href="storage/">Storage layout</a></td>
-<td>Hive partitioning, schemas, why the choices</td>
-</tr>
-<tr>
-<td><a href="order-book/">Local order book</a></td>
-<td>Bootstrap algorithm, gap detection, snapshot loop</td>
-</tr>
-<tr>
-<td><a href="extending/">Extending the parser</a></td>
-<td>Adding a stream, a market, a metric</td>
+<td>archiver</td>
+<td>backend-live</td>
+<td><code>python main.py archive</code>*</td>
+<td>raw_data:/app/binance_parser/data</td>
 </tr>
 </tbody>
 </table>
-<h2 id="file-level-layout">File-level layout<a class="headerlink" href="#file-level-layout" title="Permanent link">&para;</a></h2>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>binance_parser/
-</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>├── main.py                  # CLI: `live`, `history download`, `history funding`
-</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>│
-</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>├── config/
-</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>│   ├── settings.py          # Per-market URL / endpoint dicts + writer settings
-</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>│   └── pairs.py             # PAIRS (601) + MAJOR (20)
-</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>│
-</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>├── models/
-</span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>│   ├── events.py            # Live WS DTOs + Arrow schemas
-</span><span id="__span-0-10"><a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>│   ├── history.py           # Historical row DTOs + HISTORY_SCHEMAS
-</span><span id="__span-0-11"><a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>│   ├── rest.py              # ExchangeInfoSymbol
-</span><span id="__span-0-12"><a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>│   └── market.py            # MarketType = "spot" | "usdm"
-</span><span id="__span-0-13"><a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>│
-</span><span id="__span-0-14"><a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>├── live/
-</span><span id="__span-0-15"><a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>│   ├── ws_client.py         # WS connect / reconnect → writer + book
-</span><span id="__span-0-16"><a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>│   ├── writer.py            # Async buffered parquet writer (Hive, zstd)
-</span><span id="__span-0-17"><a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>│   ├── orderbook.py         # L2 book + manager + snapshot loop
-</span><span id="__span-0-18"><a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>│   └── funding_poller.py    # 8h REST poll of funding rates (USD-M)
-</span><span id="__span-0-19"><a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>│
-</span><span id="__span-0-20"><a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>├── history/downloader/
-</span><span id="__span-0-21"><a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>│   ├── urls.py              # FileSpec builder
-</span><span id="__span-0-22"><a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>│   ├── fetch.py             # Download + verify + extract one ZIP
-</span><span id="__span-0-23"><a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>│   ├── batch.py             # Parallel batch + checkpoint resume
-</span><span id="__span-0-24"><a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>│   └── funding_fetch.py     # Paginated funding-rate backfill
-</span><span id="__span-0-25"><a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>│
-</span><span id="__span-0-26"><a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>├── services/
-</span><span id="__span-0-27"><a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>│   ├── live.py              # Wires writer + listeners + book + funding
-</span><span id="__span-0-28"><a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>│   └── download.py          # Wires batch downloader + funding backfill
-</span><span id="__span-0-29"><a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>│
-</span><span id="__span-0-30"><a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>└── tests/                   # DTO parsing + local order-book tests
+<p>The <code>live</code> container writes three kinds of state, each on its own volume: raw
+ticks (<code>raw_data</code> -&gt; <code>binance_parser/data</code>), computed metrics parquet the bridge
+produces and warm-starts from (<code>metrics</code> -&gt; <code>/app/data/metrics</code>, config
+<code>metrics_root</code>), and the full trader state the dashboard reads (<code>trader_state</code>
+-&gt; <code>/app/data/state</code>, config <code>state_path</code>). Both paths come from the single
+repo-root <code>live_config.yaml</code> (relative paths resolved against the <code>/app</code>
+workdir).</p>
+<p>* the archiver runs the <strong>parser's</strong> <code>main.py</code> (<code>working_dir: /app/binance_parser</code>),
+which is a different entrypoint from the root <code>main.py</code> the live service runs.</p>
+<p><code>live</code> and <code>dashboard</code> have a Docker <code>HEALTHCHECK</code>; <code>archiver</code> has
+<code>healthcheck: disable: true</code> (cron-like job). All services have
+<code>restart: unless-stopped</code>. The <code>archiver</code> is behind the <code>archive</code> compose
+profile, so the default <code>docker compose up</code> starts only <code>live</code> + <code>dashboard</code>.</p>
+<h3 id="live-healthcheck">Live healthcheck<a class="headerlink" href="#live-healthcheck" title="Permanent link">&para;</a></h3>
+<p>The live process serves <code>GET /healthz</code> (200) on <code>health_port</code> (config, default
+8080) - a tiny aiohttp server running in the same event loop as the WS listener
+and engine. The container healthcheck <code>curl</code>s it. Liveness is deliberately
+<strong>business-logic agnostic</strong>: a 200 only proves the process is up and its loop is
+responsive; it does not depend on bars, strategies or weights (so it never goes
+stale on the 30-min bar cadence). <code>start_period</code> covers warm-start before the
+server binds.</p>
+<p>Separately, the <code>LiveTrader</code> writes its full per-bar state (equity, positions,
+fills, target weights, risk violations) to <code>state_path</code> (config) as the <strong>data
+feed</strong> for the read-only dashboard (<code>/api/state</code>, <code>/api/weights</code>,
+<code>/api/orders</code>). The dashboard container is pointed at the same file via its own
+<code>LIVE_STATE_PATH</code> env. That file is not a healthcheck input.</p>
+<h2 id="secrets">Secrets<a class="headerlink" href="#secrets" title="Permanent link">&para;</a></h2>
+<p>Pass via <code>.env</code> or environment (<code>docker compose --env-file</code>, systemd, Swarm
+secrets, etc.). Never <code>COPY</code> keys into the image - <code>Dockerfile</code> contains no
+<code>ENV</code> with secrets and <code>.dockerignore</code> excludes <code>.env</code>.</p>
+<p>Required:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>BINANCE_API_KEY / BINANCE_API_SECRET   (real trading only)
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>DASH_USER / DASH_PASS                  (dashboard auth)
+</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>S3_STORAGES + per-storage N_* vars     (only if the archiver profile is enabled)
 </span></code></pre></div>
-<h2 id="why-this-design">Why this design<a class="headerlink" href="#why-this-design" title="Permanent link">&para;</a></h2>
-<p>A handful of opinionated choices, mostly around storage and the data
-contract with <code>alpha_engine</code>. Full rationale in the per-page docs;
-quick summary:</p>
+<h2 id="archiver-retention">Archiver (retention)<a class="headerlink" href="#archiver-retention" title="Permanent link">&para;</a></h2>
+<p>The archiver is <code>binance_parser/services/archive.py</code>, run standalone as
+<code>python main.py archive</code> from the parser package. Every <code>dt=YYYY-MM-DD</code>
+partition strictly older than <code>ARCHIVE_RETENTION_DAYS</code> (default 3) is uploaded
+to <strong>every</strong> configured S3-compatible storage and only then deleted locally;
+empty partitions are pruned. Background mode runs one cycle per day at
+<code>ARCHIVE_HOUR_UTC:ARCHIVE_MINUTE_UTC</code> (default 00:10 UTC).</p>
+<p>Storage config is <strong>mandatory</strong>: the process exits at startup unless every
+required variable is present (it must never delete local data without a
+confirmed upload target). That is why the service is gated behind the <code>archive</code>
+profile instead of crash-looping in the default <code>up</code>. <code>S3_STORAGES</code> lists the
+storage names (comma-separated, default <code>b2</code>); for each name N set
+<code>N_ENDPOINT</code>, <code>N_REGION</code>, <code>N_BUCKET</code>, <code>N_PREFIX</code>, <code>N_KEY_ID</code>,
+<code>N_APPLICATION_KEY</code>. Full example: <code>deploy/secrets/binance.env.example</code>.</p>
+<p>One-shot / preview:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>docker<span class="w"> </span>compose<span class="w"> </span>--profile<span class="w"> </span>archive<span class="w"> </span>run<span class="w"> </span>--rm<span class="w"> </span>archiver<span class="w"> </span>python<span class="w"> </span>main.py<span class="w"> </span>archive<span class="w"> </span>--once<span class="w"> </span>--dry-run
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>docker<span class="w"> </span>compose<span class="w"> </span>--profile<span class="w"> </span>archive<span class="w"> </span>run<span class="w"> </span>--rm<span class="w"> </span>archiver<span class="w"> </span>python<span class="w"> </span>main.py<span class="w"> </span>archive<span class="w"> </span>--once
+</span></code></pre></div>
+<h2 id="overriding-for-local-bind-mounts">Overriding for local bind mounts<a class="headerlink" href="#overriding-for-local-bind-mounts" title="Permanent link">&para;</a></h2>
+<div class="language-yaml highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="nt">volumes</span><span class="p">:</span>
+</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">./data:/app/binance_parser/data</span>
+</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">./state:/app/data/state</span>
+</span></code></pre></div>
+<p>Named volumes (<code>backend_raw_data</code>, <code>backend_trader_state</code>) survive
+<code>docker compose down</code> and are the default for production.</p>
+<h2 id="notes">Notes<a class="headerlink" href="#notes" title="Permanent link">&para;</a></h2>
 <ul>
-<li><strong>Hive parquet for everything.</strong> <code>data/market=…/type=…/dt=YYYY-MM-DD/symbol=…/part-*.parquet</code>.
-  Compatible with <code>pa.dataset.dataset(..., partitioning="hive")</code>,
-  DuckDB, Spark partition pruning. The strategy engine prunes by <code>dt=</code>
-  before opening files.</li>
-<li><strong>Float32 prices, int64 ms timestamps.</strong> Halves memory vs.
-  float64/datetime64; precision is plenty for crypto. Compresses well
-  with zstd-3.</li>
-<li><strong>Array-per-snapshot order book.</strong> Each WS diff stored as one row
-  with <code>bids_price</code> / <code>bids_size</code> / <code>asks_price</code> / <code>asks_size</code> as
-  parallel <code>list&lt;float32&gt;</code> columns. The previous "one row per price
-  level" layout had ~40× more rows and worse compression.</li>
-<li><strong>One flush, many days.</strong> At flush time, buffered records are grouped
-  by event UTC date, so a flush that straddles midnight lands in the
-  correct <code>dt=</code> partitions.</li>
-<li><strong>Market abstraction by dict, not class hierarchy.</strong> Every endpoint
-  that differs between spot and usdm is a single dict keyed by
-  <code>MarketType</code> in <code>config/settings.py</code>. Add a market = add an entry.</li>
-<li><strong>Realised funding via REST poller.</strong> Official settlement rates are
-  sparse (3/day); <code>live/funding_poller.py</code> fires ~30 s past each UTC
-  settlement boundary (00 / 08 / 16) and writes one row per symbol into
-  <code>type=funding</code>.</li>
-<li><strong>Predicted funding + real mark price via WS.</strong> USD-M sessions also
-  subscribe to <code>&lt;symbol&gt;@markPrice@1s</code>. Each tick lands in
-  <code>type=markprice</code> with mark price, index price, the predicted next-
-  settlement rate and that settlement's timestamp.</li>
-<li><strong>Async everywhere.</strong> <code>asyncio.TaskGroup</code> runs the writer + per-market
-  listeners + optional book manager + optional funding poller
-  concurrently. WebSocket reconnect is automatic with exponential
-  backoff.</li>
+<li>The trader is configured only by the single repo-root <code>live_config.yaml</code>.
+  The image ships it at <code>/app/live_config.yaml</code>; compose bind-mounts
+  <code>./live_config.yaml</code> over that path so editing the one file changes a running
+  container without a rebuild. Its paths are relative, so the same file works
+  locally (<code>./data/...</code>) and in the container (<code>/app/data/...</code>, where the named
+  volumes mount).</li>
+<li>Env is secrets/wiring only: <code>BINANCE_*</code> for testnet/mainnet, <code>DASH_*</code> for the
+  dashboard, <code>ARCHIVE_*</code> / <code>S3_STORAGES</code> / <code>B2_*</code> for the archiver. See
+  <code>.env.example</code>. No trader parameter is read from env.</li>
 </ul>
-<h2 id="cli-quick-reference">CLI quick reference<a class="headerlink" href="#cli-quick-reference" title="Permanent link">&para;</a></h2>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Live</span>
-</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>python<span class="w"> </span>main.py<span class="w"> </span>live<span class="w">                              </span><span class="c1"># spot, default symbols</span>
-</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>python<span class="w"> </span>main.py<span class="w"> </span>live<span class="w"> </span>--market<span class="w"> </span>usdm<span class="w"> </span>--symbols<span class="w"> </span>BTCUSDT
-</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>python<span class="w"> </span>main.py<span class="w"> </span>live<span class="w"> </span>--market<span class="w"> </span>both<span class="w"> </span>--order-book<span class="w">   </span><span class="c1"># spot + usdm + L2 book</span>
-</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>python<span class="w"> </span>main.py<span class="w"> </span>live<span class="w"> </span>--market<span class="w"> </span>usdm<span class="w"> </span>--with-funding<span class="w"> </span><span class="c1"># usdm + 8h funding poll</span>
-</span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
-</span><span id="__span-1-7"><a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># Historical download (data.binance.vision ZIPs)</span>
-</span><span id="__span-1-8"><a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>python<span class="w"> </span>main.py<span class="w"> </span><span class="nb">history</span><span class="w"> </span>download<span class="w"> </span>--market<span class="w"> </span>spot<span class="w"> </span>--group<span class="w"> </span>major<span class="w"> </span>--months<span class="w"> </span><span class="m">1</span><span class="w"> </span>--dry-run
-</span><span id="__span-1-9"><a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>python<span class="w"> </span>main.py<span class="w"> </span><span class="nb">history</span><span class="w"> </span>download<span class="w"> </span>--market<span class="w"> </span>usdm<span class="w"> </span>--group<span class="w"> </span>major<span class="w"> </span>--months<span class="w"> </span><span class="m">12</span>
-</span><span id="__span-1-10"><a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>python<span class="w"> </span>main.py<span class="w"> </span><span class="nb">history</span><span class="w"> </span>download<span class="w"> </span>--market<span class="w"> </span>both<span class="w"> </span>--group<span class="w"> </span>all
-</span><span id="__span-1-11"><a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>
-</span><span id="__span-1-12"><a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="c1"># Funding backfill (USD-M)</span>
-</span><span id="__span-1-13"><a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>python<span class="w"> </span>main.py<span class="w"> </span><span class="nb">history</span><span class="w"> </span>funding<span class="w"> </span>--months<span class="w"> </span><span class="m">12</span><span class="w"> </span>--dry-run
-</span><span id="__span-1-14"><a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>python<span class="w"> </span>main.py<span class="w"> </span><span class="nb">history</span><span class="w"> </span>funding<span class="w"> </span>--months<span class="w"> </span><span class="m">12</span><span class="w"> </span>--symbols<span class="w"> </span>BTCUSDT<span class="w"> </span>ETHUSDT
-</span></code></pre></div>
-<p>Always run from inside <code>binance_parser/</code> (the package uses bare imports
-— see <a href="../getting-started/architecture/#sharp-edges-to-know-up-front">Architecture</a>).</p>
 
 
 
 
 
 
-
-  
-  
 
 
 
@@ -2496,44 +2567,6 @@ quick summary:</p>
       
         <footer class="md-footer">
   
-    
-      
-      <nav class="md-footer__inner md-grid" aria-label="Footer" >
-        
-          
-          <a href="../alpha-engine/live-trading/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Live trading">
-            <div class="md-footer__button md-icon">
-              
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
-            </div>
-            <div class="md-footer__title">
-              <span class="md-footer__direction">
-                Previous
-              </span>
-              <div class="md-ellipsis">
-                Live trading
-              </div>
-            </div>
-          </a>
-        
-        
-          
-          <a href="live/" class="md-footer__link md-footer__link--next" aria-label="Next: Live WebSocket">
-            <div class="md-footer__title">
-              <span class="md-footer__direction">
-                Next
-              </span>
-              <div class="md-ellipsis">
-                Live WebSocket
-              </div>
-            </div>
-            <div class="md-footer__button md-icon">
-              
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
-            </div>
-          </a>
-        
-      </nav>
     
   
   <div class="md-footer-meta md-typeset">
