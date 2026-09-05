@@ -1785,6 +1785,28 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#ts_slopedf-window-df" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ts_slope(df, window) → df
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ts_regress_residualy-x-window-df" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ts_regress_residual(y, x, window) → df
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -2651,6 +2673,28 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#ts_slopedf-window-df" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ts_slope(df, window) → df
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ts_regress_residualy-x-window-df" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ts_regress_residual(y, x, window) → df
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -2759,6 +2803,42 @@ The first row is NaN (std of a single point is undefined).</p>
 <p><code>std == 0</code> (e.g. constant window) → NaN, not Inf.</p>
 <p>The standard "normalise across recent history" tool. Z-score before EMA
 is a common pattern across the strategy registry.</p>
+<h3 id="ts_slopedf-window-df"><code>ts_slope(df, window) → df</code><a class="headerlink" href="#ts_slopedf-window-df" title="Permanent link">&para;</a></h3>
+<p>Rolling linear-trend slope: <code>cov(y, t) / var(t)</code> over the window, where
+<code>t</code> is the bar index (<code>0, 1, 2, ...</code>). Positive = trending up over the
+window, negative = trending down — a directional-trend counterpart to
+<code>ts_ema</code> (smoothing, no direction) and <code>ts_zscore</code> (level, no trend).</p>
+<p>Implemented against a <strong>global</strong> bar index rather than re-basing <code>t</code> to
+<code>0..window-1</code> inside every window: covariance and variance are
+shift-invariant (<code>cov(y, t+k) == cov(y, t)</code> for any constant <code>k</code>), and any
+rolling window of a strictly-increasing-by-1 sequence is just a shifted
+copy of <code>0..window-1</code> — so the global index gives the exact same slope as
+a per-window re-based one, fully vectorised (no per-window Python loop,
+no <code>rolling().apply(...)</code>).</p>
+<h3 id="ts_regress_residualy-x-window-df"><code>ts_regress_residual(y, x, window) → df</code><a class="headerlink" href="#ts_regress_residualy-x-window-df" title="Permanent link">&para;</a></h3>
+<p>Rolling OLS residual of <code>y</code> regressed on <code>x</code>, per column:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>mean_y, mean_x := rolling means of y, x (window)
+</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>cov  := rolling_mean(y*x) - mean_y*mean_x
+</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>var_x:= rolling_mean(x*x) - mean_x**2, replace(0, NaN)
+</span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>beta := cov / var_x
+</span><span id="__span-5-5"><a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>alpha:= mean_y - beta*mean_x
+</span><span id="__span-5-6"><a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>resid:= y - (alpha + beta*x)
+</span></code></pre></div>
+<p><code>x</code> may be:</p>
+<ul>
+<li>a <strong>DataFrame</strong> the same shape as <code>y</code> — pairwise per-column regression.
+  This is Gram-Schmidt orthogonalization: <code>ts_regress_residual(signal_b,
+  signal_a, window)</code> returns the part of <code>signal_b</code> not explained by
+  <code>signal_a</code>, useful for building a genuinely incremental signal on top
+  of an established one instead of an accidentally-correlated variant.</li>
+<li>a <strong>Series</strong> — broadcast to every column of <code>y</code>. The standard use is
+  residualizing each ticker's return against a single market/equal-weight
+  return series to get idiosyncratic (beta-neutral) returns before
+  momentum/reversal, rather than a simple cross-sectional demean (which
+  only removes the mean, not each name's own market-beta exposure).</li>
+</ul>
+<p><code>var(x) == 0</code> (e.g. a constant regressor) → NaN, not Inf, matching
+<code>ts_zscore</code>'s convention.</p>
 <h2 id="when-to-use-which">When to use which<a class="headerlink" href="#when-to-use-which" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
@@ -2799,6 +2879,14 @@ is a common pattern across the strategy registry.</p>
 <tr>
 <td>Rolling vol</td>
 <td><code>ts_std(ts_return(price, 1), window)</code></td>
+</tr>
+<tr>
+<td>To measure directional trend (not just level)</td>
+<td><code>ts_slope</code></td>
+</tr>
+<tr>
+<td>To remove another signal's (or the market's) influence before trading the remainder</td>
+<td><code>ts_regress_residual</code></td>
 </tr>
 </tbody>
 </table>
