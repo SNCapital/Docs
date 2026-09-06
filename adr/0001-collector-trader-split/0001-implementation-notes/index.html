@@ -11,7 +11,7 @@
       
       
       
-        <link rel="canonical" href="https://sncapital.github.io/Docs/alpha-engine/metrics-ru/markprice/">
+        <link rel="canonical" href="https://sncapital.github.io/Docs/adr/0001-collector-trader-split/0001-implementation-notes/">
       
       
       
@@ -24,7 +24,7 @@
     
     
       
-        <title>Markprice — mark/index price и предсказанный funding - SN Capital — Backend</title>
+        <title>ADR-0001 — заметки к реализации - SN Capital — Backend</title>
       
     
     
@@ -77,7 +77,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#markprice-markindex-price-funding" class="md-skip">
+        <a href="#adr-0001" class="md-skip">
           Skip to content
         </a>
       
@@ -113,7 +113,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Markprice — mark/index price и предсказанный funding
+              ADR-0001 — заметки к реализации
             
           </span>
         </div>
@@ -278,7 +278,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="../../" class="md-tabs__link">
+        <a href="../../../alpha-engine/" class="md-tabs__link">
           
   
   
@@ -388,7 +388,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="../../../adr/0001-collector-trader-split/0001-collector-trader-split/" class="md-tabs__link">
+        <a href="../0001-collector-trader-split/" class="md-tabs__link">
           
   
   
@@ -753,7 +753,7 @@
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="../../" class="md-nav__link ">
+            <a href="../../../alpha-engine/" class="md-nav__link ">
               
   
   
@@ -797,7 +797,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../pipeline/" class="md-nav__link">
+      <a href="../../../alpha-engine/pipeline/" class="md-nav__link">
         
   
   
@@ -825,7 +825,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../data-layer/" class="md-nav__link">
+      <a href="../../../alpha-engine/data-layer/" class="md-nav__link">
         
   
   
@@ -853,7 +853,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../writing-a-strategy/" class="md-nav__link">
+      <a href="../../../alpha-engine/writing-a-strategy/" class="md-nav__link">
         
   
   
@@ -881,7 +881,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../markowitz/" class="md-nav__link">
+      <a href="../../../alpha-engine/markowitz/" class="md-nav__link">
         
   
   
@@ -909,7 +909,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../backtesting/" class="md-nav__link">
+      <a href="../../../alpha-engine/backtesting/" class="md-nav__link">
         
   
   
@@ -937,7 +937,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../live-trading/" class="md-nav__link">
+      <a href="../../../alpha-engine/live-trading/" class="md-nav__link">
         
   
   
@@ -1904,7 +1904,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../adr/0001-collector-trader-split/0001-collector-trader-split/" class="md-nav__link">
+      <a href="../0001-collector-trader-split/" class="md-nav__link">
         
   
   
@@ -2395,22 +2395,33 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#_1" class="md-nav__link">
+  <a href="#1" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Общий контекст
+        1. Конфигурация
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Общий контекст">
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. План тестирования
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2. План тестирования">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#_2" class="md-nav__link">
+  <a href="#21-kill-adr-11" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Источник данных
+        2.1 Kill-сьют (ADR §11)
       
     </span>
   </a>
@@ -2418,10 +2429,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#_3" class="md-nav__link">
+  <a href="#22" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Используемые поля
+        2.2 Дополнительные проверки
       
     </span>
   </a>
@@ -2429,10 +2440,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#_4" class="md-nav__link">
+  <a href="#23-no1" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Каденс
+        2.3 Предварительные измерения (до/в ветке №1)
       
     </span>
   </a>
@@ -2445,99 +2456,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#30" class="md-nav__link">
+  <a href="#3-nats-jetstream" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Алгоритм агрегации в 30 минут
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Алгоритм агрегации в 30 минут">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#edge-cases" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Edge cases
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#_5" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Метрики
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Метрики">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#mark_price" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        mark_price
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#index_price" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        index_price
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#predicted_funding" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        predicted_funding
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#next_funding_time_ms" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        next_funding_time_ms
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#_6" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Сводка финальных ключей
+        3. NATS JetStream — детали
       
     </span>
   </a>
@@ -2545,10 +2467,43 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#_7" class="md-nav__link">
+  <a href="#4-rto" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Связь с другими блоками
+        4. RTO и параллелизм
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#41-filewriter-durability" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.1 Роль FileWriter и durability всей системы
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Деградации — операционные заметки
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Порядок веток
       
     </span>
   </a>
@@ -2575,133 +2530,309 @@
   
 
 
-<h1 id="markprice-markindex-price-funding">Markprice — mark/index price и предсказанный funding<a class="headerlink" href="#markprice-markindex-price-funding" title="Permanent link">&para;</a></h1>
-<p>Метрики из WS-стрима <code>&lt;symbol&gt;@markPrice@1s</code> на USD-M perpetual'ах.
-Только usdm; для spot этих данных нет.</p>
-<p>Документ описывает <strong>целевую спецификацию</strong>.</p>
+<h1 id="adr-0001">ADR-0001 — заметки к реализации<a class="headerlink" href="#adr-0001" title="Permanent link">&para;</a></h1>
+<p>Вынесено из ADR, чтобы не перегружать дизайн-документ деталями уровня кода.
+Актуально на ветках <code>feat/*</code> поверх <code>claude/nsc-90-livemetricsbridge-trader</code>.</p>
+<p>Нумерация ADR — по RULES I.1 (§7 Runtime, §8 Data, §9 NFR, §11 Risks, D-идентификаторы
+стабильны). Ссылки вида <code>§N ADR</code> ниже — на разделы основного документа текущей нумерации.</p>
 <hr />
-<h2 id="_1">Общий контекст<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
-<h3 id="_2">Источник данных<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h3>
-<p>Парсер пишет parquet:
-<div class="language-text highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>data/market=usdm/type=markprice/dt=YYYY-MM-DD/symbol=SYM/part-*.parquet
-</span></code></pre></div></p>
-<p>Источник — WS-стрим <code>&lt;symbol&gt;@markPrice@1s</code>. Биржа шлёт по одному
-сообщению <strong>в секунду</strong> на каждую usdm-пару с актуальными
-mark/index ценами и обновлённым предсказанным funding'ом.</p>
-<h3 id="_3">Используемые поля<a class="headerlink" href="#_3" title="Permanent link">&para;</a></h3>
-<p>После нормализации reader'ом (где <code>predicted_funding_rate</code> →
-<code>predicted_funding</code> для совместимости со спекой):</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>timestamp_ms          : int64    # время WS-сообщения
-</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>symbol                : string
-</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>mark_price            : float    # реальная mark-price (для liquidation engine)
-</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>index_price           : float    # подлежащий спот-индекс (basis = mark - index)
-</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>predicted_funding     : float    # прогноз ставки на следующий settlement (доля)
-</span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>next_funding_time_ms  : int64    # время следующего settlement'а
-</span></code></pre></div>
-<h3 id="_4">Каденс<a class="headerlink" href="#_4" title="Permanent link">&para;</a></h3>
-<p>1 Hz на каждый тикер: на 30-минутный бар обычно ~1800 точек на тикер.</p>
-<hr />
-<h2 id="30">Алгоритм агрегации в 30 минут<a class="headerlink" href="#30" title="Permanent link">&para;</a></h2>
-<p>Все четыре метрики — <strong>last value at bar boundary</strong>: берём значение
-последнего markprice-сэмпла, попавшего в бар (или forward-fill от
-предыдущего бара, если в текущем баре сэмплов не было).</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>markprice_at(t) = последняя markprice-запись с timestamp_ms ≤ t
-</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>
-</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>mark_price(B)            = mark_price            from markprice_at(B.end - ε)
-</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>index_price(B)           = index_price           from same
-</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>predicted_funding(B)     = predicted_funding     from same
-</span><span id="__span-2-6"><a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>next_funding_time_ms(B)  = next_funding_time_ms  from same
-</span><span id="__span-2-7"><a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>
-</span><span id="__span-2-8"><a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>= NaN для каждой если нет markprice-записей до B.end
-</span></code></pre></div>
-<p>В терминах pandas: <code>df.resample("30min").last().reindex(all_bars_idx, method="ffill")</code>.</p>
-<h3 id="edge-cases">Edge cases<a class="headerlink" href="#edge-cases" title="Permanent link">&para;</a></h3>
-<ul>
-<li>Бар до запуска парсера или до листинга символа → NaN для всех 4
-  метрик.</li>
-<li>Spot-тикер → NaN всегда (нет markprice WS-стрима).</li>
-<li>Парсер пропустил несколько секунд → метрики берутся из последней
-  имеющейся точки (forward-fill через дыры).</li>
-</ul>
-<hr />
-<h2 id="_5">Метрики<a class="headerlink" href="#_5" title="Permanent link">&para;</a></h2>
-<h3 id="mark_price"><code>mark_price</code><a class="headerlink" href="#mark_price" title="Permanent link">&para;</a></h3>
-<p>Реальная mark-price (используется биржевым liquidation engine'ом для
-расчёта PnL и триггера ликвидаций).</p>
-<p><strong>Что говорит.</strong> Эталонная цена контракта. Часто отличается от
-last-trade-price (особенно в стрессе). Альфы про liquidation triggers
-смотрят сюда, не на trade close.</p>
-<h3 id="index_price"><code>index_price</code><a class="headerlink" href="#index_price" title="Permanent link">&para;</a></h3>
-<p>Спотовый подлежащий индекс — взвешенное по объёму среднее spot-цены
-с нескольких бирж, на основе которого вычисляется mark.</p>
-<p><strong>Что говорит.</strong> Прокси для «справедливой» цены без futures-перекоса.
-Разница <code>mark - index</code> ≈ basis (премия фьючерса над спотом).</p>
-<h3 id="predicted_funding"><code>predicted_funding</code><a class="headerlink" href="#predicted_funding" title="Permanent link">&para;</a></h3>
-<p>Предсказанный funding rate на следующий settlement. Хранится как
-доля (<code>0.0001 = 1bp</code>). Обновляется биржой каждую секунду на основе
-текущего basis'а.</p>
-<p><strong>Что говорит.</strong> Forward-looking сигнал перекоса позиций. В отличие
-от <code>realized_funding</code> (см. <a href="../funding/">funding.md</a>) — это <strong>прогноз</strong>,
-который меняется в реальном времени.</p>
-<h3 id="next_funding_time_ms"><code>next_funding_time_ms</code><a class="headerlink" href="#next_funding_time_ms" title="Permanent link">&para;</a></h3>
-<p>Время в миллисекундах UTC, когда произойдёт следующий settlement
-funding'а (одно из 00:00, 08:00, 16:00 UTC).</p>
-<p><strong>Что говорит.</strong> Метаданные для синхронизации стратегий с funding
-циклом. Полезно для triggered-альф, которые активируются за N минут
-до funding settlement.</p>
-<hr />
-<h2 id="_6">Сводка финальных ключей<a class="headerlink" href="#_6" title="Permanent link">&para;</a></h2>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>mark_price
-</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>index_price
-</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>predicted_funding
-</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>next_funding_time_ms
-</span></code></pre></div>
-<p><strong>4 ключа. Только usdm. NaN для spot и для пробелов в данных.</strong></p>
-<hr />
-<h2 id="_7">Связь с другими блоками<a class="headerlink" href="#_7" title="Permanent link">&para;</a></h2>
+<h2 id="1">1. Конфигурация<a class="headerlink" href="#1" title="Permanent link">&para;</a></h2>
+<p>Конфиг — в <code>live_config.yaml</code>, секреты и wiring — в env (AGENTS.md). Лоадер
+<code>alpha_engine/live/config.py:30</code> — fail loud, без in-code дефолтов.</p>
+<p>ADR не предписывает тьюнинги «на всякий случай» (YAGNI). Конкретные ключи
+добавляются только когда появляется caller, которому нужно другое значение —
+widening дешевле narrowing.</p>
+<p>Обязательство ветки №1 (O-C2): ключи ниже вводятся в <code>live_config.yaml</code> и в
+полевую таблицу <code>alpha_engine/live/config.py</code> с fail loud; in-code дефолты
+запрещены по C8/AGENTS.md. До ветки №1 таблица — спецификация имен и мест,
+значения уточняются замерами той же ветки:</p>
 <table>
 <thead>
 <tr>
-<th>Метрика</th>
-<th>Где</th>
-<th>Различие</th>
+<th>ключ</th>
+<th>где</th>
+<th>заметка</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td><code>predicted_funding</code></td>
-<td>здесь</td>
-<td>прогноз, обновляется секундно</td>
+<td><code>nats.url</code></td>
+<td>env/wiring</td>
+<td><code>nats://nats:4222</code> в Docker, <code>nats://127.0.0.1:4222</code> локально</td>
 </tr>
 <tr>
-<td><code>realized_funding</code></td>
-<td><a href="../funding/">funding.md</a></td>
-<td>факт, обновляется 3 раза в сутки</td>
+<td><code>metrics.book_tick_ms</code></td>
+<td><code>live_config.yaml</code></td>
+<td>каденция книжных скаляров; RTO-неравенство §9 читает её из конфига</td>
 </tr>
 <tr>
-<td><code>close_price</code></td>
-<td><a href="../klines/">klines.md</a></td>
-<td>last trade price из klines</td>
+<td><code>nats.stream_compression</code></td>
+<td><code>live_config.yaml</code></td>
+<td><code>s2</code> — по измерениям ADR §9 / <code>measurements.md</code> §7, не инвариант ADR</td>
 </tr>
 <tr>
-<td><code>last_best_*_price</code></td>
-<td><a href="../orderbook-l1/">orderbook-l1.md</a></td>
-<td>last best bid/ask из снапшотов</td>
+<td><code>nats.duplicate_window</code></td>
+<td><code>live_config.yaml</code></td>
+<td><code>5м</code> (дефолт NATS <code>2м</code>) — покрывает retry+reconnect; меньше буфера <code>~1ч</code></td>
 </tr>
 <tr>
-<td><code>mark_price</code></td>
-<td>здесь</td>
-<td>биржевой эталон, не trade-price</td>
+<td><code>nats.sync_interval</code></td>
+<td><code>nats.conf</code></td>
+<td>серверный <code>2s</code> (дефолт минуты); верифицируется <code>kill -9</code></td>
+</tr>
+<tr>
+<td><code>nats.retention</code></td>
+<td><code>live_config.yaml</code></td>
+<td><code>3ч</code> (<code>30м</code> штатно + <code>60м</code> худший + <code>1ч</code> буфер, с запасом), <code>discard: old</code> — формулой §8 ADR; суточный объём теперь <code>measured</code> 22-40 ГБ (<code>measurements.md</code> §6), 3 ч ≈ 3-5 ГБ на диске</td>
+</tr>
+<tr>
+<td><code>book_store.checkpoint_on_bar</code></td>
+<td><code>live_config.yaml</code></td>
+<td>всегда на границе бара</td>
+</tr>
+<tr>
+<td><code>book_store.keep_bars</code></td>
+<td><code>live_config.yaml</code></td>
+<td>2 — текущая+предыдущая</td>
+</tr>
+<tr>
+<td><code>book_store.codec</code></td>
+<td><code>live_config.yaml</code></td>
+<td><code>v1</code></td>
+</tr>
+<tr>
+<td><code>book_store.synchronous_commit</code></td>
+<td><code>live_config.yaml</code></td>
+<td><code>true</code> — fsync каждый коммит</td>
+</tr>
+<tr>
+<td><code>jetstream.consumer_ack_wait_ms</code></td>
+<td><code>live_config.yaml</code></td>
+<td><code>&gt; flush 60с</code></td>
+</tr>
+<tr>
+<td><code>collector.buffer_bytes</code></td>
+<td><code>live_config.yaml</code></td>
+<td><code>~1_000_000_000-1_600_000_000</code> (~1 ч живого потока @60, <code>measured</code>: 250-450 КБ/с, <code>measurements.md</code> §6)</td>
+</tr>
+<tr>
+<td><code>collector.buffer_alert_ratio</code></td>
+<td><code>live_config.yaml</code></td>
+<td><code>0.7</code> — порог алерта</td>
 </tr>
 </tbody>
 </table>
-<p>Это <strong>четыре разных способа</strong> ответить на вопрос «какая цена в этот
-момент»:
-- mark — для liquidation/PnL расчётов биржей
-- index — спотовый бенчмарк
-- close_price — последний trade price
-- mid (<code>(best_bid + best_ask) / 2</code>) — теоретический middle of book</p>
-<p>В стрессе они расходятся.</p>
+<hr />
+<h2 id="2">2. План тестирования<a class="headerlink" href="#2" title="Permanent link">&para;</a></h2>
+<p>Золотое свойство: <strong>прогон с убийством потребителя даёт те же бары, что и непрерывный прогон</strong>
+(приём как в parity-сьютах <code>38e0b72</code>).</p>
+<h3 id="21-kill-adr-11">2.1 Kill-сьют (ADR §11)<a class="headerlink" href="#21-kill-adr-11" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>тест</th>
+<th>что проверяет</th>
+<th>критерий</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>kill трейдера на N сек</td>
+<td>реплей <code>seq+1</code> + <code>u &gt; watermark</code></td>
+<td>бары за окно == эталон</td>
+</tr>
+<tr>
+<td>kill трейдера среди бара</td>
+<td>чекпойнт границы бара + реплей от неё</td>
+<td>текущий бар ПОЛОН, включая ob-часть (ключевой тест D5)</td>
+</tr>
+<tr>
+<td>kill трейдера на 5 секунд</td>
+<td>стартовая позиция реплея</td>
+<td>кольцо полное; короткий рестарт ловит то, что длинный маскирует</td>
+</tr>
+<tr>
+<td>kill коллектора</td>
+<td>дырка задетектилась (spot <code>U</code>, USD-M <code>pu</code>)</td>
+<td>бары помечены неполными, trade/kline добэкфиллены</td>
+</tr>
+<tr>
+<td>режим реплея <code>Engine</code></td>
+<td>исторические тики (§7)</td>
+<td>полное кольцо, а не один слот</td>
+</tr>
+<tr>
+<td>переключение реплей → live</td>
+<td><code>_next_bar</code>/<code>_cur_bucket</code></td>
+<td>не разъезжаются на границе переключения</td>
+</tr>
+<tr>
+<td>рестарт трейдера (paper)</td>
+<td>D10 — не durable</td>
+<td>позиции не сравниваются; mainnet — сверка с биржей</td>
+</tr>
+<tr>
+<td>graceful shutdown</td>
+<td>данные уже в очереди</td>
+<td>ноль потерь</td>
+</tr>
+<tr>
+<td>round-trip чекпойнта</td>
+<td>блоб + <code>(u, seq, trades_seq, events_seq)</code> → реплей</td>
+<td>== непрерывная книга, включая слот первой секунды бара</td>
+</tr>
+<tr>
+<td>краш на границе бара</td>
+<td>коммит нового чекпойнта не прошёл</td>
+<td>откат на предыдущую границу, бар всё равно полон</td>
+</tr>
+<tr>
+<td>динамический универсум</td>
+<td>листинг/делистинг между границами баров</td>
+<td>не ломает чекпойнт; символ без снапшота стартует холодно</td>
+</tr>
+<tr>
+<td>дедуп</td>
+<td>повторная доставка <code>Msg-Id</code></td>
+<td>бар не меняется (серверный дедуп + идемпотентность)</td>
+</tr>
+<tr>
+<td>kill -9 NATS</td>
+<td><code>sync_interval</code></td>
+<td>измерить фактическое окно, подтвердить секунды</td>
+</tr>
+<tr>
+<td>NATS выключен на N минут</td>
+<td>буфер коллектора D9</td>
+<td>после подъёма бары == эталон</td>
+</tr>
+<tr>
+<td>PG выключен на N минут</td>
+<td>флаш фейлится громко, трейдер жив</td>
+<td>восстановление = обычный рестарт-путь</td>
+</tr>
+<tr>
+<td>глубина после дырки</td>
+<td>бакеты 5%/25%</td>
+<td>помечены недостоверными, не отданы как валидные</td>
+</tr>
+</tbody>
+</table>
+<h3 id="22">2.2 Дополнительные проверки<a class="headerlink" href="#22" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Parity транспорта (ветка №1):</strong> один процесс, NATS за интерфейсом <code>LiveTickBus</code>
+  (<code>async write(market, event)</code> + subscribe). Измерить реальные <code>msg/s</code> и <code>bytes/s</code>,
+  пересчитать кап D9, обновить оценки ADR §9, kill -9 NATS → <code>sync_interval</code>. Доказать bar-parity.</li>
+<li><strong>Память трейдера (ветка №2):</strong> 60 стаканов — замерить RSS, сравнить с RUNBOOK 2-2.5 ГБ.</li>
+<li><strong>RTO рестарта трейдера (ветка №3):</strong> цель ≤2 мин (D4). Замерить средний/пик <code>PG rows/s</code>.</li>
+<li><strong>Go-парсера больше нет.</strong> <code>--metrics-roots</code> у бэктеста читает наши же parquet, которые пишет этот же питоновский движок (<code>ParquetBarSink</code> в live, <code>tools/replay_metrics.py</code> на истории). Следствия: расхождения каденции между бэктестом и live быть не может; парити с Go-портом больше не ограничивает изменения в <code>compute_orderbook</code> / <code>book_scalars</code> — цена правки теперь только в пересчёте уже записанных исторических метрик. Ссылки на <code>internal/bookmgr/bookmgr.go</code> и <code>cmd/replay</code> в докстрингах остаются как происхождение алгоритма, а не как контракт совместимости.
+  Если не укладывается — вариант C (метрики отдельным сервисом) или Python 3.14+ (см. §4).</li>
+<li><strong>Динамический универсум:</strong> добавить/удалить символ между флашами, проверить per-symbol watermark.</li>
+<li><strong>Retention-границы:</strong> рестарт трейдера дольше 3ч (холодный старт) — первый бар неполный, деградированная глубина.</li>
+</ul>
+<h3 id="23-no1">2.3 Предварительные измерения (до/в ветке №1)<a class="headerlink" href="#23-no1" title="Permanent link">&para;</a></h3>
+<ul class="task-list">
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>Nats-Msg-Id</code> для <code>forceOrder</code>: собрать 7 дней <code>type=forceorder</code>, проверить уникальность <code>o.T</code> и необходимость композита <code>S/q/p/ap/l/z</code>. <strong>Блокер для старта ветки №1 — снять до разработки.</strong></li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Время набора глубины после дырки: инструментировать <code>resync_count</code>/<code>seq_gaps</code> в <code>BookScalars</code>, получить измеренную границу «бары недостоверны» вместо эмпирической (делается в ветке №5 заодно с kill-сьютом).</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Реальные <code>msg/s</code> и <code>bytes/s</code> диффов на 60 символах — пересчитать кап буфера D9 и оценки §5.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> Пропускная способность NATS и стоимость веера консьюмеров — измерено, ADR §9 / <code>measurements.md</code> §7 (стоковый конфиг, 4 vCPU): 0.7-0.8 мс на консьюмера до 1200 штук; чтение ~26k msg/s на процесс с заголовками, линейно по процессам; потолок — питоновский клиент, не брокер; <code>fast-parse</code> вредит.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> Стоимость <code>compute_book_scalars</code> — измерено и оптимизировано (NSC-51, ветка <code>perf/book-scalars-cone</code>): 5.31 -&gt; 1.30 мс за счёт обхода 25%-конуса вместо материализации книги.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> Недостоверные книжные дельта-ключи — починено (ветка <code>fix/book-delta-metrics</code>): приращения эмитятся по смене книги, а не по слоту кольца; 140 ключей ожили. Той же правкой <code>__sum</code> счётчиков <code>book_updates_count</code>/<code>seq_gaps</code>/<code>resync_count</code> перестал считать повторы. Осталось разово пересчитать историю через <code>tools/replay_metrics.py</code> — прежняя семантика с новой не совпадает на 143 ключах.</li>
+</ul>
+<hr />
+<h2 id="3-nats-jetstream">3. NATS JetStream — детали<a class="headerlink" href="#3-nats-jetstream" title="Permanent link">&para;</a></h2>
+<ul>
+<li><strong>Streams:</strong> <code>MD_DIFF</code> (<code>md.*.diff.*</code>, 3ч, <code>discard: old</code>), <code>MD_TRADE</code> (<code>md.*.trade.*</code>, 3ч, <code>discard: old</code> — вынесен отдельно, высокий объём), <code>MD_EVENTS</code> (остальное: <code>md.*.kline.*</code>, <code>md.*.mark.*</code>, <code>md.*.liq.*</code>, <code>md.*.info.*</code>, <code>md.*.funding.*</code>, <code>md.*.stats.*</code>, 3ч, <code>discard: old</code>). <code>MD_SNAP</code> убран — публиковать в него нечего (D3). Унифицировано на 3ч — разного retention на один стрим у JetStream нет, объём поллеров в 3ч пренебрежим.</li>
+<li><strong>Retention <code>MD_DIFF</code></strong> должен покрывать возраст самого старого чекпойнта, с которого реплеим: 30 мин штатно, 60 мин при откате на предыдущую границу, плюс буфер D9. 3 ч — с запасом.</li>
+<li><strong><code>retention: limits</code> обязателен, <code>workqueue</code> ломает восстановление.</strong> Проверено: под <code>limits</code> ack двигает только курсор консьюмера и сообщение остаётся в логе (500/500 перечитано новым консьюмером с <code>opt_start_seq=1</code>); под <code>workqueue</code> ack удаляет сообщение (0/500) и реплей невозможен. Writer (D8) акает по ходу дела — под <code>workqueue</code> он молча уничтожал бы диффы, нужные трейдеру. Это инвариант корректности, а не тюнинг; проверять в тестах создания стримов.</li>
+<li><strong>Реплей — только новыми эфемерными консьюмерами</strong> с явным <code>opt_start_seq</code>. Существующий durable отмотать назад нельзя: его позиция принадлежит серверу (повторный bind отдаёт 0 сообщений).</li>
+<li><strong>Dedup:</strong> <code>Nats-Msg-Id</code> как JetStream хедер, не поле payload. Окно дедупа — настройка стрима. <strong>Оппортунистическая оптимизация, не гарантия:</strong> таблица в RAM, рестарт NATS её стирает. Гарантию даёт идемпотентность консьюмера.</li>
+<li><strong><code>sync_interval</code></strong> — серверный <code>nats.conf</code>, не <code>live_config.yaml</code>. Верифицируется <code>kill -9 NATS</code> в ветке №1.</li>
+<li><strong>Subjects / MsgId</strong> — см. таблицу §5 ADR (явные поля Binance, без хешей, <code>dropped_invalid</code> + WARN на невалидном payload).</li>
+<li><strong>Запасной путь:</strong> RedPanda (Kafka-протокол), контракт publish/subscribe не меняется. Триггер — десятки тысяч msg/s.</li>
+</ul>
+<hr />
+<h2 id="4-rto">4. RTO и параллелизм<a class="headerlink" href="#4-rto" title="Permanent link">&para;</a></h2>
+<ul>
+<li><strong>Окно реплея — от границы бара</strong>, а не от места остановки: кольцо при старте пусто, ему нужны события с начала бара (D4). Продолжение с последнего ack дало бы после короткого рестарта пустое кольцо.</li>
+<li><strong>Три позиции, три стрима, все per-symbol:</strong> <code>seq</code> (<code>MD_DIFF</code>), <code>trades_seq</code> (<code>MD_TRADE</code>) и <code>events_seq</code> (<code>MD_EVENTS</code>) — колонки одной строки <code>(market,symbol,bar_ts)</code>. Sequence разных стримов несравнимы.</li>
+<li><strong>Текущий план:</strong> реплей диффов — per-symbol консьюмеры (<code>filter_subject</code> + <code>opt_start_seq = seq+1</code>), реплей сделок — per-symbol консьюмеры (<code>MD_TRADE</code>, высокий объём, параллельно как диффы), реплей остальных событий — один consumer на <code>MD_EVENTS</code> (~10-50 msg/s без сделок).</li>
+<li><strong>Веер консьюмеров измерен и дёшев:</strong> 0.7-0.8 мс на консьюмера ровно до 1200 штук, 11-25 КБ памяти сервера на каждого, ноль ошибок (перезамер 2026-09: 2.3-2.6 мс/шт, доставка полная — <code>measurements.md</code> §7). Опасение про «шторм <code>CreateConsumer</code>» снято (ADR §9).</li>
+<li><strong>Доминирует доставка из JetStream</strong> (~26k msg/s на процесс с заголовками), затем парсинг и применение диффа (17 мкс), затем скаляры. После NSC-51 (<code>compute_book_scalars</code> по 25%-конусу) скаляр стоит 1.30 мс вместо 5.31, и скаляры перестали быть главной статьёй.</li>
+<li><strong>Реплей обязан шардироваться по процессам, а не только по консьюмерам.</strong> Замер: 1 процесс — 14.6 с на 432k сообщений при 14.5 с CPU (100% ядра), 4 процесса — 5.6 с. Соединения не помогают: упор в GIL, не в сокет.</li>
+<li><strong>Ограничение:</strong> источник правды — RTO-неравенство ADR §9 (после NSC-51 точка обрыва — единицы секунд). Трейдер должен проверять неравенство на старте и предупреждать.</li>
+<li><strong>Настройки чтения:</strong> <code>AckNone</code> на реплее (позиция из PG, не из ack'ов) — +5%; батч <code>fetch</code> 100-1000, <code>fetch(5000)</code> роняет соединение; push-консьюмеры непригодны для реплея — сервер отключает клиента как медленного.</li>
+<li><strong><code>nats-py[fast-parse]</code> не подключать.</strong> Rust-парсер заголовков <code>fast_mail_parser</code> в нашем профиле пессимизация: контролируемое A/B даёт цену <code>Nats-Msg-Id</code> 3.3% / <strong>19.5%</strong> / 5.5% (чистый / Rust / чистый повторно). Заголовок один и короткий, переход через PyO3 дороже питоновского разбора строки. Альтернативных клиентов нет: <code>nats-python</code> заброшен и синхронный, <code>asyncio-nats-client</code> — старое имя <code>nats-py</code>, Rust/C-биндингов не существует.</li>
+<li><strong>Заголовок стоит 14%</strong> (медианы 5 повторений: 24 457 против 21 037 msg/s). Планировать по ~26k msg/s на процесс, не по 31k.</li>
+<li><strong>Публикация ~22k msg/s на процесс</strong> (<code>js.publish</code> с ack, пачками по 3000). Живой поток 600 пар — 6000 msg/s, запас трёхкратный. Но слив часового буфера D9 (~21.6 млн сообщений) при одновременном приёме живого потока идёт со скоростью ~16k/s и занимает <strong>~22 минуты</strong> — заложить в алерты, подъём брокера не возвращает норму мгновенно.</li>
+<li><strong>Брокер не узкое место ни разу:</strong> idle 13-23 МБ RSS, CPU 0-30% при чтении на полной скорости, ноль потерянных сообщений на всех прогонах. Стрим на диске ≈ объём payload'ов (не сжат по умолчанию) — <code>compression: s2</code> из D2 живой рычаг.</li>
+<li><strong>Ephemeral-консьюмеры не мусорят:</strong> после <code>unsubscribe</code> состояние на сервере не накапливается; в прогонах с 1200 консьюмерами память возвращалась.</li>
+<li><strong>Если реплей не укладывается:</strong> рычаги — чекпойнт слотов кольца (§11 ADR), вариант C (метрики отдельным сервисом), или <strong>Python 3.14+</strong> (free-threaded mode — снял бы нужду в отдельных процессах).</li>
+<li><strong>Ack:</strong> <code>AckExplicit</code>, <code>ack_wait</code> &gt; максимального удержания пачки writer'ом (дефолт 5 мин при flush 60с). Редоставка до ack — дубли, дедуп по <code>Nats-Msg-Id</code>. Относится к <code>FileWriter</code> (D8); реплей книги и кольца акает не по этой схеме — там <code>AckNone</code> и позиция из PG.</li>
+<li><strong><code>max_ack_pending</code> по умолчанию 1000</strong> — измерено: без явного значения сервер перестаёт отдавать на тысяче неподтверждённых. Для writer'а поднять выше размера пачки.</li>
+<li><strong>Почему не «durable + ack после коммита в PG» вместо хранения <code>seq</code>:</strong> держать бар неподтверждённым стоит ~0.35-1 КБ памяти сервера на сообщение — 413 МБ на 60 символах, 4.1 ГБ на 600 (ADR §9; перезамер: ~352 Б → 152 МБ / ~1.5 ГБ, вывод тот же). Плюс <code>ack_wait</code> пришлось бы поднять выше длины бара. Два <code>BIGINT</code> в строке, которую и так пишем, дешевле.</li>
+</ul>
+<h2 id="41-filewriter-durability">4.1 Роль FileWriter и durability всей системы<a class="headerlink" href="#41-filewriter-durability" title="Permanent link">&para;</a></h2>
+<p><code>FileWriter</code> (<code>binance_parser/live/writer.py:69</code>) — это <strong>бэкап в parquet</strong>
+(<code>market=*/type=*/dt=*/symbol=*/part-*.parquet</code>, zstd) + <code>services/archive.py:44</code> → S3 tar (ретеншн 3 дня).
+<strong>Не аналог NATS</strong>, но в D8 он тоже становится durable consumer'ом <code>md.*</code> в трейдере (<code>ack</code> после <code>flush</code>).</p>
+<p>Важно не сводить D8 только к «бэкап не теряет 60с». Durable consumer'ы — это durability <strong>всей downstream-системы</strong>:
+- NATS retention (3ч) + PG чекпойнт (D5, <code>u</code>/<code>seq</code>) + <code>opt_start_seq = seq+1</code> — восстанавливают книгу и ring метрик (791 ключ) без потерь;
+- тот же механизм (<code>ack</code> после обработки) у <code>FileWriter</code> — гарантирует что и parquet-бэкап не теряет окно.</p>
+<p>То есть без D8 теряется не только история на диске, но и инвариант «рестарт трейдера не теряет события» для расчёта метрик и торговли: live-реплей зависит от NATS, а полнота бэкапа — от того же <code>ack</code>. D9-буфер — RAM перед NATS в коллекторе (~1ч), страхует <code>NATS лёг</code> до того как события попадут в JetStream.</p>
+<hr />
+<h2 id="5">5. Деградации — операционные заметки<a class="headerlink" href="#5" title="Permanent link">&para;</a></h2>
+<ul>
+<li><code>discard: old</code> на <code>MD_DIFF</code> — теряем старьё, поток живёт. Обратное (<code>new</code>) остановило бы коллектор — хуже. Смена поведения vs <code>LiveTickBus</code> (<code>live/tick_bus.py:66</code> молчаливый дроп → наблюдаемый pending в JetStream).</li>
+<li>NATS лёг → буфер D9 держит ~час. PG лёг → трейдер живёт из RAM, запись чекпойнта фейлится громко; краш в этом окне → откат на предыдущую границу. Live-данные при этом не теряются — реплей идёт из NATS.</li>
+<li>Коллектор упал с непустым буфером — RAM D9 теряется (осознанная цена D9).</li>
+<li><strong>Важно:</strong> <code>FileWriter</code> — часть общей durability: без <code>ack</code> после <code>flush</code> (D8) теряется и бэкап, и инвариант полноты данных для метрик/трейдера.</li>
+</ul>
+<hr />
+<h2 id="6">6. Порядок веток<a class="headerlink" href="#6" title="Permanent link">&para;</a></h2>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>#1 feat/queue-transport  — транспорт за LiveTickBus, измерения, kill -9 NATS (низкий риск)
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>#2 feat/collector-split  — коллектор в свой контейнер, книга в трейдер (высокий риск, только после #1)
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>#3 feat/pg-book-store    — PG чекпойнт блобом на границу бара + (u, seq, trades_seq, events_seq);
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>                           режим реплея в Engine и переключение в live; флаг полноты бара
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>                           (средний риск)
+</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>#4 feat/queue-writer     — FileWriter как durable consumer в трейдере (низкий риск, независим от #3; закрывает класс A для бэкапа и для downstream метрик/трейдера)
+</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>#5 feat/restart-resilience-tests — kill-сьют
+</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>#6 → Phase 2-4           — фьючерсы, funding, ордера
+</span></code></pre></div>
+<h1 id="3-4-4-60-">3 и #4 независимы; #4 можно двигать раньше если 60-секундная дыра начнёт мешать метрикам/бэкапу.<a class="headerlink" href="#3-4-4-60-" title="Permanent link">&para;</a></h1>
+<hr />
+<h2 id="7-engine-no3">7. Требования к <code>Engine</code> для реплея (ветка №3)<a class="headerlink" href="#7-engine-no3" title="Permanent link">&para;</a></h2>
+<p>Сегодня живой движок исторические тики <strong>не принимает</strong>: <code>wall_clock_anchor=True</code>
+(<code>metrics_engine/live_bridge.py:208</code>) анкорит первый слот по <code>time.time()</code>, после чего
+каждый тик с <code>bucket &lt; _cur_bucket</code> сворачивается в текущий слот и выходит
+(<code>metrics_engine/engine.py:191,207</code>). Проверено: реплей 1200 секунд истории в свежий
+движок даёт 36 слотов из 1800 при <code>wall_clock_anchor=True</code> и 1199 при <code>False</code>. Молча, без
+ошибки, с правдоподобной строкой на выходе. Без правок §7 ADR не работает.</p>
+<p>Что нужно сделать:</p>
+<ol>
+<li><strong>Явный режим реплея.</strong> <code>wall_clock_anchor=False</code> (механизм есть, им пользуется
+   <code>tools/replay_metrics.py:114</code>) плюс <strong>подавление эмита баров</strong>. Цель реплея —
+   восстановить состояние на «сейчас», а не пересчитать прошедшие бары: они уже в
+   архиве, и торговать по ним поздно. Это заодно снимает проблему догоняющих баров —
+   <code>_build_row</code> не принимает границы бара, берёт кольцо целиком, поэтому при дренаже
+   нескольких баров подряд все считались бы по одному и тому же содержимому.</li>
+<li><strong>Переключение в live.</strong> После догона — <code>wall_clock_anchor=True</code>; <code>_next_bar</code> и
+   <code>_cur_bucket</code> к этому моменту выставлены по времени тиков и продолжают жить. Условие
+   переключения — отставание меньше слота. Это единственное место, где можно тихо
+   разъехаться; нужен тест.</li>
+<li><strong>Флаг полноты бара в строке.</strong> §6 п.6 и §8 ADR стоят на «бар идёт в стратегию, только
+   если полон», но такого поля в <code>row</code> нет. Критерий — <strong>слот на каждую секунду от начала
+   бара</strong>, а не <code>size == cap</code>: слоты продвигаются только приходящими тиками, поэтому
+   после простоя кольцо бывает формально полным и при этом растянутым шире бара.</li>
+<li><strong>Сделать <code>_max_slot_jump</code> громким.</strong> Скачок больше 3600 слотов молча делает
+   <code>buf.clear()</code> (<code>metrics_engine/engine.py:220</code>) — кольцо стирается без следа. По §8 ADR
+   это ровно случай «бары помечаем неполными»: нужен счётчик и лог.</li>
+<li><strong>Warm-start окна баров не трогать.</strong> Лукбэк стратегий приходит из parquet через
+   <code>MultiFileParquetReader</code> — это отдельный механизм, реплей его не заменяет.</li>
+</ol>
+<p>Тест, который ловит главное: kill трейдера на <strong>5 секунд</strong> в середине бара → кольцо
+полное, бар совпадает с эталонным непрерывным прогоном. Короткий рестарт, не длинный:
+при неверной стартовой позиции длинный выглядит нормально, а короткий даёт пустое кольцо.</p>
 
 
 

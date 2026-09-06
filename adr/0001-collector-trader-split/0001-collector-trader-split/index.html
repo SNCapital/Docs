@@ -1,0 +1,3981 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Quantitative research and live-trading stack on top of Binance market data. Strategy engine + WebSocket data pipeline + local L2 order book.
+">
+      
+      
+      
+        <link rel="canonical" href="https://sncapital.github.io/Docs/adr/0001-collector-trader-split/0001-collector-trader-split/">
+      
+      
+        <link rel="prev" href="../../../development/contributing/">
+      
+      
+        <link rel="next" href="../../../research-log/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>ADR-0001 Collector / trader split - SN Capital — Backend</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="https://unpkg.com/katex@0/dist/katex.min.css">
+    
+    <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#adr-0001-live-collector-trader" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../../.." title="SN Capital — Backend" class="md-header__button md-logo" aria-label="SN Capital — Backend" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            SN Capital — Backend
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              ADR-0001 Collector / trader split
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m14.3 16-.7-2h-3.2l-.7 2H7.8L11 7h2l3.2 9zM20 8.69V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12zm-9.15 3.96h2.3L12 9z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_2" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to system preference"  type="radio" name="__palette" id="__palette_2">
+    
+      <label class="md-header__button md-icon" title="Switch to system preference" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+          <a href="javascript:void(0)" class="md-search__icon md-icon" title="Share" aria-label="Share" data-clipboard data-clipboard-text="" data-md-component="search-share" tabindex="-1">
+            
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9a3 3 0 0 0-3 3 3 3 0 0 0 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.15c-.05.21-.08.43-.08.66 0 1.61 1.31 2.91 2.92 2.91s2.92-1.3 2.92-2.91A2.92 2.92 0 0 0 18 16.08"/></svg>
+          </a>
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/SNCapital/Backend" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    SNCapital/Backend
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+    
+      
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../getting-started/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Getting started
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../alpha-engine/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Alpha engine
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../binance-parser/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Binance parser
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../strategies/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Strategies
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../reference/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Reference
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../development/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Development
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="./" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Architecture decisions
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../../research-log/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Research log
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../research/nsc-14-aggtrade-vs-trade/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Research notes
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../openspec/batch-backtest/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Specs
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+    
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../.." title="SN Capital — Backend" class="md-nav__button md-logo" aria-label="SN Capital — Backend" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    SN Capital — Backend
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/SNCapital/Backend" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    SNCapital/Backend
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../../getting-started/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Getting started
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_2" id="__nav_2_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Getting started
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../getting-started/installation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Installation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../getting-started/quickstart/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Quick start
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../getting-started/architecture/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../../alpha-engine/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Alpha engine
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_3" id="__nav_3_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Alpha engine
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../alpha-engine/pipeline/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Pipeline overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../alpha-engine/data-layer/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Data layer
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../alpha-engine/writing-a-strategy/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Writing a strategy
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../alpha-engine/markowitz/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Markowitz combination
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../alpha-engine/backtesting/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Backtesting & PnL
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../alpha-engine/live-trading/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Live trading
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../../binance-parser/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Binance parser
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_4" id="__nav_4_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Binance parser
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../binance-parser/live/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Live WebSocket
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../binance-parser/historical/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Historical download
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../binance-parser/storage/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Storage layout
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../binance-parser/order-book/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Local order book
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../binance-parser/extending/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Extending the parser
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../../strategies/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Strategies
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_5" id="__nav_5_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Strategies
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../methodology/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Methodology
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../strategies/funding_reversion/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Funding mean reversion
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../strategies/trade_imbalance/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Trade imbalance
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../strategies/ob_mispricing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Orderbook mispricing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../strategies/book_depth_imbalance/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Book depth imbalance
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../strategies/vol_mean_reversion/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Volatility mean reversion
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../strategies/vol_ob_entropy/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Volume / OB entropy
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_6" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../../reference/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Reference
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_6" id="__nav_6_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Reference
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../reference/cli/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    CLI
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../reference/operators/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Operators
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../reference/metrics/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Metrics catalogue
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../reference/glossary/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Glossary
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_7" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../../development/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Development
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_7" id="__nav_7_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Development
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../development/setup/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Setup
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../development/testing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Testing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../development/contributing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Contributing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Architecture decisions
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_8">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Architecture decisions
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ADR-0001 Collector / trader split
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ADR-0001 Collector / trader split
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#0" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        0. Шапка
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1-overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Overview
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-goals-non-goals-deferred" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Goals / Non-Goals / Deferred
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-constraints" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Constraints
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-context-c4-l1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Context (C4-L1)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-containers-c4-l2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Containers (C4-L2)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-components" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Components
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-runtime" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. Runtime
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-data" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8. Data
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#9-nfr-scale" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9. NFR + Scale
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#10-decisions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10. Decisions
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="10. Decisions">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#d0-live-collector-trader-durable" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        D0. Разделить live-контур на collector и trader через durable лог
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#d1-" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        D1. Коллектор — край биржи, без бизнес-логики
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#d2-nats-jetstream-file-storage" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        D2. Брокер — NATS JetStream с file storage
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#d3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        D3. Стакан живёт только в трейдере; сырые диффы — через очередь
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#d4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        D4. Производный стейт не хранится, а пересчитывается реплеем от границы бара
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#d5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        D5. Чекпойнт книги — блобом на границу бара + три позиции, одной транзакцией
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#d6" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        D6. Книга хранится целиком; рост принят
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#d7-payload-11-nats-msg-id" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        D7. Сырой payload 1:1; Nats-Msg-Id из явных полей, без хешей
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#d8-parquet-durable-consumer" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        D8. Parquet пишет трейдер как durable consumer
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#d9-ram" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        D9. Буфер коллектора — RAM на окно починки, с байтовым капом
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#d10" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        D10. Позиции локально не хранятся
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#11-risks-failure-modes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        11. Risks + Failure Modes
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="11. Risks + Failure Modes">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#111" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        11.1 Отложенные рычаги (триггеры возврата)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#12-observability" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        12. Observability
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#13-security" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        13. Security
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#14-glossary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        14. Glossary
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#references" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        References
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="References">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#phase-4-summary-consolidation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Phase 4 Summary (consolidation)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../research-log/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Research log
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_10" >
+        
+          
+          <label class="md-nav__link" for="__nav_10" id="__nav_10_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Research notes
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_10_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_10">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Research notes
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../research/nsc-14-aggtrade-vs-trade/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    NSC-14 aggTrade vs trade
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_11" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../../openspec/batch-backtest/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Specs
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_11" id="__nav_11_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_11_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_11">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Specs
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../openspec/dashboard/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Dashboard
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../openspec/historical-download/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Historical download
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../openspec/live-trading/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Live Trading
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../openspec/live-ws/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Live WebSocket pipeline
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../openspec/metrics-aggregation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Metrics Aggregation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../openspec/metrics-engine/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Metrics Engine
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../openspec/models/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Data models
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../openspec/rest-pollers/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    REST pollers
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#0" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        0. Шапка
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1-overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Overview
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-goals-non-goals-deferred" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Goals / Non-Goals / Deferred
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-constraints" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Constraints
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-context-c4-l1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Context (C4-L1)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-containers-c4-l2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Containers (C4-L2)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-components" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Components
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-runtime" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. Runtime
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-data" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8. Data
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#9-nfr-scale" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9. NFR + Scale
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#10-decisions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10. Decisions
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="10. Decisions">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#d0-live-collector-trader-durable" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        D0. Разделить live-контур на collector и trader через durable лог
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#d1-" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        D1. Коллектор — край биржи, без бизнес-логики
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#d2-nats-jetstream-file-storage" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        D2. Брокер — NATS JetStream с file storage
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#d3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        D3. Стакан живёт только в трейдере; сырые диффы — через очередь
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#d4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        D4. Производный стейт не хранится, а пересчитывается реплеем от границы бара
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#d5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        D5. Чекпойнт книги — блобом на границу бара + три позиции, одной транзакцией
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#d6" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        D6. Книга хранится целиком; рост принят
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#d7-payload-11-nats-msg-id" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        D7. Сырой payload 1:1; Nats-Msg-Id из явных полей, без хешей
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#d8-parquet-durable-consumer" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        D8. Parquet пишет трейдер как durable consumer
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#d9-ram" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        D9. Буфер коллектора — RAM на окно починки, с байтовым капом
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#d10" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        D10. Позиции локально не хранятся
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#11-risks-failure-modes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        11. Risks + Failure Modes
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="11. Risks + Failure Modes">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#111" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        11.1 Отложенные рычаги (триггеры возврата)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#12-observability" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        12. Observability
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#13-security" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        13. Security
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#14-glossary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        14. Glossary
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#references" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        References
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="References">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#phase-4-summary-consolidation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Phase 4 Summary (consolidation)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="adr-0001-live-collector-trader">ADR-0001. Разделение live-контура на collector и trader<a class="headerlink" href="#adr-0001-live-collector-trader" title="Permanent link">&para;</a></h1>
+<h2 id="0">0. Шапка<a class="headerlink" href="#0" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Status</td>
+<td>Accepted</td>
+</tr>
+<tr>
+<td>Date</td>
+<td>Proposed 2026-08-27, decided 2026-09-01, revised 2026-09-02/03</td>
+</tr>
+<tr>
+<td>Deciders</td>
+<td>Backend team (NSC-87 / NSC-90 owners)</td>
+</tr>
+<tr>
+<td>Base</td>
+<td><code>claude/nsc-90-livemetricsbridge-trader</code></td>
+</tr>
+<tr>
+<td>Supersedes</td>
+<td><code>backlog/restart-resilience.md</code> (фазы 1-4 переносятся сюда)</td>
+</tr>
+<tr>
+<td>Resolves</td>
+<td>NSC-87 (контейнеризация), NSC-90 (LiveMetricsBridge) — следующий шаг после них</td>
+</tr>
+<tr>
+<td>Re-evaluation Trigger</td>
+<td>Пересмотреть, если: живой поток превысит десятки тысяч msg/s; реплей перестанет укладываться в RTO из §9; появится managed-очередь с replay-семантикой; collector и trader разъедутся по хостам (пересмотреть буфер D9 и Security §13)</td>
+</tr>
+</tbody>
+</table>
+<p>Спутники: <code>0001-book-store-schema.md</code> (формат чекпойнта D5), <code>0001-implementation-notes.md</code> (тьюнинги, замеры, kill-сьют).
+Источник правды по числам — <code>measurements.md</code>; формулы — в этом документе, константы — в спутнике (критерии веток — спутник §6).</p>
+<h2 id="1-overview">1. Overview<a class="headerlink" href="#1-overview" title="Permanent link">&para;</a></h2>
+<p>Live-контур делится на два процесса через durable лог: <code>collector</code> держит край биржи (WS + поллеры) и только публикует сырые события, <code>trader</code> держит книгу, метрики, стратегии и архив. Рестарт потребителя не теряет события: восстановление — реплеем лога от чекпойнта на границу бара. Пилот — 60 символов USD-M на одном VM; путь к 600 символам и разъезду по хостам не закрыт, но не оплачен заранее.</p>
+<h2 id="2-goals-non-goals-deferred">2. Goals / Non-Goals / Deferred<a class="headerlink" href="#2-goals-non-goals-deferred" title="Permanent link">&para;</a></h2>
+<p>Goals (этот док фиксирует):</p>
+<ul>
+<li>G1. Деплой стратегий/метрик не рвёт WS и стаканы (секунды вместо минут).</li>
+<li>G2. Рестарт потребителя не теряет события (очередь — durability-граница).</li>
+<li>G3. Книжная история пересчитываема (диффы архивируются сырьём 1:1).</li>
+</ul>
+<p>Non-Goals (осознанно исключено, не проектировать):</p>
+<ul>
+<li>N1. Тьюнинг пулов/тредов/TCP/<code>work_mem</code>/heap — делегирован в runbook (<code>deploy/RUNBOOK.md</code>) и автомасштабирование (RULES I.2). В доке только формулы и инварианты.</li>
+<li>N2. Точная каденция книжных скаляров как контракт — ключ <code>metrics.book_tick_ms</code>
+  в <code>live_config.yaml</code>, обязателен с ветки №1 (fail loud, in-code дефолт запрещён
+  по C8); док фиксирует только неравенство RTO из §9.</li>
+<li>N3. PII/GDPR-механика сверх §13 — персональных данных в контуре нет (только маркет-дата).</li>
+</ul>
+<p>Deferred — см. §11.1 (единственный список рычагов с триггерами возврата).</p>
+<h2 id="3-constraints">3. Constraints<a class="headerlink" href="#3-constraints" title="Permanent link">&para;</a></h2>
+<p>Технические (не двигать без пересмотра ADR):</p>
+<ul>
+<li>C1. Один VM: 8 vCPU / 16 GB / NVMe (<code>deploy/RUNBOOK.md</code>). Свободно ~9.5 ГБ под очередь в RAM — поэтому retention в RAM невозможен (см. решение о брокере).</li>
+<li>C2. Binance REST-лимит 2400 weight/мин; лимитеру доступно 2000 (<code>common/rate_limiter.py:135</code>, запас 400 вычтен). Один <code>/depth</code> USD-M <code>limit=1000</code> весит 20 (<code>live/orderbook.py:137</code>): 60 символов = 1200 weight, 600 = 12000 (минимум 6 минут упора в лимитер).</li>
+<li>C3. REST отдаёт максимум 1000 уровней (USD-M) / 5000 (spot) (<code>config/settings.py:43</code>). Top-1000 на BTCUSDT покрывает лишь ~0.15% от mid (замер §9/приложение) — ресинк даёт обрубок, а не книгу.</li>
+<li>C4. WS-подписки (профиль max-период, <code>measured</code> 2026-09-03, <code>measurements.md</code> §2-3):
+  depth <code>@depth@500ms</code> (ровно 2/s, байты те же), markPrice без суффикса (ровно
+  &#8531; с), <code>kline_1m</code> (в очередь только closed, 1/мин), aggTrade (trade-driven,
+  BTC ~16/s, альты ~2-4/s), forceOrder (редок: 17 шт/10 мин на 5 символов).
+  Интервал kline — контракт данных, не рычаг.</li>
+<li>C5. Роутинг fstream (иначе потоков нет физически): с 2026-03-06 (legacy retired
+  2026-04-23) unrouted <code>wss://fstream.binance.com/stream</code> отдаёт только Public
+  (<code>@depth</code>); остальное — только <code>.../market/stream</code>, depth там нет (проверено
+  живьём, <code>measurements.md</code> §4). Коллектор обязан держать два соединения:
+  <code>/public</code> для depth, <code>/market</code> для остального. Код на момент ADR использует
+  один unrouted base (<code>config/settings.py:25-26</code>) — чинится в ветке №2.</li>
+<li>C6. Кандидаты универсума: пересечение спот-USDT × PERP-USDT — 355 символов
+  (<code>measured</code> 2026-09-03; спот TRADING 1359, US-M TRADING 762, из них PERP USDT
+  526). Пилот 60 собирается из этих 355, где есть и спот-история, и перп.</li>
+<li>C7. Бар 30 минут, UTC-aligned (<code>bar_minutes: 30</code>, <code>live_config.yaml</code>). Ring — 1800 слотов (<code>engine.py:145</code>, <code>tick_ms=1000</code>).</li>
+<li>C8. Конфиг только <code>live_config.yaml</code>, fail loud без in-code дефолтов (<code>alpha_engine/live/config.py:30</code>); env — только секреты и wiring (<code>BINANCE_API_*</code>, <code>nats.url</code>). CLI-флагов для тюнинга нет (AGENTS.md).</li>
+</ul>
+<p>Организационные: пилот paper → testnet → mainnet; Go-парсера больше нет (<code>--metrics-roots</code> читает наши же parquet — расхождение каденции бэктест/live невозможно по построению).</p>
+<p>Внешние: схема событий принадлежит Binance; мы её не версионируем, а повторяем 1:1 (D7).</p>
+<p>Допущения (<code>ASSUMPTION</code> с ценой ошибки):</p>
+<ul>
+<li>A1. <code>T_repair ~ 1ч</code> — починка NATS/сети человеком укладывается в час (кап буфера D9). Ошибка: простой дольше капа → дроп со счётчиком → дырка в диффах → бары неполные (§11).</li>
+<li>A2. Профиль §9 (<code>measured</code> 2026-09-03, активный рынок, 5 символов → экстраполяция на 60/600) репрезентативен для пилота. Ошибка: рынок в разы активнее или скачок универсума → первым упирается реплей в RTO (§11, что ломается при ×5), затем диск очереди/архива.</li>
+<li>A3. Один VM, loopback = internal без auth (§13). Ошибка (разъезд по хостам): пересмотреть буфер D9, Security §13 (NATS creds + PG SCRAM + TLS) — триггер в шапке.</li>
+</ul>
+<h2 id="4-context-c4-l1">4. Context (C4-L1)<a class="headerlink" href="#4-context-c4-l1" title="Permanent link">&para;</a></h2>
+<p>Система — исследовательская live-платформа: стримит маркет-дату, считает 791 ключ метрик, торгует/симулирует по 30-минутным барам, пишет архив в parquet → S3. Внешние акторы: Binance (WS/REST, untrusted), оператор (дашборд read-only), S3-совместимое хранилище (архив).</p>
+<pre class="mermaid"><code>graph TD
+  subgraph UNTRUSTED["Untrusted zone"]
+    BIN["Binance WS + REST"]
+    S3["S3 / B2 archive"]
+    USER["Operator browser"]
+  end
+  subgraph INTERNAL["Internal / single VM"]
+    SYS["Live system: collector + queue + trader + PG"]
+  end
+  BIN --&gt;|"WS diffs/trades/klines/mark/liq; REST depth/exchange_info/funding"| SYS
+  SYS --&gt;|"tar per dt"| S3
+  USER --&gt;|"HTTPS, read-only"| SYS</code></pre>
+<h2 id="5-containers-c4-l2">5. Containers (C4-L2)<a class="headerlink" href="#5-containers-c4-l2" title="Permanent link">&para;</a></h2>
+<p>Ответственность — ровно одна на контейнер. Протоколы поименно. Sync помечен <code>S</code>, async — <code>A</code>.</p>
+<pre class="mermaid"><code>graph TD
+  subgraph UNTRUSTED2["Untrusted"]
+    BIN2["Binance WS/REST"]
+    S32["S3/B2"]
+    BRW["Browser"]
+  end
+  subgraph INTERNAL2["Internal: single VM, loopback"]
+    COL["collector: WS + reconnect + pollers, no book"]
+    NATS["NATS JetStream: MD_DIFF / MD_TRADE / MD_EVENTS, file storage"]
+    TRD["trader: OrderBook + Engine + strategies + risk + blotter + FileWriter"]
+    PG["Postgres: book_checkpoint blob + seq positions"]
+    VOL["NVMe volumes: raw_data + metrics parquet"]
+    ARC["archiver: tar per dt -&gt; S3"]
+    DSH["dashboard :8000 read-only"]
+  end
+  BIN2 --&gt;|"A: WSS streams; S: HTTPS REST /depth"| COL
+  COL --&gt;|"A: NATS publish raw JSON + Nats-Msg-Id"| NATS
+  NATS --&gt;|"A: replay + live subscribe"| TRD
+  TRD --&gt;|"S: SQL tx per bar boundary"| PG
+  TRD --&gt;|"file write"| VOL
+  VOL --&gt;|"expired dt &gt; retention"| ARC
+  ARC --&gt;|"S: HTTPS PUT"| S32
+  TRD --&gt;|"file: live_state.json"| DSH
+  BRW --&gt;|"S: HTTPS"| DSH
+  TRD --&gt;|"S: HTTPS REST /depth, только холодный старт"| BIN2</code></pre>
+<table>
+<thead>
+<tr>
+<th>Контейнер</th>
+<th>Отвечает</th>
+<th>Протокол / сериализация</th>
+<th>S/A</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>collector</td>
+<td>WS-соединения (два: <code>/public</code> для depth, <code>/market</code> для остального — C5), реконнект, поллеры exchange_info/funding/market_stats; публикация сырья</td>
+<td>WSS in; NATS publish, payload — сырой JSON Binance 1:1 + хедер <code>Nats-Msg-Id</code></td>
+<td>A</td>
+</tr>
+<tr>
+<td>NATS JetStream</td>
+<td>Durable лог, retention, replay с offset, оппортунистический dedup</td>
+<td>NATS protocol, file storage</td>
+<td>A</td>
+</tr>
+<tr>
+<td>trader</td>
+<td>Единственный <code>OrderBook</code>, Engine/ring, стратегии, risk, blotter, <code>FileWriter</code>, booksnapshot-архив</td>
+<td>NATS subscribe; SQL к PG; parquet/zstd на диск</td>
+<td>A + S к PG</td>
+</tr>
+<tr>
+<td>Postgres</td>
+<td>Чекпойнт книги блобом на границу бара + три позиции (<code>seq</code>, <code>trades_seq</code>, <code>events_seq</code>)</td>
+<td>PostgreSQL wire</td>
+<td>S</td>
+</tr>
+<tr>
+<td>volumes / archiver / dashboard</td>
+<td>Parquet Hive-раскладка, tar per dt → S3, read-only фид</td>
+<td>файлы, HTTPS</td>
+<td>S/A</td>
+</tr>
+</tbody>
+</table>
+<p>Trust boundary: всё внутри VM — internal (loopback, без auth — см. §13 с триггером); снаружи — Binance, S3, браузер — untrusted. Управляющей связи collector ↔ trader нет.</p>
+<p>Subjects (контракт, версионируется сменой с простоем):</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>md.{market}.diff.{symbol}     диффы стакана
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>md.{market}.trade.{symbol}    aggTrade (+ trade при reconstruct_multileveled)
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>md.{market}.kline.{symbol}    только closed (k.x=true)
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>md.{market}.mark.{symbol}     markPrice / funding
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>md.{market}.liq.{symbol}      forceOrder
+</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>md.{market}.info.{symbol}     exchange_info (строки поллеров)
+</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>md.{market}.funding.{symbol}  funding settlement
+</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>md.{market}.stats.{symbol}    market_stats
+</span></code></pre></div>
+<p>Streams (инвариант, не настройка): <code>MD_DIFF</code> (<code>md.*.diff.*</code>), <code>MD_TRADE</code> (<code>md.*.trade.*</code>), <code>MD_EVENTS</code> (остальное). <code>retention: limits</code> обязателен — под <code>workqueue</code> ack writer'а физически удалял бы диффы для реплея трейдера (замерено 500/500 vs 0/500, см. спутник §3). <code>MD_SNAP</code> отсутствует — публиковать нечего (D3).</p>
+<h2 id="6-components">6. Components<a class="headerlink" href="#6-components" title="Permanent link">&para;</a></h2>
+<p>Только нетривиальные границы (остальное — код, не док):</p>
+<ul>
+<li><code>OrderBook</code> живёт только в trader (применение диффов, контроль непрерывности по <code>U</code>/<code>pu</code>, сшивка снапшота с потоком). В collector его нет; периодическая публикация полного стакана удаляется; запись книжных снапшотов в parquet переезжает в trader как архив. Детали — спутник §7.</li>
+<li><code>Engine</code> требует режима реплея (эмит баров подавлен + флаг полноты бара + громкий счётчик скачков слотов); живой движок исторические тики схлопывает молча — без этого §7 не работает. Детали — спутник §7 notes.</li>
+<li><code>FileWriter</code> — durable consumer в trader (ack после flush); offset у брокера, не в PG.</li>
+</ul>
+<h2 id="7-runtime">7. Runtime<a class="headerlink" href="#7-runtime" title="Permanent link">&para;</a></h2>
+<p>Критические потоки. Дедупликация: где — брокер (оппортунистически, окно <code>W_dedup</code>) + консьюмер (обязательно); алгоритм — <code>Nats-Msg-Id</code> из явных полей Binance (§8); дубликат в окне — <code>PubAck duplicate:true</code> без записи; вне окна/после рестарта NATS — доставляется повторно, консьюмер идемпотентен (книга — абсолютный <code>qty</code> + фильтр <code>u</code>, ring — dedup-сет по <code>MsgId</code> на окно реплея, иначе аддитивные агрегаты удвоятся); out-of-order внутри символа невозможен по построению (<code>u</code> монотонен; нарушение = дырка, см. ниже).</p>
+<pre class="mermaid"><code>sequenceDiagram
+  participant B as Binance WS
+  participant C as collector
+  participant J as JetStream
+  participant T as trader
+  participant P as Postgres
+  B-&gt;&gt;C: depth diff / trade / kline(mark/liq)
+  alt невалидный payload / неизвестный stream
+    C-&gt;&gt;C: WARN + dropped_invalid, без публикации (fail loud)
+  else валидное событие
+    C-&gt;&gt;J: publish raw + Nats-Msg-Id
+    J--&gt;&gt;C: PubAck (duplicate:true при повторе в окне)
+    J-&gt;&gt;T: live deliver
+    T-&gt;&gt;T: apply diff (u-check), feed ring, close bar
+    T-&gt;&gt;P: COMMIT checkpoint (blob + u + seq/trades_seq/events_seq)
+    T-&gt;&gt;J: ack (после COMMIT)
+  end
+  Note over T,P: booksnapshot 30-мин пишется мимо очереди (архив)</code></pre>
+<pre class="mermaid"><code>sequenceDiagram
+  participant J as JetStream
+  participant T as trader (restart)
+  participant P as Postgres
+  T-&gt;&gt;P: read checkpoint @ bar boundary + seqs
+  alt checkpoint найден и retention покрывает
+    T-&gt;&gt;J: per-symbol replay MD_DIFF from seq+1, MD_TRADE from trades_seq+1, MD_EVENTS from MIN(events_seq)+1
+    J-&gt;&gt;T: backlog (AckNone, фильтр u &gt; u_snapshot, dedup по MsgId)
+    T-&gt;&gt;T: Engine в replay (эмит подавлен) → догнал хвост → live
+  else нет чекпойнта / PG пуст / retention превышен
+    T-&gt;&gt;T: холодный старт: REST /depth параллельно + сшивка U&lt;=lastUpdateId+1&lt;=u, первый бар неполный
+  end</code></pre>
+<pre class="mermaid"><code>sequenceDiagram
+  participant C as collector
+  participant J as JetStream (down)
+  participant T as trader
+  C-&gt;&gt;C: buffer в RAM (неблокирующий publish)
+  Note over C: NATS лёг — копим до T_repair, алерт задолго до 100%
+  J--&gt;&gt;C: подъём
+  alt буфер в капе
+    C-&gt;&gt;J: drain буфера (живой поток + backlog; задержка убывает постепенно)
+    J-&gt;&gt;T: доставка без потерь
+  else переполнение (нереалистично при капе на час)
+    C-&gt;&gt;C: дроп со счётчиком + громкий алерт
+    J-&gt;&gt;T: дырка → бары неполные (§11)
+  end</code></pre>
+<p>State machine сущности <code>bar</code> + режима trader (подвешенных состояний нет — у каждого timeout/recovery):</p>
+<pre class="mermaid"><code>stateDiagram-v2
+  [*] --&gt; ColdStart: no checkpoint / retention exceeded
+  [*] --&gt; Replay: checkpoint found
+  ColdStart --&gt; Live: REST sewn, first bar incomplete
+  Replay --&gt; Live: lag &lt; 1 slot на всех стримах
+  Replay --&gt; ColdStart: log протух / codec unknown
+  Live --&gt; Replay: restart (replay от границы бара)
+  Live --&gt; Degraded: gap (pu/U mismatch) / PG down / NATS down
+  Degraded --&gt; Live: поток возобновлён / PG up (откат на предыдущую границу при краше в окно)
+  state Bar {
+    [*] --&gt; Incomplete: gap / cold start / missing slot
+    Incomplete --&gt; Complete: слот на каждую секунду бара
+    Complete --&gt; Closed: граница бара (checkpoint COMMIT)
+    Closed --&gt; [*]
+  }</code></pre>
+<p>Протокол старта трейдера (норматив, детали — <code>0001-book-store-schema.md</code> §5):</p>
+<ol>
+<li>Читает PG: для каждого символа свой блоб на новейшую завершённую границу именно
+   этого символа + <code>u</code> + <code>seq</code>/<code>trades_seq</code>/<code>events_seq</code> (одна строка <code>(market,symbol,bar_ts)</code>).</li>
+<li>Диффы per-symbol от <code>seq+1</code>, фильтр <code>u &gt; u_snapshot</code>, параллельно.</li>
+<li>Сделки per-symbol от <code>trades_seq+1</code>, идемпотентность по <code>MsgId</code> обязательна.</li>
+<li>События одним консьюмером <code>MD_EVENTS</code> от <code>MIN(events_seq)+1</code> по символам границы
+   (каждый символ отбрасывает старше своего), идемпотентность обязательна.</li>
+<li>Engine в replay (эмит баров подавлен) — цель дойти до «сейчас», не пересчитать бары.</li>
+<li>Лаг &lt; слота по всем стримам → live.</li>
+<li>Бар в стратегию — только полный (слот на каждую секунду бара).</li>
+<li>Paper: позиции с нуля; mainnet: позиции/баланс с биржи, далее userDataStream.</li>
+<li>Нет чекпойнта/ретеншн превышен → холодный старт (единственный REST <code>/depth</code>).</li>
+<li>Дырка при живом чекпойнте → без ресинка: остаёмся на книге, бары неполные, дальше реплей.</li>
+</ol>
+<h2 id="8-data">8. Data<a class="headerlink" href="#8-data" title="Permanent link">&para;</a></h2>
+<p>Парадигма: лог как источник истины (JetStream) + регенерируемый чекпойнт (PG) + пересчитываемое производное (ring/позиции). Event Sourcing в строгом смысле нет: храним не все эволюции сущности, а сырьё + снапшот для O(окно), производное не храним вовсе (D4).</p>
+<p>Владельцы стейта: книга — trader (RAM) + чекпойнт в PG; позиции очереди — PG (атомарно с книгой, Transactional Inbox); offset writer'а — брокер (durable consumer); сырьё — JetStream (retention формулой ниже).</p>
+<p>Контракты на уровне инвариантов:</p>
+<ul>
+<li>Payload 1:1 с Binance (JSON, не бинарь — цена принята, не связывающее ограничение). Своей схемы между сервисами нет.</li>
+<li><code>Nats-Msg-Id</code> — только явные поля Binance, без хешей; невалидный payload / неизвестный stream не публикуется (<code>WARN</code> + <code>dropped_invalid++</code>, fail loud):</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>поток</th>
+<th><code>Nats-Msg-Id</code></th>
+<th>уникальность</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>diff</td>
+<td><code>{market}:{symbol}:diff:{u}</code></td>
+<td><code>data.u</code> per-symbol монотонен</td>
+</tr>
+<tr>
+<td>aggTrade</td>
+<td><code>{market}:{symbol}:a:{a}</code></td>
+<td><code>data.a</code></td>
+</tr>
+<tr>
+<td>raw trade</td>
+<td><code>{market}:{symbol}:t:{t}</code></td>
+<td><code>data.t</code> (только при reconstruct_multilevel)</td>
+</tr>
+<tr>
+<td>kline</td>
+<td><code>{market}:{symbol}:k:{k.i}:{k.t}</code></td>
+<td><code>k.t</code>+<code>k.i</code>; только <code>k.x=true</code> (тихая смена архива: незакрытые свечи больше не храним, метрики не страдают — downstream их отбрасывал)</td>
+</tr>
+<tr>
+<td>mark</td>
+<td><code>{market}:{symbol}:m:{E}</code></td>
+<td><code>data.E</code>, 1/с/символ</td>
+</tr>
+<tr>
+<td>liq</td>
+<td><code>{market}:{symbol}:liq:{T}:{S}:{q}:{p}:{ap}:{l}:{z}</code></td>
+<td>композит: у Binance нет id, один <code>o.T</code> неуникален в пределах мс</td>
+</tr>
+<tr>
+<td>info/funding/stats</td>
+<td><code>{market}:{symbol}:{kind}:{bucket_or_time}</code></td>
+<td><code>snapshot_ms</code> / <code>fundingTime</code> / 5-мин бакет</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>Ключ партиционирования/порядка: <code>symbol</code> (книги per-symbol независимы → параллельный реплей; skew невозможен по построению — символы равномощны по порядку величины).</li>
+<li>Порядок внутри символа — по <code>u</code> (детект дырок), позиция в логе — по <code>seq</code> (<code>u</code> не offset; <code>E</code> Binance не монотонен по стриму — не offset; серверный timestamp записи монотонен и годился бы, но <code>seq</code> точнее).</li>
+<li>Консистентность: per-symbol strong order (через <code>u</code>), глобально eventual (бары закрываются по settlement); read-your-writes не требуется.</li>
+<li>Доставка: at-least-once + идемпотентные консьюмеры + DLQ отсутствует осознанно (инвалид дропается громко, старое ротируется — см. §11). Exactly-once не заявляется.</li>
+</ul>
+<p>Design Limits (формулы; точные числа — только <code>measured</code> или в спутнике):</p>
+<table>
+<thead>
+<tr>
+<th>Parameter / Invariant</th>
+<th>Value / Formula</th>
+<th>Rationale</th>
+<th>Consequence of Violation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Retention (<code>MD_*</code>, <code>discard: old</code>)</td>
+<td><code>&gt;= штатный простой + худший простой + буфер drain</code></td>
+<td>Пережить рестарт/откат на предыдущую границу без холодного старта</td>
+<td>Холодный старт: REST-шторм + первый бар неполный + обрубок глубины</td>
+</tr>
+<tr>
+<td><code>retention: limits</code> (не <code>workqueue</code>)</td>
+<td>инвариант</td>
+<td>ack writer'а не должен удалять диффы трейдера</td>
+<td>Тихая потеря реплея, видимая только на следующем рестарте</td>
+</tr>
+<tr>
+<td>Dedup window</td>
+<td><code>W_dedup &gt;= max_retry + max_reconnect + clock_skew</code></td>
+<td>Покрыть ретраи и простой на деплое</td>
+<td>Дубль бизнес-операции при ретраях (для ring — удвоение объёма)</td>
+</tr>
+<tr>
+<td>Collector buffer</td>
+<td><code>buffer_bytes &gt;= throughput_peak * T_repair</code>, <code>T_repair ~ 1ч</code> (время починки человеком)</td>
+<td>Без буфера рестарт NATS теряет данные у источника</td>
+<td>Дырка в диффах → бары неполные (§11)</td>
+</tr>
+<tr>
+<td>Checkpoint cadence</td>
+<td>строго на границу бара; <code>keep &gt;= 2</code> границы</td>
+<td>Снапшот среди бара не восстанавливает начало бара (дифф необратим); две границы страхуют краш на записи</td>
+<td>Невосстановимые секунды бара / удвоенный реплей при краше на границе</td>
+</tr>
+<tr>
+<td>Checkpoint atomicity</td>
+<td>снапшот + все три <code>seq</code> в одной tx; ack после <code>COMMIT</code></td>
+<td>Позиция обязана соответствовать состоянию (Transactional Inbox)</td>
+<td>Дырка реплея (seq вперёд) или лишняя работа (seq назад — безопасно)</td>
+</tr>
+<tr>
+<td>Book depth stored</td>
+<td>целиком, без среза</td>
+<td>Срез ломает бакеты 5%/25% непредсказуемо по символам</td>
+<td>Недостоверные книжные метрики (хуже, чем честная неполнота)</td>
+</tr>
+<tr>
+<td>Live поток vs чтение</td>
+<td><code>live_msg_s &lt;&lt; replay_msg_s_per_proc</code> (<code>measured: ~26k/s</code> с заголовками, §9)</td>
+<td>Живой контур обязан быть на порядок ниже потолка реплея</td>
+<td>Реплей не укладывается в RTO (см. неравенство §9)</td>
+</tr>
+</tbody>
+</table>
+<p>Формат блоба и SQL — <code>0001-book-store-schema.md</code> (в этом доке только инварианты выше).</p>
+<h2 id="9-nfr-scale">9. NFR + Scale<a class="headerlink" href="#9-nfr-scale" title="Permanent link">&para;</a></h2>
+<p>Нагрузочный профиль входа (пилот → цель; <code>measured</code>, см. <code>measurements.md</code> §2-6,
+10-мин live-окна, активный рынок; min/max-период подписок — §3 того же файла):</p>
+<ul>
+<li>Живой поток в очередь: ~500-600 msg/s @60 симв. при дефолтных подписках
+  (240 diffs + 60 mark + ~240 trades), <strong>~380 msg/s при max-периоде</strong>
+  (<code>@depth@500ms</code> + голый <code>@markPrice</code>); ~3800-6000 msg/s @600 симв.</li>
+<li>Дифф-байты: ~250-450 КБ/с @60 в обоих профилях (max-период режет msg/s,
+  не байты: апдейт несёт больше изменений — замерено L8).</li>
+<li>Суточный объём сырья: <strong>~22-40 ГБ/сутки</strong> (<code>measured</code>, без booksnapshot).
+  Архив — крупнейшая статья хранения: ~40-120 ГБ резидентно на 160 ГБ NVMe
+  (существующее правило архиватора <code>expired dt &gt; 3d</code>, <code>services/archive.py:44</code>)</li>
+<li>~8-15 ТБ/год в S3 <strong>до сжатия</strong> (<code>estimate</code> из измеренного суточного объёма;
+  ratio zstd замерить в ветке №1). Планировать отдельно от очереди.</li>
+<li>PG: 60 строк раз в 30 мин (600 при 600 симв.), ~10-20 МБ на границу (<code>measured</code> порядок: ~160-320 КБ/символ при 10-20k уровней), живой объём ×2. <code>UPDATE</code>-чурна нет.</li>
+<li>RTO рестарта трейдера: <code>&lt;= 2 мин</code> (бары 30-мин, пропуск недопустим). Худший случай (краш на границе) — ×2, расчёт ниже.</li>
+<li>RTO-неравенство (проверяется трейдером на старте, предупреждение при нарушении).
+  Определения: <code>cores</code> — число replay-процессов (GIL: шардирование процессами, не
+  потоками); <code>msgs</code> — сообщений на символ за бар; <code>cadence_s</code> = <code>book_tick_ms/1000</code>;
+  <code>k_skew &gt;= 1</code> — отношение самого тяжёлого шарда к среднему (замеры дают skew 9-10x
+  между символами, speedup 2.6x вместо 4x на 4 процессах — делить на <code>cores</code>
+  без <code>k_skew</code> нельзя). Формула — оценка снизу:</li>
+</ul>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>((1800 / cadence_s) * scalar_cost + msgs * (1/26000 + 17us)) * symbols * k_skew / cores &lt;= RTO
+</span></code></pre></div>
+<p>Подстановка (max-период @60: <code>msgs = 11400</code>, <code>scalar = 1.30мс</code>, <code>cadence = 60с</code>,
+  <code>k_skew = 2</code>): скаляры 39мс + сообщения 632мс = ~0.7с/символ → 4 процесса ≈ 20с,
+  ×2 откат ≈ 40с — в RTO 120с. @600/4 ≈ 200с, ×2 ≈ 400с — вне RTO: 600 символов
+  только после доп. шардирования / варианта C.</p>
+<p><code>measured</code> (детали — <code>measurements.md</code> §7, спутник §4): доставка ~26k msg/s/процесс с <code>Nats-Msg-Id</code> (~31k без заголовков, цена ~14%, перепроверено 2026-09: 26.9k/31.1k); применение диффа ~17 мкс; скаляры книги ~1.30 мс после NSC-51 (было ~5.31); публикация ~19-24k msg/s/процесс; веер консьюмеров ~1-3 мс/шт до 1200 (доставка полная); pending-overhead ~352 Б/сообщение без тел (полный бар max-период @60 ≈ 241 МБ, дефолт ≈ 342 МБ, ×2 откат — вывод D5 тот же). Живой контур при 600 парах — ~13% одного ядра. Точка обрыва по каденции — единицы секунд (~3 с после NSC-51); при каденции 60 с запас двадцатикратный, но реплей обязан шардироваться по процессам (GIL: 1 проц. ~14.6 с vs 4 проц. ~5.6 с на 432k сообщений — speedup 2.6x, не 4x, см. <code>k_skew</code> выше).
+- Latency SLO live: p95/p99 wall latency не нормируется (не load-bearing: бары 30-мин, корректность = полнота бара + lag &lt; слота). SLO: <code>bar_complete=1</code> (слот на каждую секунду, §7 п.7) и отставание реплея &lt; 1 слота на всех стримах.
+- Измерение глубины (<code>measured</code>, один снапшот/символ, spot — порядок величины, повторить на USD-M): top-1000 дотягивается до −0.138%/+0.234% (BTCUSDT) и ±9.3% (ADAUSDT) при бакетах скаляров 5%/25% — REST-обрубок недостаточен, отсюда вес чекпойнта D5.</p>
+<p>Что ломается первым при ×5 — см. §11.</p>
+<h2 id="10-decisions">10. Decisions<a class="headerlink" href="#10-decisions" title="Permanent link">&para;</a></h2>
+<h3 id="d0-live-collector-trader-durable">D0. Разделить live-контур на collector и trader через durable лог<a class="headerlink" href="#d0-live-collector-trader-durable" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Status: accepted. Dependencies: нет.</li>
+<li>Context: один процесс связывает частоту деплоя стратегий со стоимостью старта WS+стаканов (минуты на полном универсуме), теряет до 60 с буфера writer'а и весь ring при рестарте, не хранит диффы (книжная история невосстановима), а существующая in-process граница (полный стакан 1 Гц/символ, ~10-15 МБ/с @60) не переживает превращения в сеть.</li>
+<li>Drivers: частота деплоя независимо от цены старта; durability рестарта потребителя; пересчитываемость книжной истории; не платить за 600 символов сейчас, но не закрывать путь.</li>
+<li>Options:</li>
+<li>A. Монолит + персистентность стейта (сериализация ring/стаканов). Cons: не чинит деплой-рвёт-WS и kill -9; версионируемый формат ~80 полей × 1800 слотов × N. Rejected.</li>
+<li>B. Разделение через Redis Streams. Cons: retention в RAM (~14 ГБ на 26 ч vs ~9.5 свободных) → durability-граница схлопывается до минут. Rejected.</li>
+<li>B'. RabbitMQ classic / stream queues. Classic: сообщение живёт до ack — реплей 26 ч невозможен структурно. Stream queues: семантика подходит, но самая молодая фича + сырой <code>rstream</code>. Rejected на зрелости.</li>
+<li>B''. Свой файловый лог без брокера. Cons: становимся вендором очереди (torn-write, ротация, offset'ы); при разъезде всё равно менять. Rejected.</li>
+<li>C. Три сервиса (collector → metrics → trader). Pros: мгновенный рестарт трейдера, шардирование метрик. Cons: ровно то разделение, что NSC-90 схлопнул; платить сейчас не за что. Deferred.</li>
+<li>D'. Сшивающий ресинк вместо стирающего. Cons: фантомная ликвидность навсегда без способа отличить протухшие уровни. Rejected.</li>
+<li>D (этот). Pros: развязывает деплой/старт, чинит классы потерь очередью, открывает пересчёт истории. Cons: +2 сервиса, диффы — горячая зависимость, RTO завязан на каденцию. Принят.</li>
+<li>Decision: Мы делим контур на <code>collector</code> (край биржи, без бизнес-логики) и <code>trader</code> (книга, метрики, стратегии, архив) с NATS JetStream как границей durability (D2) и чекпойнтом книги в PG (D5).</li>
+<li>Consequences: +деплой трейдера в день без разрыва WS; +пересчитываемая история; −сырьевой архив 22-40 ГБ/сутки (<code>measured</code>); −RTO зависит от каденции (§9); дверь к 600 символам открыта (per-symbol реплей, R3, RedPanda).</li>
+<li>Re-evaluation Trigger: поток на порядок выше или RTO вне цели при всех рычагах §11 → вариант C / RedPanda.</li>
+<li>Mitigation: буфер D9, чекпойнт D5, kill-сьют (спутник §2).</li>
+<li>Verification: золотое свойство — прогон с убийством потребителя даёт те же бары, что непрерывный (приём parity-сьютов <code>38e0b72</code>); критерии веток — спутник §2.</li>
+</ul>
+<h3 id="d1-">D1. Коллектор — край биржи, без бизнес-логики<a class="headerlink" href="#d1-" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Status: accepted. Dependencies: D0.</li>
+<li>Context: любая строка кода в процессе с WS делает его деплой дорогим. Коллектор должен меняться редко по построению.</li>
+<li>Drivers: редкость деплоя коллектора; ноль причин держать у него состояние.</li>
+<li>Options: (a) коллектор со стаканом/метриками — быстрее локальные скаляры, но любая новая метрика пересоздаёт стаканы — rejected; (b) коллектор делает ресинк/держит <code>/depth</code> — дублирует REST-бюджет и знание рынка — rejected; &copy; этот: только WS+reconnect+поллеры, парсинг минимума под <code>MsgId</code> — принят.</li>
+<li>Decision: Мы публикуем строки поллеров в очередь и не пишем на диск, не считаем метрик, не держим стакан, не ресинкаем (REST при дырке берёт трейдер напрямую, D3); непрерывность считает трейдер. Подписки — max-профиль C4; соединения — два по C5.</li>
+<li>Consequences: +коллектор живёт неделями; −строки поллеров пишет только консьюмер очереди (D8).</li>
+<li>Re-evaluation Trigger: поллеры упёрлись в IP-бюджет коллектора → вынести поллеры отдельно; Binance снова меняет роутинг → пересмотреть C5.</li>
+<li>Mitigation: правило ревью — «исследовательский код не входит в коллектор».</li>
+<li>Verification: деплой трейдера не рвёт WS-соединения коллектора (kill-сьют); оба соединения живы, каденции соответствуют C4 (depth 2/s, mark &#8531; с).</li>
+</ul>
+<h3 id="d2-nats-jetstream-file-storage">D2. Брокер — NATS JetStream с file storage<a class="headerlink" href="#d2-nats-jetstream-file-storage" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Status: accepted. Dependencies: D0.</li>
+<li>Context: нужен тупой durable лог с retention и replay с offset; KV/дедуп/consumer-API — бонусы, не требования (стейт и offset у нас вне брокера — D5, D8).</li>
+<li>Drivers: дисковый retention на 16 ГБ VM; replay произвольного offset новым консьюмером; смена URL при разъезде; зрелость file-storage.</li>
+<li>Options: Redis Streams (RAM-retention — rejected, см. D0); RabbitMQ (см. D0); свой лог (см. D0); RedPanda — проходит по семантике, но ~2 ГБ RAM из дефицитных под пропускную на порядки выше нашей — запасной путь масштабирования, контракт publish/subscribe не меняется.</li>
+<li>Decision: Мы используем NATS JetStream с file storage и тремя стримами <code>MD_DIFF</code>/<code>MD_TRADE</code>/<code>MD_EVENTS</code> под <code>retention: limits</code>.</li>
+<li>Consequences: +реплей от границы бара; −окно kill -9 задаётся <code>sync_interval</code> (серверный, не ноль); −dedup-таблица в RAM (оппортунистична).</li>
+<li>Re-evaluation Trigger: десятки тысяч msg/s → RedPanda без смены контракта.</li>
+<li>Mitigation: идемпотентные консьюмеры (D7) как гарантия поверх оппортунистического дедупа; <code>sync_interval</code> верифицируется kill-тестом ветки №1.</li>
+<li>Verification: перечитывание заакнутой истории новым консьюмером 500/500 под <code>limits</code> (0/500 под <code>workqueue</code> — инвариант в тестах создания стримов); kill -9 NATS измеряет фактическое окно.</li>
+</ul>
+<h3 id="d3">D3. Стакан живёт только в трейдере; сырые диффы — через очередь<a class="headerlink" href="#d3" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Status: accepted. Dependencies: D0, D2.</li>
+<li>Context: казалось, коллектору нужен стакан для детекта дырок/бутстрапа/истории; проверка показала — ни одна роль его не требует, а публикация полного стакана 1 Гц/символ не переживает сеть (~2 МБ/с @60, ~180 ГБ/сутки — <code>measured</code>: 1000+1000 уровней ≈ 28 КБ JSON, <code>measurements.md</code> §1/§5) и уже помечена <code>TODO(NSC-51)</code>.</li>
+<li>Drivers: пропускная способность очереди; пересчитываемость истории (G3); минимум знания рынка в коллекторе.</li>
+<li>Options: (a) стакан в коллекторе + снапшоты 1 Гц — rejected по объёму; (b) скаляры в коллекторе — rejected (новая метрика = пересоздание стаканов, против D1); &copy; этот: сырые диффы, трейдер собирает книгу, сам ходит REST только на холодном старте без PG.</li>
+<li>Decision: Мы публикуем сырые диффы; трейдер держит единственный <code>OrderBook</code>, ведёт непрерывность, пишет 30-мин booksnapshot как архив (живой контур его не читает).</li>
+<li>Consequences: +история пересчитываема; +<code>TODO(NSC-51)</code> закрыт удалением цикла; −диффы — горячая зависимость; −IP-бюджет <code>/fapi/</code> у коллектора, трейдер ходит в REST только холодным стартом (60 симв. = 1200 weight; 600 = 12000 = минимум 6 минут в лимитер + стаггер + стыкующий фрейм).</li>
+<li>Re-evaluation Trigger: дифф-поток на порядок выше → сжатие/бинарный кодек (контракт меняется с простоем).</li>
+<li>Mitigation: чекпойнт D5 + буфер D9 + репликация (§11) против потери диффа; при дырке с живым чекпойнтом — без ресинка (REST даёт обрубок), остаёмся на книге.</li>
+<li>Verification: kill коллектора → дырка задетектирована (<code>U</code>/<code>pu</code>), бары неполные, глубина не потеряна; каденция скаляров — event-time, live и реплей одним путём (детали — спутник §7).</li>
+</ul>
+<h3 id="d4">D4. Производный стейт не хранится, а пересчитывается реплеем от границы бара<a class="headerlink" href="#d4" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Status: accepted. Dependencies: D0, D5.</li>
+<li>Context: ring — чистая функция последних 1800 с событий; paper-позиции — чистая функция баров (backtest на живом потоке). Хранить их — версионируемый формат ради секунд пересчёта.</li>
+<li>Drivers: отсутствие формата сериализации; детерминизм пересчёта.</li>
+<li>Options: (a) продолжение с последнего ack — после короткого рестарта даёт пустой ring + ожидание целого бара живого потока (тихий отказ восстановления) — rejected; (b) сериализация ring/позиций — rejected (дорого ради частичного результата, не чинит kill -9); &copy; этот: реплей от границы текущего бара по трём позициям — принят.</li>
+<li>Decision: Мы храним только чекпойнт книги (D5); ring, paper-позиции/equity, <code>LiqDeque</code>, дельта-счётчики пересчитываются реплеем; окно — от границы бара, три стрима — три позиции.</li>
+<li>Consequences: +нет форматов; −RTO обязан покрывать реплей (неравенство §9, шардирование по процессам обязательно — per-symbol веер дёшев: 0.7-2.6 мс/консьюмер до 1200, измерено дважды).</li>
+<li>Re-evaluation Trigger: реплей бара не укладывается в RTO при целевой каденции → чекпойнт слотов кольца (§11) или вариант C.</li>
+<li>Mitigation: трейдер проверяет RTO-неравенство на старте и предупреждает; каденция — явный ключ конфига.</li>
+<li>Verification: kill на 5 секунд среди бара → кольцо полное, бар (включая ob-часть) равен эталону; длинный рестарт один не проверяет (маскирует неверную стартовую позицию).</li>
+</ul>
+<h3 id="d5">D5. Чекпойнт книги — блобом на границу бара + три позиции, одной транзакцией<a class="headerlink" href="#d5" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Status: accepted (переработан 2026-09-02: блоб на границу вместо зеркала; 2026-09-03: <code>MD_TRADE</code> отдельно). Dependencies: D0, D4.</li>
+<li>Context: снапшот «среди бара» не восстанавливает его начало (дифф необратим: <code>qty</code> перезаписывается); зеркало с любым лагом задачу не решает — дело в направлении, не в свежести.</li>
+<li>Drivers: восстановимость любого бара из реальных диффов; транзакционность позиции+состояния; дешёвая запись/чтение.</li>
+<li>Options: (a) зеркало текущего состояния — rejected (не восстанавливает начало бара); (b) строки уровней <code>(market,symbol,side,price,qty)</code> — 0.6-1.2 млн строк/границу @60 vs 60 строк блобом, <code>COPY</code> в партицию, <code>UPDATE</code>-чурн — rejected; &copy; durable без ack до границы вместо хранения <code>seq</code> — держать бар un-acked стоит ~0.35-1 КБ/сообщение (955 Б в оригинале, ~352 Б в перезамере 2026-09: 152 МБ @60 / ~1.5 ГБ @600) + <code>ack_wait</code> выше длины бара — rejected; (d) без позиций вовсе (<code>opt_start_time</code> + фильтр <code>u</code>) — рабочий fallback, не выбран (менее точен); (e) этот: блоб целиком + <code>u</code> + <code>seq</code>/<code>trades_seq</code>/<code>events_seq</code>, две границы, COMMIT затем ack — принят.</li>
+<li>Decision: Мы пишем раз в бар на границе: вся книга одним блобом без среза + <code>u</code> + три <code>seq</code>, одной транзакцией на символ; храним две последние границы.</li>
+<li>Consequences: +PG-нагрузка — десятки МБ, без autovacuum-чурна; +глубина не теряется при дырке (остаёмся на книге, бары неполные); −PG — несущая конструкция (без него — холодный старт с обрубком).</li>
+<li>Re-evaluation Trigger: размер блоба/время чтения мешает → срез по mid ~50% (D6) или слоты кольца (§11).</li>
+<li>Mitigation: краш на границе → откат на предыдущую (реплей 30-60 мин, RTO ×2, в цели); новый листинг среди бара → холодный старт одного символа, первый бар неполный; <code>codec</code> неизвестен → чекпойнт выбрасывается, старт холодный (миграций блоба нет никогда).</li>
+<li>Verification: round-trip блоб+позиции → реплей равен непрерывной книге включая слот первой секунды; краш на границе → бар полон с предыдущей границы.</li>
+</ul>
+<h3 id="d6">D6. Книга хранится целиком; рост принят<a class="headerlink" href="#d6" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Status: accepted. Dependencies: D5.</li>
+<li>Context: уровни копятся сутками (десятки тысяч/символ); любой top-N срез по счёту даёт разное покрытие по символам (BTCUSDT 0.15% vs ADAUSDT 9.3% на top-1000).</li>
+<li>Drivers: корректность бакетов 5%/25% для всех символов одинаково.</li>
+<li>Options: (a) срез top-N — rejected (символозависим); (b) срез по mid ~50% (двойной запас над 25%) — отложен как рычаг с измеренным триггером; &copy; этот: целиком, рост мониторим — принят (при блобе и двух границах объём ограничен сверху).</li>
+<li>Decision: Мы не срезаем книгу при записи чекпойнта.</li>
+<li>Consequences: +корректность; −мониторить размер блоба/символ.</li>
+<li>Re-evaluation Trigger: размер/время чтения мешает → срез по расстоянию от mid (~50%), протокол не трогает.</li>
+<li>Mitigation: сжатие блоба (zstd, книга из монотонных цен жмётся); формат — спутник схемы.</li>
+<li>Verification: бакеты 5%/25% после рестарта равны эталону, а не обрубку.</li>
+</ul>
+<h3 id="d7-payload-11-nats-msg-id">D7. Сырой payload 1:1; <code>Nats-Msg-Id</code> из явных полей, без хешей<a class="headerlink" href="#d7-payload-11-nats-msg-id" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Status: accepted. Dependencies: D0, D2.</li>
+<li>Context: собственная схема между сервисами = версионирование и интерпретация вместо сырья в архиве.</li>
+<li>Drivers: отсутствие нашей схемы; нулевая сериализация в коллекторе; архив = настоящее сырьё.</li>
+<li>Options: (a) нормализованная схема/msgpack/protobuf — компактнее, но версионирование + стоимость — rejected (объём не связывающее ограничение); (b) хеш-фолбэк при отсутствии полей — прячет ошибки — rejected (fail loud); &copy; этот — принят.</li>
+<li>Decision: Мы публикуем байты Binance как есть; коллектор извлекает только поля для <code>Nats-Msg-Id</code> (таблица §8); невалид/неизвестный stream не публикуется (<code>WARN</code> + метрика <code>dropped_invalid</code>).</li>
+<li>Consequences: +схема принадлежит Binance; −JSON объёмнее бинаря (принято); −тихая смена архива: только closed klines (незакрытые downstream отбрасывал, метрики целы, история меняется — следствие уровня «что публикуем», не детали <code>MsgId</code>).</li>
+<li>Re-evaluation Trigger: объём очереди/архива стал связывающим → бинарный кодек с миграционным окном.</li>
+<li>Mitigation: идемпотентность консьюмера по тем же явным ключам обязательна (at-least-once).</li>
+<li>Verification: повторная доставка <code>MsgId</code> не меняет бар (серверный дедуп + идемпотентность); <code>forceOrder</code>-композит проверен 7-дневной выборкой до ветки №1 (блокер).</li>
+</ul>
+<h3 id="d8-parquet-durable-consumer">D8. Parquet пишет трейдер как durable consumer<a class="headerlink" href="#d8-parquet-durable-consumer" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Status: accepted. Dependencies: D0, D2.</li>
+<li>Context: 60-секундный RAM-буфер writer'а — класс A (невосстановимая потеря) посреди системы «очередь как durability-граница».</li>
+<li>Drivers: durability бэкапа и downstream-инварианта «рестарт не теряет события».</li>
+<li>Options: (a) writer в коллекторе — баги parquet рестартуют WS — rejected (против D1); (b) третий сервис <code>sink</code> — тот же консьюмер, плюс контейнер, ноль выигрыша — rejected; &copy; этот — принят.</li>
+<li>Decision: Мы переносим <code>FileWriter</code> в трейдер как durable consumer всех <code>md.*</code> с явным <code>AckExplicit</code> после flush; offset у брокера; <code>ack_wait</code> формулой <code>&gt; max_hold</code>; booksnapshot — мимо очереди напрямую.</li>
+<li>Consequences: +класс A исчезает (рестарт дочитывает с ack); −дисковый I/O parquet в частично деплоящемся сервисе (потерь нет — очередь держит не-ack'нутое, цена ресурсная).</li>
+<li>Re-evaluation Trigger: I/O writer'а мешает трейдеру → вынести writer в свой процесс (тот же консьюмер, другой контейнер).</li>
+<li>Mitigation: редоставка до ack — дубли, дедуп по <code>MsgId</code> в буфере writer'а.</li>
+<li>Verification: kill до flush → после рестарта parquet без дыр (offset с последнего ack).</li>
+</ul>
+<h3 id="d9-ram">D9. Буфер коллектора — RAM на окно починки, с байтовым капом<a class="headerlink" href="#d9-ram" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Status: accepted. Dependencies: D2.</li>
+<li>Context: без буфера любой рестарт NATS теряет данные у источника — чиним рестарт потребителя и ломаем рестарт брокера.</li>
+<li>Drivers: пережить починку брокера/сети человеком без потери непрерывности; не заводить второй durability-механизм.</li>
+<li>Options: (a) без буфера — rejected; (b) дисковый WAL — второй формат со своими багами рядом с JetStream; коллектор падает редко — отложен как рычаг; &copy; этот: RAM, неблокирующий publish, кап формулой, переполнение — нереалистичный сценарий — принят.</li>
+<li>Decision: Мы держим между WS-ридером и publish буфер в памяти на <code>T_repair</code> (≈ час), кап в байтах по замеру ветки №1; заполнение — метрика первого класса с ранним алертом.</li>
+<li>Consequences: +рес тарт брокера переживается; −падение коллектора с непустым буфером теряет RAM (осознанная цена, редкий случай); −слив полного буфера долог (~22 мин @600 пар при 22k publish vs 6k live — задержка убывает постепенно, подъём ≠ мгновенная норма).</li>
+<li>Re-evaluation Trigger: кап покрывает заметно меньше часа / разъезд по хостам / падения чаще раза в месяц → дисковый WAL (§11).</li>
+<li>Mitigation: NATS рядом с коллектором (loopback), пока один VM — при разъезде размер пересмотреть.</li>
+<li>Verification: NATS выключен N минут (&lt; капа) → после подъёма бары равны эталону.</li>
+</ul>
+<h3 id="d10">D10. Позиции локально не хранятся<a class="headerlink" href="#d10" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Status: accepted. Dependencies: D4.</li>
+<li>Context: локальная копия позиций на живых деньгах — единственный способ разойтись с реальностью.</li>
+<li>Drivers: невозможность расхождения с биржей по построению; детерминизм paper.</li>
+<li>Options: (a) durable локальные позиции — расхождение с биржей возможно — rejected для mainnet; (b) этот: mainnet/testnet — биржа (<code>positionRisk</code> на старте + сверка userDataStream), paper — реплей с нуля — принят.</li>
+<li>Decision: Мы не храним позиции/equity локально; paper стартует с нуля (упрощение, класс D), mainnet сверяется с биржей; <code>live_state.json</code> остаётся фидом дашборда (PG не участвует); <code>day_start_equity</code>: paper — скаляр с нуля, mainnet — фиксация баланса на 00:00 UTC.</li>
+<li>Consequences: +неконсистентность невозможна; −paper-рестарт теряет позиции (не баг, класс D).</li>
+<li>Re-evaluation Trigger: потеря paper-состояния мешает (длиннее минут) → крошечная закладка на границу бара (§11).</li>
+<li>Mitigation: флаг полноты бара не зависит от позиций; mainnet-сверка — Phase 4 роадмапа.</li>
+<li>Verification: рестарт в paper не сравнивает позиции; в mainnet — сверка с биржей.</li>
+</ul>
+<h2 id="11-risks-failure-modes">11. Risks + Failure Modes<a class="headerlink" href="#11-risks-failure-modes" title="Permanent link">&para;</a></h2>
+<p>Классы: A невосстановим / B с биржи / C из персистентных данных / D потеря приемлема. Деградация — явная и поименованная; невалид — fail loud (AGENTS.md). Ретраев с константами нет — политика формулой: <code>retry while bar_window_open, backoff &lt;= retention_window, иначе пометить бар неполным</code>. DLQ отсутствует осознанно: инвалид — в <code>dropped_invalid</code> (не DLQ), старое — ротируется (<code>discard: old</code>), неполнота — флагом бара, а не очередью.</p>
+<table>
+<thead>
+<tr>
+<th>Событие</th>
+<th>Класс</th>
+<th>Поведение</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Дырка в диффах (<code>U</code>/<code>pu</code>)</td>
+<td>C</td>
+<td>Без ресинка: остаёмся на книге от чекпойнта, бары неполные, дальше реплей. Глубина не теряется; REST не ходим (дорого + обрубок). Fail-closed по полноте бара</td>
+</tr>
+<tr>
+<td>Дырка в трейдах (<code>agg_id</code>)</td>
+<td>C</td>
+<td>Только наблюдение: счётчик <code>agg_id_gaps</code> + WARNING с дельтой (образец — <code>record_trade</code> в <code>health.py</code>), живой контур не останавливается, авто-backfill нет. Бар помечается через существующий <code>bar_complete</code></td>
+</tr>
+<tr>
+<td>Дырка в событиях (staleness mark/kline)</td>
+<td>C</td>
+<td>Только наблюдение: staleness-check (<code>now - last &gt; 2x каденции</code>: mark &#8531;с, kline closed 1/мин) + счётчик + WARNING, без действий. Редкие liq/info/funding не проверяются</td>
+</tr>
+<tr>
+<td>Отставший консьюмер</td>
+<td>C</td>
+<td>JetStream копит pending — потерь нет. Наблюдаемый lag вместо дропа</td>
+</tr>
+<tr>
+<td>Диск под очередь кончился</td>
+<td>D</td>
+<td><code>discard: old</code>: теряем старьё, поток жив. <code>discard: new</code> остановил бы коллектор — хуже</td>
+</tr>
+<tr>
+<td>Коллектор лёг</td>
+<td>B</td>
+<td>Окно не получил никто. Trade/kline — backfill из REST-history; книга — RAM трейдера; бары неполные. Лечение — репликация (§11.1)</td>
+</tr>
+<tr>
+<td>Трейдер лёг</td>
+<td>C, fallback B</td>
+<td>§7: чекпойнт + реплей; RTO ~секунды-десятки секунд @60 (см. §9); краш на границе → предыдущая граница (RTO ×2); дольше retention / PG пуст → холодный старт, первый бар неполный</td>
+</tr>
+<tr>
+<td>NATS лёг</td>
+<td>C, overflow D</td>
+<td>Буфер D9 (~час); дольше — дроп со счётчиком и алертом → как дырка. Слив полного буфера ~22 мин — заложить в алерты</td>
+</tr>
+<tr>
+<td>Буфер переполнился</td>
+<td>D</td>
+<td>Нереалистично при капе на час (A1); алерт задолго до 100%; иначе дроп + громкий алерт</td>
+</tr>
+<tr>
+<td>PG лёг</td>
+<td>C, fallback B</td>
+<td>Трейдер жив из RAM; запись чекпойнта фейлится громко; краш в окне → откат на предыдущую границу; обе пусты → холодный старт. Чекпойнт регенерируем — деградация, не отказ</td>
+</tr>
+<tr>
+<td>Коллектор упал с непустым буфером</td>
+<td>D → B</td>
+<td>RAM теряется целиком (осознанная цена D9) → как «коллектор лёг»</td>
+</tr>
+</tbody>
+</table>
+<p>Что ломается первым при ×5 нагрузки: живой поток остаётся запасом (600 пар ~6k msg/s vs 26k/процесс), первым упирается реплей в RTO (CPU-bound питоновского клиента + скаляры) — лечится шардированием по процессам, затем вариант C; вторым — диск очереди/архива (22-40 ГБ/сутки ×5 = 110-200 ГБ/сутки; @600 символов — 220-400 ГБ/сутки) и слив буфера; третьим — память трейдера на 600 книг (замерить в ветке №2, не верить оценке RUNBOOK).</p>
+<h3 id="111">11.1 Отложенные рычаги (триггеры возврата)<a class="headerlink" href="#111" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Рычаг</th>
+<th>Триггер</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Дисковый WAL буфера (D9)</td>
+<td>кап &lt; часа; разъезд по хостам; падения чаще раза в месяц</td>
+</tr>
+<tr>
+<td>Репликация коллектора</td>
+<td>любой прод-инцидент первой строки таблицы; <code>MsgId</code> делает дедуп двух издателей дешёвым</td>
+</tr>
+<tr>
+<td>Закладка paper-позиций на границу (D10)</td>
+<td>потеря paper-состояния мешает дольше минут</td>
+</tr>
+<tr>
+<td>Срез книги по mid ~50% (D6)</td>
+<td>размер блоба/время чтения мешает</td>
+</tr>
+<tr>
+<td>Чистка чекпойнтов делистнутых символов</td>
+<td>мёртвые записи заметны в PG; реализация — по возрасту <code>written_at</code>, не по разнице множеств (символ может вернуться)</td>
+</tr>
+<tr>
+<td>Чекпойнт слотов кольца (~640 Б/слот/символ)</td>
+<td>каденция чаще единиц секунд, реплей вне RTO; цена — привязка к 80 полям <code>Aggregate</code></td>
+</tr>
+<tr>
+<td>Вариант C — метрики отдельно</td>
+<td>метрики упёрлись в CPU трейдера</td>
+</tr>
+<tr>
+<td>RedPanda (D2)</td>
+<td>десятки тысяч msg/s; контракт не меняется</td>
+</tr>
+</tbody>
+</table>
+<p>Открытые замеры — спутник §2.3 и <code>measurements.md</code> §8 (блокер D7, граница недостоверности глубины).</p>
+<h2 id="12-observability">12. Observability<a class="headerlink" href="#12-observability" title="Permanent link">&para;</a></h2>
+<p>Каждый инвариант виден метрикой; трейсинг — через очереди:</p>
+<ul>
+<li>Очередь: <code>pending</code> per-consumer, <code>ack_lag</code>, <code>dedup_collision_rate</code> (повторы <code>MsgId</code> в окне), <code>retention_age_vs_checkpoint</code> (возраст oldest vs самый старый чекпойнт — раннее предупреждение холодного старта).</li>
+<li>Буфер коллектора: <code>buffer_fill_ratio</code> + алерт задолго до 100%; <code>dropped_invalid</code> + причина; <code>publish_rate</code> vs <code>live_rate</code> при drain.</li>
+<li>Книга/реплей: <code>replay_lag_slots</code>, <code>seq_gaps</code>, <code>resync_count</code>, <code>book_updates_count</code>, <code>book_age_ms</code>, <code>blob_bytes_per_symbol</code>, <code>checkpoint_age</code>, <code>bar_complete</code> (флаг полноты — слот на каждую секунду).</li>
+<li>Трейды/события (только наблюдение, без действий): <code>agg_id_gaps</code> (разрывы монотонного <code>agg_id</code> per-symbol — образец <code>HealthCounters.record_trade</code>), <code>events_staleness</code> (mark/kline старше 2x каденции). Реализация — <code>health.py</code> в ветках №2 (коллектор) и №3 (трейдер, replay-путь).</li>
+<li>RTO: длительность реплея vs неравенство §9; нарушение — предупреждение на старте + метрика.</li>
+<li>Writer: <code>flush_lag</code>, <code>unacked_batch_age</code> (&lt; <code>ack_wait</code> с запасом).</li>
+<li>Propagation через очереди — <code>Nats-Msg-Id</code> как idempotency/trace key (таблица §8); полный OTel <code>trace_id</code>/<code>span_id</code> не вводится (deferred: триггер — инцидент, не диагностируемый счётчиками + <code>bar_complete</code>). Дубли возникают не от Binance, а от нашего дизайна (реплей D5 и writer D8 по построению перечитывают обработанное); идемпотентность консьюмеров сохраняется.</li>
+</ul>
+<h2 id="13-security">13. Security<a class="headerlink" href="#13-security" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Trust boundaries — §5 (граница internal/untrusted на C4-L2). Internal заканчивается на loopback одного VM; всё внешнее (Binance, S3, браузер) — untrusted.</li>
+<li>Auth/authz: внутри VM аутентификация NATS/PG не включается осознанно (нет слушателей наружу, loopback; dashboard — read-only монтирование + пароль <code>DASH_PASS</code>). Триггер: разъезд по хостам → NATS creds + PG SCRAM + TLS transit, dashboard за Caddy auth.</li>
+<li>Encryption: transit внутри VM — plaintext loopback (триггер выше — TLS); at-rest — диск VM (NVMe) без полевого шифрования; S3-архив — SSE бакета. Полевого шифрования уровней книги нет (маркет-дата, не секрет).</li>
+<li>Secrets: только env (<code>BINANCE_API_KEY/SECRET</code>, creds дашборда/архиватора); никогда в <code>live_config.yaml</code> и коде; права <code>600</code>, владелец <code>trader</code> (RUNBOOK step 2).</li>
+<li>Audit log: append-only для живых денег — fills/blotter трейдера + <code>live_state.json</code> как фид; чекпойнт PG — не audit (регенерируем, перетирается).</li>
+<li>PII/GDPR: неприменимо — в контуре только маркет-дата и derived метрики; masking/tokenization не требуются. При появлении user-identifying данных — пересмотр этого раздела.</li>
+</ul>
+<h2 id="14-glossary">14. Glossary<a class="headerlink" href="#14-glossary" title="Permanent link">&para;</a></h2>
+<p>Термины — как в коде, без перевода: collector, trader, <code>MD_DIFF</code> / <code>MD_TRADE</code> / <code>MD_EVENTS</code>, <code>Nats-Msg-Id</code>, <code>seq</code> / <code>trades_seq</code> / <code>events_seq</code>, <code>u</code> (<code>last_update_id</code>), <code>OrderBook</code>, <code>Engine</code>, ring, <code>BookScalars</code>, <code>book_tick_ms</code>, bar (<code>bar_ts</code>, <code>window_ms</code>), checkpoint, replay, live, durable consumer, <code>AckExplicit</code> / <code>AckNone</code>, <code>opt_start_seq</code>, Transactional Inbox, RTO, <code>dropped_invalid</code>, booksnapshot, <code>LiqDeque</code>, blotter, <code>live_state.json</code>, <code>backfill</code>.</p>
+<h2 id="references">References<a class="headerlink" href="#references" title="Permanent link">&para;</a></h2>
+<ul>
+<li><code>backlog/restart-resilience.md</code> — исходная постановка, фазы 0-4.</li>
+<li><code>deploy/RUNBOOK.md</code> — VM, пилот paper → testnet → mainnet.</li>
+<li><code>docs/docker.md</code> — раскладка, которую меняет §5.</li>
+<li><code>CLAUDE.md</code> — Phase 1-4 роадмапа; <code>AGENTS.md</code> — fail loud, конфиг в файлах.</li>
+<li>Спутники: <code>0001-book-store-schema.md</code>, <code>0001-implementation-notes.md</code>, <code>measurements.md</code> (источник правды по числам; формулы — здесь, константы — в спутниках).</li>
+</ul>
+<p>D-идентификаторы D0-D10 стабильны (на них ссылаются код и ветки).</p>
+<h3 id="phase-4-summary-consolidation">Phase 4 Summary (consolidation)<a class="headerlink" href="#phase-4-summary-consolidation" title="Permanent link">&para;</a></h3>
+<p>Инварианты: очередь — durability-граница под <code>limits</code>; восстановление — только реплеем от границы бара по трём <code>seq</code> + <code>u</code>; чекпойнт — блоб целиком + tx + ack после COMMIT; производное не хранится; payload 1:1 + явный <code>MsgId</code>, инвалид — громко; позиции локально не хранятся; RTO-неравенство проверяется на старте. Лимиты — формулами (§8), числа — в спутнике.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Footer" >
+        
+          
+          <a href="../../../development/contributing/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Contributing">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              <div class="md-ellipsis">
+                Contributing
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../../../research-log/" class="md-footer__link md-footer__link--next" aria-label="Next: Research log">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              <div class="md-ellipsis">
+                Research log
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+</div>
+      
+        
+<div class="md-social">
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://github.com/SNCapital" target="_blank" rel="noopener" title="github.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+      <div class="md-progress" data-md-component="progress" role="progressbar"></div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["navigation.instant", "navigation.instant.progress", "navigation.tracking", "navigation.tabs", "navigation.tabs.sticky", "navigation.sections", "navigation.expand", "navigation.indexes", "navigation.top", "navigation.footer", "search.suggest", "search.highlight", "search.share", "toc.follow", "content.code.copy", "content.code.annotate", "content.tabs.link", "content.tooltips"], "search": "../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+        <script src="../../../javascripts/katex.js"></script>
+      
+        <script src="https://unpkg.com/katex@0/dist/katex.min.js"></script>
+      
+        <script src="https://unpkg.com/katex@0/dist/contrib/auto-render.min.js"></script>
+      
+    
+  </body>
+</html>

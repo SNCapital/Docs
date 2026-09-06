@@ -11,7 +11,7 @@
       
       
       
-        <link rel="canonical" href="https://sncapital.github.io/Docs/alpha-engine/metrics-ru/markprice/">
+        <link rel="canonical" href="https://sncapital.github.io/Docs/adr/RULES/">
       
       
       
@@ -19,19 +19,19 @@
         
       
       
-      <link rel="icon" href="../../../assets/images/favicon.png">
+      <link rel="icon" href="../../assets/images/favicon.png">
       <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
     
     
       
-        <title>Markprice — mark/index price и предсказанный funding - SN Capital — Backend</title>
+        <title>Правила дизайн-доков (System Design Doc + ADR) - SN Capital — Backend</title>
       
     
     
-      <link rel="stylesheet" href="../../../assets/stylesheets/main.ec1eaa64.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/main.ec1eaa64.min.css">
       
         
-        <link rel="stylesheet" href="../../../assets/stylesheets/palette.ab4e12ef.min.css">
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
       
       
 
@@ -52,7 +52,7 @@
     
       <link rel="stylesheet" href="https://unpkg.com/katex@0/dist/katex.min.css">
     
-    <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
       
 
@@ -77,7 +77,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#markprice-markindex-price-funding" class="md-skip">
+        <a href="#-system-design-doc-adr" class="md-skip">
           Skip to content
         </a>
       
@@ -93,7 +93,7 @@
 
 <header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
   <nav class="md-header__inner md-grid" aria-label="Header">
-    <a href="../../.." title="SN Capital — Backend" class="md-header__button md-logo" aria-label="SN Capital — Backend" data-md-component="logo">
+    <a href="../.." title="SN Capital — Backend" class="md-header__button md-logo" aria-label="SN Capital — Backend" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
@@ -113,7 +113,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Markprice — mark/index price и предсказанный funding
+              Правила дизайн-доков (System Design Doc + ADR)
             
           </span>
         </div>
@@ -235,7 +235,7 @@
   
   
     <li class="md-tabs__item">
-      <a href="../../.." class="md-tabs__link">
+      <a href="../.." class="md-tabs__link">
         
   
   
@@ -256,7 +256,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="../../../getting-started/" class="md-tabs__link">
+        <a href="../../getting-started/" class="md-tabs__link">
           
   
   
@@ -278,7 +278,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="../../" class="md-tabs__link">
+        <a href="../../alpha-engine/" class="md-tabs__link">
           
   
   
@@ -300,7 +300,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="../../../binance-parser/" class="md-tabs__link">
+        <a href="../../binance-parser/" class="md-tabs__link">
           
   
   
@@ -322,7 +322,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="../../../strategies/" class="md-tabs__link">
+        <a href="../../strategies/" class="md-tabs__link">
           
   
   
@@ -344,7 +344,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="../../../reference/" class="md-tabs__link">
+        <a href="../../reference/" class="md-tabs__link">
           
   
   
@@ -366,7 +366,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="../../../development/" class="md-tabs__link">
+        <a href="../../development/" class="md-tabs__link">
           
   
   
@@ -388,7 +388,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="../../../adr/0001-collector-trader-split/0001-collector-trader-split/" class="md-tabs__link">
+        <a href="../0001-collector-trader-split/0001-collector-trader-split/" class="md-tabs__link">
           
   
   
@@ -408,7 +408,7 @@
   
   
     <li class="md-tabs__item">
-      <a href="../../../research-log/" class="md-tabs__link">
+      <a href="../../research-log/" class="md-tabs__link">
         
   
   
@@ -429,7 +429,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="../../../research/nsc-14-aggtrade-vs-trade/" class="md-tabs__link">
+        <a href="../../research/nsc-14-aggtrade-vs-trade/" class="md-tabs__link">
           
   
   
@@ -451,7 +451,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="../../../openspec/batch-backtest/" class="md-tabs__link">
+        <a href="../../openspec/batch-backtest/" class="md-tabs__link">
           
   
   
@@ -493,7 +493,7 @@
 
 <nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
-    <a href="../../.." title="SN Capital — Backend" class="md-nav__button md-logo" aria-label="SN Capital — Backend" data-md-component="logo">
+    <a href="../.." title="SN Capital — Backend" class="md-nav__button md-logo" aria-label="SN Capital — Backend" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
@@ -523,7 +523,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../.." class="md-nav__link">
+      <a href="../.." class="md-nav__link">
         
   
   
@@ -581,7 +581,7 @@
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="../../../getting-started/" class="md-nav__link ">
+            <a href="../../getting-started/" class="md-nav__link ">
               
   
   
@@ -625,7 +625,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../getting-started/installation/" class="md-nav__link">
+      <a href="../../getting-started/installation/" class="md-nav__link">
         
   
   
@@ -653,7 +653,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../getting-started/quickstart/" class="md-nav__link">
+      <a href="../../getting-started/quickstart/" class="md-nav__link">
         
   
   
@@ -681,7 +681,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../getting-started/architecture/" class="md-nav__link">
+      <a href="../../getting-started/architecture/" class="md-nav__link">
         
   
   
@@ -753,7 +753,7 @@
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="../../" class="md-nav__link ">
+            <a href="../../alpha-engine/" class="md-nav__link ">
               
   
   
@@ -797,7 +797,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../pipeline/" class="md-nav__link">
+      <a href="../../alpha-engine/pipeline/" class="md-nav__link">
         
   
   
@@ -825,7 +825,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../data-layer/" class="md-nav__link">
+      <a href="../../alpha-engine/data-layer/" class="md-nav__link">
         
   
   
@@ -853,7 +853,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../writing-a-strategy/" class="md-nav__link">
+      <a href="../../alpha-engine/writing-a-strategy/" class="md-nav__link">
         
   
   
@@ -881,7 +881,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../markowitz/" class="md-nav__link">
+      <a href="../../alpha-engine/markowitz/" class="md-nav__link">
         
   
   
@@ -909,7 +909,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../backtesting/" class="md-nav__link">
+      <a href="../../alpha-engine/backtesting/" class="md-nav__link">
         
   
   
@@ -937,7 +937,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../live-trading/" class="md-nav__link">
+      <a href="../../alpha-engine/live-trading/" class="md-nav__link">
         
   
   
@@ -1007,7 +1007,7 @@
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="../../../binance-parser/" class="md-nav__link ">
+            <a href="../../binance-parser/" class="md-nav__link ">
               
   
   
@@ -1051,7 +1051,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../binance-parser/live/" class="md-nav__link">
+      <a href="../../binance-parser/live/" class="md-nav__link">
         
   
   
@@ -1079,7 +1079,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../binance-parser/historical/" class="md-nav__link">
+      <a href="../../binance-parser/historical/" class="md-nav__link">
         
   
   
@@ -1107,7 +1107,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../binance-parser/storage/" class="md-nav__link">
+      <a href="../../binance-parser/storage/" class="md-nav__link">
         
   
   
@@ -1135,7 +1135,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../binance-parser/order-book/" class="md-nav__link">
+      <a href="../../binance-parser/order-book/" class="md-nav__link">
         
   
   
@@ -1163,7 +1163,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../binance-parser/extending/" class="md-nav__link">
+      <a href="../../binance-parser/extending/" class="md-nav__link">
         
   
   
@@ -1237,7 +1237,7 @@
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="../../../strategies/" class="md-nav__link ">
+            <a href="../../strategies/" class="md-nav__link ">
               
   
   
@@ -1281,7 +1281,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../methodology/" class="md-nav__link">
+      <a href="../../methodology/" class="md-nav__link">
         
   
   
@@ -1309,7 +1309,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../strategies/funding_reversion/" class="md-nav__link">
+      <a href="../../strategies/funding_reversion/" class="md-nav__link">
         
   
   
@@ -1337,7 +1337,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../strategies/trade_imbalance/" class="md-nav__link">
+      <a href="../../strategies/trade_imbalance/" class="md-nav__link">
         
   
   
@@ -1365,7 +1365,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../strategies/ob_mispricing/" class="md-nav__link">
+      <a href="../../strategies/ob_mispricing/" class="md-nav__link">
         
   
   
@@ -1393,7 +1393,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../strategies/book_depth_imbalance/" class="md-nav__link">
+      <a href="../../strategies/book_depth_imbalance/" class="md-nav__link">
         
   
   
@@ -1421,7 +1421,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../strategies/vol_mean_reversion/" class="md-nav__link">
+      <a href="../../strategies/vol_mean_reversion/" class="md-nav__link">
         
   
   
@@ -1449,7 +1449,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../strategies/vol_ob_entropy/" class="md-nav__link">
+      <a href="../../strategies/vol_ob_entropy/" class="md-nav__link">
         
   
   
@@ -1517,7 +1517,7 @@
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="../../../reference/" class="md-nav__link ">
+            <a href="../../reference/" class="md-nav__link ">
               
   
   
@@ -1561,7 +1561,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../reference/cli/" class="md-nav__link">
+      <a href="../../reference/cli/" class="md-nav__link">
         
   
   
@@ -1589,7 +1589,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../reference/operators/" class="md-nav__link">
+      <a href="../../reference/operators/" class="md-nav__link">
         
   
   
@@ -1617,7 +1617,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../reference/metrics/" class="md-nav__link">
+      <a href="../../reference/metrics/" class="md-nav__link">
         
   
   
@@ -1645,7 +1645,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../reference/glossary/" class="md-nav__link">
+      <a href="../../reference/glossary/" class="md-nav__link">
         
   
   
@@ -1711,7 +1711,7 @@
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="../../../development/" class="md-nav__link ">
+            <a href="../../development/" class="md-nav__link ">
               
   
   
@@ -1755,7 +1755,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../development/setup/" class="md-nav__link">
+      <a href="../../development/setup/" class="md-nav__link">
         
   
   
@@ -1783,7 +1783,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../development/testing/" class="md-nav__link">
+      <a href="../../development/testing/" class="md-nav__link">
         
   
   
@@ -1811,7 +1811,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../development/contributing/" class="md-nav__link">
+      <a href="../../development/contributing/" class="md-nav__link">
         
   
   
@@ -1904,7 +1904,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../adr/0001-collector-trader-split/0001-collector-trader-split/" class="md-nav__link">
+      <a href="../0001-collector-trader-split/0001-collector-trader-split/" class="md-nav__link">
         
   
   
@@ -1939,7 +1939,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../research-log/" class="md-nav__link">
+      <a href="../../research-log/" class="md-nav__link">
         
   
   
@@ -2024,7 +2024,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../research/nsc-14-aggtrade-vs-trade/" class="md-nav__link">
+      <a href="../../research/nsc-14-aggtrade-vs-trade/" class="md-nav__link">
         
   
   
@@ -2100,7 +2100,7 @@
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="../../../openspec/batch-backtest/" class="md-nav__link ">
+            <a href="../../openspec/batch-backtest/" class="md-nav__link ">
               
   
   
@@ -2144,7 +2144,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../openspec/dashboard/" class="md-nav__link">
+      <a href="../../openspec/dashboard/" class="md-nav__link">
         
   
   
@@ -2172,7 +2172,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../openspec/historical-download/" class="md-nav__link">
+      <a href="../../openspec/historical-download/" class="md-nav__link">
         
   
   
@@ -2200,7 +2200,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../openspec/live-trading/" class="md-nav__link">
+      <a href="../../openspec/live-trading/" class="md-nav__link">
         
   
   
@@ -2228,7 +2228,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../openspec/live-ws/" class="md-nav__link">
+      <a href="../../openspec/live-ws/" class="md-nav__link">
         
   
   
@@ -2256,7 +2256,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../openspec/metrics-aggregation/" class="md-nav__link">
+      <a href="../../openspec/metrics-aggregation/" class="md-nav__link">
         
   
   
@@ -2284,7 +2284,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../openspec/metrics-engine/" class="md-nav__link">
+      <a href="../../openspec/metrics-engine/" class="md-nav__link">
         
   
   
@@ -2312,7 +2312,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../openspec/models/" class="md-nav__link">
+      <a href="../../openspec/models/" class="md-nav__link">
         
   
   
@@ -2340,7 +2340,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../openspec/rest-pollers/" class="md-nav__link">
+      <a href="../../openspec/rest-pollers/" class="md-nav__link">
         
   
   
@@ -2395,149 +2395,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#_1" class="md-nav__link">
+  <a href="#i1" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Общий контекст
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Общий контекст">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#_2" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Источник данных
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#_3" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Используемые поля
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#_4" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Каденс
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#30" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Алгоритм агрегации в 30 минут
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Алгоритм агрегации в 30 минут">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#edge-cases" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Edge cases
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#_5" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Метрики
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Метрики">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#mark_price" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        mark_price
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#index_price" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        index_price
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#predicted_funding" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        predicted_funding
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#next_funding_time_ms" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        next_funding_time_ms
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#_6" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Сводка финальных ключей
+        I.1. Структура документа
       
     </span>
   </a>
@@ -2545,10 +2406,98 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#_7" class="md-nav__link">
+  <a href="#i2-load-bearing" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Связь с другими блоками
+        I.2. Правило полноты (фильтр load-bearing)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#i3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        I.3. Правило чисел — «требование, не число»
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#i4-10-05-1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        I.4. Формат каждого решения в §10 (коротко, 0.5-1 стр)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#i5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        I.5. Чего не делать
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#i6-" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        I.6. Чек-лист самопроверки перед сдачей
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#i7-chunking" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        I.7. Процесс (chunking: не весь док за раз)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#i8-mermaid" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        I.8. Диаграммы — только Mermaid
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#i9" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        I.9. Антипаттерны (читать перед генерацией)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#i10-brownfield" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        I.10. Brownfield (на входе существующий код)
       
     </span>
   </a>
@@ -2575,133 +2524,277 @@
   
 
 
-<h1 id="markprice-markindex-price-funding">Markprice — mark/index price и предсказанный funding<a class="headerlink" href="#markprice-markindex-price-funding" title="Permanent link">&para;</a></h1>
-<p>Метрики из WS-стрима <code>&lt;symbol&gt;@markPrice@1s</code> на USD-M perpetual'ах.
-Только usdm; для spot этих данных нет.</p>
-<p>Документ описывает <strong>целевую спецификацию</strong>.</p>
-<hr />
-<h2 id="_1">Общий контекст<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
-<h3 id="_2">Источник данных<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h3>
-<p>Парсер пишет parquet:
-<div class="language-text highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>data/market=usdm/type=markprice/dt=YYYY-MM-DD/symbol=SYM/part-*.parquet
-</span></code></pre></div></p>
-<p>Источник — WS-стрим <code>&lt;symbol&gt;@markPrice@1s</code>. Биржа шлёт по одному
-сообщению <strong>в секунду</strong> на каждую usdm-пару с актуальными
-mark/index ценами и обновлённым предсказанным funding'ом.</p>
-<h3 id="_3">Используемые поля<a class="headerlink" href="#_3" title="Permanent link">&para;</a></h3>
-<p>После нормализации reader'ом (где <code>predicted_funding_rate</code> →
-<code>predicted_funding</code> для совместимости со спекой):</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>timestamp_ms          : int64    # время WS-сообщения
-</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>symbol                : string
-</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>mark_price            : float    # реальная mark-price (для liquidation engine)
-</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>index_price           : float    # подлежащий спот-индекс (basis = mark - index)
-</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>predicted_funding     : float    # прогноз ставки на следующий settlement (доля)
-</span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>next_funding_time_ms  : int64    # время следующего settlement'а
-</span></code></pre></div>
-<h3 id="_4">Каденс<a class="headerlink" href="#_4" title="Permanent link">&para;</a></h3>
-<p>1 Hz на каждый тикер: на 30-минутный бар обычно ~1800 точек на тикер.</p>
-<hr />
-<h2 id="30">Алгоритм агрегации в 30 минут<a class="headerlink" href="#30" title="Permanent link">&para;</a></h2>
-<p>Все четыре метрики — <strong>last value at bar boundary</strong>: берём значение
-последнего markprice-сэмпла, попавшего в бар (или forward-fill от
-предыдущего бара, если в текущем баре сэмплов не было).</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>markprice_at(t) = последняя markprice-запись с timestamp_ms ≤ t
-</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>
-</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>mark_price(B)            = mark_price            from markprice_at(B.end - ε)
-</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>index_price(B)           = index_price           from same
-</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>predicted_funding(B)     = predicted_funding     from same
-</span><span id="__span-2-6"><a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>next_funding_time_ms(B)  = next_funding_time_ms  from same
-</span><span id="__span-2-7"><a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>
-</span><span id="__span-2-8"><a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>= NaN для каждой если нет markprice-записей до B.end
-</span></code></pre></div>
-<p>В терминах pandas: <code>df.resample("30min").last().reindex(all_bars_idx, method="ffill")</code>.</p>
-<h3 id="edge-cases">Edge cases<a class="headerlink" href="#edge-cases" title="Permanent link">&para;</a></h3>
-<ul>
-<li>Бар до запуска парсера или до листинга символа → NaN для всех 4
-  метрик.</li>
-<li>Spot-тикер → NaN всегда (нет markprice WS-стрима).</li>
-<li>Парсер пропустил несколько секунд → метрики берутся из последней
-  имеющейся точки (forward-fill через дыры).</li>
-</ul>
-<hr />
-<h2 id="_5">Метрики<a class="headerlink" href="#_5" title="Permanent link">&para;</a></h2>
-<h3 id="mark_price"><code>mark_price</code><a class="headerlink" href="#mark_price" title="Permanent link">&para;</a></h3>
-<p>Реальная mark-price (используется биржевым liquidation engine'ом для
-расчёта PnL и триггера ликвидаций).</p>
-<p><strong>Что говорит.</strong> Эталонная цена контракта. Часто отличается от
-last-trade-price (особенно в стрессе). Альфы про liquidation triggers
-смотрят сюда, не на trade close.</p>
-<h3 id="index_price"><code>index_price</code><a class="headerlink" href="#index_price" title="Permanent link">&para;</a></h3>
-<p>Спотовый подлежащий индекс — взвешенное по объёму среднее spot-цены
-с нескольких бирж, на основе которого вычисляется mark.</p>
-<p><strong>Что говорит.</strong> Прокси для «справедливой» цены без futures-перекоса.
-Разница <code>mark - index</code> ≈ basis (премия фьючерса над спотом).</p>
-<h3 id="predicted_funding"><code>predicted_funding</code><a class="headerlink" href="#predicted_funding" title="Permanent link">&para;</a></h3>
-<p>Предсказанный funding rate на следующий settlement. Хранится как
-доля (<code>0.0001 = 1bp</code>). Обновляется биржой каждую секунду на основе
-текущего basis'а.</p>
-<p><strong>Что говорит.</strong> Forward-looking сигнал перекоса позиций. В отличие
-от <code>realized_funding</code> (см. <a href="../funding/">funding.md</a>) — это <strong>прогноз</strong>,
-который меняется в реальном времени.</p>
-<h3 id="next_funding_time_ms"><code>next_funding_time_ms</code><a class="headerlink" href="#next_funding_time_ms" title="Permanent link">&para;</a></h3>
-<p>Время в миллисекундах UTC, когда произойдёт следующий settlement
-funding'а (одно из 00:00, 08:00, 16:00 UTC).</p>
-<p><strong>Что говорит.</strong> Метаданные для синхронизации стратегий с funding
-циклом. Полезно для triggered-альф, которые активируются за N минут
-до funding settlement.</p>
-<hr />
-<h2 id="_6">Сводка финальных ключей<a class="headerlink" href="#_6" title="Permanent link">&para;</a></h2>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>mark_price
-</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>index_price
-</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>predicted_funding
-</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>next_funding_time_ms
-</span></code></pre></div>
-<p><strong>4 ключа. Только usdm. NaN для spot и для пробелов в данных.</strong></p>
-<hr />
-<h2 id="_7">Связь с другими блоками<a class="headerlink" href="#_7" title="Permanent link">&para;</a></h2>
+<h1 id="-system-design-doc-adr">Правила дизайн-доков (System Design Doc + ADR)<a class="headerlink" href="#-system-design-doc-adr" title="Permanent link">&para;</a></h1>
+<p>Инструкция для агента: написать дизайн-документ архитектуры системы.
+База: Nygard (Status/Context/Decision/Consequences), MADR (drivers + options),
+Fowler (brevity, immutable, supersede вместо правок, inverted pyramid),
+структура большого дока — SAD/arc42 + C4.</p>
+<p>Ты — архитектор. Пишешь System Design Doc: он фиксирует решения, от которых
+зависит корректность и необратимость системы. Это не план разработки и не тьюнинг.
+Документ — однозначный контракт: сеньор-инженер строит по нему компоненты
+без двусмысленности в гарантиях и границах.</p>
+<p>Входы: описание системы, требования, ограничения, текущий код (если есть).
+Если входа не хватает для решения — явно пиши <code>ASSUMPTION: ...</code> + как дизайн
+сломается/не масштабируется, если допущение неверно. Не выдумывай молча.</p>
+<h2 id="i1">I.1. Структура документа<a class="headerlink" href="#i1" title="Permanent link">&para;</a></h2>
+<ol>
+<li>Шапка — Status (<code>Draft | In Review | Accepted | Deprecated | Superseded by X</code>),
+   Date, Deciders, Re-evaluation Trigger (условие пересмотра: «если RPS превысит 10k»,
+   «если появится managed-сервис X»). Без триггера решение гниет молча.</li>
+<li>Overview — 2-3 предложения: что за система, для кого, ключевое свойство.</li>
+<li>Goals / Non-Goals / Deferred — что док фиксирует, что осознанно исключено,
+   какие параметры делегированы инженерам/конфигу (с ссылкой куда).</li>
+<li>Constraints — технические, организационные, внешние границы, которые нельзя двигать.</li>
+<li>Context (C4-L1) — система как черный ящик, внешние акторы и зависимости.</li>
+<li>Containers (C4-L2) — основные сервисы/хранилища/очереди, кто за что отвечает.
+   У каждого — одна четкая ответственность. Протоколы и сериализация — поименно
+   (gRPC/REST/events; Protobuf/JSON), без версий, если версия не load-bearing.
+   Sync vs async — явно. Trust boundaries и внешние зависимости — явно.</li>
+<li>Components — только для мест, где есть нетривиальная логика или спорная граница.</li>
+<li>Runtime — 2-4 критических потока (sequence): Happy path + Failure path.
+   Для дедупликации: где (gateway/ingestion/DB), алгоритм, ключ идемпотентности,
+   что с дубликатом (drop / cached <code>200 OK</code> / <code>409</code>), поведение при out-of-order.
+   Для сущностей с жизненным циклом (заказ, платеж, воркер) — State Diagram:
+   терминальные состояния, переходы при таймаутах/ошибках; «подвешенных»
+   состояний без timeout/recovery быть не должно.</li>
+<li>Data — парадигма хранения (OLTP/OLAP/Event Sourcing/CQRS), владелец стейта,
+   модель данных, контракты очередей/API на уровне инвариантов
+   (что гарантировано, а не какой лимит в байтах). Ключ партиционирования/шардирования
+   — каким полем и зачем (исключить skew, сохранить order), требования
+   к консистентности (strong/eventual/read-your-writes), гарантии доставки
+   и паттерны (at-least-once/exactly-once: idempotency key, unique index, Outbox, Saga).</li>
+<li>NFR + Scale — проверяемые утверждения + нагрузочный профиль входа:
+   целевой RPS (read/write), latency budget (p95/p99), объемы/сутки, retention policy.
+   Запрещены пустышки «быстро/масштабируемо/надежно» без SLO и механизма.</li>
+<li>Decisions — список решений в мини-ADR формате (см. I.4).</li>
+<li>Risks + Failure Modes — что может пойти не так, класс восстановления
+    для каждого. Обязательный вопрос: что ломается первым при превышении
+    нагрузки в 5 раз; поведение при падении downstream/очереди/кэша
+    (fail-open vs fail-closed, DLQ/retries как политика формулой, не константами).</li>
+<li>Observability — какой метрикой виден каждый инвариант
+    (lag, dedup collision rate, error budget), propagation <code>trace_id</code>/<code>span_id</code>
+    через очереди.</li>
+<li>Security — trust boundaries (где на C4-L2 кончается internal и начинается
+    untrusted zone), auth/authz модель (RBAC/ABAC), шифрование rest/transit,
+    откуда сервисы берут секреты (Vault / Secrets Manager / env, никогда хардкод),
+    что требует audit log (append-only/WORM), PII/GDPR: masking, tokenization,
+    field-level encryption — если применимо. Только границы и модели, без тюнинга либ.</li>
+<li>Glossary — термины без перевода, как в коде.</li>
+</ol>
+<h2 id="i2-load-bearing">I.2. Правило полноты (фильтр load-bearing)<a class="headerlink" href="#i2-load-bearing" title="Permanent link">&para;</a></h2>
+<p>Прежде чем включить параметр или правило в документ, прогони через 4 вопроса.
+Хотя бы одно «ДА» — пиши в док. Все «НЕТ» — выноси в runbook/конфиг.</p>
+<ol>
+<li><strong>Contract:</strong> определяет ли это формат данных, протокол или схему на границе
+   двух сервисов? Сломает ли смена API/контракт очереди (простой, миграция)?</li>
+<li><strong>Consistency/Safety:</strong> определяет ли это консистентность, идемпотентность
+   или поведение при Network Partition (CAP)?</li>
+<li><strong>Scale/State:</strong> диктует ли это предел масштабирования (партиции, шарды)
+   или максимальный размер стейта в памяти/на диске?</li>
+<li><strong>Compliance:</strong> диктуется ли это <strong>внешним мандатом</strong> (legal/regulatory,
+   contractual obligation, industry standard с аудитом: GDPR, PCI DSS, WORM,
+   Data Residency) — независимо от техдизайна? Тест: «можем ли не делать это
+   без юридических/финансовых последствий?» Если да — в док по Compliance.
+   Внутренний security best practice без мандата — не Compliance, а Security (п.13).</li>
+</ol>
+<p>Правило Architectural Limits vs. Tuning:
+* DO NOT выдумывать тюнинг конфигов (<code>work_mem</code>, heap JVM, размеры пулов/тредов,
+  TCP-таймауты). Считай, что их закроют runbook и автомасштабирование.
+  Нехватка входа — <code>ASSUMPTION</code>, а не галлюцинация числом.
+* DO фиксировать архитектурные лимиты, инварианты и границы стейта, если лимит
+  влияет на масштаб, размер стейта или контракт: партиции/шардинг, окно
+  дедупликации, max payload, retention. Формат — таблицей из I.3
+  (формула + rationale + что ломается при нарушении).</p>
+<h2 id="i3">I.3. Правило чисел — «требование, не число»<a class="headerlink" href="#i3" title="Permanent link">&para;</a></h2>
+<p>Точные константы тьюнинга в дизайн не писать. Вместо числа — требование формулой
++ rationale + что ломается при нарушении + способ проверки. Точное число —
+только если оно измерено и от него зависит корректность, тогда с пометкой
+<code>measured</code> или <code>estimate, remeasure</code>. Не выдумывай число ради полноты таблицы:
+нет замера — пиши формулу и <code>ASSUMPTION</code>.</p>
+<p>Плохо: «окно дедупликации — 5 минут».
+Хорошо: «очередь обязана обеспечивать окно дедупликации, покрывающее
+<code>max_retry + max_reconnect + clock_skew</code>. Rationale: иначе повтор после рестарта
+станет дублем бизнес-операции. Нарушение: двойное списание при ретраях.
+Верификация: повторная доставка с тем же Msg-Id не меняет состояние (тест).
+Точное значение — в конфиге после замеров, не в дизайне».</p>
+<p>Аналогично для retention, буферов, таймаутов:
+<code>retention &gt;= штатный простой + худший простой + буфер, discard: old</code>
++ тест рестарта, а не «3 часа».</p>
+<p>Граница на примерах:
+* <code>max_connections=500</code> к Postgres — НЕ архитектура, а тюнинг. В дизайне —
+  паттерн («все подключения через pooler в режиме transaction, лимит активных
+  транзакций — пулом»), число — в <code>values.yaml</code>/runbook. Исключение: если 500 —
+  жесткий лимит облачного тарифа, диктующий потолок масштаба, — тогда в таблицу
+  как constraint с rationale.
+* Число партиций / ключ шардирования — архитектура: задает потолок параллелизма
+  (консьюмеров не больше партиций) и гарантии порядка внутри ключа. Смена требует
+  простоя/репартиционирования. В таблицу: формула/число + ключ + что ломается
+  (hot partition -&gt; лаг одной партиции).
+* Окно дедупликации / event TTL / retention по compliance — архитектура:
+  задает размер стейта, стоимость хранения и SLA ретраев. Если upstream ретраит
+  3 суток, а окно 24 часа — на 25-й час будет дубль. В таблицу с расчетом стейта.
+* Cache TTL (свежесть vs нагрузка, меняется на лету) — НЕ архитектура, а тюнинг.</p>
+<p>Формат таблицы Design Limits (в §8-9, не списком конфигов):</p>
 <table>
 <thead>
 <tr>
-<th>Метрика</th>
-<th>Где</th>
-<th>Различие</th>
+<th>Parameter / Invariant</th>
+<th>Value / Formula</th>
+<th>Rationale (Why?)</th>
+<th>Consequence of Violation</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td><code>predicted_funding</code></td>
-<td>здесь</td>
-<td>прогноз, обновляется секундно</td>
+<td>Max payload</td>
+<td><code>&lt;= broker_max AND consumer_chunk</code></td>
+<td>Не аллоцировать огромные чанки в памяти консьюмера</td>
+<td>OOM / отклонение брокером -&gt; DLQ</td>
 </tr>
 <tr>
-<td><code>realized_funding</code></td>
-<td><a href="../funding/">funding.md</a></td>
-<td>факт, обновляется 3 раза в сутки</td>
+<td>Partitions</td>
+<td><code>N, key=tenant_id</code></td>
+<td>Потолок параллелизма N, порядок внутри ключа</td>
+<td>Больше N обработчиков невозможно; skew -&gt; лаг</td>
 </tr>
 <tr>
-<td><code>close_price</code></td>
-<td><a href="../klines/">klines.md</a></td>
-<td>last trade price из klines</td>
+<td>Dedup window</td>
+<td><code>&gt;= backoff_max + downtime_deploy</code></td>
+<td>Покрыть ретраи и простой на деплое</td>
+<td>Дубль операции при сетевом блейпе</td>
 </tr>
 <tr>
-<td><code>last_best_*_price</code></td>
-<td><a href="../orderbook-l1/">orderbook-l1.md</a></td>
-<td>last best bid/ask из снапшотов</td>
+<td>Retention</td>
+<td><code>&gt;= простой_штатный + простой_худший + буфер</code></td>
+<td>Пережить рестарт консьюмера без холодного старта</td>
+<td>Холодный старт, первый бар неполный</td>
 </tr>
 <tr>
-<td><code>mark_price</code></td>
-<td>здесь</td>
-<td>биржевой эталон, не trade-price</td>
+<td>Worker memory</td>
+<td><code>&gt;= state_size + buffer</code></td>
+<td>Воркер не должен OOM при пике стейта</td>
+<td>OOM-kill, рестарт, лаг обработки</td>
 </tr>
 </tbody>
 </table>
-<p>Это <strong>четыре разных способа</strong> ответить на вопрос «какая цена в этот
-момент»:
-- mark — для liquidation/PnL расчётов биржей
-- index — спотовый бенчмарк
-- close_price — последний trade price
-- mid (<code>(best_bid + best_ask) / 2</code>) — теоретический middle of book</p>
-<p>В стрессе они расходятся.</p>
+<h2 id="i4-10-05-1">I.4. Формат каждого решения в §10 (коротко, 0.5-1 стр)<a class="headerlink" href="#i4-10-05-1" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Title: глагол + объект («Использовать лог с retention для...»).</li>
+<li>Status: proposed / accepted / superseded by X.</li>
+<li>Dependencies (если есть): от каких ADR зависит решение — чтобы при supersede
+  видеть цепочку.</li>
+<li>Context: проблема и ограничения (2-3 предложения для читателя через 18 месяцев).</li>
+<li>Decision Drivers: latency, cost, экспертиза, consistency, ops-сложность — явно.</li>
+<li>Options: минимум 2 реальные альтернативы, у каждой — как работает, pros, cons,
+  почему отвергли. Честно. Порядок обязателен: Drivers + Options — ДО Decision.
+  Не фиксируй выбор раньше разбора альтернатив (иначе дальше пойдет
+  рационализация, а не анализ).</li>
+<li>Decision: активным залогом, 1-2 предложения. «Мы будем...».</li>
+<li>Consequences: что станет легче, что тяжелее, какие двери закрываются.</li>
+<li>Re-evaluation Trigger: условие пересмотра («если RPS превысит 10k»,
+  «если появится managed-очередь X»).</li>
+<li>Mitigation: чем компенсируем минусы (политикой формулой, не числом-тьюнингом).</li>
+<li>Migration (только если решение кого-то supersede'ит): backward compatibility
+  window (сколько живет deprecated), migration path (dual-write / adapter /
+  feature flags), sunset date (когда удалить).</li>
+<li>Verification: каким тестом/метрикой докажем (kill-тест, реплей, хаос-сценарий).
+  Без верификации решение не принято.</li>
+<li>Псевдокод — только для нетривиального алгоритма (блокровка, генерация ключей);
+  имен методов/сигнатур функций нет.</li>
+</ul>
+<h2 id="i5">I.5. Чего не делать<a class="headerlink" href="#i5" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Не писать тьюнинги «на всякий случай»: ни параметра, ни флага без называемого
+  caller'а, которому нужно другое значение.</li>
+<li>Не дублировать одно значение в трех местах. Источник правды один, остальные
+  ссылаются.</li>
+<li>Не прятать ошибки за фолбэками: невалидное — fail loud, деградация — явная
+  и поименованная.</li>
+<li>Не писать больше страницы на одно решение. Детали кода — в код, операционка —
+  в runbook. Исходного кода реализации нет; имена методов/сигнатуры — нет.</li>
+<li>Не править принятое решение молча: только новым документом с <code>supersedes</code>.</li>
+<li>Не писать абстрактных пустышек без механики: «быстро/масштабируемо/надежно»
+  без SLO и механизма — запрещено. Маркеры воды: <code>seamless, robust, synergy,
+  cutting-edge, blazing fast</code> — не использовать; вместо них точный механизм
+  («at-least-once + idempotent consumers + DLQ», а не «robust delivery»).</li>
+</ul>
+<h2 id="i6-">I.6. Чек-лист самопроверки перед сдачей<a class="headerlink" href="#i6-" title="Permanent link">&para;</a></h2>
+<ul class="task-list">
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Каждый инвариант имеет тест/проверку.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Каждая очередь/хранилище имеет гарантии (retention, dedup, порядок)
+  формулой, а не числом.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Каждая деградация имеет класс восстановления.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Нет констант тьюнинга без пометки measured/estimate; тюнинг
+  (<code>work_mem</code>, heap, пулы, TCP-таймауты) не выдуман — делегирован в runbook.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Лимиты из таблицы Design Limits проходят фильтр I.2
+  (Contract / Consistency / Scale / Compliance); у каждого есть rationale
+  и consequence of violation.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Нет required-параметра, который никто не читает.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Шапка дока: Status/Date/Deciders/Re-evaluation Trigger; у каждого ADR свой триггер.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Диаграммы — mermaid, соответствуют тексту; state machines у сущностей с циклом,
+  без подвешенных состояний.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Нет противоречий между разделами.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Non-Goals/Deferred заполнены: видно, что делегировано и куда.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Каждый инвариант виден в Observability (метрика + трейсинг).</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Security: trust boundaries на C4-L2, encryption rest/transit явно указано,
+  секреты не в конфигах, audit и PII рассмотрены.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> У каждого ADR есть Drivers отдельно от Context; Decision написан после Options.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Каждый ASSUMPTION имеет цену ошибки (что сломается при неверном допущении).</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Нет пустышек без SLO и механизма; вопрос «что ломается первым при x5» отвечен.</li>
+</ul>
+<h2 id="i7-chunking">I.7. Процесс (chunking: не весь док за раз)<a class="headerlink" href="#i7-chunking" title="Permanent link">&para;</a></h2>
+<p>Полный SAD — 15-30 страниц; одним выводом модель обрежет документ или деградирует
+в качестве. Генерируй по фазам, останавливайся на аппрув после каждой:</p>
+<ul>
+<li><strong>Phase 1: Scope &amp; Context.</strong> Overview, Goals/Non-Goals/Deferred, Constraints,
+  C4-L1, C4-L2. Стоп: аппрув границ системы и внешних интеграций.</li>
+<li><strong>Phase 2: Data &amp; Runtime.</strong> Data, контракты, 2-4 sequence (Happy + Failure),
+  state machines. Стоп: аппрув инвариантов данных и потоков.</li>
+<li><strong>Phase 3: Decisions &amp; Limits.</strong> ADR по 2-3 за раз, Design Limits, Risks.
+  Стоп: аппрув trade-offs.</li>
+<li><strong>Phase 4: Cross-cutting &amp; Review.</strong> Observability, Security, Glossary,
+  прогон чек-листа I.6 (self-correction pass).</li>
+</ul>
+<p><strong>Handoff Protocol.</strong> В конце каждой фазы — блок <code>### Phase N Summary</code>
+(до 300 слов): принятые инварианты и лимиты. Следующая фаза использует Summary
+как жесткий constraint; инварианты ранних фаз молча не пересматриваются.</p>
+<p><strong>Revision Protocol.</strong> Если в фазе N обнаружено, что инвариант фазы M &lt; N
+физически нереализуем или противоречит новому constraint: сгенерируй блок
+<code>### Phase M Revision Request</code> с объяснением конфликта, останови фазу N
+и жди аппрув на откат к фазе M. Без аппрува инвариант молча не игнорировать.</p>
+<ul>
+<li><strong>Phase 5: Consolidation (после аппрува всех фаз).</strong> Glossary Check (унификация
+  терминов), Cross-Reference Validation (ссылки на ADR/таблицы), Redundancy
+  Pruning (дубли удалить, один источник правды).</li>
+</ul>
+<h2 id="i8-mermaid">I.8. Диаграммы — только Mermaid<a class="headerlink" href="#i8-mermaid" title="Permanent link">&para;</a></h2>
+<p>Все диаграммы — строго в блоке <code>```mermaid</code>. Запрещены ASCII-арт, PlantUML, D2.
+* C4: строго <code>graph TD</code> с <code>subgraph</code> для trust boundaries.
+  <code>C4Context</code>/<code>C4Container</code> — только если явно запрошено и рендер поддерживает.
+* Потоки: <code>sequenceDiagram</code> с <code>alt/else</code> для Failure path.
+* Состояния: <code>stateDiagram-v2</code>.
+Диаграммы соответствуют тексту (проверка в I.6).</p>
+<p><strong>Разделение ответственности.</strong> Sequence (Runtime) — поток данных между сервисами,
+фокус latency/таймауты/сетевые сбои. State Machine (Data) — жизненный цикл сущности
+внутри владельца стейта, фокус легальные/терминальные состояния. Один процесс
+в обеих диаграммах не дублировать.</p>
+<h2 id="i9">I.9. Антипаттерны (читать перед генерацией)<a class="headerlink" href="#i9" title="Permanent link">&para;</a></h2>
+<p>BAD (выдуманный тюнинг + вода):
+«Используем Redis для дедупликации. Выставим <code>maxmemory-policy allkeys-lru</code>,
+<code>tcp-keepalive 60</code>, пул 50 коннектов. Это даст blazing fast обработку
+и robust delivery.»
+Почему плохо: тюнинг выдуман, пустышки вместо SLO, нет инварианта и failure mode.</p>
+<p>GOOD (контракт по правилам I.2–I.3):
+«Дедупликация (exactly-once поверх at-least-once транспорта): окно
+<code>W &gt;= max_upstream_retry + max_deploy_downtime</code> (или <code>measured: ...</code>).
+Ключ <code>hash(tenant_id, idempotency_key)</code> в KV-хранилище, значение — статус.
+KV недоступно -&gt; fail-closed (<code>503</code> на write), иначе двойное списание.
+Trade-off: жертвуем Availability ради Consistency (CP по CAP).»</p>
+<h2 id="i10-brownfield">I.10. Brownfield (на входе существующий код)<a class="headerlink" href="#i10-brownfield" title="Permanent link">&para;</a></h2>
+<p>Извлекай As-Is архитектуру, а не описывай код: игнорируй бизнес-логику внутри
+функций; ищи границы сервисов (кто с какими БД/очередями говорит), sync/async,
+точки отказа (где нет ретраев/брейкеров). Находки — как ADR: <code>Accepted</code>
+(паттерн работает) или <code>Deprecated</code> (антипаттерн под перепись).</p>
 
 
 
@@ -2774,12 +2867,12 @@ funding'а (одно из 00:00, 08:00, 16:00 UTC).</p>
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["navigation.instant", "navigation.instant.progress", "navigation.tracking", "navigation.tabs", "navigation.tabs.sticky", "navigation.sections", "navigation.expand", "navigation.indexes", "navigation.top", "navigation.footer", "search.suggest", "search.highlight", "search.share", "toc.follow", "content.code.copy", "content.code.annotate", "content.tabs.link", "content.tooltips"], "search": "../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.instant", "navigation.instant.progress", "navigation.tracking", "navigation.tabs", "navigation.tabs.sticky", "navigation.sections", "navigation.expand", "navigation.indexes", "navigation.top", "navigation.footer", "search.suggest", "search.highlight", "search.share", "toc.follow", "content.code.copy", "content.code.annotate", "content.tabs.link", "content.tooltips"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
     
     
-      <script src="../../../assets/javascripts/bundle.d7400e89.min.js"></script>
+      <script src="../../assets/javascripts/bundle.d7400e89.min.js"></script>
       
-        <script src="../../../javascripts/katex.js"></script>
+        <script src="../../javascripts/katex.js"></script>
       
         <script src="https://unpkg.com/katex@0/dist/katex.min.js"></script>
       

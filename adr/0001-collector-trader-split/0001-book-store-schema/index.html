@@ -11,7 +11,7 @@
       
       
       
-        <link rel="canonical" href="https://sncapital.github.io/Docs/alpha-engine/metrics-ru/markprice/">
+        <link rel="canonical" href="https://sncapital.github.io/Docs/adr/0001-collector-trader-split/0001-book-store-schema/">
       
       
       
@@ -24,7 +24,7 @@
     
     
       
-        <title>Markprice — mark/index price и предсказанный funding - SN Capital — Backend</title>
+        <title>ADR-0001 — схема Postgres book store (D5) - SN Capital — Backend</title>
       
     
     
@@ -77,7 +77,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#markprice-markindex-price-funding" class="md-skip">
+        <a href="#adr-0001-postgres-book-store-d5" class="md-skip">
           Skip to content
         </a>
       
@@ -113,7 +113,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Markprice — mark/index price и предсказанный funding
+              ADR-0001 — схема Postgres book store (D5)
             
           </span>
         </div>
@@ -278,7 +278,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="../../" class="md-tabs__link">
+        <a href="../../../alpha-engine/" class="md-tabs__link">
           
   
   
@@ -388,7 +388,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="../../../adr/0001-collector-trader-split/0001-collector-trader-split/" class="md-tabs__link">
+        <a href="../0001-collector-trader-split/" class="md-tabs__link">
           
   
   
@@ -753,7 +753,7 @@
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="../../" class="md-nav__link ">
+            <a href="../../../alpha-engine/" class="md-nav__link ">
               
   
   
@@ -797,7 +797,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../pipeline/" class="md-nav__link">
+      <a href="../../../alpha-engine/pipeline/" class="md-nav__link">
         
   
   
@@ -825,7 +825,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../data-layer/" class="md-nav__link">
+      <a href="../../../alpha-engine/data-layer/" class="md-nav__link">
         
   
   
@@ -853,7 +853,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../writing-a-strategy/" class="md-nav__link">
+      <a href="../../../alpha-engine/writing-a-strategy/" class="md-nav__link">
         
   
   
@@ -881,7 +881,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../markowitz/" class="md-nav__link">
+      <a href="../../../alpha-engine/markowitz/" class="md-nav__link">
         
   
   
@@ -909,7 +909,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../backtesting/" class="md-nav__link">
+      <a href="../../../alpha-engine/backtesting/" class="md-nav__link">
         
   
   
@@ -937,7 +937,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../live-trading/" class="md-nav__link">
+      <a href="../../../alpha-engine/live-trading/" class="md-nav__link">
         
   
   
@@ -1904,7 +1904,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../adr/0001-collector-trader-split/0001-collector-trader-split/" class="md-nav__link">
+      <a href="../0001-collector-trader-split/" class="md-nav__link">
         
   
   
@@ -2395,149 +2395,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#_1" class="md-nav__link">
+  <a href="#1" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Общий контекст
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Общий контекст">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#_2" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Источник данных
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#_3" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Используемые поля
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#_4" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Каденс
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#30" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Алгоритм агрегации в 30 минут
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Алгоритм агрегации в 30 минут">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#edge-cases" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Edge cases
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#_5" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Метрики
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Метрики">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#mark_price" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        mark_price
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#index_price" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        index_price
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#predicted_funding" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        predicted_funding
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#next_funding_time_ms" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        next_funding_time_ms
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#_6" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Сводка финальных ключей
+        1. Идея
       
     </span>
   </a>
@@ -2545,10 +2406,65 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#_7" class="md-nav__link">
+  <a href="#2" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Связь с другими блоками
+        2. Таблицы
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Формат блоба
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Запись — раз в бар, на границе
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-7-adr" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Чтение — протокол старта трейдера (§7 ADR)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-pg" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Что в PG НЕ хранится
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. Связанные решения
       
     </span>
   </a>
@@ -2575,133 +2491,239 @@
   
 
 
-<h1 id="markprice-markindex-price-funding">Markprice — mark/index price и предсказанный funding<a class="headerlink" href="#markprice-markindex-price-funding" title="Permanent link">&para;</a></h1>
-<p>Метрики из WS-стрима <code>&lt;symbol&gt;@markPrice@1s</code> на USD-M perpetual'ах.
-Только usdm; для spot этих данных нет.</p>
-<p>Документ описывает <strong>целевую спецификацию</strong>.</p>
+<h1 id="adr-0001-postgres-book-store-d5">ADR-0001 — схема Postgres book store (D5)<a class="headerlink" href="#adr-0001-postgres-book-store-d5" title="Permanent link">&para;</a></h1>
+<p>Вынесено из ADR. Детали реализации чекпойнта книги. Актуально на ветках <code>feat/*</code>.
+Инварианты — в ADR §8 (Data); здесь только формат, SQL и протокол. Нумерация ADR —
+по RULES I.1 (§7 Runtime, §8 Data, §9 NFR, §11 Risks); D-идентификаторы стабильны.</p>
 <hr />
-<h2 id="_1">Общий контекст<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
-<h3 id="_2">Источник данных<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h3>
-<p>Парсер пишет parquet:
-<div class="language-text highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>data/market=usdm/type=markprice/dt=YYYY-MM-DD/symbol=SYM/part-*.parquet
-</span></code></pre></div></p>
-<p>Источник — WS-стрим <code>&lt;symbol&gt;@markPrice@1s</code>. Биржа шлёт по одному
-сообщению <strong>в секунду</strong> на каждую usdm-пару с актуальными
-mark/index ценами и обновлённым предсказанным funding'ом.</p>
-<h3 id="_3">Используемые поля<a class="headerlink" href="#_3" title="Permanent link">&para;</a></h3>
-<p>После нормализации reader'ом (где <code>predicted_funding_rate</code> →
-<code>predicted_funding</code> для совместимости со спекой):</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>timestamp_ms          : int64    # время WS-сообщения
-</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>symbol                : string
-</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>mark_price            : float    # реальная mark-price (для liquidation engine)
-</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>index_price           : float    # подлежащий спот-индекс (basis = mark - index)
-</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>predicted_funding     : float    # прогноз ставки на следующий settlement (доля)
-</span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>next_funding_time_ms  : int64    # время следующего settlement'а
+<h2 id="1">1. Идея<a class="headerlink" href="#1" title="Permanent link">&para;</a></h2>
+<p>Трейдер хранит в PG <strong>чекпойнт книги на границу завершённого 30-минутного бара</strong> —
+регенерируемый, не источник истины. Источник истины — очередь (NATS JetStream) плюс
+реплей от этой границы.</p>
+<p>Почему именно на границу бара, а не «последнее состояние с отставанием ≤60с»: книжные
+скаляры штампуются в слоты кольца посекундно, а реплей идёт только вперёд. Из снапшота на
+12:19 секунды 12:00–12:19 не пересобрать — чтобы получить книгу на 12:00:01, нужна книга
+на 12:00:00, а назад из более свежего состояния не уехать: дифф Binance перезаписывает
+<code>qty</code> на уровне, обратной операции нет. Снапшот на границе делает весь бар восстановимым
+из реальных диффов по построению.</p>
+<p>Паттерн — <strong>Transactional Inbox</strong>: снапшот и позиции очереди коммитятся атомарно, <code>ack</code>
+в JetStream — после <code>COMMIT</code>. Крэш между ними даёт дубли, они безопасны: применение диффа
+идемпотентно (<code>qty</code> абсолютный) плюс фильтр <code>u &gt; u_snapshot</code>.</p>
+<hr />
+<h2 id="2">2. Таблицы<a class="headerlink" href="#2" title="Permanent link">&para;</a></h2>
+<p>Две границы бара хранятся одновременно — текущая и предыдущая; старее удаляются. Это
+страховка на случай краша ровно в момент записи новой: откатываемся на предыдущую и
+реплеим 30-60 минут вместо 30.</p>
+<div class="language-sql highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1">-- Одна таблица: ключ (market, symbol, bar_ts) везде. Три позиции стримов —</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="c1">-- колонки одной строки символа, пишутся одной транзакцией (Transactional Inbox, D5).</span>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">book_checkpoint</span><span class="w"> </span><span class="p">(</span>
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">    </span><span class="n">market</span><span class="w">      </span><span class="nb">TEXT</span><span class="w">   </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="p">,</span><span class="w">          </span><span class="c1">-- 'spot' | 'usdm'</span>
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="w">    </span><span class="n">symbol</span><span class="w">      </span><span class="nb">TEXT</span><span class="w">   </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="p">,</span><span class="w">          </span><span class="c1">-- 'BTCUSDT' (upper)</span>
+</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="w">    </span><span class="n">bar_ts</span><span class="w">      </span><span class="nb">BIGINT</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="p">,</span><span class="w">          </span><span class="c1">-- граница бара, ms UTC (кратна window_ms)</span>
+</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="w">    </span><span class="n">u</span><span class="w">           </span><span class="nb">BIGINT</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="p">,</span><span class="w">          </span><span class="c1">-- last_update_id книги на момент снапшота</span>
+</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="w">    </span><span class="n">seq</span><span class="w">         </span><span class="nb">BIGINT</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="p">,</span><span class="w">          </span><span class="c1">-- позиция в MD_DIFF на тот же момент</span>
+</span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="w">    </span><span class="n">trades_seq</span><span class="w">  </span><span class="nb">BIGINT</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="p">,</span><span class="w">          </span><span class="c1">-- позиция в MD_TRADE на тот же момент</span>
+</span><span id="__span-0-10"><a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="w">    </span><span class="n">events_seq</span><span class="w">  </span><span class="nb">BIGINT</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="p">,</span><span class="w">          </span><span class="c1">-- позиция в MD_EVENTS на тот же момент</span>
+</span><span id="__span-0-11"><a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="w">    </span><span class="n">codec</span><span class="w">       </span><span class="nb">TEXT</span><span class="w">   </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="p">,</span><span class="w">          </span><span class="c1">-- формат блоба, см. §3</span>
+</span><span id="__span-0-12"><a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="w">    </span><span class="n">book</span><span class="w">        </span><span class="n">BYTEA</span><span class="w">  </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="p">,</span><span class="w">          </span><span class="c1">-- вся книга целиком, без среза по глубине</span>
+</span><span id="__span-0-13"><a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="w">    </span><span class="n">written_at</span><span class="w">  </span><span class="n">TIMESTAMPTZ</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="w"> </span><span class="k">DEFAULT</span><span class="w"> </span><span class="n">now</span><span class="p">(),</span>
+</span><span id="__span-0-14"><a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="w">    </span><span class="k">PRIMARY</span><span class="w"> </span><span class="k">KEY</span><span class="w"> </span><span class="p">(</span><span class="n">market</span><span class="p">,</span><span class="w"> </span><span class="n">symbol</span><span class="p">,</span><span class="w"> </span><span class="n">bar_ts</span><span class="p">)</span>
+</span><span id="__span-0-15"><a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="p">);</span>
 </span></code></pre></div>
-<h3 id="_4">Каденс<a class="headerlink" href="#_4" title="Permanent link">&para;</a></h3>
-<p>1 Hz на каждый тикер: на 30-минутный бар обычно ~1800 точек на тикер.</p>
-<hr />
-<h2 id="30">Алгоритм агрегации в 30 минут<a class="headerlink" href="#30" title="Permanent link">&para;</a></h2>
-<p>Все четыре метрики — <strong>last value at bar boundary</strong>: берём значение
-последнего markprice-сэмпла, попавшего в бар (или forward-fill от
-предыдущего бара, если в текущем баре сэмплов не было).</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>markprice_at(t) = последняя markprice-запись с timestamp_ms ≤ t
-</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>
-</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>mark_price(B)            = mark_price            from markprice_at(B.end - ε)
-</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>index_price(B)           = index_price           from same
-</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>predicted_funding(B)     = predicted_funding     from same
-</span><span id="__span-2-6"><a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>next_funding_time_ms(B)  = next_funding_time_ms  from same
-</span><span id="__span-2-7"><a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>
-</span><span id="__span-2-8"><a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>= NaN для каждой если нет markprice-записей до B.end
-</span></code></pre></div>
-<p>В терминах pandas: <code>df.resample("30min").last().reindex(all_bars_idx, method="ffill")</code>.</p>
-<h3 id="edge-cases">Edge cases<a class="headerlink" href="#edge-cases" title="Permanent link">&para;</a></h3>
-<ul>
-<li>Бар до запуска парсера или до листинга символа → NaN для всех 4
-  метрик.</li>
-<li>Spot-тикер → NaN всегда (нет markprice WS-стрима).</li>
-<li>Парсер пропустил несколько секунд → метрики берутся из последней
-  имеющейся точки (forward-fill через дыры).</li>
-</ul>
-<hr />
-<h2 id="_5">Метрики<a class="headerlink" href="#_5" title="Permanent link">&para;</a></h2>
-<h3 id="mark_price"><code>mark_price</code><a class="headerlink" href="#mark_price" title="Permanent link">&para;</a></h3>
-<p>Реальная mark-price (используется биржевым liquidation engine'ом для
-расчёта PnL и триггера ликвидаций).</p>
-<p><strong>Что говорит.</strong> Эталонная цена контракта. Часто отличается от
-last-trade-price (особенно в стрессе). Альфы про liquidation triggers
-смотрят сюда, не на trade close.</p>
-<h3 id="index_price"><code>index_price</code><a class="headerlink" href="#index_price" title="Permanent link">&para;</a></h3>
-<p>Спотовый подлежащий индекс — взвешенное по объёму среднее spot-цены
-с нескольких бирж, на основе которого вычисляется mark.</p>
-<p><strong>Что говорит.</strong> Прокси для «справедливой» цены без futures-перекоса.
-Разница <code>mark - index</code> ≈ basis (премия фьючерса над спотом).</p>
-<h3 id="predicted_funding"><code>predicted_funding</code><a class="headerlink" href="#predicted_funding" title="Permanent link">&para;</a></h3>
-<p>Предсказанный funding rate на следующий settlement. Хранится как
-доля (<code>0.0001 = 1bp</code>). Обновляется биржой каждую секунду на основе
-текущего basis'а.</p>
-<p><strong>Что говорит.</strong> Forward-looking сигнал перекоса позиций. В отличие
-от <code>realized_funding</code> (см. <a href="../funding/">funding.md</a>) — это <strong>прогноз</strong>,
-который меняется в реальном времени.</p>
-<h3 id="next_funding_time_ms"><code>next_funding_time_ms</code><a class="headerlink" href="#next_funding_time_ms" title="Permanent link">&para;</a></h3>
-<p>Время в миллисекундах UTC, когда произойдёт следующий settlement
-funding'а (одно из 00:00, 08:00, 16:00 UTC).</p>
-<p><strong>Что говорит.</strong> Метаданные для синхронизации стратегий с funding
-циклом. Полезно для triggered-альф, которые активируются за N минут
-до funding settlement.</p>
-<hr />
-<h2 id="_6">Сводка финальных ключей<a class="headerlink" href="#_6" title="Permanent link">&para;</a></h2>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>mark_price
-</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>index_price
-</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>predicted_funding
-</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>next_funding_time_ms
-</span></code></pre></div>
-<p><strong>4 ключа. Только usdm. NaN для spot и для пробелов в данных.</strong></p>
-<hr />
-<h2 id="_7">Связь с другими блоками<a class="headerlink" href="#_7" title="Permanent link">&para;</a></h2>
+<p><strong>Почему блоб, а не строка на уровень.</strong> При записи раз в бар «дельта-записи» не работают:
+за полчаса грязной становится примерно половина книги, пишем всё равно целиком. А раз
+целиком — разница на порядок-два:</p>
 <table>
 <thead>
 <tr>
-<th>Метрика</th>
-<th>Где</th>
-<th>Различие</th>
+<th></th>
+<th>строки <code>(market,symbol,side,price,qty)</code></th>
+<th><strong>блоб</strong></th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td><code>predicted_funding</code></td>
-<td>здесь</td>
-<td>прогноз, обновляется секундно</td>
+<td>на границу, 60 симв.</td>
+<td>0.6-1.2 млн строк, 60-120 МБ</td>
+<td><strong>60 строк, 10-20 МБ</strong></td>
 </tr>
 <tr>
-<td><code>realized_funding</code></td>
-<td><a href="../funding/">funding.md</a></td>
-<td>факт, обновляется 3 раза в сутки</td>
+<td>запись</td>
+<td><code>COPY</code> в свежую партицию; <code>INSERT ON CONFLICT</code> не тянет</td>
+<td>тривиальна</td>
 </tr>
 <tr>
-<td><code>close_price</code></td>
-<td><a href="../klines/">klines.md</a></td>
-<td>last trade price из klines</td>
+<td>чтение при старте</td>
+<td>0.6-1.2 млн строк</td>
+<td>60 строк</td>
 </tr>
 <tr>
-<td><code>last_best_*_price</code></td>
-<td><a href="../orderbook-l1/">orderbook-l1.md</a></td>
-<td>last best bid/ask из снапшотов</td>
+<td>600 символов</td>
+<td>6-12 млн строк, 0.6-1.2 ГБ</td>
+<td>100-200 МБ</td>
 </tr>
 <tr>
-<td><code>mark_price</code></td>
-<td>здесь</td>
-<td>биржевой эталон, не trade-price</td>
+<td><code>SELECT ... WHERE price BETWEEN</code></td>
+<td>есть</td>
+<td>нет</td>
 </tr>
 </tbody>
 </table>
-<p>Это <strong>четыре разных способа</strong> ответить на вопрос «какая цена в этот
-момент»:
-- mark — для liquidation/PnL расчётов биржей
-- index — спотовый бенчмарк
-- close_price — последний trade price
-- mid (<code>(best_bid + best_ask) / 2</code>) — теоретический middle of book</p>
-<p>В стрессе они расходятся.</p>
+<p>Запросимость по уровням теряется, и это осознанно: чекпойнт держит две последние границы
+и постоянно перетирается — для исследования это архив (parquet <code>type=booksnapshot</code>), а не
+живой стейт. Заодно исчезает <code>UPDATE</code>-чурн: тюнинг autovacuum перестаёт быть операционной
+задачей, потому что таблицы уровней больше нет.</p>
+<p><strong>Почему <code>bar_ts</code> в ключе, а не одна строка на символ.</strong> Две границы должны сосуществовать,
+и новая пишется, пока старая ещё валидна. Удаление старых — отдельным <code>DELETE ... WHERE
+market = :m AND symbol = :s AND bar_ts &lt; :keep_from</code> после успешного коммита новой.</p>
+<hr />
+<h2 id="3">3. Формат блоба<a class="headerlink" href="#3" title="Permanent link">&para;</a></h2>
+<p><code>codec</code> — версия формата, обязательна: блоб живёт полчаса и полностью регенерируем,
+поэтому миграций не пишем никогда. Правило простое: <strong><code>codec</code> не распознан → чекпойнт
+выбрасывается, символ стартует холодно.</strong> Цена несовпадения версий — один неполный бар.</p>
+<p>Базовый формат <code>v1</code>:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>uint32  n_bids
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>uint32  n_asks
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>float64 bid_price[n_bids], float64 bid_qty[n_bids]   # по убыванию цены
+</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>float64 ask_price[n_asks], float64 ask_qty[n_asks]   # по возрастанию цены
+</span></code></pre></div>
+<p>Порядок уже отсортирован — при чтении <code>SortedDict</code> строится без пересортировки. Сжатие
+(zstd) — по измерению ветки №3; книга из монотонных цен жмётся хорошо.</p>
+<hr />
+<h2 id="4">4. Запись — раз в бар, на границе<a class="headerlink" href="#4" title="Permanent link">&para;</a></h2>
+<p>На границе бара, для каждого символа:</p>
+<div class="language-sql highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="k">BEGIN</span><span class="p">;</span>
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="k">INSERT</span><span class="w"> </span><span class="k">INTO</span><span class="w"> </span><span class="n">book_checkpoint</span><span class="w"> </span><span class="p">(</span><span class="n">market</span><span class="p">,</span><span class="w"> </span><span class="n">symbol</span><span class="p">,</span><span class="w"> </span><span class="n">bar_ts</span><span class="p">,</span><span class="w"> </span><span class="n">u</span><span class="p">,</span><span class="w"> </span><span class="n">seq</span><span class="p">,</span><span class="w"> </span><span class="n">trades_seq</span><span class="p">,</span><span class="w"> </span><span class="n">events_seq</span><span class="p">,</span><span class="w"> </span><span class="n">codec</span><span class="p">,</span><span class="w"> </span><span class="n">book</span><span class="p">)</span>
+</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="k">VALUES</span><span class="w"> </span><span class="p">(</span><span class="err">$</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="err">$</span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="err">$</span><span class="mi">3</span><span class="p">,</span><span class="w"> </span><span class="err">$</span><span class="mi">4</span><span class="p">,</span><span class="w"> </span><span class="err">$</span><span class="mi">5</span><span class="p">,</span><span class="w"> </span><span class="err">$</span><span class="mi">6</span><span class="p">,</span><span class="w"> </span><span class="err">$</span><span class="mi">7</span><span class="p">,</span><span class="w"> </span><span class="s1">'v1'</span><span class="p">,</span><span class="w"> </span><span class="err">$</span><span class="mi">8</span><span class="p">);</span>
+</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="k">COMMIT</span><span class="p">;</span>
+</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1">-- ack: live-подписка трейдера акает непрерывно по ходу обработки (позиция реплея</span>
+</span><span id="__span-2-6"><a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="c1">-- всё равно из PG, не из ack); FileWriter (D8) акает после flush; сам реплей идёт</span>
+</span><span id="__span-2-7"><a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1">-- с AckNone — там ack'ать нечего. Держать сообщения un-acked до границы запрещено</span>
+</span><span id="__span-2-8"><a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="c1">-- (отвергнутый вариант D5-(c): цена удержания бара + ack_wait длиннее бара).</span>
+</span><span id="__span-2-9"><a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="c1">-- затем: DELETE FROM book_checkpoint WHERE market = $1 AND symbol = $2 AND bar_ts &lt; :предыдущая_граница</span>
+</span></code></pre></div>
+<p><strong>Точность <code>seq</code>.</strong> Записывается sequence последнего сообщения, <strong>эффект которого попал в
+этот снапшот</strong> — не «на момент начала транзакции». Снимок книги и <code>seq</code> берутся атомарно в
+процессе (книга и счётчик живут в одном asyncio-loop, диффы между ними не проскакивают).
+Ошибка в сторону меньшего <code>seq</code> безопасна — лишние диффы переприменятся идемпотентно;
+ошибка в сторону большего пропустит диффы, и это уже потеря.</p>
+<p><code>synchronous_commit = true</code> → fsync на каждом коммите, окно kill -9 минимально;
+<code>false</code> — быстрее, окно шире (тьюнинг через <code>live_config.yaml</code>).</p>
+<p><strong>Нагрузка.</strong> 60 строк раз в 30 минут (600 при 600 символах), ~10-20 МБ на границу,
+живой объём — вдвое больше (две границы). Никакого <code>UPDATE</code>-чурна.</p>
+<p><strong>Чего уборка НЕ делает (отложено осознанно).</strong> <code>DELETE ... WHERE market = :m AND symbol = :s AND bar_ts &lt; :предыдущая_граница</code>
+чистит прошлые границы только у символов, которые продолжают торговаться: он привязан к
+записи новой границы, а у делистнутого символа новой границы не будет никогда. Его последний
+чекпойнт остаётся в таблице навсегда — мёртвые ~160-320 КБ на символ.</p>
+<p>На пилоте это неважно: универсум меняется единицами символов в месяц, и даже сотня мёртвых
+записей — десятки мегабайт. Но по-хорошему нужна чистка по универсуму: при старте (или раз
+в сутки) удалять <code>book_checkpoint</code> для символов, которых нет в текущем
+<code>symbols</code> из <code>live_config.yaml</code>. Делать её надо аккуратно — символ может временно выпасть
+из конфига и вернуться, поэтому безопаснее удалять по возрасту (<code>written_at</code> старше
+нескольких суток) и логировать что именно удалено, а не молча вычищать по разнице множеств.
+Триггер возврата — §11 ADR.</p>
+<hr />
+<h2 id="5-7-adr">5. Чтение — протокол старта трейдера (§7 ADR)<a class="headerlink" href="#5-7-adr" title="Permanent link">&para;</a></h2>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>1. читает PG: для каждого символа — свой блок книги на границу последнего завершённого
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>   бара + (u, seq, trades_seq, events_seq). Новейшая завершённая граница выбирается
+</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>   per-symbol: часть символов может быть на границе N, часть (краш между коммитами)
+</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>   на N-1; символ без строки стартует холодно и остальных не блокирует
+</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>2. диффы: per-symbol консьюмеры md.{market}.diff.{symbol}, opt_start_seq = seq+1,
+</span><span id="__span-3-6"><a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>   параллельно → отбрасывает u &lt;= u_snapshot, применяет остальные
+</span><span id="__span-3-7"><a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>3. сделки: per-symbol консьюмеры md.{market}.trade.{symbol}, opt_start_seq = trades_seq+1,
+</span><span id="__span-3-8"><a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>   параллельно → идемпотентность по Nats-Msg-Id обязательна (ring аддитивен)
+</span><span id="__span-3-9"><a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>4. события: один консьюмер на MD_EVENTS от MIN(events_seq)+1 по символам границы
+</span><span id="__span-3-10"><a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>   (позиций 60, консьюмер один — стартуем от самой старой, иначе пропуск);
+</span><span id="__span-3-11"><a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>   каждый символ отбрасывает события старше своего events_seq;
+</span><span id="__span-3-12"><a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>   → kline/mark/liq поля + LiqDeque; идемпотентность по Nats-Msg-Id обязательна
+</span><span id="__span-3-13"><a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>5. Engine в режиме реплея: эмит баров подавлен
+</span><span id="__span-3-14"><a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>6. догнали хвост по всем трём стримам → переключение в live
+</span><span id="__span-3-15"><a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>7. бар в стратегию, только если есть слот на каждую секунду бара
+</span><span id="__span-3-16"><a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>8. codec не распознан / нет чекпойнта / PG пуст / ретеншн MD_DIFF/MD_TRADE превышен
+</span><span id="__span-3-17"><a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>   → холодный старт: REST /depth, первый бар неполный
+</span><span id="__span-3-18"><a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a>9. дырка (spot U != last_u+1, USD-M pu != last_u) при живом чекпойнте
+</span><span id="__span-3-19"><a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a>   → остаёмся на текущей книге, бары за окно неполные, ресинка нет
+</span></code></pre></div>
+<p>Per-symbol независимость: каждый символ восстанавливается своим блобом и своим <code>u</code>,
+один битый символ не блокирует остальные.</p>
+<p><strong>Почему частичная граница возможна и почему это нормально.</strong> 60 символов чекаются
+60 независимыми транзакциями на каждой 30-минутной границе. Крэш между коммитами
+(kill -9, ребут, OOM) оставляет часть символов на новой границе N, часть — на
+предыдущей N-1. Это штатный исход, а не исключение: каждый символ реплеит от своей
+границы (п.1), отставшие догоняют лишней работой (дубли идемпотентны), пропусков нет.
+Максимальная длина реплея — ~60 минут (символ с N-1 + долгое лежание), это цена RTO x2
+из D5, а не потеря данных. Хранимых границ всегда максимум две (<code>keep &gt;= 2</code>, §2):
+символ без строки ни на одной из них стартует холодно.</p>
+<p><strong>Почему <code>MD_EVENTS</code> — один консьюмер от глобального <code>MIN(events_seq)</code>.</strong>
+DIFF и TRADE реплеятся per-symbol, каждый от своей позиции, лишнего не читают (пп.2-3).
+EVENTS делят один консьюмер на всех (объем мал, ~10-50 msg/s, делить на 60 нечем),
+поэтому стартует от самой старой позиции — иначе символы со старым <code>events_seq</code>
+получат пропуск. Внутри одной границы указатели рядом (символы чекаются параллельно
+за секунды), лишнего почти нет. При расщеплении N/N-1 символы новой границы
+перечитают до ~30 минут чужих EVENTS — это 18-90k сообщений, 1-4 секунды реплея,
+допустимо: дубли отбрасываются по <code>events_seq</code> символа + <code>Nats-Msg-Id</code>. Отдельный
+консьюмер на группу границы не заводится осознанно (два эфемерных консьюмера ради
+секунд экономии при краше раз в месяц — лишний механизм).</p>
+<p>Writer (D8) использует отдельный durable consumer, его offset хранит брокер — в PG его
+нет: у writer'а семантика «продолжить с последнего ack», а не «с границы бара».</p>
+<hr />
+<h2 id="6-pg">6. Что в PG НЕ хранится<a class="headerlink" href="#6-pg" title="Permanent link">&para;</a></h2>
+<p>Всё производное восстанавливается реплеем — это D4, и здесь он выполним:</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>откуда берётся</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>55 тиковых полей слота: трейды</td>
+<td>реплей <code>MD_TRADE</code> от <code>trades_seq</code> (per-symbol, параллельно)</td>
+</tr>
+<tr>
+<td>55 тиковых полей слота: клайны/mark/ликвидации/funding</td>
+<td>реплей <code>MD_EVENTS</code> от <code>events_seq</code></td>
+</tr>
+<tr>
+<td>25 книжных полей слота</td>
+<td>блоб + реплей <code>MD_DIFF</code> от <code>seq</code>, скаляры пересчитываются</td>
+</tr>
+<tr>
+<td><code>LiqDeque</code> (<code>ob__liq_shock_*</code>)</td>
+<td>forceOrder приходят в <code>MD_EVENTS</code></td>
+</tr>
+<tr>
+<td><code>book_updates_count</code> / <code>seq_gaps</code> / <code>resync_count</code></td>
+<td>это дельты с прошлой выборки, а не тотал'ы (<code>metrics_engine/book_replay.py:77</code>) — переаккумулируются из реплеенных диффов</td>
+</tr>
+<tr>
+<td><code>_next_bar</code>, <code>_cur_bucket</code></td>
+<td>выводятся из выравнивания бара</td>
+</tr>
+<tr>
+<td><code>_cur</code> — незакрытый слот</td>
+<td>&lt;1 с, добирается хвостом реплея</td>
+</tr>
+<tr>
+<td>кольцо целиком</td>
+<td>результат всего вышеперечисленного</td>
+</tr>
+<tr>
+<td>paper-позиции, equity</td>
+<td>не durable (D10)</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="7">7. Связанные решения<a class="headerlink" href="#7" title="Permanent link">&para;</a></h2>
+<ul>
+<li>D4 — окно реплея от границы бара, а не от места остановки; три стрима — три позиции.</li>
+<li>D6 — книга целиком, без среза; рост принят, рычаг отложен.</li>
+<li>D8 — <code>FileWriter</code> как durable consumer, offset у брокера.</li>
+<li>§11 ADR — отложенные рычаги и триггеры возврата.</li>
+<li>§9 ADR + <code>measurements.md</code> §6-7 — измеренная стоимость реплея и ограничение по каденции книжных скаляров.</li>
+</ul>
 
 
 

@@ -11,7 +11,7 @@
       
       
       
-        <link rel="canonical" href="https://sncapital.github.io/Docs/alpha-engine/metrics-ru/markprice/">
+        <link rel="canonical" href="https://sncapital.github.io/Docs/adr/0001-collector-trader-split/measurements/">
       
       
       
@@ -24,7 +24,7 @@
     
     
       
-        <title>Markprice — mark/index price и предсказанный funding - SN Capital — Backend</title>
+        <title>ADR-0001 — замеры потоков Binance - SN Capital — Backend</title>
       
     
     
@@ -77,7 +77,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#markprice-markindex-price-funding" class="md-skip">
+        <a href="#adr-0001-binance" class="md-skip">
           Skip to content
         </a>
       
@@ -113,7 +113,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Markprice — mark/index price и предсказанный funding
+              ADR-0001 — замеры потоков Binance
             
           </span>
         </div>
@@ -278,7 +278,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="../../" class="md-tabs__link">
+        <a href="../../../alpha-engine/" class="md-tabs__link">
           
   
   
@@ -388,7 +388,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="../../../adr/0001-collector-trader-split/0001-collector-trader-split/" class="md-tabs__link">
+        <a href="../0001-collector-trader-split/" class="md-tabs__link">
           
   
   
@@ -753,7 +753,7 @@
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="../../" class="md-nav__link ">
+            <a href="../../../alpha-engine/" class="md-nav__link ">
               
   
   
@@ -797,7 +797,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../pipeline/" class="md-nav__link">
+      <a href="../../../alpha-engine/pipeline/" class="md-nav__link">
         
   
   
@@ -825,7 +825,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../data-layer/" class="md-nav__link">
+      <a href="../../../alpha-engine/data-layer/" class="md-nav__link">
         
   
   
@@ -853,7 +853,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../writing-a-strategy/" class="md-nav__link">
+      <a href="../../../alpha-engine/writing-a-strategy/" class="md-nav__link">
         
   
   
@@ -881,7 +881,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../markowitz/" class="md-nav__link">
+      <a href="../../../alpha-engine/markowitz/" class="md-nav__link">
         
   
   
@@ -909,7 +909,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../backtesting/" class="md-nav__link">
+      <a href="../../../alpha-engine/backtesting/" class="md-nav__link">
         
   
   
@@ -937,7 +937,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../live-trading/" class="md-nav__link">
+      <a href="../../../alpha-engine/live-trading/" class="md-nav__link">
         
   
   
@@ -1904,7 +1904,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../../adr/0001-collector-trader-split/0001-collector-trader-split/" class="md-nav__link">
+      <a href="../0001-collector-trader-split/" class="md-nav__link">
         
   
   
@@ -2395,22 +2395,22 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#_1" class="md-nav__link">
+  <a href="#1-" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Общий контекст
+        1. Офлайн-замеры (без сети)
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Общий контекст">
+    <nav class="md-nav" aria-label="1. Офлайн-замеры (без сети)">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#_2" class="md-nav__link">
+  <a href="#11-json-ws-envelope-stream-data" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Источник данных
+        1.1 Размер сырого JSON WS-envelope {stream, data}
       
     </span>
   </a>
@@ -2418,21 +2418,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#_3" class="md-nav__link">
+  <a href="#12-5" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Используемые поля
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#_4" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Каденс
+        1.2 Скорость парсинга/применения (синтетика, медиана 5 повторов)
       
     </span>
   </a>
@@ -2445,22 +2434,44 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#30" class="md-nav__link">
+  <a href="#2-live-ws" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Алгоритм агрегации в 30 минут
+        2. Live-замеры WS
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Алгоритм агрегации в 30 минут">
+    <nav class="md-nav" aria-label="2. Live-замеры WS">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#edge-cases" class="md-nav__link">
+  <a href="#21" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Edge cases
+        2.1 Прогоны
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#22-depth-10-l6" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.2 Depth, 10 мин (L6)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#23-market-10-l7" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.3 Market-стримы, 10 мин (L7)
       
     </span>
   </a>
@@ -2473,71 +2484,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#_5" class="md-nav__link">
+  <a href="#3" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Метрики
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Метрики">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#mark_price" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        mark_price
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#index_price" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        index_price
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#predicted_funding" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        predicted_funding
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#next_funding_time_ms" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        next_funding_time_ms
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#_6" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Сводка финальных ключей
+        3. Максимальные периоды подписок (принятый профиль)
       
     </span>
   </a>
@@ -2545,10 +2495,54 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#_7" class="md-nav__link">
+  <a href="#4-fstream" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Связь с другими блоками
+        4. Роутинг fstream (критично для кода)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-rest-" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. REST-замеры
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-running-kline-booksnapshot" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Экстраполяции в очередь (без running kline, без booksnapshot)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-nats-jetstream" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. NATS JetStream (перепроверено)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8. Что не измерено здесь
       
     </span>
   </a>
@@ -2575,133 +2569,451 @@
   
 
 
-<h1 id="markprice-markindex-price-funding">Markprice — mark/index price и предсказанный funding<a class="headerlink" href="#markprice-markindex-price-funding" title="Permanent link">&para;</a></h1>
-<p>Метрики из WS-стрима <code>&lt;symbol&gt;@markPrice@1s</code> на USD-M perpetual'ах.
-Только usdm; для spot этих данных нет.</p>
-<p>Документ описывает <strong>целевую спецификацию</strong>.</p>
-<hr />
-<h2 id="_1">Общий контекст<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
-<h3 id="_2">Источник данных<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h3>
-<p>Парсер пишет parquet:
-<div class="language-text highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>data/market=usdm/type=markprice/dt=YYYY-MM-DD/symbol=SYM/part-*.parquet
-</span></code></pre></div></p>
-<p>Источник — WS-стрим <code>&lt;symbol&gt;@markPrice@1s</code>. Биржа шлёт по одному
-сообщению <strong>в секунду</strong> на каждую usdm-пару с актуальными
-mark/index ценами и обновлённым предсказанным funding'ом.</p>
-<h3 id="_3">Используемые поля<a class="headerlink" href="#_3" title="Permanent link">&para;</a></h3>
-<p>После нормализации reader'ом (где <code>predicted_funding_rate</code> →
-<code>predicted_funding</code> для совместимости со спекой):</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>timestamp_ms          : int64    # время WS-сообщения
-</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>symbol                : string
-</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>mark_price            : float    # реальная mark-price (для liquidation engine)
-</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>index_price           : float    # подлежащий спот-индекс (basis = mark - index)
-</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>predicted_funding     : float    # прогноз ставки на следующий settlement (доля)
-</span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>next_funding_time_ms  : int64    # время следующего settlement'а
-</span></code></pre></div>
-<h3 id="_4">Каденс<a class="headerlink" href="#_4" title="Permanent link">&para;</a></h3>
-<p>1 Hz на каждый тикер: на 30-минутный бар обычно ~1800 точек на тикер.</p>
-<hr />
-<h2 id="30">Алгоритм агрегации в 30 минут<a class="headerlink" href="#30" title="Permanent link">&para;</a></h2>
-<p>Все четыре метрики — <strong>last value at bar boundary</strong>: берём значение
-последнего markprice-сэмпла, попавшего в бар (или forward-fill от
-предыдущего бара, если в текущем баре сэмплов не было).</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>markprice_at(t) = последняя markprice-запись с timestamp_ms ≤ t
-</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>
-</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>mark_price(B)            = mark_price            from markprice_at(B.end - ε)
-</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>index_price(B)           = index_price           from same
-</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>predicted_funding(B)     = predicted_funding     from same
-</span><span id="__span-2-6"><a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>next_funding_time_ms(B)  = next_funding_time_ms  from same
-</span><span id="__span-2-7"><a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>
-</span><span id="__span-2-8"><a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>= NaN для каждой если нет markprice-записей до B.end
-</span></code></pre></div>
-<p>В терминах pandas: <code>df.resample("30min").last().reindex(all_bars_idx, method="ffill")</code>.</p>
-<h3 id="edge-cases">Edge cases<a class="headerlink" href="#edge-cases" title="Permanent link">&para;</a></h3>
-<ul>
-<li>Бар до запуска парсера или до листинга символа → NaN для всех 4
-  метрик.</li>
-<li>Spot-тикер → NaN всегда (нет markprice WS-стрима).</li>
-<li>Парсер пропустил несколько секунд → метрики берутся из последней
-  имеющейся точки (forward-fill через дыры).</li>
-</ul>
-<hr />
-<h2 id="_5">Метрики<a class="headerlink" href="#_5" title="Permanent link">&para;</a></h2>
-<h3 id="mark_price"><code>mark_price</code><a class="headerlink" href="#mark_price" title="Permanent link">&para;</a></h3>
-<p>Реальная mark-price (используется биржевым liquidation engine'ом для
-расчёта PnL и триггера ликвидаций).</p>
-<p><strong>Что говорит.</strong> Эталонная цена контракта. Часто отличается от
-last-trade-price (особенно в стрессе). Альфы про liquidation triggers
-смотрят сюда, не на trade close.</p>
-<h3 id="index_price"><code>index_price</code><a class="headerlink" href="#index_price" title="Permanent link">&para;</a></h3>
-<p>Спотовый подлежащий индекс — взвешенное по объёму среднее spot-цены
-с нескольких бирж, на основе которого вычисляется mark.</p>
-<p><strong>Что говорит.</strong> Прокси для «справедливой» цены без futures-перекоса.
-Разница <code>mark - index</code> ≈ basis (премия фьючерса над спотом).</p>
-<h3 id="predicted_funding"><code>predicted_funding</code><a class="headerlink" href="#predicted_funding" title="Permanent link">&para;</a></h3>
-<p>Предсказанный funding rate на следующий settlement. Хранится как
-доля (<code>0.0001 = 1bp</code>). Обновляется биржой каждую секунду на основе
-текущего basis'а.</p>
-<p><strong>Что говорит.</strong> Forward-looking сигнал перекоса позиций. В отличие
-от <code>realized_funding</code> (см. <a href="../funding/">funding.md</a>) — это <strong>прогноз</strong>,
-который меняется в реальном времени.</p>
-<h3 id="next_funding_time_ms"><code>next_funding_time_ms</code><a class="headerlink" href="#next_funding_time_ms" title="Permanent link">&para;</a></h3>
-<p>Время в миллисекундах UTC, когда произойдёт следующий settlement
-funding'а (одно из 00:00, 08:00, 16:00 UTC).</p>
-<p><strong>Что говорит.</strong> Метаданные для синхронизации стратегий с funding
-циклом. Полезно для triggered-альф, которые активируются за N минут
-до funding settlement.</p>
-<hr />
-<h2 id="_6">Сводка финальных ключей<a class="headerlink" href="#_6" title="Permanent link">&para;</a></h2>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>mark_price
-</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>index_price
-</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>predicted_funding
-</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>next_funding_time_ms
-</span></code></pre></div>
-<p><strong>4 ключа. Только usdm. NaN для spot и для пробелов в данных.</strong></p>
-<hr />
-<h2 id="_7">Связь с другими блоками<a class="headerlink" href="#_7" title="Permanent link">&para;</a></h2>
+<h1 id="adr-0001-binance">ADR-0001 — замеры потоков Binance<a class="headerlink" href="#adr-0001-binance" title="Permanent link">&para;</a></h1>
+<p>Все цифры ниже — измеренные, не расчётные. Методика, сырые итоги прогонов,
+максимальные периоды подписок и экстраполяции на 60/600 символов.
+Дата live-сессии: 2026-09-03, активный рынок. Скрипты: инлайн <code>python -c</code>
+и <code>live_capture*.py</code> (временная директория, в репо не входят); воспроизведение —
+подпиской из §2 на те же стримы на ту же длительность.</p>
+<h2 id="1-">1. Офлайн-замеры (без сети)<a class="headerlink" href="#1-" title="Permanent link">&para;</a></h2>
+<p>Окружение: Python 3.12, Windows. Фикстуры <code>binance_parser/tests/test_models.py</code>.</p>
+<h3 id="11-json-ws-envelope-stream-data">1.1 Размер сырого JSON WS-envelope <code>{stream, data}</code><a class="headerlink" href="#11-json-ws-envelope-stream-data" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
 <tr>
-<th>Метрика</th>
-<th>Где</th>
-<th>Различие</th>
+<th>Поток</th>
+<th>Средний размер</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td><code>predicted_funding</code></td>
-<td>здесь</td>
-<td>прогноз, обновляется секундно</td>
+<td>diff (2bid+1ask)</td>
+<td>188 Б spot / 196 Б usdm (+8 Б за <code>pu</code>)</td>
 </tr>
 <tr>
-<td><code>realized_funding</code></td>
-<td><a href="../funding/">funding.md</a></td>
-<td>факт, обновляется 3 раза в сутки</td>
+<td>diff параметрически (/сторону)</td>
+<td>1 ур. ~175 Б, 5 ур. ~345 Б, 10 ур. ~555 Б, 20 ур. ~975 Б, 50 ур. ~2235 Б</td>
 </tr>
 <tr>
-<td><code>close_price</code></td>
-<td><a href="../klines/">klines.md</a></td>
-<td>last trade price из klines</td>
+<td>aggTrade</td>
+<td>169 Б (живьём 203–205 Б — в фикстуре короткие числа)</td>
 </tr>
 <tr>
-<td><code>last_best_*_price</code></td>
-<td><a href="../orderbook-l1/">orderbook-l1.md</a></td>
-<td>last best bid/ask из снапшотов</td>
+<td>trade</td>
+<td>159 Б</td>
 </tr>
 <tr>
-<td><code>mark_price</code></td>
-<td>здесь</td>
-<td>биржевой эталон, не trade-price</td>
+<td>kline closed 1m</td>
+<td>295 Б (живьём 335–349 Б)</td>
+</tr>
+<tr>
+<td>markPrice</td>
+<td>179 Б (живьём 207–223 Б)</td>
+</tr>
+<tr>
+<td>forceOrder</td>
+<td>224 Б (живьём 242–247 Б)</td>
 </tr>
 </tbody>
 </table>
-<p>Это <strong>четыре разных способа</strong> ответить на вопрос «какая цена в этот
-момент»:
-- mark — для liquidation/PnL расчётов биржей
-- index — спотовый бенчмарк
-- close_price — последний trade price
-- mid (<code>(best_bid + best_ask) / 2</code>) — теоретический middle of book</p>
-<p>В стрессе они расходятся.</p>
+<h3 id="12-5">1.2 Скорость парсинга/применения (синтетика, медиана 5 повторов)<a class="headerlink" href="#12-5" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Операция</th>
+<th>Медиана</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>json.loads</code> + извлечение <code>data.u</code> (diff 3bid+2ask)</td>
+<td>3.78 мкс/сообщ. (n=20000)</td>
+</tr>
+<tr>
+<td><code>json.loads</code> + <code>WsEnvelope.from_raw</code> (aggTrade)</td>
+<td>4.87 мкс/сообщ. (n=20000)</td>
+</tr>
+<tr>
+<td><code>OrderBook._apply_levels</code> (diff 3 уровня)</td>
+<td>2.82 мкс/сообщ. (n=20000)</td>
+</tr>
+<tr>
+<td>Полный pipeline diff 5 уровней</td>
+<td>8.68 мкс/сообщ. (n=5000, ~115k дифф/с в микробенче)</td>
+</tr>
+</tbody>
+</table>
+<p>Без WS, сети, NATS и observer-цепи (<code>_fire_diff_observers</code>, <code>TODO(NSC-51)</code>);
+с цифрой §9 «17 мкс» — один порядок.</p>
+<h2 id="2-live-ws">2. Live-замеры WS<a class="headerlink" href="#2-live-ws" title="Permanent link">&para;</a></h2>
+<h3 id="21">2.1 Прогоны<a class="headerlink" href="#21" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Профиль</th>
+<th>Символы</th>
+<th>Длит.</th>
+<th>msg/s</th>
+<th>Байт/s</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>L1</td>
+<td>unrouted <code>.../stream?streams=</code> depth+aggTrade+mark+kline+forceOrder</td>
+<td>BTC,ETH,ADA</td>
+<td>68 с</td>
+<td>10.0 (только depth!)</td>
+<td>38 КБ/с</td>
+</tr>
+<tr>
+<td>L2</td>
+<td>unrouted depth</td>
+<td>BTC</td>
+<td>30 сообщ.</td>
+<td>только depth</td>
+<td>—</td>
+</tr>
+<tr>
+<td>L3</td>
+<td><code>/market</code> aggTrade+mark+kline+forceOrder</td>
+<td>BTC</td>
+<td>40 сообщ.</td>
+<td>39 aggTrade + 1 kline</td>
+<td>—</td>
+</tr>
+<tr>
+<td>L4</td>
+<td><code>/market</code> 13 стримов</td>
+<td>BTC,ETH,ADA</td>
+<td>90 с</td>
+<td>36.7</td>
+<td>8.3 КБ/с</td>
+</tr>
+<tr>
+<td>L5</td>
+<td><code>/public</code> depth + <code>/market</code> depth (проверка роутинга)</td>
+<td>BTC</td>
+<td>—</td>
+<td>depth только на <code>/public</code></td>
+<td>—</td>
+</tr>
+<tr>
+<td>L6</td>
+<td><code>/public</code> depth</td>
+<td>BTC,ETH,ADA,SOL,DOGE</td>
+<td>600 с</td>
+<td>19.34</td>
+<td>48.2 КБ/с</td>
+</tr>
+<tr>
+<td>L7</td>
+<td><code>/market</code> aggTrade+mark+kline+forceOrder</td>
+<td>BTC,ETH,ADA,SOL,DOGE</td>
+<td>600 с</td>
+<td>48.29</td>
+<td>11.2 КБ/с</td>
+</tr>
+<tr>
+<td>L8</td>
+<td><code>/public</code> depth@500ms</td>
+<td>BTC,ETH</td>
+<td>45 с</td>
+<td>4.0</td>
+<td>36.5 КБ/с</td>
+</tr>
+<tr>
+<td>L9</td>
+<td><code>/market</code> markPrice без суффикса</td>
+<td>BTC,ETH</td>
+<td>30 с</td>
+<td>0.667</td>
+<td>145 Б/с</td>
+</tr>
+</tbody>
+</table>
+<p>L1 — артефакт до понимания роутинга (см. §4): не смешивать с остальными.</p>
+<h3 id="22-depth-10-l6">2.2 Depth, 10 мин (L6)<a class="headerlink" href="#22-depth-10-l6" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Символ</th>
+<th>msg/s</th>
+<th>mean Б</th>
+<th>КБ/с</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>BTCUSDT</td>
+<td>3.97</td>
+<td>5340</td>
+<td>21.2</td>
+</tr>
+<tr>
+<td>ETHUSDT</td>
+<td>3.97</td>
+<td>4018</td>
+<td>15.9</td>
+</tr>
+<tr>
+<td>SOLUSDT</td>
+<td>3.91</td>
+<td>1221</td>
+<td>4.8</td>
+</tr>
+<tr>
+<td>DOGEUSDT</td>
+<td>3.82</td>
+<td>1110</td>
+<td>4.2</td>
+</tr>
+<tr>
+<td>ADAUSDT</td>
+<td>3.67</td>
+<td>561</td>
+<td>2.1</td>
+</tr>
+</tbody>
+</table>
+<p>Каденция подтверждает дефолт веню 250 мс на USD-M (код её не пинит — R1).</p>
+<h3 id="23-market-10-l7">2.3 Market-стримы, 10 мин (L7)<a class="headerlink" href="#23-market-10-l7" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Стрим</th>
+<th>BTC</th>
+<th>ETH</th>
+<th>SOL</th>
+<th>DOGE</th>
+<th>ADA</th>
+<th>mean Б</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>aggTrade /s</td>
+<td>15.9</td>
+<td>10.3</td>
+<td>3.7</td>
+<td>2.5</td>
+<td>1.8</td>
+<td>~204</td>
+</tr>
+<tr>
+<td>markPrice@1s /s</td>
+<td>1.00</td>
+<td>1.00</td>
+<td>1.00</td>
+<td>1.00</td>
+<td>1.00</td>
+<td>~215</td>
+</tr>
+<tr>
+<td>kline_1m running /s</td>
+<td>2.40</td>
+<td>2.16</td>
+<td>1.96</td>
+<td>1.36</td>
+<td>1.17</td>
+<td>~343</td>
+</tr>
+<tr>
+<td>forceOrder /10 мин</td>
+<td>9</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+<td>5</td>
+<td>~245</td>
+</tr>
+</tbody>
+</table>
+<p>Running kline код дропает (в очередь только closed 1/мин/символ).
+Итого market на 5 символов: 48.29 msg/s, 11.2 КБ/с; в очередь (без running):
+~39 msg/s, ~8.1 КБ/с.</p>
+<h2 id="3">3. Максимальные периоды подписок (принятый профиль)<a class="headerlink" href="#3" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Стрим</th>
+<th>Было (код)</th>
+<th>Макс. период</th>
+<th>Замер эффекта</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>depth (USD-M)</td>
+<td>голый <code>@depth</code> (= 250 мс веню)</td>
+<td><code>@depth@500ms</code></td>
+<td>ровно 2/s (L8); байты/s те же (BTC 22.5 vs 21.2, ETH 13.9 vs 15.9 КБ/с — шум активности)</td>
+</tr>
+<tr>
+<td>markPrice</td>
+<td><code>@markPrice@1s</code></td>
+<td>голый <code>@markPrice</code> (= 3 с)</td>
+<td>ровно 0.333/s (L9), ~218 Б/сообщ.</td>
+</tr>
+<tr>
+<td>kline</td>
+<td><code>kline_1m</code>, только closed</td>
+<td>без изменений: интервал — контракт данных для стратегий, не свободный рычаг</td>
+<td>closed 1/мин/символ</td>
+</tr>
+<tr>
+<td>aggTrade</td>
+<td>всегда</td>
+<td>без изменений: trade-driven, ручки нет</td>
+<td>—</td>
+</tr>
+<tr>
+<td>forceOrder</td>
+<td>всегда (usdm)</td>
+<td>без изменений: снапшот 1 с, событие редкое</td>
+<td>17 шт/10 мин на 5 символов</td>
+</tr>
+</tbody>
+</table>
+<p>Эффект максимального периода: msg/s режется (diffs 4/s → 2/s, mark 1/s → &#8531;s),
+байты/s почти не меняются (апдейт несёт больше изменений). Выигрыш — на
+per-message бюджетах (publish ~22k/s, consume ~26k/s, парсинг), не на трафике.
+Применение в коде: суффикс <code>@depth@500ms</code> + голый <code>@markPrice</code> (2 строки +
+обновление тестов подписок) — на момент замера НЕ внесено, числа ниже даны
+для обоих профилей.</p>
+<h2 id="4-fstream">4. Роутинг fstream (критично для кода)<a class="headerlink" href="#4-fstream" title="Permanent link">&para;</a></h2>
+<p>С 2026-03-06 (legacy retired 2026-04-23) <code>wss://fstream.binance.com</code> без
+пути отдаёт только Public (<code>@depth</code>). Проверено: L1/L2/L5.
+Код (<code>binance_parser/config/settings.py:25-26</code>) использует unrouted base —
+на фьючерсах приходил бы только depth. Нужно два соединения:
+<code>/public</code> для depth, <code>/market</code> для остального (<code>/market</code> depth не отдаёт —
+проверено таймаутом). Spot (<code>stream.binance.com:9443</code>) работает полностью
+без роутов (проверено: depth 1/s + aggTrade + kline).</p>
+<h2 id="5-rest-">5. REST-замеры<a class="headerlink" href="#5-rest-" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Запрос</th>
+<th>Размер</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>/fapi/v1/depth?symbol=BTCUSDT&amp;limit=1000</code></td>
+<td>42 КБ, ~1.8 с</td>
+</tr>
+<tr>
+<td><code>/fapi/v1/fundingRate</code> (1 строка)</td>
+<td>127 Б</td>
+</tr>
+<tr>
+<td><code>/fapi/v1/exchangeInfo</code> (всё)</td>
+<td>1.1 МБ / 893 символа (~1.2 КБ/символ)</td>
+</tr>
+</tbody>
+</table>
+<h2 id="6-running-kline-booksnapshot">6. Экстраполяции в очередь (без running kline, без booksnapshot)<a class="headerlink" href="#6-running-kline-booksnapshot" title="Permanent link">&para;</a></h2>
+<p>Измеренная база на символ: depth ~3.9 msg/s (дефолт) / 2.0 (max-период),
+market ~7.9 msg/s (из них mark 1/s, closed kline ~0.017/s).
+Микс 60 символов: 10 мажоров (~22 КБ/с) + 50 альтов (~5 КБ/с).</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>5 измеренных</th>
+<th>60 символов</th>
+<th>600 символов</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>msg/s, дефолт подписок</td>
+<td>~59</td>
+<td>~500–600 (240 diffs + 60 mark + ~240 trades)</td>
+<td>~5000–6000</td>
+</tr>
+<tr>
+<td>msg/s, max-период</td>
+<td>—</td>
+<td><strong>~380</strong> (120 diffs + 20 mark + ~240 trades)</td>
+<td>~3800</td>
+</tr>
+<tr>
+<td>Байты/s (оба профиля, ±активность)</td>
+<td>~56 КБ/с</td>
+<td><strong>~250–450 КБ/с</strong></td>
+<td>~2.5–4.5 МБ/с</td>
+</tr>
+<tr>
+<td>Сутки сырья</td>
+<td>~2.9 ГБ</td>
+<td><strong>~22–40 ГБ</strong></td>
+<td>~220–400 ГБ</td>
+</tr>
+<tr>
+<td>Буфер D9 (1 ч)</td>
+<td>~200 МБ</td>
+<td><strong>~1–1.6 ГБ RAM</strong></td>
+<td>н/п</td>
+</tr>
+</tbody>
+</table>
+<p>Живой поток 6000 msg/s @600 — в 4+ раз ниже потолка реплея 26k/s/процесс;
+выводы §9 по RTO не меняются.</p>
+<h2 id="7-nats-jetstream">7. NATS JetStream (перепроверено)<a class="headerlink" href="#7-nats-jetstream" title="Permanent link">&para;</a></h2>
+<p>Стенд: nats-server v2.10.27 windows-amd64, стоковый конфиг, file storage,
+loopback; клиент nats-py (pip, сентябрь 2026), Python 3.12, Windows.
+Payload 500 Б (~530 Б на проводе, как датасет ADR §9).
+Скрипт: <code>nats_bench.py</code> (временная директория). Сырые итоги — <code>nats_bench.json</code>.</p>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Утверждение ADR §9</th>
+<th>Перезамер</th>
+<th>Вердикт</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>N1</td>
+<td><code>limits</code>: ack не удаляет (500/500); <code>workqueue</code>: ack удаляет (0/500)</td>
+<td>limits: после ack осталось <strong>500</strong>, <code>get_msg(seq=1)</code> OK; workqueue: осталось <strong>0</strong>, seq=1 → 404</td>
+<td>подтверждено точно</td>
+</tr>
+<tr>
+<td>N2</td>
+<td>Веер 0.7–0.8 мс/консьюмер до 1200, доставка полная, 11–25 КБ памяти/шт</td>
+<td><strong>2.3–2.6 мс/шт</strong> (60/200/600/1200, 1200 за ~3.2 с), доставка OK везде, ноль ошибок; память по /varz на Windows не различима (нули)</td>
+<td>тот же порядок (×3 медленнее — Windows + новее клиент); вывод «шторма нет» в силе</td>
+</tr>
+<tr>
+<td>N3</td>
+<td>Доставка ~31k/s без заголовков, ~26k/s с <code>Nats-Msg-Id</code> (цена 14%)</td>
+<td><strong>31.1k/s</strong> без, <strong>26.9k/s</strong> с заголовком (20k сообщ., batch 500) → цена <strong>13.4%</strong></td>
+<td>подтверждено почти в цифру</td>
+</tr>
+<tr>
+<td>N4</td>
+<td>Публикация ~22k msg/s/процесс</td>
+<td>медианы 3 повторов по 10k: <strong>18.7–23.9k/s</strong> (разброс между повторами ±15%)</td>
+<td>подтверждено; штраф заголовка не воспроизвёлся (в шуме) — планировать по нижней границе</td>
+</tr>
+<tr>
+<td>N5</td>
+<td>Держать бар un-acked: 955 Б/сообщ. (413 МБ @60, 4.1 ГБ @600)</td>
+<td><strong>~352 Б/сообщ.</strong> RSS (20k unacked, tasklist) → <strong>~152 МБ @60, ~1.5 ГБ @600</strong></td>
+<td>порядок тот же, вывод D5 не меняется (всё равно нет места рядом с трейдером и PG)</td>
+</tr>
+</tbody>
+</table>
+<h2 id="8">8. Что не измерено здесь<a class="headerlink" href="#8" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Уникальность forceOrder-композита за 7 дней (блокер D7).</li>
+<li>Набор глубины после холодного старта (граница «недостоверны»).</li>
+<li>booksnapshot-партиция (48 full-depth/сутки/символ) в суммы выше НЕ входит.</li>
+</ul>
 
 
 
