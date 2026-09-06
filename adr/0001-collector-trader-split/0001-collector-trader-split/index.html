@@ -3208,8 +3208,8 @@
 <p>Технические (не двигать без пересмотра ADR):</p>
 <ul>
 <li>C1. Один VM: 8 vCPU / 16 GB / NVMe (<code>deploy/RUNBOOK.md</code>). Свободно ~9.5 ГБ под очередь в RAM — поэтому retention в RAM невозможен (см. решение о брокере).</li>
-<li>C2. Binance REST-лимит 2400 weight/мин; лимитеру доступно 2000 (<code>common/rate_limiter.py:135</code>, запас 400 вычтен). Один <code>/depth</code> USD-M <code>limit=1000</code> весит 20 (<code>live/orderbook.py:137</code>): 60 символов = 1200 weight, 600 = 12000 (минимум 6 минут упора в лимитер).</li>
-<li>C3. REST отдаёт максимум 1000 уровней (USD-M) / 5000 (spot) (<code>config/settings.py:43</code>). Top-1000 на BTCUSDT покрывает лишь ~0.15% от mid (замер §9/приложение) — ресинк даёт обрубок, а не книгу.</li>
+<li>C2. Binance REST-лимит 2400 weight/мин; лимитеру доступно 2000 (<code>collector/common/rate_limiter.py:135</code>, запас 400 вычтен). Один <code>/depth</code> USD-M <code>limit=1000</code> весит 20 (<code>collector/live/orderbook.py:137</code>): 60 символов = 1200 weight, 600 = 12000 (минимум 6 минут упора в лимитер).</li>
+<li>C3. REST отдаёт максимум 1000 уровней (USD-M) / 5000 (spot) (<code>collector/config/settings.py:43</code>). Top-1000 на BTCUSDT покрывает лишь ~0.15% от mid (замер §9/приложение) — ресинк даёт обрубок, а не книгу.</li>
 <li>C4. WS-подписки (профиль max-период, <code>measured</code> 2026-09-03, <code>measurements.md</code> §2-3):
   depth <code>@depth@500ms</code> (ровно 2/s, байты те же), markPrice без суффикса (ровно
   &#8531; с), <code>kline_1m</code> (в очередь только closed, 1/мин), aggTrade (trade-driven,
@@ -3220,12 +3220,12 @@
   (<code>@depth</code>); остальное — только <code>.../market/stream</code>, depth там нет (проверено
   живьём, <code>measurements.md</code> §4). Коллектор обязан держать два соединения:
   <code>/public</code> для depth, <code>/market</code> для остального. Код на момент ADR использует
-  один unrouted base (<code>config/settings.py:25-26</code>) — чинится в ветке №2.</li>
+   один unrouted base (<code>collector/config/settings.py:25-26</code>) — чинится в ветке №2.</li>
 <li>C6. Кандидаты универсума: пересечение спот-USDT × PERP-USDT — 355 символов
   (<code>measured</code> 2026-09-03; спот TRADING 1359, US-M TRADING 762, из них PERP USDT
   526). Пилот 60 собирается из этих 355, где есть и спот-история, и перп.</li>
-<li>C7. Бар 30 минут, UTC-aligned (<code>bar_minutes: 30</code>, <code>live_config.yaml</code>). Ring — 1800 слотов (<code>engine.py:145</code>, <code>tick_ms=1000</code>).</li>
-<li>C8. Конфиг только <code>live_config.yaml</code>, fail loud без in-code дефолтов (<code>alpha_engine/live/config.py:30</code>); env — только секреты и wiring (<code>BINANCE_API_*</code>, <code>nats.url</code>). CLI-флагов для тюнинга нет (AGENTS.md).</li>
+<li>C7. Бар 30 минут, UTC-aligned (<code>bar_minutes: 30</code>, <code>live_config.yaml</code>). Ring — 1800 слотов (<code>metrics/metrics_engine/engine.py:145</code>, <code>tick_ms=1000</code>).</li>
+<li>C8. Конфиг только <code>live_config.yaml</code>, fail loud без in-code дефолтов (<code>trader/config.py:30</code>); env — только секреты и wiring (<code>BINANCE_API_*</code>, <code>nats.url</code>). CLI-флагов для тюнинга нет (AGENTS.md).</li>
 </ul>
 <p>Организационные: пилот paper → testnet → mainnet; Go-парсера больше нет (<code>--metrics-roots</code> читает наши же parquet — расхождение каденции бэктест/live невозможно по построению).</p>
 <p>Внешние: схема событий принадлежит Binance; мы её не версионируем, а повторяем 1:1 (D7).</p>
@@ -3547,7 +3547,7 @@
   не байты: апдейт несёт больше изменений — замерено L8).</li>
 <li>Суточный объём сырья: <strong>~22-40 ГБ/сутки</strong> (<code>measured</code>, без booksnapshot).
   Архив — крупнейшая статья хранения: ~40-120 ГБ резидентно на 160 ГБ NVMe
-  (существующее правило архиватора <code>expired dt &gt; 3d</code>, <code>services/archive.py:44</code>)</li>
+   (существующее правило архиватора <code>expired dt &gt; 3d</code>, <code>collector/services/archive.py:44</code>)</li>
 <li>~8-15 ТБ/год в S3 <strong>до сжатия</strong> (<code>estimate</code> из измеренного суточного объёма;
   ratio zstd замерить в ветке №1). Планировать отдельно от очереди.</li>
 <li>PG: 60 строк раз в 30 мин (600 при 600 симв.), ~10-20 МБ на границу (<code>measured</code> порядок: ~160-320 КБ/символ при 10-20k уровней), живой объём ×2. <code>UPDATE</code>-чурна нет.</li>
