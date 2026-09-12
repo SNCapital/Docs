@@ -2632,17 +2632,20 @@ market = :m AND symbol = :s AND bar_ts &lt; :keep_from</code> после усп�
 </span><span id="__span-3-6"><a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>   параллельно → отбрасывает u &lt;= u_snapshot, применяет остальные
 </span><span id="__span-3-7"><a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>3. сделки: per-symbol консьюмеры md.{market}.trade.{symbol}, opt_start_seq = trades_seq+1,
 </span><span id="__span-3-8"><a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>   параллельно → идемпотентность по Nats-Msg-Id обязательна (ring аддитивен)
-</span><span id="__span-3-9"><a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>4. события: один консьюмер на MD_EVENTS от MIN(events_seq)+1 по символам границы
-</span><span id="__span-3-10"><a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>   (позиций 60, консьюмер один — стартуем от самой старой, иначе пропуск);
-</span><span id="__span-3-11"><a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>   каждый символ отбрасывает события старше своего events_seq;
-</span><span id="__span-3-12"><a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>   → kline/mark/liq поля + LiqDeque; идемпотентность по Nats-Msg-Id обязательна
-</span><span id="__span-3-13"><a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>5. Engine в режиме реплея: эмит баров подавлен
-</span><span id="__span-3-14"><a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>6. догнали хвост по всем трём стримам → переключение в live
-</span><span id="__span-3-15"><a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>7. бар в стратегию, только если есть слот на каждую секунду бара
-</span><span id="__span-3-16"><a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>8. codec не распознан / нет чекпойнта / PG пуст / ретеншн MD_DIFF/MD_TRADE превышен
-</span><span id="__span-3-17"><a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>   → холодный старт: REST /depth, первый бар неполный
-</span><span id="__span-3-18"><a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a>9. дырка (spot U != last_u+1, USD-M pu != last_u) при живом чекпойнте
-</span><span id="__span-3-19"><a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a>   → остаёмся на текущей книге, бары за окно неполные, ресинка нет
+</span><span id="__span-3-9"><a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>4. события: per-symbol × N-subject fetches из MD_EVENTS от общего
+</span><span id="__span-3-10"><a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>   MIN(events_seq)+1 по символам границы (позиций 60 — стартуем от самой
+</span><span id="__span-3-11"><a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>   старой, иначе пропуск);
+</span><span id="__span-3-12"><a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>   каждый символ отбрасывает события старше своего events_seq;
+</span><span id="__span-3-13"><a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>   → kline/mark/liq поля + LiqDeque; идемпотентность по Nats-Msg-Id обязательна
+</span><span id="__span-3-14"><a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>5. Engine в режиме реплея: эмит баров подавлен
+</span><span id="__span-3-15"><a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>6. догнали хвост по всем трём стримам → переключение в live
+</span><span id="__span-3-16"><a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>7. бар в стратегию, только если есть слот на каждую секунду бара
+</span><span id="__span-3-17"><a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>8. codec не распознан / нет чекпойнта / PG пуст / NATS недоступен на старте
+</span><span id="__span-3-18"><a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a>   → холодный старт: REST /depth, первый бар неполный. Ретеншн превышен при
+</span><span id="__span-3-19"><a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a>   живом чекпойнте → не холодный старт, а `"hole"`: остаёмся на книге из
+</span><span id="__span-3-20"><a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a>   чекпойнта, бары за окно неполные (рационал C3)
+</span><span id="__span-3-21"><a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a>9. дырка (spot U != last_u+1, USD-M pu != last_u) при живом чекпойнте
+</span><span id="__span-3-22"><a id="__codelineno-3-22" name="__codelineno-3-22" href="#__codelineno-3-22"></a>   → остаёмся на текущей книге, бары за окно неполные, ресинка нет
 </span></code></pre></div>
 <p>Per-symbol независимость: каждый символ восстанавливается своим блобом и своим <code>u</code>,
 один битый символ не блокирует остальные.</p>
@@ -2654,12 +2657,12 @@ market = :m AND symbol = :s AND bar_ts &lt; :keep_from</code> после усп�
 Максимальная длина реплея — ~60 минут (символ с N-1 + долгое лежание), это цена RTO x2
 из D5, а не потеря данных. Хранимых границ всегда максимум две (<code>keep &gt;= 2</code>, §2):
 символ без строки ни на одной из них стартует холодно.</p>
-<p><strong>Почему <code>MD_EVENTS</code> — один консьюмер от глобального <code>MIN(events_seq)</code>.</strong>
+<p><strong>Почему <code>MD_EVENTS</code> — per-symbol × N-subject fetches от общего <code>MIN(events_seq)</code>.</strong>
 DIFF и TRADE реплеятся per-symbol, каждый от своей позиции, лишнего не читают (пп.2-3).
-EVENTS делят один консьюмер на всех (объем мал, ~10-50 msg/s, делить на 60 нечем),
-поэтому стартует от самой старой позиции — иначе символы со старым <code>events_seq</code>
-получат пропуск. Внутри одной границы указатели рядом (символы чекаются параллельно
-за секунды), лишнего почти нет. При расщеплении N/N-1 символы новой границы
+EVENTS фетчатся per-symbol по каждому subject из общего <code>MIN(events_seq)+1</code> —
+иначе символы со старым <code>events_seq</code> получат пропуск. Внутри одной границы
+указатели рядом (символы чекаются параллельно за секунды), лишнего почти нет.
+При расщеплении N/N-1 символы новой границы
 перечитают до ~30 минут чужих EVENTS — это 18-90k сообщений, 1-4 секунды реплея,
 допустимо: дубли отбрасываются по <code>events_seq</code> символа + <code>Nats-Msg-Id</code>. Отдельный
 консьюмер на группу границы не заводится осознанно (два эфемерных консьюмера ради

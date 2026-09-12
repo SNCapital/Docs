@@ -3208,7 +3208,7 @@
 <p>Технические (не двигать без пересмотра ADR):</p>
 <ul>
 <li>C1. Один VM: 8 vCPU / 16 GB / NVMe (<code>deploy/RUNBOOK.md</code>). Свободно ~9.5 ГБ под очередь в RAM — поэтому retention в RAM невозможен (см. решение о брокере).</li>
-<li>C2. Binance REST-лимит 2400 weight/мин; лимитеру доступно 2000 (<code>collector/common/rate_limiter.py:135</code>, запас 400 вычтен). Один <code>/depth</code> USD-M <code>limit=1000</code> весит 20 (<code>collector/live/orderbook.py:137</code>): 60 символов = 1200 weight, 600 = 12000 (минимум 6 минут упора в лимитер).</li>
+<li>C2. Binance REST-лимит 2400 weight/мин; лимитеру доступно 2000 (<code>collector/shared/rate_limiter.py:135</code>, запас 400 вычтен). Один <code>/depth</code> USD-M <code>limit=1000</code> весит 20 (<code>collector/live/orderbook.py:137</code>): 60 символов = 1200 weight, 600 = 12000 (минимум 6 минут упора в лимитер).</li>
 <li>C3. REST отдаёт максимум 1000 уровней (USD-M) / 5000 (spot) (<code>collector/config/settings.py:43</code>). Top-1000 на BTCUSDT покрывает лишь ~0.15% от mid (замер §9/приложение) — ресинк даёт обрубок, а не книгу.</li>
 <li>C4. WS-подписки (профиль max-период, <code>measured</code> 2026-09-03, <code>measurements.md</code> §2-3):
   depth <code>@depth@500ms</code> (ровно 2/s, байты те же), markPrice без суффикса (ровно
@@ -3218,9 +3218,10 @@
 <li>C5. Роутинг fstream (иначе потоков нет физически): с 2026-03-06 (legacy retired
   2026-04-23) unrouted <code>wss://fstream.binance.com/stream</code> отдаёт только Public
   (<code>@depth</code>); остальное — только <code>.../market/stream</code>, depth там нет (проверено
-  живьём, <code>measurements.md</code> §4). Коллектор обязан держать два соединения:
-  <code>/public</code> для depth, <code>/market</code> для остального. Код на момент ADR использует
-   один unrouted base (<code>collector/config/settings.py:25-26</code>) — чинится в ветке №2.</li>
+   живьём, <code>measurements.md</code> §4). Коллектор держит два соединения:
+   <code>/public</code> для depth, <code>/market</code> для остального. Код на момент правки уже
+   использует два роученых base (<code>WS_PUBLIC_BASES</code>/<code>WS_MARKET_BASES</code>,
+   <code>collector/config/settings.py:25-32</code>) — требование C5 закрыто кодом.</li>
 <li>C6. Кандидаты универсума: пересечение спот-USDT × PERP-USDT — 355 символов
   (<code>measured</code> 2026-09-03; спот TRADING 1359, US-M TRADING 762, из них PERP USDT
   526). Пилот 60 собирается из этих 355, где есть и спот-история, и перп.</li>
@@ -3233,7 +3234,7 @@
 <ul>
 <li>A1. <code>T_repair ~ 1ч</code> — починка NATS/сети человеком укладывается в час (кап буфера D9). Ошибка: простой дольше капа → дроп со счётчиком → дырка в диффах → бары неполные (§11).</li>
 <li>A2. Профиль §9 (<code>measured</code> 2026-09-03, активный рынок, 5 символов → экстраполяция на 60/600) репрезентативен для пилота. Ошибка: рынок в разы активнее или скачок универсума → первым упирается реплей в RTO (§11, что ломается при ×5), затем диск очереди/архива.</li>
-<li>A3. Один VM, loopback = internal без auth (§13). Ошибка (разъезд по хостам): пересмотреть буфер D9, Security §13 (NATS creds + PG SCRAM + TLS) — триггер в шапке.</li>
+<li>A3. Один VM, internal без NATS-auth (PG — пароль+SCRAM, порты NATS/дашборда опубликованы на хосте — §13). Ошибка (разъезд по хостам): пересмотреть буфер D9, Security §13 (NATS creds + TLS) — триггер в шапке.</li>
 </ul>
 <h2 id="4-context-c4-l1">4. Context (C4-L1)<a class="headerlink" href="#4-context-c4-l1" title="Permanent link">&para;</a></h2>
 <p>Система — исследовательская live-платформа: стримит маркет-дату, считает 791 ключ метрик, торгует/симулирует по 30-минутным барам, пишет архив в parquet → S3. Внешние акторы: Binance (WS/REST, untrusted), оператор (дашборд read-only), S3-совместимое хранилище (архив).</p>
@@ -3275,7 +3276,7 @@
   ARC --&gt;|"S: HTTPS PUT"| S32
   TRD --&gt;|"file: live_state.json"| DSH
   BRW --&gt;|"S: HTTPS"| DSH
-  TRD --&gt;|"S: HTTPS REST /depth, только холодный старт"| BIN2</code></pre>
+  TRD --&gt;|"S: HTTPS REST: /depth (cold start) + /fapi/v1/time (sync) + exchangeInfo (filters) + /fapi/v1/order (testnet/mainnet)"| BIN2</code></pre>
 <table>
 <thead>
 <tr>
@@ -3318,7 +3319,7 @@
 </tr>
 </tbody>
 </table>
-<p>Trust boundary: всё внутри VM — internal (loopback, без auth — см. §13 с триггером); снаружи — Binance, S3, браузер — untrusted. Управляющей связи collector ↔ trader нет.</p>
+<p>Trust boundary: всё внутри VM — internal (NATS без auth, PG — пароль+SCRAM; порты NATS <code>4222/8222</code> и дашборда опубликованы на хосте — см. §13 с триггером); снаружи — Binance, S3, браузер — untrusted. Управляющей связи collector ↔ trader нет.</p>
 <p>Subjects (контракт, версионируется сменой с простоем):</p>
 <div class="language-text highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>md.{market}.diff.{symbol}     диффы стакана
 </span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>md.{market}.trade.{symbol}    aggTrade (+ trade при reconstruct_multileveled)
@@ -3328,6 +3329,7 @@
 </span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>md.{market}.info.{symbol}     exchange_info (строки поллеров)
 </span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>md.{market}.funding.{symbol}  funding settlement
 </span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>md.{market}.stats.{symbol}    market_stats
+</span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>md.{market}.hb.{symbol}       quiet-heartbeat (F3, synthetic, едет в MD_EVENTS)
 </span></code></pre></div>
 <p>Streams (инвариант, не настройка): <code>MD_DIFF</code> (<code>md.*.diff.*</code>), <code>MD_TRADE</code> (<code>md.*.trade.*</code>), <code>MD_EVENTS</code> (остальное). <code>retention: limits</code> обязателен — под <code>workqueue</code> ack writer'а физически удалял бы диффы для реплея трейдера (замерено 500/500 vs 0/500, см. спутник §3). <code>MD_SNAP</code> отсутствует — публиковать нечего (D3).</p>
 <h2 id="6-components">6. Components<a class="headerlink" href="#6-components" title="Permanent link">&para;</a></h2>
@@ -3362,11 +3364,15 @@
   participant T as trader (restart)
   participant P as Postgres
   T-&gt;&gt;P: read checkpoint @ bar boundary + seqs
-  alt checkpoint найден и retention покрывает
-    T-&gt;&gt;J: per-symbol replay MD_DIFF from seq+1, MD_TRADE from trades_seq+1, MD_EVENTS from MIN(events_seq)+1
+  alt checkpoint найден
+    T-&gt;&gt;J: per-symbol replay: MD_DIFF from seq+1, MD_TRADE from trades_seq+1, MD_EVENTS per-subject fetches from shared MIN(events_seq)+1
     J-&gt;&gt;T: backlog (AckNone, фильтр u &gt; u_snapshot, dedup по MsgId)
-    T-&gt;&gt;T: Engine в replay (эмит подавлен) → догнал хвост → live
-  else нет чекпойнта / PG пуст / retention превышен
+    alt retention покрывает (first seq == start)
+      T-&gt;&gt;T: Engine в replay (эмит подавлен) → догнал хвост → live
+    else retention hole (first seq past start)
+      T-&gt;&gt;T: hole: остаёмся на книге из чекпойнта, бары неполные
+    end
+  else нет чекпойнта / PG пуст / codec unknown / NATS недоступен
     T-&gt;&gt;T: холодный старт: REST /depth параллельно + сшивка U&lt;=lastUpdateId+1&lt;=u, первый бар неполный
   end</code></pre>
 <pre class="mermaid"><code>sequenceDiagram
@@ -3385,11 +3391,12 @@
   end</code></pre>
 <p>State machine сущности <code>bar</code> + режима trader (подвешенных состояний нет — у каждого timeout/recovery):</p>
 <pre class="mermaid"><code>stateDiagram-v2
-  [*] --&gt; ColdStart: no checkpoint / retention exceeded
+  [*] --&gt; ColdStart: no checkpoint / PG empty / codec unknown
   [*] --&gt; Replay: checkpoint found
   ColdStart --&gt; Live: REST sewn, first bar incomplete
   Replay --&gt; Live: lag &lt; 1 slot на всех стримах
-  Replay --&gt; ColdStart: log протух / codec unknown
+  Replay --&gt; ColdStart: codec unknown
+  Replay --&gt; Degraded: retention hole (остаёмся на книге, бары неполные)
   Live --&gt; Replay: restart (replay от границы бара)
   Live --&gt; Degraded: gap (pu/U mismatch) / PG down / NATS down
   Degraded --&gt; Live: поток возобновлён / PG up (откат на предыдущую границу при краше в окно)
@@ -3405,13 +3412,22 @@
    этого символа + <code>u</code> + <code>seq</code>/<code>trades_seq</code>/<code>events_seq</code> (одна строка <code>(market,symbol,bar_ts)</code>).</li>
 <li>Диффы per-symbol от <code>seq+1</code>, фильтр <code>u &gt; u_snapshot</code>, параллельно.</li>
 <li>Сделки per-symbol от <code>trades_seq+1</code>, идемпотентность по <code>MsgId</code> обязательна.</li>
-<li>События одним консьюмером <code>MD_EVENTS</code> от <code>MIN(events_seq)+1</code> по символам границы
-   (каждый символ отбрасывает старше своего), идемпотентность обязательна.</li>
+<li>События — per-symbol × N-subject fetches из <code>MD_EVENTS</code> от общего
+   <code>MIN(events_seq)+1</code> по символам границы (каждый символ отбрасывает старше
+   своего), идемпотентность обязательна.</li>
 <li>Engine в replay (эмит баров подавлен) — цель дойти до «сейчас», не пересчитать бары.</li>
 <li>Лаг &lt; слота по всем стримам → live.</li>
-<li>Бар в стратегию — только полный (слот на каждую секунду бара).</li>
-<li>Paper: позиции с нуля; mainnet: позиции/баланс с биржи, далее userDataStream.</li>
-<li>Нет чекпойнта/ретеншн превышен → холодный старт (единственный REST <code>/depth</code>).</li>
+<li>Бар в стратегию — только полный (слот на каждую секунду бара). Флаг —
+   fresh-event-per-second (<code>Engine.is_bar_complete</code>): тихие неликвидные секунды
+   без событий читаются неполными; короткие гэпы закрывает heartbeat (F3);
+   на предысторию (листинг без событий) и делистинг heartbeat нет — такие бары
+   неполные по построению.</li>
+<li>Paper: позиции с нуля; mainnet: позиции/баланс с биржи, далее per-bar REST
+   poll (<code>positionRisk</code>/<code>account</code> → <code>reconcile</code>).</li>
+<li>Нет чекпойнта / PG пуст / <code>codec</code> неизвестен / NATS недоступен на старте →
+   холодный старт (единственный REST <code>/depth</code>). Ретеншн превышен при живом
+   чекпойнте → не холодный старт, а <code>"hole"</code>: остаёмся на книге из чекпойнта,
+   бары за окно неполные, дальше реплей (рационал C3 — REST даёт обрубок).</li>
 <li>Дырка при живом чекпойнте → без ресинка: остаёмся на книге, бары неполные, дальше реплей.</li>
 </ol>
 <h2 id="8-data">8. Data<a class="headerlink" href="#8-data" title="Permanent link">&para;</a></h2>
@@ -3466,8 +3482,17 @@
 <td><code>{market}:{symbol}:{kind}:{bucket_or_time}</code></td>
 <td><code>snapshot_ms</code> / <code>fundingTime</code> / 5-мин бакет</td>
 </tr>
+<tr>
+<td>hb</td>
+<td><code>{market}:{symbol}:hb:{sec}</code></td>
+<td><code>sec</code> — секундный бакет; идемпотентен (повтор за ту же секунду несёт тот же id)</td>
+</tr>
 </tbody>
 </table>
+<p>Heartbeat синтетический: его генерирует сам коллектор (минимальный payload
+<code>{"s", "E", "hb"}</code>, байтов Binance за ним нет), а не веню. Он существует для
+полноты тихих символов: без него секунды без реальных событий читались бы
+неполными по правилу fresh-event-per-second (§7 п.7).</p>
 <ul>
 <li>Ключ партиционирования/порядка: <code>symbol</code> (книги per-symbol независимы → параллельный реплей; skew невозможен по построению — символы равномощны по порядку величины).</li>
 <li>Порядок внутри символа — по <code>u</code> (детект дырок), позиция в логе — по <code>seq</code> (<code>u</code> не offset; <code>E</code> Binance не монотонен по стриму — не offset; серверный timestamp записи монотонен и годился бы, но <code>seq</code> точнее).</li>
@@ -3488,8 +3513,8 @@
 <tr>
 <td>Retention (<code>MD_*</code>, <code>discard: old</code>)</td>
 <td><code>&gt;= штатный простой + худший простой + буфер drain</code></td>
-<td>Пережить рестарт/откат на предыдущую границу без холодного старта</td>
-<td>Холодный старт: REST-шторм + первый бар неполный + обрубок глубины</td>
+<td>Пережить рестарт/откат на предыдущую границу без потери книги</td>
+<td>Ретеншн превышен при живом чекпойнте → <code>"hole"</code> (остаёмся на книге, бары неполные); чекпойнта нет вовсе → холодный старт: REST-шторм + первый бар неполный + обрубок глубины</td>
 </tr>
 <tr>
 <td><code>retention: limits</code> (не <code>workqueue</code>)</td>
@@ -3595,7 +3620,7 @@
 <li>Context: любая строка кода в процессе с WS делает его деплой дорогим. Коллектор должен меняться редко по построению.</li>
 <li>Drivers: редкость деплоя коллектора; ноль причин держать у него состояние.</li>
 <li>Options: (a) коллектор со стаканом/метриками — быстрее локальные скаляры, но любая новая метрика пересоздаёт стаканы — rejected; (b) коллектор делает ресинк/держит <code>/depth</code> — дублирует REST-бюджет и знание рынка — rejected; &copy; этот: только WS+reconnect+поллеры, парсинг минимума под <code>MsgId</code> — принят.</li>
-<li>Decision: Мы публикуем строки поллеров в очередь и не пишем на диск, не считаем метрик, не держим стакан, не ресинкаем (REST при дырке берёт трейдер напрямую, D3); непрерывность считает трейдер. Подписки — max-профиль C4; соединения — два по C5.</li>
+<li>Decision: Мы публикуем строки поллеров в очередь и не пишем на диск, не считаем метрик, не держим стакан, не ресинкаем (на дырке при живом чекпойнте трейдер остаётся на книге без ресинка, D3); непрерывность считает трейдер. Подписки — max-профиль C4; соединения — два по C5.</li>
 <li>Consequences: +коллектор живёт неделями; −строки поллеров пишет только консьюмер очереди (D8).</li>
 <li>Re-evaluation Trigger: поллеры упёрлись в IP-бюджет коллектора → вынести поллеры отдельно; Binance снова меняет роутинг → пересмотреть C5.</li>
 <li>Mitigation: правило ревью — «исследовательский код не входит в коллектор».</li>
@@ -3618,9 +3643,9 @@
 <li>Status: accepted. Dependencies: D0, D2.</li>
 <li>Context: казалось, коллектору нужен стакан для детекта дырок/бутстрапа/истории; проверка показала — ни одна роль его не требует, а публикация полного стакана 1 Гц/символ не переживает сеть (~2 МБ/с @60, ~180 ГБ/сутки — <code>measured</code>: 1000+1000 уровней ≈ 28 КБ JSON, <code>measurements.md</code> §1/§5) и уже помечена <code>TODO(NSC-51)</code>.</li>
 <li>Drivers: пропускная способность очереди; пересчитываемость истории (G3); минимум знания рынка в коллекторе.</li>
-<li>Options: (a) стакан в коллекторе + снапшоты 1 Гц — rejected по объёму; (b) скаляры в коллекторе — rejected (новая метрика = пересоздание стаканов, против D1); &copy; этот: сырые диффы, трейдер собирает книгу, сам ходит REST только на холодном старте без PG.</li>
+<li>Options: (a) стакан в коллекторе + снапшоты 1 Гц — rejected по объёму; (b) скаляры в коллекторе — rejected (новая метрика = пересоздание стаканов, против D1); &copy; этот: сырые диффы, трейдер собирает книгу, сам ходит REST за книгой (<code>/depth</code>) только на холодном старте без PG (исполнитель ордеров ходит своим REST отдельно — см. стрелку §5 и D10).</li>
 <li>Decision: Мы публикуем сырые диффы; трейдер держит единственный <code>OrderBook</code>, ведёт непрерывность, пишет 30-мин booksnapshot как архив (живой контур его не читает).</li>
-<li>Consequences: +история пересчитываема; +<code>TODO(NSC-51)</code> закрыт удалением цикла; −диффы — горячая зависимость; −IP-бюджет <code>/fapi/</code> у коллектора, трейдер ходит в REST только холодным стартом (60 симв. = 1200 weight; 600 = 12000 = минимум 6 минут в лимитер + стаггер + стыкующий фрейм).</li>
+<li>Consequences: +история пересчитываема; +<code>TODO(NSC-51)</code> закрыт удалением цикла; −диффы — горячая зависимость; −IP-бюджет <code>/fapi/</code> у коллектора, за книгой (<code>/depth</code>) трейдер ходит в REST только холодным стартом (60 симв. = 1200 weight; 600 = 12000 = минимум 6 минут в лимитер + стаггер + стыкующий фрейм).</li>
 <li>Re-evaluation Trigger: дифф-поток на порядок выше → сжатие/бинарный кодек (контракт меняется с простоем).</li>
 <li>Mitigation: чекпойнт D5 + буфер D9 + репликация (§11) против потери диффа; при дырке с живым чекпойнтом — без ресинка (REST даёт обрубок), остаёмся на книге.</li>
 <li>Verification: kill коллектора → дырка задетектирована (<code>U</code>/<code>pu</code>), бары неполные, глубина не потеряна; каденция скаляров — event-time, live и реплей одним путём (детали — спутник §7).</li>
@@ -3671,7 +3696,7 @@
 <li>Consequences: +схема принадлежит Binance; −JSON объёмнее бинаря (принято); −тихая смена архива: только closed klines (незакрытые downstream отбрасывал, метрики целы, история меняется — следствие уровня «что публикуем», не детали <code>MsgId</code>).</li>
 <li>Re-evaluation Trigger: объём очереди/архива стал связывающим → бинарный кодек с миграционным окном.</li>
 <li>Mitigation: идемпотентность консьюмера по тем же явным ключам обязательна (at-least-once).</li>
-<li>Verification: повторная доставка <code>MsgId</code> не меняет бар (серверный дедуп + идемпотентность); <code>forceOrder</code>-композит проверен 7-дневной выборкой до ветки №1 (блокер).</li>
+<li>Verification: повторная доставка <code>MsgId</code> не меняет бар (серверный дедуп + идемпотентность); <code>forceOrder</code>-композит — процедурой 7-дневной выборки до ветки №1 (блокер; статус и результат — спутник §2.3, бокс открыт до прогона).</li>
 </ul>
 <h3 id="d8-parquet-durable-consumer">D8. Parquet пишет трейдер как durable consumer<a class="headerlink" href="#d8-parquet-durable-consumer" title="Permanent link">&para;</a></h3>
 <ul>
@@ -3679,7 +3704,12 @@
 <li>Context: 60-секундный RAM-буфер writer'а — класс A (невосстановимая потеря) посреди системы «очередь как durability-граница».</li>
 <li>Drivers: durability бэкапа и downstream-инварианта «рестарт не теряет события».</li>
 <li>Options: (a) writer в коллекторе — баги parquet рестартуют WS — rejected (против D1); (b) третий сервис <code>sink</code> — тот же консьюмер, плюс контейнер, ноль выигрыша — rejected; &copy; этот — принят.</li>
-<li>Decision: Мы переносим <code>FileWriter</code> в трейдер как durable consumer всех <code>md.*</code> с явным <code>AckExplicit</code> после flush; offset у брокера; <code>ack_wait</code> формулой <code>&gt; max_hold</code>; booksnapshot — мимо очереди напрямую.</li>
+<li>Decision: Мы переносим <code>FileWriter</code> в трейдер как durable consumer только
+  поллерных сабджектов (<code>md.*.info.*</code>, <code>md.*.funding.*</code>, <code>md.*.stats.*</code>) с явным
+  <code>AckExplicit</code> после flush; offset у брокера; <code>ack_wait</code> формулой <code>&gt; max_hold</code>;
+  booksnapshot — мимо очереди напрямую. WS-виды (<code>diff</code>/<code>trade</code>/<code>kline</code>/<code>mark</code>/
+  <code>liq</code>/<code>hb</code>) durable-консьюмера не имеют by design: их везёт эфемерный live feed
+  (<code>deliver new</code>, без durable) + реплей-путь (эфемерные pull-fetches от позиций PG).</li>
 <li>Consequences: +класс A исчезает (рестарт дочитывает с ack); −дисковый I/O parquet в частично деплоящемся сервисе (потерь нет — очередь держит не-ack'нутое, цена ресурсная).</li>
 <li>Re-evaluation Trigger: I/O writer'а мешает трейдеру → вынести writer в свой процесс (тот же консьюмер, другой контейнер).</li>
 <li>Mitigation: редоставка до ack — дубли, дедуп по <code>MsgId</code> в буфере writer'а.</li>
@@ -3702,7 +3732,7 @@
 <li>Status: accepted. Dependencies: D4.</li>
 <li>Context: локальная копия позиций на живых деньгах — единственный способ разойтись с реальностью.</li>
 <li>Drivers: невозможность расхождения с биржей по построению; детерминизм paper.</li>
-<li>Options: (a) durable локальные позиции — расхождение с биржей возможно — rejected для mainnet; (b) этот: mainnet/testnet — биржа (<code>positionRisk</code> на старте + сверка userDataStream), paper — реплей с нуля — принят.</li>
+<li>Options: (a) durable локальные позиции — расхождение с биржей возможно — rejected для mainnet; (b) этот: mainnet/testnet — биржа (<code>positionRisk</code> на старте + per-bar REST poll <code>account</code>/<code>positionRisk</code> → <code>reconcile</code>; <code>userDataStream</code> нет — контракта на него не существует), paper — реплей с нуля — принят.</li>
 <li>Decision: Мы не храним позиции/equity локально; paper стартует с нуля (упрощение, класс D), mainnet сверяется с биржей; <code>live_state.json</code> остаётся фидом дашборда (PG не участвует); <code>day_start_equity</code>: paper — скаляр с нуля, mainnet — фиксация баланса на 00:00 UTC.</li>
 <li>Consequences: +неконсистентность невозможна; −paper-рестарт теряет позиции (не баг, класс D).</li>
 <li>Re-evaluation Trigger: потеря paper-состояния мешает (длиннее минут) → крошечная закладка на границу бара (§11).</li>
@@ -3710,7 +3740,37 @@
 <li>Verification: рестарт в paper не сравнивает позиции; в mainnet — сверка с биржей.</li>
 </ul>
 <h2 id="11-risks-failure-modes">11. Risks + Failure Modes<a class="headerlink" href="#11-risks-failure-modes" title="Permanent link">&para;</a></h2>
-<p>Классы: A невосстановим / B с биржи / C из персистентных данных / D потеря приемлема. Деградация — явная и поименованная; невалид — fail loud (AGENTS.md). Ретраев с константами нет — политика формулой: <code>retry while bar_window_open, backoff &lt;= retention_window, иначе пометить бар неполным</code>. DLQ отсутствует осознанно: инвалид — в <code>dropped_invalid</code> (не DLQ), старое — ротируется (<code>discard: old</code>), неполнота — флагом бара, а не очередью.</p>
+<p>Классы: A невосстановим / B с биржи / C из персистентных данных / D потеря приемлема. Деградация — явная и поименованная; невалид — fail loud (AGENTS.md). Ретраи — явными константами в коде (старая формула <code>retry while bar_window_open, backoff &lt;= retention_window</code> отменена и заменена таблицей ниже). DLQ отсутствует осознанно: инвалид — в <code>dropped_invalid</code> (не DLQ), старое — ротируется (<code>discard: old</code>), неполнота — флагом бара, а не очередью.</p>
+<table>
+<thead>
+<tr>
+<th>Путь</th>
+<th>Политика (код — источник правды)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>WS reconnect</td>
+<td><code>MAX_CONSECUTIVE_RECONNECT_FAILURES=30</code>, backoff 1s x2 с капом 60s, затем эскалация <code>RuntimeError</code> в TaskGroup (<code>collector/live/ws_client.py:57,333,488-498</code>)</td>
+</tr>
+<tr>
+<td>Поллеры, transient-ошибки</td>
+<td><code>_RETRY_BACKOFF_SECONDS=(1,3,10)</code> (<code>collector/live/periodic_poller.py:55</code>, те же константы в <code>exchange_info</code>/<code>funding</code>/<code>market_stats</code>-поллерах)</td>
+</tr>
+<tr>
+<td>Поллеры, rate-limit</td>
+<td>до <code>MAX_RATE_LIMIT_RETRIES_PER_CALL=3</code> честных <code>Retry-After</code>-ожиданий, дефолт <code>DEFAULT_RETRY_AFTER_SECONDS=60.0</code> (<code>collector/shared/rate_limiter.py:14,21</code>)</td>
+</tr>
+<tr>
+<td>Writer flush</td>
+<td><code>WRITE_RETRIES=3</code>, линейный backoff <code>WRITE_RETRY_BACKOFF_SECONDS=1.0</code>, на исчерпании — fail loud (<code>collector/live/writer.py:65-66,130-147</code>)</td>
+</tr>
+<tr>
+<td>Book bootstrap</td>
+<td><code>BOOTSTRAP_BACKOFF_INITIAL_SECONDS=1.0</code> x2 до <code>BOOTSTRAP_BACKOFF_MAX_SECONDS=30.0</code>, <code>Retry-After</code> чтится, jitter 5-30s (<code>trader/book.py:532-553</code>)</td>
+</tr>
+</tbody>
+</table>
 <table>
 <thead>
 <tr>
@@ -3753,7 +3813,7 @@
 <tr>
 <td>Трейдер лёг</td>
 <td>C, fallback B</td>
-<td>§7: чекпойнт + реплей; RTO ~секунды-десятки секунд @60 (см. §9); краш на границе → предыдущая граница (RTO ×2); дольше retention / PG пуст → холодный старт, первый бар неполный</td>
+<td>§7: чекпойнт + реплей; RTO ~секунды-десятки секунд @60 (см. §9); краш на границе → предыдущая граница (RTO ×2); ретеншн превышен при живом чекпойнте → <code>"hole"</code> (остаёмся на книге, бары неполные); PG пуст / нет чекпойнта → холодный старт, первый бар неполный</td>
 </tr>
 <tr>
 <td>NATS лёг</td>
@@ -3835,8 +3895,18 @@
 </ul>
 <h2 id="13-security">13. Security<a class="headerlink" href="#13-security" title="Permanent link">&para;</a></h2>
 <ul>
-<li>Trust boundaries — §5 (граница internal/untrusted на C4-L2). Internal заканчивается на loopback одного VM; всё внешнее (Binance, S3, браузер) — untrusted.</li>
-<li>Auth/authz: внутри VM аутентификация NATS/PG не включается осознанно (нет слушателей наружу, loopback; dashboard — read-only монтирование + пароль <code>DASH_PASS</code>). Триггер: разъезд по хостам → NATS creds + PG SCRAM + TLS transit, dashboard за Caddy auth.</li>
+<li>Trust boundaries — §5 (граница internal/untrusted на C4-L2). Internal — один VM (порты NATS/дашборда опубликованы на хосте, см. ниже); всё внешнее (Binance, S3, браузер) — untrusted.</li>
+<li>Auth/authz (фактическая поза, как собрано в <code>docker-compose.yml</code>): PG — пароль
+  обязателен и SCRAM включён (<code>POSTGRES_HOST_AUTH_METHOD=scram-sha-256</code>;
+  <code>POSTGRES_PASSWORD</code> из <code>PGPASSWORD</code>, дефолт <code>trader_dev_only</code> — только чтобы
+  образ postgres стартовал на локальном <code>compose up</code>, в проде настоящий секрет
+  из <code>.env</code>; наружу порты PG не опубликованы — только compose-сеть). NATS — без
+  creds, но порты <code>4222/8222</code> опубликованы через compose <code>ports</code> (слушают
+  хостовые интерфейсы, а не только loopback) — осознанно, пока всё на одном VM.
+  Dashboard слушает <code>0.0.0.0:8000</code> в контейнере, порт опубликован
+  (<code>${DASHBOARD_PORT:-8000}:8000</code>); read-only монтирование стейта + <code>DASH_USER</code> /
+  <code>DASH_PASS</code> из env. Триггер: разъезд по хостам → до выноса любого порта за
+  хост: NATS creds + TLS transit, dashboard за Caddy auth (PG SCRAM уже включён).</li>
 <li>Encryption: transit внутри VM — plaintext loopback (триггер выше — TLS); at-rest — диск VM (NVMe) без полевого шифрования; S3-архив — SSE бакета. Полевого шифрования уровней книги нет (маркет-дата, не секрет).</li>
 <li>Secrets: только env (<code>BINANCE_API_KEY/SECRET</code>, creds дашборда/архиватора); никогда в <code>live_config.yaml</code> и коде; права <code>600</code>, владелец <code>trader</code> (RUNBOOK step 2).</li>
 <li>Audit log: append-only для живых денег — fills/blotter трейдера + <code>live_state.json</code> как фид; чекпойнт PG — не audit (регенерируем, перетирается).</li>

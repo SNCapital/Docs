@@ -2538,12 +2538,14 @@
 <hr />
 <h2 id="1">1. Конфигурация<a class="headerlink" href="#1" title="Permanent link">&para;</a></h2>
 <p>Конфиг — в <code>live_config.yaml</code>, секреты и wiring — в env (AGENTS.md). Лоадер
-<code>alpha_engine/live/config.py:30</code> — fail loud, без in-code дефолтов.</p>
+<code>trader/config.py:30</code> — fail loud, без in-code дефолтов.</p>
+<p>Имена: в заметках ключи ниже даны точечной нотацией (<code>metrics.book_tick_ms</code>),
+в коде и <code>live_config.yaml</code> — плоские (<code>metrics_book_tick_ms</code>); авторитетны имена кода.</p>
 <p>ADR не предписывает тьюнинги «на всякий случай» (YAGNI). Конкретные ключи
 добавляются только когда появляется caller, которому нужно другое значение —
 widening дешевле narrowing.</p>
 <p>Обязательство ветки №1 (O-C2): ключи ниже вводятся в <code>live_config.yaml</code> и в
-полевую таблицу <code>alpha_engine/live/config.py</code> с fail loud; in-code дефолты
+полевую таблицу <code>trader/config.py</code> с fail loud; in-code дефолты
 запрещены по C8/AGENTS.md. До ветки №1 таблица — спецификация имен и мест,
 значения уточняются замерами той же ветки:</p>
 <table>
@@ -2583,7 +2585,7 @@ widening дешевле narrowing.</p>
 <tr>
 <td><code>nats.retention</code></td>
 <td><code>live_config.yaml</code></td>
-<td><code>3ч</code> (<code>30м</code> штатно + <code>60м</code> худший + <code>1ч</code> буфер, с запасом), <code>discard: old</code> — формулой §8 ADR; суточный объём теперь <code>measured</code> 22-40 ГБ (<code>measurements.md</code> §6), 3 ч ≈ 3-5 ГБ на диске</td>
+<td><code>72ч</code> (3 суток — пережить многодневный простой/реплей), <code>discard: old</code> — формулой §8 ADR; суточный объём <code>measured</code> 22-40 ГБ (<code>measurements.md</code> §6), 72 ч ≈ 66-120 ГБ на диске — считать volume под это</td>
 </tr>
 <tr>
 <td><code>book_store.checkpoint_on_bar</code></td>
@@ -2732,7 +2734,11 @@ widening дешевле narrowing.</p>
 </ul>
 <h3 id="23-no1">2.3 Предварительные измерения (до/в ветке №1)<a class="headerlink" href="#23-no1" title="Permanent link">&para;</a></h3>
 <ul class="task-list">
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>Nats-Msg-Id</code> для <code>forceOrder</code>: собрать 7 дней <code>type=forceorder</code>, проверить уникальность <code>o.T</code> и необходимость композита <code>S/q/p/ap/l/z</code>. <strong>Блокер для старта ветки №1 — снять до разработки.</strong></li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> <code>Nats-Msg-Id</code> для <code>forceOrder</code>: собрать 7 дней <code>type=forceorder</code>, проверить уникальность <code>o.T</code> и необходимость композита <code>S/q/p/ap/l/z</code>. <strong>Блокер для старта ветки №1 — снять до разработки.</strong>
+  Процедура (бокс не чекать без прогона): <code>python tools/forceorder_msgid_study.py --roots &lt;type=forceorder parquet roots&gt;</code> (см. <code>tools/README.md</code>).
+  Тул печатает <code>rows/N unique_oT=X unique_composite=Y</code>. Композит оправдан
+  только при <code>unique_oT==False</code> + <code>unique_composite==True</code> на 7-дневной выборке;
+  записанного прогона в репо нет — результат прогона приложить сюда при снятии.</li>
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Время набора глубины после дырки: инструментировать <code>resync_count</code>/<code>seq_gaps</code> в <code>BookScalars</code>, получить измеренную границу «бары недостоверны» вместо эмпирической (делается в ветке №5 заодно с kill-сьютом).</li>
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Реальные <code>msg/s</code> и <code>bytes/s</code> диффов на 60 символах — пересчитать кап буфера D9 и оценки §5.</li>
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled checked/><span class="task-list-indicator"></span></label> Пропускная способность NATS и стоимость веера консьюмеров — измерено, ADR §9 / <code>measurements.md</code> §7 (стоковый конфиг, 4 vCPU): 0.7-0.8 мс на консьюмера до 1200 штук; чтение ~26k msg/s на процесс с заголовками, линейно по процессам; потолок — питоновский клиент, не брокер; <code>fast-parse</code> вредит.</li>
@@ -2742,8 +2748,8 @@ widening дешевле narrowing.</p>
 <hr />
 <h2 id="3-nats-jetstream">3. NATS JetStream — детали<a class="headerlink" href="#3-nats-jetstream" title="Permanent link">&para;</a></h2>
 <ul>
-<li><strong>Streams:</strong> <code>MD_DIFF</code> (<code>md.*.diff.*</code>, 3ч, <code>discard: old</code>), <code>MD_TRADE</code> (<code>md.*.trade.*</code>, 3ч, <code>discard: old</code> — вынесен отдельно, высокий объём), <code>MD_EVENTS</code> (остальное: <code>md.*.kline.*</code>, <code>md.*.mark.*</code>, <code>md.*.liq.*</code>, <code>md.*.info.*</code>, <code>md.*.funding.*</code>, <code>md.*.stats.*</code>, 3ч, <code>discard: old</code>). <code>MD_SNAP</code> убран — публиковать в него нечего (D3). Унифицировано на 3ч — разного retention на один стрим у JetStream нет, объём поллеров в 3ч пренебрежим.</li>
-<li><strong>Retention <code>MD_DIFF</code></strong> должен покрывать возраст самого старого чекпойнта, с которого реплеим: 30 мин штатно, 60 мин при откате на предыдущую границу, плюс буфер D9. 3 ч — с запасом.</li>
+<li><strong>Streams:</strong> <code>MD_DIFF</code> (<code>md.*.diff.*</code>, 72ч, <code>discard: old</code>), <code>MD_TRADE</code> (<code>md.*.trade.*</code>, 72ч, <code>discard: old</code> — вынесен отдельно, высокий объём), <code>MD_EVENTS</code> (остальное: <code>md.*.kline.*</code>, <code>md.*.mark.*</code>, <code>md.*.liq.*</code>, <code>md.*.info.*</code>, <code>md.*.funding.*</code>, <code>md.*.stats.*</code>, 72ч, <code>discard: old</code>). <code>MD_SNAP</code> убран — публиковать в него нечего (D3). У JetStream нет разного retention на один стрим; объём поллеров в окне пренебрежим.</li>
+<li><strong>Retention <code>MD_DIFF</code></strong> должен покрывать возраст самого старого чекпойнта, с которого реплеим, плюс многодневный простой: 72 ч с запасом (≈66-120 ГБ на диске при суточном объёме 22-40 ГБ).</li>
 <li><strong><code>retention: limits</code> обязателен, <code>workqueue</code> ломает восстановление.</strong> Проверено: под <code>limits</code> ack двигает только курсор консьюмера и сообщение остаётся в логе (500/500 перечитано новым консьюмером с <code>opt_start_seq=1</code>); под <code>workqueue</code> ack удаляет сообщение (0/500) и реплей невозможен. Writer (D8) акает по ходу дела — под <code>workqueue</code> он молча уничтожал бы диффы, нужные трейдеру. Это инвариант корректности, а не тюнинг; проверять в тестах создания стримов.</li>
 <li><strong>Реплей — только новыми эфемерными консьюмерами</strong> с явным <code>opt_start_seq</code>. Существующий durable отмотать назад нельзя: его позиция принадлежит серверу (повторный bind отдаёт 0 сообщений).</li>
 <li><strong>Dedup:</strong> <code>Nats-Msg-Id</code> как JetStream хедер, не поле payload. Окно дедупа — настройка стрима. <strong>Оппортунистическая оптимизация, не гарантия:</strong> таблица в RAM, рестарт NATS её стирает. Гарантию даёт идемпотентность консьюмера.</li>
@@ -2756,7 +2762,7 @@ widening дешевле narrowing.</p>
 <ul>
 <li><strong>Окно реплея — от границы бара</strong>, а не от места остановки: кольцо при старте пусто, ему нужны события с начала бара (D4). Продолжение с последнего ack дало бы после короткого рестарта пустое кольцо.</li>
 <li><strong>Три позиции, три стрима, все per-symbol:</strong> <code>seq</code> (<code>MD_DIFF</code>), <code>trades_seq</code> (<code>MD_TRADE</code>) и <code>events_seq</code> (<code>MD_EVENTS</code>) — колонки одной строки <code>(market,symbol,bar_ts)</code>. Sequence разных стримов несравнимы.</li>
-<li><strong>Текущий план:</strong> реплей диффов — per-symbol консьюмеры (<code>filter_subject</code> + <code>opt_start_seq = seq+1</code>), реплей сделок — per-symbol консьюмеры (<code>MD_TRADE</code>, высокий объём, параллельно как диффы), реплей остальных событий — один consumer на <code>MD_EVENTS</code> (~10-50 msg/s без сделок).</li>
+<li><strong>Текущий план:</strong> реплей диффов — per-symbol консьюмеры (<code>filter_subject</code> + <code>opt_start_seq = seq+1</code>), реплей сделок — per-symbol консьюмеры (<code>MD_TRADE</code>, высокий объём, параллельно как диффы), реплей остальных событий — per-symbol × N-subject fetches из <code>MD_EVENTS</code> от общего <code>MIN(events_seq)+1</code> (~10-50 msg/s без сделок).</li>
 <li><strong>Веер консьюмеров измерен и дёшев:</strong> 0.7-0.8 мс на консьюмера ровно до 1200 штук, 11-25 КБ памяти сервера на каждого, ноль ошибок (перезамер 2026-09: 2.3-2.6 мс/шт, доставка полная — <code>measurements.md</code> §7). Опасение про «шторм <code>CreateConsumer</code>» снято (ADR §9).</li>
 <li><strong>Доминирует доставка из JetStream</strong> (~26k msg/s на процесс с заголовками), затем парсинг и применение диффа (17 мкс), затем скаляры. После NSC-51 (<code>compute_book_scalars</code> по 25%-конусу) скаляр стоит 1.30 мс вместо 5.31, и скаляры перестали быть главной статьёй.</li>
 <li><strong>Реплей обязан шардироваться по процессам, а не только по консьюмерам.</strong> Замер: 1 процесс — 14.6 с на 432k сообщений при 14.5 с CPU (100% ядра), 4 процесса — 5.6 с. Соединения не помогают: упор в GIL, не в сокет.</li>
@@ -2773,24 +2779,27 @@ widening дешевле narrowing.</p>
 <li><strong>Почему не «durable + ack после коммита в PG» вместо хранения <code>seq</code>:</strong> держать бар неподтверждённым стоит ~0.35-1 КБ памяти сервера на сообщение — 413 МБ на 60 символах, 4.1 ГБ на 600 (ADR §9; перезамер: ~352 Б → 152 МБ / ~1.5 ГБ, вывод тот же). Плюс <code>ack_wait</code> пришлось бы поднять выше длины бара. Два <code>BIGINT</code> в строке, которую и так пишем, дешевле.</li>
 </ul>
 <h2 id="41-filewriter-durability">4.1 Роль FileWriter и durability всей системы<a class="headerlink" href="#41-filewriter-durability" title="Permanent link">&para;</a></h2>
-<p><code>FileWriter</code> (<code>binance_parser/live/writer.py:69</code>) — это <strong>бэкап в parquet</strong>
+<p><code>FileWriter</code> (<code>collector/live/writer.py</code>) — это <strong>бэкап в parquet</strong>
 (<code>market=*/type=*/dt=*/symbol=*/part-*.parquet</code>, zstd) + <code>services/archive.py:44</code> → S3 tar (ретеншн 3 дня).
-<strong>Не аналог NATS</strong>, но в D8 он тоже становится durable consumer'ом <code>md.*</code> в трейдере (<code>ack</code> после <code>flush</code>).</p>
+<strong>Не аналог NATS</strong>, но в D8 он тоже становится durable consumer'ом поллерных
+сабджектов (<code>md.*.info/funding/stats.*</code>) в трейдере (<code>ack</code> после <code>flush</code>).
+WS-виды (<code>diff</code>/<code>trade</code>/<code>kline</code>/<code>mark</code>/<code>liq</code>/<code>hb</code>) durable-консьюмера не имеют:
+их везёт эфемерный live feed + реплей-путь.</p>
 <p>Важно не сводить D8 только к «бэкап не теряет 60с». Durable consumer'ы — это durability <strong>всей downstream-системы</strong>:
-- NATS retention (3ч) + PG чекпойнт (D5, <code>u</code>/<code>seq</code>) + <code>opt_start_seq = seq+1</code> — восстанавливают книгу и ring метрик (791 ключ) без потерь;
+- NATS retention (72ч) + PG чекпойнт (D5, <code>u</code>/<code>seq</code>) + <code>opt_start_seq = seq+1</code> — восстанавливают книгу и ring метрик (791 ключ) без потерь;
 - тот же механизм (<code>ack</code> после обработки) у <code>FileWriter</code> — гарантирует что и parquet-бэкап не теряет окно.</p>
 <p>То есть без D8 теряется не только история на диске, но и инвариант «рестарт трейдера не теряет события» для расчёта метрик и торговли: live-реплей зависит от NATS, а полнота бэкапа — от того же <code>ack</code>. D9-буфер — RAM перед NATS в коллекторе (~1ч), страхует <code>NATS лёг</code> до того как события попадут в JetStream.</p>
 <hr />
 <h2 id="5">5. Деградации — операционные заметки<a class="headerlink" href="#5" title="Permanent link">&para;</a></h2>
 <ul>
-<li><code>discard: old</code> на <code>MD_DIFF</code> — теряем старьё, поток живёт. Обратное (<code>new</code>) остановило бы коллектор — хуже. Смена поведения vs <code>LiveTickBus</code> (<code>live/tick_bus.py:66</code> молчаливый дроп → наблюдаемый pending в JetStream).</li>
+<li><code>discard: old</code> на <code>MD_DIFF</code> — теряем старьё, поток живёт. Обратное (<code>new</code>) остановило бы коллектор — хуже. Смена поведения vs <code>LiveTickBus</code> (<code>trader/tick_bus.py:66</code> молчаливый дроп → наблюдаемый pending в JetStream).</li>
 <li>NATS лёг → буфер D9 держит ~час. PG лёг → трейдер живёт из RAM, запись чекпойнта фейлится громко; краш в этом окне → откат на предыдущую границу. Live-данные при этом не теряются — реплей идёт из NATS.</li>
 <li>Коллектор упал с непустым буфером — RAM D9 теряется (осознанная цена D9).</li>
 <li><strong>Важно:</strong> <code>FileWriter</code> — часть общей durability: без <code>ack</code> после <code>flush</code> (D8) теряется и бэкап, и инвариант полноты данных для метрик/трейдера.</li>
 </ul>
 <hr />
 <h2 id="6">6. Порядок веток<a class="headerlink" href="#6" title="Permanent link">&para;</a></h2>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>#1 feat/queue-transport  — транспорт за LiveTickBus, измерения, kill -9 NATS (низкий риск)
+<div class="language-text highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>#1 feat/queue-transport  — транспорт за LiveTickBus, измерения, kill -9 NATS (средний риск: lossy dropped counter становится наблюдаемым JetStream pending)
 </span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>#2 feat/collector-split  — коллектор в свой контейнер, книга в трейдер (высокий риск, только после #1)
 </span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>#3 feat/pg-book-store    — PG чекпойнт блобом на границу бара + (u, seq, trades_seq, events_seq);
 </span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>                           режим реплея в Engine и переключение в live; флаг полноты бара

@@ -2549,6 +2549,17 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#9-recalibration-queue-transport-no1-2026-09-05" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9. Recalibration queue-transport (ветка №1, 2026-09-05)
+      
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -2576,7 +2587,7 @@
 и <code>live_capture*.py</code> (временная директория, в репо не входят); воспроизведение —
 подпиской из §2 на те же стримы на ту же длительность.</p>
 <h2 id="1-">1. Офлайн-замеры (без сети)<a class="headerlink" href="#1-" title="Permanent link">&para;</a></h2>
-<p>Окружение: Python 3.12, Windows. Фикстуры <code>binance_parser/tests/test_models.py</code>.</p>
+<p>Окружение: Python 3.12, Windows. Фикстуры <code>collector/tests/test_models.py</code>.</p>
 <h3 id="11-json-ws-envelope-stream-data">1.1 Размер сырого JSON WS-envelope <code>{stream, data}</code><a class="headerlink" href="#11-json-ws-envelope-stream-data" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
@@ -2885,8 +2896,9 @@ per-message бюджетах (publish ~22k/s, consume ~26k/s, парсинг), �
 <h2 id="4-fstream">4. Роутинг fstream (критично для кода)<a class="headerlink" href="#4-fstream" title="Permanent link">&para;</a></h2>
 <p>С 2026-03-06 (legacy retired 2026-04-23) <code>wss://fstream.binance.com</code> без
 пути отдаёт только Public (<code>@depth</code>). Проверено: L1/L2/L5.
-Код (<code>binance_parser/config/settings.py:25-26</code>) использует unrouted base —
-на фьючерсах приходил бы только depth. Нужно два соединения:
+Код (<code>collector/config/settings.py:25-32</code>, <code>WS_PUBLIC_BASES</code>/<code>WS_MARKET_BASES</code>)
+использует два роученых base: unrouted base на фьючерсах отдавал бы только
+depth, поэтому нужны два соединения:
 <code>/public</code> для depth, <code>/market</code> для остального (<code>/market</code> depth не отдаёт —
 проверено таймаутом). Spot (<code>stream.binance.com:9443</code>) работает полностью
 без роутов (проверено: depth 1/s + aggTrade + kline).</p>
@@ -3013,6 +3025,24 @@ Payload 500 Б (~530 Б на проводе, как датасет ADR §9).
 <li>Уникальность forceOrder-композита за 7 дней (блокер D7).</li>
 <li>Набор глубины после холодного старта (граница «недостоверны»).</li>
 <li>booksnapshot-партиция (48 full-depth/сутки/символ) в суммы выше НЕ входит.</li>
+</ul>
+<h2 id="9-recalibration-queue-transport-no1-2026-09-05">9. Recalibration queue-transport (ветка №1, 2026-09-05)<a class="headerlink" href="#9-recalibration-queue-transport-no1-2026-09-05" title="Permanent link">&para;</a></h2>
+<p>Тул <code>tools/nats_recalibrate.py</code> (CLI surface only, ядро без CLI): синтетический
+max-period микс за интерфейсом шины, компактный raw-JSON как на проводе.</p>
+<ul>
+<li>bus ceiling (in-process, без сети): ~118-132k msg/s, ~8.9-9.9 МБ/с;
+  масштабировано к измеренному live wire 350 КБ/с (§6) — D9 кап на час живого
+  потока, а не на цикл бенчмарка.</li>
+<li>live wire: ~4650 msg/s (scaled), 350.0 КБ/с sustained @60 символов.</li>
+<li><code>buffer_bytes = peak_bytes_s * 3600 = 1260000000</code> — expected from the wire
+  profile; <code>tools/nats_recalibrate.py</code> asserts the checked-in
+  <code>collector_buffer_bytes: 1300000000</code> stays within +-20% of it
+  (config 1300000000 vs expected 1260000000 — match, exit 0).</li>
+<li><code>nats.conf sync_interval: 2s</code> — верификация <code>kill -9 NATS</code> вручную
+  (сервер не вендорим; см. <code>tests/test_queue_transport_kill.py</code>).</li>
+<li>Golden bar-parity: <code>test_bar_parity_continuous_vs_queued</code> — те же 180
+  aggtrade-событий через <code>LiveTickBus</code> и <code>NatsTickBus(memory=True)</code> дают
+  идентичные бары (<code>bars_direct == bars_queued</code>).</li>
 </ul>
 
 

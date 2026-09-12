@@ -11,31 +11,27 @@
       
       
       
-        <link rel="canonical" href="https://sncapital.github.io/Docs/openspec/live-ws/">
+        <link rel="canonical" href="https://sncapital.github.io/Docs/adr/0002-proxy-shards-bars-stream/0002-proxy-shards-bars-stream/">
       
       
-        <link rel="prev" href="../live-trading/">
-      
-      
-        <link rel="next" href="../metrics-aggregation/">
       
       
         
       
       
-      <link rel="icon" href="../../assets/images/favicon.png">
+      <link rel="icon" href="../../../assets/images/favicon.png">
       <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
     
     
       
-        <title>Live WebSocket pipeline - SN Capital — Backend</title>
+        <title>ADR-0002. Горизонталь прокси и калькуляторов + контракт баров - SN Capital — Backend</title>
       
     
     
-      <link rel="stylesheet" href="../../assets/stylesheets/main.ec1eaa64.min.css">
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.ec1eaa64.min.css">
       
         
-        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+        <link rel="stylesheet" href="../../../assets/stylesheets/palette.ab4e12ef.min.css">
       
       
 
@@ -56,7 +52,7 @@
     
       <link rel="stylesheet" href="https://unpkg.com/katex@0/dist/katex.min.css">
     
-    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
       
 
@@ -81,7 +77,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#purpose" class="md-skip">
+        <a href="#adr-0002" class="md-skip">
           Skip to content
         </a>
       
@@ -97,7 +93,7 @@
 
 <header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
   <nav class="md-header__inner md-grid" aria-label="Header">
-    <a href="../.." title="SN Capital — Backend" class="md-header__button md-logo" aria-label="SN Capital — Backend" data-md-component="logo">
+    <a href="../../.." title="SN Capital — Backend" class="md-header__button md-logo" aria-label="SN Capital — Backend" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
@@ -117,7 +113,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Live WebSocket pipeline
+              ADR-0002. Горизонталь прокси и калькуляторов + контракт баров
             
           </span>
         </div>
@@ -239,7 +235,7 @@
   
   
     <li class="md-tabs__item">
-      <a href="../.." class="md-tabs__link">
+      <a href="../../.." class="md-tabs__link">
         
   
   
@@ -260,7 +256,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="../../getting-started/" class="md-tabs__link">
+        <a href="../../../getting-started/" class="md-tabs__link">
           
   
   
@@ -282,7 +278,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="../../alpha-engine/" class="md-tabs__link">
+        <a href="../../../alpha-engine/" class="md-tabs__link">
           
   
   
@@ -304,7 +300,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="../../binance-parser/" class="md-tabs__link">
+        <a href="../../../binance-parser/" class="md-tabs__link">
           
   
   
@@ -326,7 +322,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="../../strategies/" class="md-tabs__link">
+        <a href="../../../strategies/" class="md-tabs__link">
           
   
   
@@ -348,7 +344,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="../../reference/" class="md-tabs__link">
+        <a href="../../../reference/" class="md-tabs__link">
           
   
   
@@ -370,7 +366,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="../../development/" class="md-tabs__link">
+        <a href="../../../development/" class="md-tabs__link">
           
   
   
@@ -392,7 +388,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="../../adr/0001-collector-trader-split/0001-collector-trader-split/" class="md-tabs__link">
+        <a href="../../0001-collector-trader-split/0001-collector-trader-split/" class="md-tabs__link">
           
   
   
@@ -412,7 +408,7 @@
   
   
     <li class="md-tabs__item">
-      <a href="../../research-log/" class="md-tabs__link">
+      <a href="../../../research-log/" class="md-tabs__link">
         
   
   
@@ -433,7 +429,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="../../research/nsc-14-aggtrade-vs-trade/" class="md-tabs__link">
+        <a href="../../../research/nsc-14-aggtrade-vs-trade/" class="md-tabs__link">
           
   
   
@@ -451,13 +447,11 @@
   
   
   
-    
-  
   
     
     
-      <li class="md-tabs__item md-tabs__item--active">
-        <a href="../batch-backtest/" class="md-tabs__link">
+      <li class="md-tabs__item">
+        <a href="../../../openspec/batch-backtest/" class="md-tabs__link">
           
   
   
@@ -499,7 +493,7 @@
 
 <nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
-    <a href="../.." title="SN Capital — Backend" class="md-nav__button md-logo" aria-label="SN Capital — Backend" data-md-component="logo">
+    <a href="../../.." title="SN Capital — Backend" class="md-nav__button md-logo" aria-label="SN Capital — Backend" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
@@ -529,7 +523,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../.." class="md-nav__link">
+      <a href="../../.." class="md-nav__link">
         
   
   
@@ -587,7 +581,7 @@
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="../../getting-started/" class="md-nav__link ">
+            <a href="../../../getting-started/" class="md-nav__link ">
               
   
   
@@ -631,7 +625,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../getting-started/installation/" class="md-nav__link">
+      <a href="../../../getting-started/installation/" class="md-nav__link">
         
   
   
@@ -659,7 +653,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../getting-started/quickstart/" class="md-nav__link">
+      <a href="../../../getting-started/quickstart/" class="md-nav__link">
         
   
   
@@ -687,7 +681,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../getting-started/architecture/" class="md-nav__link">
+      <a href="../../../getting-started/architecture/" class="md-nav__link">
         
   
   
@@ -759,7 +753,7 @@
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="../../alpha-engine/" class="md-nav__link ">
+            <a href="../../../alpha-engine/" class="md-nav__link ">
               
   
   
@@ -803,7 +797,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../alpha-engine/pipeline/" class="md-nav__link">
+      <a href="../../../alpha-engine/pipeline/" class="md-nav__link">
         
   
   
@@ -831,7 +825,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../alpha-engine/data-layer/" class="md-nav__link">
+      <a href="../../../alpha-engine/data-layer/" class="md-nav__link">
         
   
   
@@ -859,7 +853,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../alpha-engine/writing-a-strategy/" class="md-nav__link">
+      <a href="../../../alpha-engine/writing-a-strategy/" class="md-nav__link">
         
   
   
@@ -887,7 +881,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../alpha-engine/markowitz/" class="md-nav__link">
+      <a href="../../../alpha-engine/markowitz/" class="md-nav__link">
         
   
   
@@ -915,7 +909,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../alpha-engine/backtesting/" class="md-nav__link">
+      <a href="../../../alpha-engine/backtesting/" class="md-nav__link">
         
   
   
@@ -943,7 +937,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../alpha-engine/live-trading/" class="md-nav__link">
+      <a href="../../../alpha-engine/live-trading/" class="md-nav__link">
         
   
   
@@ -1013,7 +1007,7 @@
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="../../binance-parser/" class="md-nav__link ">
+            <a href="../../../binance-parser/" class="md-nav__link ">
               
   
   
@@ -1057,7 +1051,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../binance-parser/live/" class="md-nav__link">
+      <a href="../../../binance-parser/live/" class="md-nav__link">
         
   
   
@@ -1085,7 +1079,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../binance-parser/historical/" class="md-nav__link">
+      <a href="../../../binance-parser/historical/" class="md-nav__link">
         
   
   
@@ -1113,7 +1107,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../binance-parser/storage/" class="md-nav__link">
+      <a href="../../../binance-parser/storage/" class="md-nav__link">
         
   
   
@@ -1141,7 +1135,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../binance-parser/order-book/" class="md-nav__link">
+      <a href="../../../binance-parser/order-book/" class="md-nav__link">
         
   
   
@@ -1169,7 +1163,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../binance-parser/extending/" class="md-nav__link">
+      <a href="../../../binance-parser/extending/" class="md-nav__link">
         
   
   
@@ -1243,7 +1237,7 @@
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="../../strategies/" class="md-nav__link ">
+            <a href="../../../strategies/" class="md-nav__link ">
               
   
   
@@ -1287,7 +1281,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../methodology/" class="md-nav__link">
+      <a href="../../../methodology/" class="md-nav__link">
         
   
   
@@ -1315,7 +1309,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../strategies/funding_reversion/" class="md-nav__link">
+      <a href="../../../strategies/funding_reversion/" class="md-nav__link">
         
   
   
@@ -1343,7 +1337,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../strategies/trade_imbalance/" class="md-nav__link">
+      <a href="../../../strategies/trade_imbalance/" class="md-nav__link">
         
   
   
@@ -1371,7 +1365,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../strategies/ob_mispricing/" class="md-nav__link">
+      <a href="../../../strategies/ob_mispricing/" class="md-nav__link">
         
   
   
@@ -1399,7 +1393,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../strategies/book_depth_imbalance/" class="md-nav__link">
+      <a href="../../../strategies/book_depth_imbalance/" class="md-nav__link">
         
   
   
@@ -1427,7 +1421,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../strategies/vol_mean_reversion/" class="md-nav__link">
+      <a href="../../../strategies/vol_mean_reversion/" class="md-nav__link">
         
   
   
@@ -1455,7 +1449,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../strategies/vol_ob_entropy/" class="md-nav__link">
+      <a href="../../../strategies/vol_ob_entropy/" class="md-nav__link">
         
   
   
@@ -1523,7 +1517,7 @@
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="../../reference/" class="md-nav__link ">
+            <a href="../../../reference/" class="md-nav__link ">
               
   
   
@@ -1567,7 +1561,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../reference/cli/" class="md-nav__link">
+      <a href="../../../reference/cli/" class="md-nav__link">
         
   
   
@@ -1595,7 +1589,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../reference/operators/" class="md-nav__link">
+      <a href="../../../reference/operators/" class="md-nav__link">
         
   
   
@@ -1623,7 +1617,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../reference/metrics/" class="md-nav__link">
+      <a href="../../../reference/metrics/" class="md-nav__link">
         
   
   
@@ -1651,7 +1645,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../reference/glossary/" class="md-nav__link">
+      <a href="../../../reference/glossary/" class="md-nav__link">
         
   
   
@@ -1717,7 +1711,7 @@
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="../../development/" class="md-nav__link ">
+            <a href="../../../development/" class="md-nav__link ">
               
   
   
@@ -1761,7 +1755,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../development/setup/" class="md-nav__link">
+      <a href="../../../development/setup/" class="md-nav__link">
         
   
   
@@ -1789,7 +1783,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../development/testing/" class="md-nav__link">
+      <a href="../../../development/testing/" class="md-nav__link">
         
   
   
@@ -1817,7 +1811,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../development/contributing/" class="md-nav__link">
+      <a href="../../../development/contributing/" class="md-nav__link">
         
   
   
@@ -1910,7 +1904,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../adr/0001-collector-trader-split/0001-collector-trader-split/" class="md-nav__link">
+      <a href="../../0001-collector-trader-split/0001-collector-trader-split/" class="md-nav__link">
         
   
   
@@ -1945,7 +1939,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../research-log/" class="md-nav__link">
+      <a href="../../../research-log/" class="md-nav__link">
         
   
   
@@ -2030,7 +2024,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../research/nsc-14-aggtrade-vs-trade/" class="md-nav__link">
+      <a href="../../../research/nsc-14-aggtrade-vs-trade/" class="md-nav__link">
         
   
   
@@ -2062,8 +2056,6 @@
       
   
   
-    
-  
   
   
     
@@ -2093,23 +2085,22 @@
     
     
       
-        
-        
-      
       
         
       
     
     
-    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_11" checked>
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_11" >
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="../batch-backtest/" class="md-nav__link ">
+            <a href="../../../openspec/batch-backtest/" class="md-nav__link ">
               
   
   
@@ -2127,13 +2118,13 @@
             </a>
             
               
-              <label class="md-nav__link " for="__nav_11" id="__nav_11_label" tabindex="">
+              <label class="md-nav__link " for="__nav_11" id="__nav_11_label" tabindex="0">
                 <span class="md-nav__icon md-icon"></span>
               </label>
             
           </div>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_11_label" aria-expanded="true">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_11_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_11">
             <span class="md-nav__icon md-icon"></span>
             
@@ -2153,7 +2144,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../dashboard/" class="md-nav__link">
+      <a href="../../../openspec/dashboard/" class="md-nav__link">
         
   
   
@@ -2181,7 +2172,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../historical-download/" class="md-nav__link">
+      <a href="../../../openspec/historical-download/" class="md-nav__link">
         
   
   
@@ -2209,7 +2200,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../live-trading/" class="md-nav__link">
+      <a href="../../../openspec/live-trading/" class="md-nav__link">
         
   
   
@@ -2234,35 +2225,10 @@
                 
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Live WebSocket pipeline
-  
-
-    
-  </span>
-  
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../../../openspec/live-ws/" class="md-nav__link">
         
   
   
@@ -2278,162 +2244,6 @@
   
 
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#purpose" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Purpose
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#requirements" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Requirements
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Requirements">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#requirement-live-cli-contract" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Requirement: Live CLI contract
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#requirement-stream-subscription-sets" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Requirement: Stream subscription sets
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#requirement-websocket-persistence-semantics" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Requirement: WebSocket persistence semantics
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#requirement-websocket-reconnect-policy" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Requirement: WebSocket reconnect policy
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#requirement-buffered-parquet-writer" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Requirement: Buffered parquet writer
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#requirement-order-book-state-lifecycle" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Requirement: Order-book state lifecycle
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#requirement-order-book-bootstrap" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Requirement: Order-book bootstrap
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#requirement-order-book-snapshots" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Requirement: Order-book snapshots
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#requirement-health-and-pipeline-statistics" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Requirement: Health and pipeline statistics
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#requirement-live-run-composition" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Requirement: Live run composition
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -2446,7 +2256,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../metrics-aggregation/" class="md-nav__link">
+      <a href="../../../openspec/metrics-aggregation/" class="md-nav__link">
         
   
   
@@ -2474,7 +2284,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../metrics-engine/" class="md-nav__link">
+      <a href="../../../openspec/metrics-engine/" class="md-nav__link">
         
   
   
@@ -2502,7 +2312,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../models/" class="md-nav__link">
+      <a href="../../../openspec/models/" class="md-nav__link">
         
   
   
@@ -2530,7 +2340,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../rest-pollers/" class="md-nav__link">
+      <a href="../../../openspec/rest-pollers/" class="md-nav__link">
         
   
   
@@ -2575,6 +2385,8 @@
   
   
   
+    
+  
   
     <label class="md-nav__title" for="__toc">
       <span class="md-nav__icon md-icon"></span>
@@ -2583,10 +2395,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#purpose" class="md-nav__link">
+  <a href="#0" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Purpose
+        0. Шапка
       
     </span>
   </a>
@@ -2594,121 +2406,116 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#requirements" class="md-nav__link">
+  <a href="#1-overview" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Requirements
+        1. Overview
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Requirements">
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-goals-non-goals-deferred" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Goals / Non-Goals / Deferred
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-constraints" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Constraints
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-context-c4-l1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Context (C4-L1)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-containers-c4-l2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Containers (C4-L2)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5. Containers (C4-L2)">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#requirement-live-cli-contract" class="md-nav__link">
+  <a href="#phase-1-summary" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Requirement: Live CLI contract
+        Phase 1 Summary
       
     </span>
   </a>
   
 </li>
         
-          <li class="md-nav__item">
-  <a href="#requirement-stream-subscription-sets" class="md-nav__link">
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-components" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Requirement: Stream subscription sets
+        6. Components
       
     </span>
   </a>
   
 </li>
-        
-          <li class="md-nav__item">
-  <a href="#requirement-websocket-persistence-semantics" class="md-nav__link">
+      
+        <li class="md-nav__item">
+  <a href="#7-runtime" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Requirement: WebSocket persistence semantics
+        7. Runtime
       
     </span>
   </a>
   
 </li>
-        
-          <li class="md-nav__item">
-  <a href="#requirement-websocket-reconnect-policy" class="md-nav__link">
+      
+        <li class="md-nav__item">
+  <a href="#8-data" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Requirement: WebSocket reconnect policy
+        8. Data
       
     </span>
   </a>
   
-</li>
+    <nav class="md-nav" aria-label="8. Data">
+      <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#requirement-buffered-parquet-writer" class="md-nav__link">
+  <a href="#phase-2-summary" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Requirement: Buffered parquet writer
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#requirement-order-book-state-lifecycle" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Requirement: Order-book state lifecycle
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#requirement-order-book-bootstrap" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Requirement: Order-book bootstrap
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#requirement-order-book-snapshots" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Requirement: Order-book snapshots
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#requirement-health-and-pipeline-statistics" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Requirement: Health and pipeline statistics
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#requirement-live-run-composition" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Requirement: Live run composition
+        Phase 2 Summary
       
     </span>
   </a>
@@ -2740,273 +2547,324 @@
   
 
 
-  <h1>Live WebSocket pipeline</h1>
+<h1 id="adr-0002">ADR-0002. Горизонталь прокси и калькуляторов + контракт баров<a class="headerlink" href="#adr-0002" title="Permanent link">&para;</a></h1>
+<h2 id="0">0. Шапка<a class="headerlink" href="#0" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Status</td>
+<td>Draft (Phase 1 approved: A3 decided — checkpoints stay in PG; O2 open, carried as fork. Phase 2 below — на аппруве)</td>
+</tr>
+<tr>
+<td>Date</td>
+<td>Proposed 2026-09-12, revised 2026-09-12 (масштабируется всё, оси: биржи × очереди × ноды)</td>
+</tr>
+<tr>
+<td>Deciders</td>
+<td>Backend team</td>
+</tr>
+<tr>
+<td>Base</td>
+<td>ADR-0001 (<code>docs/adr/0001-collector-trader-split/0001-collector-trader-split.md</code>), схема с доски <code>architecture.excalidraw</code> («Предложение: раздельные сервисы + JetStream»)</td>
+</tr>
+<tr>
+<td>Extends</td>
+<td>ADR-0001: забирает отложенный вариант C (метрики отдельным сервисом, D0) и масштабирование до 600 символов; не отменяет durability-границу (очередь) и per-symbol восстановление</td>
+</tr>
+<tr>
+<td>Re-evaluation Trigger</td>
+<td>Пересмотреть, если: живой поток превысит десятки тысяч msg/s на единицу деления; bars-контракт не покрывает исполнение (нужны тики в трейдере); managed-очередь с replay-семантикой снимет вопрос retention</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>Процесс: RULES.md I.7, по фазам. Эта сдача — только Phase 1. Phase 2 (Data/Runtime), Phase 3 (Decisions), Phase 4 (cross-cutting) — после аппрува границ ниже.</p>
+</blockquote>
+<h2 id="1-overview">1. Overview<a class="headerlink" href="#1-overview" title="Permanent link">&para;</a></h2>
+<p>Масштабируется всё, по трём осям: биржи (на каждую — свой collector, calculator и trader), очереди (очередь одна логически, скейлится по нодам; внутри — три семейства: стакан/диффы, трейды, всё остальное, по которым калькулятор делится ещё на 2–3, если метрики не пересекаются), ноды (PG в будущем тоже понодово). На старте биржа одна — значит collector, calculator и trader тоже по одному. Ключевое свойство: рост — это добавление единиц деления, а не переписывание; трейдер видит только закрытые бары своей биржи со штампом качества.</p>
+<h2 id="2-goals-non-goals-deferred">2. Goals / Non-Goals / Deferred<a class="headerlink" href="#2-goals-non-goals-deferred" title="Permanent link">&para;</a></h2>
+<p>Goals (этот док фиксирует):</p>
+<ul>
+<li>G1. Масштабирование всего: collector × E (по коллектору на биржу), calculator × E, trader × E (трейдер скейлится по биржам); очередь одна логически, скейлится по нодам; PG в будущем понодово. Старт: E = 1, всё по одному.</li>
+<li>G2. Контракт <code>bars.*</code> между калькуляторами и трейдером: 1 сообщение = 1 закрытый бар со всеми ключами и штампом качества; биржа в теме (<code>md.binance.usdm...</code>, <code>bars.binance...</code>), добавление биржи трейдер не меняет.</li>
+<li>G3. Трейдер на биржу (на аккаунт): ордера напрямую в Trade API своей биржи мимо шины, позиции — из user data stream со сверкой.</li>
+<li>G4. Штамп качества и ingress time как часть контракта данных (иначе live и replay/backтест расходятся).</li>
+<li>G5. Калькулятор делится по трём семействам очередей (стакан/диффы, трейды, остальное) до ×2–×3 тогда и только тогда, когда метрики между семействами не пересекаются (условие проверяется в Phase 3).</li>
+</ul>
+<p>Non-Goals (осознанно исключено):</p>
+<ul>
+<li>N1. Тьюнинг пулов/тредов/TCP/батчей — runbook, по RULES.md I.2 (в доке только формулы и инварианты).</li>
+<li>N2. PII/GDPR-механика — в контуре только маркет-дата (как в ADR-0001 §13).</li>
+<li>N3. Мультиаккаунт внутри одной биржи и мультирегион — один аккаунт на биржу, один контур (триггер в шапке).</li>
+</ul>
+<p>Deferred / Open (решает встреча с доски, см. «Вопросы на встречу»):</p>
+<ul>
+<li>O1. NATS на той же машине, что прокси, или отдельно (вопрос 1). Очередь одна логически в обоих случаях; отдельно — нужен кластер, не одиночка.</li>
+<li>O2. Решения по символам независимо или портфельно — определяет форму bars-контракта: одиночные бары vs комплект баров за окно + правило ожидания опоздавшего шарда (вопрос 2). Без ответа нельзя финализировать §5/§8.</li>
+<li>O3. Retention по возрасту или по ack: <code>limits + max_age</code> (отставший архиватор тихо теряет) vs <code>interest/workqueue</code> (залипший консьюмер забивает диск) — выбрать, какой отказ терпим (вопрос 3).</li>
+<li>O4. Гранулярность консьюмеров внутри шарда: консьюмер на шард (в 2.10+ несколько filter subjects) vs 1 символ = 1 консьюмер для порядка дифов (вопрос 4 + пометка с доски).</li>
+<li>O5. Метрика слепых секунд на <code>/public</code> (вопрос 5).</li>
+<li>O6. Каденция снапшотов depth (вопрос 6): в данных ~1220 снапшотов/сутки (интервал ~61.6 сек) против 30 мин в конфиге — разница ~25x и главный драйвер объёма.</li>
+<li>O7. Паттерн чтения (символ×период vs все символы×дата) для партиционирования parquet (вопрос 7).</li>
+</ul>
+<h2 id="3-constraints">3. Constraints<a class="headerlink" href="#3-constraints" title="Permanent link">&para;</a></h2>
+<p>Технические (наследуются из ADR-0001 §3, не дублирую: C2 лимит REST 2400 weight/мин, C3 срез REST depth, C4 каденции подписок, C5 роутинг fstream двумя соединениями). Новые с доски:</p>
+<ul>
+<li>C6. Подписка на ~12000 стримов стартует ~32 сек (<code>measured</code>, доска) — старт контура не мгновенный, заложить в RTO и порядок поднятия.</li>
+<li>C7. Сырьевой объём <code>estimate</code> доски ~13 ГБ/день (сжатый parquet) против <code>measured</code> 22–40 ГБ/день из <code>measurements.md</code> §6 — расходятся в ~2x, см. ASSUMPTION A2.</li>
+<li>C8. Parquet «1 файл/день/тип» (доска) против текущей Hive-раскладки <code>part-*.parquet</code> — смена формата архива требует окна миграции (Phase 3, Migration).</li>
+<li>C9. Биржа — часть темы (<code>md.binance.usdm.btcusdt.depth</code>, <code>bars.binance...</code>, доска) против текущих <code>md.{market}.{kind}.{symbol}</code> — смена контракта с простоем (Phase 3). Направление решено (биржа в теме сразу, «потом больно»), механика переезда — в Phase 3.</li>
+</ul>
+<p>Допущения (<code>ASSUMPTION</code> с ценой ошибки):</p>
+<ul>
+<li>A1. NATS живёт рядом с прокси (один VM/loopback), пока не отвечен O1. Ошибка: разъезд по хостам без кластера и пересмотра буфера — разрыв минутами вместо рестарта секундами.</li>
+<li>A2. Объём сырья для сайзинга retention/disk — 22–40 ГБ/день (<code>measurements.md</code>, не 13 с доски). Ошибка в меньшую сторону: диск очереди переполняется раньше расчёта (<code>discard: old</code> начнёт есть окно реплея).</li>
+<li>A3. DECIDED 2026-09-12: PG-чеkпойнты книги (ADR-0001 D5) остаются источником восстановления книги. Bars-стрим — производное (пересчитывается из сырья + чекпойнтов), не замена. Пересмотр отложен с триггером: окно retention доказуемо покрывает все рестарты И операционная цена PG становится связывающей — тогда отдельным ADR с миграцией. Понодовый скейл PG — будущее, не этот док.</li>
+<li>A4. Snapshot-каденция depth для сайзинга — текущая живая (вопрос O6 открыт). Ошибка: при 1/мин дифф-поток и объём — на порядок выше, чем при 1/30мин.</li>
+</ul>
+<h2 id="4-context-c4-l1">4. Context (C4-L1)<a class="headerlink" href="#4-context-c4-l1" title="Permanent link">&para;</a></h2>
+<p>Исследовательская live-платформа (как в ADR-0001 §4): стримит маркет-дату, считает метрики по 30-минутным барам, торгует трейдерами по одному на биржу, пишет архив в parquet → S3. Новое против ADR-0001: масштабируются все измерения (биржи, очереди/ноду, будущий PG), метрики вынесены в отдельный слой, трейдер потребляет только готовые бары своей биржи.</p>
+<pre class="mermaid"><code>graph TD
+    subgraph UNTRUSTED["Untrusted zone"]
+        BIN["Binance WS + REST + Trade API + user data"]
+        S3["S3 archive"]
+        USER["Operator browser"]
+    end
+    subgraph INTERNAL["Internal contour"]
+        SYS["Collectors + JetStream + archiver + metric calcs + traders"]
+    end
+    BIN --&gt;|"WS diffs/trades/klines/mark/liq; REST depth/exchange_info/funding"| SYS
+    SYS --&gt;|"orders per exchange (bypass bus); user data stream"| BIN
+    SYS --&gt;|"parquet 1 file/day/type"| S3
+    USER --&gt;|"HTTPS, read-only"| SYS</code></pre>
+<h2 id="5-containers-c4-l2">5. Containers (C4-L2)<a class="headerlink" href="#5-containers-c4-l2" title="Permanent link">&para;</a></h2>
+<p>Ответственность — ровно одна на единицу деления. Кратность: ×E — на биржу (старт E=1), очередь — одна логически на нодах. Sync помечен <code>S</code>, async — <code>A</code>.</p>
+<pre class="mermaid"><code>graph TD
+    subgraph UNTRUSTED2["Untrusted"]
+        BIN2["Binance WS/REST/Trade API"]
+        S32["S3"]
+        BRW["Browser"]
+    end
+    subgraph INTERNAL2["Internal contour"]
+        PRX["collector x E (1 per exchange): WS + reconnect + pollers, async publish, no book"]
+        NATS["NATS JetStream (1 logical, node-scaled): md.* raw + bars.* closed bars, file storage"]
+        ARC["raw archiver: separate consumer -&gt; parquet 1 file/day/type"]
+        CALC["metric calc x E (split x2-3 along queue families iff metrics disjoint)"]
+        TRD["trader x E (1 per exchange/account): own bars subscribe, orders direct"]
+        PG["Postgres (provisional, see A3; node-sharded in future)"]
+        VOL["NVMe volumes: raw staging + parquet"]
+        DSH["dashboard read-only"]
+    end
+    BIN2 --&gt;|"A: WSS streams; S: HTTPS REST"| PRX
+    PRX --&gt;|"A: NATS publish raw + Msg-Id"| NATS
+    NATS --&gt;|"A: replay + live subscribe"| ARC
+    NATS --&gt;|"A: 1 symbol = 1 consumer (diff order)"| CALC
+    CALC --&gt;|"A: 1 msg = 1 closed bar + quality stamp"| NATS
+    NATS --&gt;|"A: bars.&lt;exchange&gt;.*.30m"| TRD
+    TRD --&gt;|"S: orders bypass bus; user data stream + REST reconcile"| BIN2
+    TRD --&gt;|"S: checkpoint read/write (A3)"| PG
+    ARC --&gt;|"file write"| VOL
+    VOL --&gt;|"S: HTTPS PUT (copy, verify, then delete)"| S32
+    TRD --&gt;|"file: live_state.json"| DSH
+    BRW --&gt;|"S: HTTPS"| DSH</code></pre>
+<table>
+<thead>
+<tr>
+<th>Единица</th>
+<th>Отвечает</th>
+<th>S/A</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>collector × E</td>
+<td>Край своей биржи (два WS по C5 + поллеры), in-memory буфер сырыми байтами с потолком и счётчиком, асинхронный publish не из цикла чтения сокета; не считает, на диск не пишет</td>
+<td>A</td>
+</tr>
+<tr>
+<td>NATS JetStream (1 логическая)</td>
+<td>Три семейства сырья (стакан/диффы, трейды, остальное) + <code>bars.*</code> закрытых баров; durable лог, retention, replay; скейл по нодам</td>
+<td>A</td>
+</tr>
+<tr>
+<td>raw archiver</td>
+<td>Отдельный сервис со своим курсором в очереди (durable consumer, offset у брокера, ack после верификации в S3) → 1 файл/день/тип, собранный дописыванием row groups в один открытый writer за сутки; копия, проверка, потом удаление</td>
+<td>A + S к S3</td>
+</tr>
+<tr>
+<td>metric calc × E (÷2–3 опционально)</td>
+<td>Шарды по символам, далее сплит по семействам очередей при непересекающихся метриках (G5): книга, движок, штамп качества; 1 сообщение = 1 закрытый бар (пустое = NULL, всегда эмитим)</td>
+<td>A</td>
+</tr>
+<tr>
+<td>trader × E</td>
+<td>Бары своей биржи; stale-бар старше N минут — не торгуем, ack и выкидываем; ордера напрямую, <code>newClientOrderId</code> из (символ + ts бара); user data + сверка</td>
+<td>A + S к бирже</td>
+</tr>
+<tr>
+<td>Postgres</td>
+<td>Чекпойнты книги по D5 (A3 decided); понодовый шардинг — будущее, не этот док</td>
+<td>S</td>
+</tr>
+<tr>
+<td>volumes / dashboard</td>
+<td>Parquet, read-only фид</td>
+<td>S/A</td>
+</tr>
+</tbody>
+</table>
+<p>Trust boundary: как в ADR-0001 §5/§13 (internal — контур, untrusted — Binance/S3/браузер); управляющей связи proxy ↔ trader нет; каждый трейдер — единственный writer в Trade API своей биржи.</p>
+<h3 id="phase-1-summary">Phase 1 Summary<a class="headerlink" href="#phase-1-summary" title="Permanent link">&para;</a></h3>
+<p>Инварианты Phase 1 (constraint для следующих фаз): масштабируется всё — оси биржи (collector/calc/trader ×E, старт E=1), очереди (одна логическая на нодах, внутри три семейства для сплита ×2–3 при непересекающихся метриках), ноды (PG понодово в будущем); два семейства стримов (<code>md.*</code> сырьё, <code>bars.*</code> закрытые бары), биржа в теме; контракт трейдера — только бары своей биржи со штампом качества + ingress time; ордера и позиции — вне шины. Открыто и блокирует Phase &#8532;: O2 (форма bars-контракта), O1/O3 (топология и retention-семантика), судьба PG-чеkпойнтов (A3), каденция снапшотов (O6). Числа до замеров — только как <code>measured(доска)</code>/<code>estimate</code> с ценой ошибки (A2, A4). [Phase 1 rev.3: A3 decided — чекпойнты остаются в PG.]</p>
+<h2 id="6-components">6. Components<a class="headerlink" href="#6-components" title="Permanent link">&para;</a></h2>
+<p>Только нетривиальные границы:</p>
+<ul>
+<li><code>metric calc</code> внутри: книга + движок + штамп качества на единицу деления. Сплит ×2–3 идёт по семействам очередей (диффы/книга, трейды, остальное) тогда и только тогда, когда метрики семейств не пересекаются (G5): пересечение — общий шард, иначе дубли состояния и сшивка. Проверка непересекаемости — Phase 3 (решение D-серии).</li>
+<li><code>trader</code> intake: подписка на бары своей биржи, stale-drop, исполнение. Комплект баров за окно (портфельный вариант O2) собирается здесь же, если O2 решится в его пользу, — движок баров при этом не меняется.</li>
+</ul>
+<h2 id="7-runtime">7. Runtime<a class="headerlink" href="#7-runtime" title="Permanent link">&para;</a></h2>
+<p>Дедупликация везде: брокер оппортунистически (<code>Nats-Msg-Id</code>), консьюмер обязательно; out-of-order внутри символа невозможен по построению (<code>u</code> монотонен, нарушение = дырка).</p>
+<pre class="mermaid"><code>sequenceDiagram
+  participant B as Binance WS/REST
+  participant P as data-proxy (своя биржа)
+  participant J as JetStream md.*
+  participant A as raw archiver
+  participant C as metric calc (шард)
+  participant G as PG checkpoints
+  B-&gt;&gt;P: depth diff / trade / kline(mark/liq) / REST
+  alt невалидный payload
+    P-&gt;&gt;P: WARN + dropped_invalid, без публикации (fail loud)
+  else валидное событие
+    P-&gt;&gt;P: ingress time рядом с биржевым; RAM-буфер (потолок, счётчик)
+    P-&gt;&gt;J: publish raw + Nats-Msg-Id (асинхронно, не из цикла чтения)
+    J--&gt;&gt;P: PubAck (duplicate:true при повторе в окне)
+    J-&gt;&gt;A: live deliver (свой durable-курсор) -&gt; дописывание row groups в открытый writer дня -&gt; S3 (копия, проверка, удаление; ack после верификации)
+    J-&gt;&gt;C: live deliver + replay от чекпойнта
+    C-&gt;&gt;G: read checkpoint @ bar boundary
+    C-&gt;&gt;C: apply diff (u-check), ring, close bar + quality stamp
+    C-&gt;&gt;G: COMMIT checkpoint (A3)
+    C-&gt;&gt;J: publish 1 msg = 1 closed bar (пустое = NULL, всегда эмитим)
+  end</code></pre>
+<pre class="mermaid"><code>sequenceDiagram
+  participant J as JetStream bars.*
+  participant T as trader (своя биржа)
+  participant V as Trade API + user data
+  participant G as PG checkpoints
+  J-&gt;&gt;T: bars.&lt;ex&gt;.*.30m live (+ replay хвоста при рестарте)
+  alt бар старше N минут (stale)
+    T-&gt;&gt;T: не торгуем, ack и выкидываем
+  else свежий бар
+    T-&gt;&gt;T: решение (per-symbol; O2-форк ниже)
+    T-&gt;&gt;V: ордера напрямую, newClientOrderId=(символ + ts бара)
+    T-&gt;&gt;V: user data stream + REST reconcile (listenKey renew ~30 мин)
+  end
+  alt рестарт трейдера
+    T-&gt;&gt;V: позиции/баланс с биржи заново (локально не храним, D10)
+    T-&gt;&gt;J: resume live с последнего (bars короткого retention хватает)
+  else рестарт калькулятора
+    T-&gt;&gt;T: ждём бары (трейдер не рестартится, гэп виден по штампу)
+  end</code></pre>
+<pre class="mermaid"><code>stateDiagram-v2
+  state Bar {
+    [*] --&gt; Incomplete: gap / cold start / missing slot
+    Incomplete --&gt; Complete: слот на каждую секунду бара
+    Complete --&gt; Closed: граница бара (checkpoint COMMIT + publish)
+    Closed --&gt; [*]
+  }</code></pre>
+<blockquote>
+<p>O2-ФОРК (открыт, обе ветки живут до решения встречи):
+- Ветка S (per-symbol): калькулятор публикует бары посимвольно, трейдер реагирует на каждый бар; разделение дешёвое, комплектов не нужно.
+- Ветка P (портфельно): трейдеру нужен КОМПЛЕКТ баров за окно от N калькуляторов — тогда в §8 добавляются правило «сколько ждём» и поведение «шард не прислал» (таймаут комплекта + неполный флаг, без блокировки).
+База Phase 2 — ветка S (совпадает с текущим движком и ADR-0001); ветка P не должна ломать формат одиночного бара, только добавлять сборку.</p>
+</blockquote>
+<h2 id="8-data">8. Data<a class="headerlink" href="#8-data" title="Permanent link">&para;</a></h2>
+<p>Парадигма: лог как источник истины (JetStream <code>md.*</code>) + регенерируемый чекпойнт книги (PG, A3) + пересчитываемое производное (bars, ring, позиции). Bars-стрим — производное и выкидываемое: пересчитывается из сырья + чекпойнтов, долгим не хранится.</p>
+<p>Владельцы стейта: книга — calc (RAM) + чекпойнт в PG; сырьё — JetStream; бары — JetStream коротким окном; позиции — биржа (user data + reconcile); архив — parquet → S3.</p>
+<p>Контракты на уровне инвариантов:</p>
+<ul>
+<li>Темы (принцип решён, C9; точный шаблон — решение Phase 3): биржа первая, далее рынок/вид/символ; бары — <code>bars.&lt;exchange&gt;...30m</code>-формой с интервалом в теме. Своей схемы между сервисами нет, payload сырья 1:1 с Binance (D7 из ADR-0001).</li>
+<li><code>Nats-Msg-Id</code> — из явных полей Binance (таблица ADR-0001 §8) + для баров <code>bars:{exchange}:{symbol}:{bar_ts}</code>; невалид — громко, без публикации.</li>
+<li>Ingress time пишется рядом с биржевым временем в каждом событии: без него live и replay расходятся на границах баров (доска).</li>
+<li>Штамп качества в каждом баре (поля контракта): разрывы <code>U/u/pu</code> и <code>agg id</code> (точный счёт потерянных), счётчик markPrice = слепые секунды (1800 на 30-мин бар), измерение по коннектам отдельно (<code>/public</code> vs <code>/market</code>), трёхуровневый статус (норм / деградация / плохо), флаг полноты. Бэктест фильтрует так же, как живой трейдер.</li>
+<li>Ключ партиционирования: биржа → символ (книги независимы → параллельный реплей и шарды без skew по построению).</li>
+<li>Консистентность: per-symbol strong order (через <code>u</code>), глобально eventual (бары закрываются по settlement); read-your-writes не требуется.</li>
+<li>Доставка: at-least-once + идемпотентные консьюмеры; exactly-once не заявляется. Ордера идемпотентны через <code>newClientOrderId=(символ + ts бара)</code>.</li>
+</ul>
+<p>Design Limits (формулы; числа — только <code>measured</code> или конфиг):</p>
+<table>
+<thead>
+<tr>
+<th>Parameter / Invariant</th>
+<th>Value / Formula</th>
+<th>Rationale</th>
+<th>Consequence of Violation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Retention <code>md.*</code></td>
+<td><code>&gt;= возраст старейшего чекпойнта + худший простой + буфер drain</code></td>
+<td>Пережить рестарт/откат без потери книги</td>
+<td>Retention hole → остаёмся на книге, бары неполные (явный флаг)</td>
+</tr>
+<tr>
+<td>Retention <code>bars.*</code></td>
+<td><code>&gt;= простой трейдера + окно скоса шардов</code> (короткое: бары пересчитываемы)</td>
+<td>Трейдеру нужен только хвост, не история</td>
+<td>Долгий простой трейдера → холодный старт ленты (позиции — с биржи, D10)</td>
+</tr>
+<tr>
+<td>Dedup window</td>
+<td><code>W_dedup &gt;= max_retry + max_reconnect + clock_skew</code></td>
+<td>Покрыть ретраи и простой на деплое</td>
+<td>Дубль бизнес-операции (для ring — удвоение объёма)</td>
+</tr>
+<tr>
+<td>Proxy buffer</td>
+<td><code>buffer_bytes &gt;= throughput_peak * T_repair</code>, переполнение — дроп со счётчиком + алерт, без spill-файла (доска)</td>
+<td>Без буфера рестарт NATS теряет данные у источника</td>
+<td>Дырка в диффах → бары неполные</td>
+</tr>
+<tr>
+<td>Checkpoint cadence</td>
+<td>строго на границу бара; <code>keep &gt;= 2</code> (D5)</td>
+<td>Снапшот среди бара не восстанавливает его начало</td>
+<td>Невосстановимые секунды / двойной реплей при краше на границе</td>
+</tr>
+<tr>
+<td>Book depth stored</td>
+<td>целиком, без среза (D6)</td>
+<td>Срез ломает бакеты непредсказуемо по символам</td>
+<td>Недостоверные книжные метрики</td>
+</tr>
+<tr>
+<td>Stale bar</td>
+<td><code>bar_age &gt; N</code> → не торгуем, ack и выкидываем</td>
+<td>Протухший сигнал хуже отсутствия сигнала</td>
+<td>Торговля по протухшему бару</td>
+</tr>
+<tr>
+<td>ListenKey</td>
+<td>renew ~каждые 30 мин + сверка по таймеру и после ордера</td>
+<td>Без подтверждения позиция/филлы расходятся с биржей</td>
+<td>Тихий разрыв учёта (пример с доски: 4 символа молчали 2 суток)</td>
+</tr>
+</tbody>
+</table>
+<h3 id="phase-2-summary">Phase 2 Summary<a class="headerlink" href="#phase-2-summary" title="Permanent link">&para;</a></h3>
+<p>Инварианты Phase 2 (constraint для Phase 3): сырьё 1:1 + MsgId + ingress time; бары — производное с полным контрактом (все ключи + штамп качества + NULL вместо forward fill); PG-чеkпойнты — восстановление книги; ордера идемпотентны по (символ + ts бара); потоки replay/live/hole/cold — как на диаграммах; O2 несётся форком (база — per-symbol). Следующая фаза: решения D-серии (сплит калькулятора по G5, точный шаблон тем, retention-семантика O3, число шардов O4) + риски и лимиты.</p>
 
-<h2 id="purpose">Purpose<a class="headerlink" href="#purpose" title="Permanent link">&para;</a></h2>
-<p>Defines the live WebSocket pipeline of <code>binance_parser</code>: the <code>live</code> CLI entry point, per-market
-subscription sets, connection and reconnect policy, stream dispatch to parquet, buffered writer
-semantics, local order-book lifecycle and snapshots, health/stats accounting, and task composition
-of the live run.</p>
-<h2 id="requirements">Requirements<a class="headerlink" href="#requirements" title="Permanent link">&para;</a></h2>
-<h3 id="requirement-live-cli-contract">Requirement: Live CLI contract<a class="headerlink" href="#requirement-live-cli-contract" title="Permanent link">&para;</a></h3>
-<p>The system SHALL expose a <code>live</code> subcommand accepting <code>--market</code> (spot|usdm|both, default spot),
-<code>--symbols</code> (space-separated, default BTCUSDT and ETHUSDT, upper-cased), <code>--order-book</code> (flag), and
-<code>--with-funding</code> (flag). The command SHALL run until interrupted, and a keyboard interrupt SHALL
-stop it with exit code 0.</p>
-<h4 id="scenario-default-live-run">Scenario: Default live run<a class="headerlink" href="#scenario-default-live-run" title="Permanent link">&para;</a></h4>
-<ul>
-<li><strong>WHEN</strong> the live command is run with no flags</li>
-<li><strong>THEN</strong> it starts a spot-market pipeline for BTCUSDT and ETHUSDT without the order book or
-  funding poller</li>
-</ul>
-<h4 id="scenario-symbols-upper-cased">Scenario: Symbols upper-cased<a class="headerlink" href="#scenario-symbols-upper-cased" title="Permanent link">&para;</a></h4>
-<ul>
-<li><strong>WHEN</strong> symbols are passed in lowercase</li>
-<li><strong>THEN</strong> the pipeline operates on the upper-cased symbols</li>
-</ul>
-<h3 id="requirement-stream-subscription-sets">Requirement: Stream subscription sets<a class="headerlink" href="#requirement-stream-subscription-sets" title="Permanent link">&para;</a></h3>
-<p>The system SHALL subscribe per symbol, per market, to a fixed stream set: always <code>@depth@500ms</code>,
-<code>@aggTrade</code>, and <code>@kline_1m</code>; plus, on usdm only, bare <code>@markPrice</code> and (when enabled) <code>@forceOrder</code>.
-The raw <code>@trade</code> stream SHALL be subscribed only when trades are preferred over aggregate trades (or
-multilevel reconstruction is enabled); by default it is not subscribed and aggregate trades are the
-canonical trade source.</p>
-<h4 id="scenario-default-spot-subscription">Scenario: Default spot subscription<a class="headerlink" href="#scenario-default-spot-subscription" title="Permanent link">&para;</a></h4>
-<ul>
-<li><strong>WHEN</strong> a spot listener starts for a symbol with default settings</li>
-<li><strong>THEN</strong> exactly <code>@depth@500ms</code>, <code>@aggTrade</code>, and <code>@kline_1m</code> streams are subscribed</li>
-</ul>
-<h4 id="scenario-default-usdm-subscription">Scenario: Default usdm subscription<a class="headerlink" href="#scenario-default-usdm-subscription" title="Permanent link">&para;</a></h4>
-<ul>
-<li><strong>WHEN</strong> a usdm listener starts for a symbol with default settings</li>
-<li><strong>THEN</strong> <code>@depth@500ms</code>, <code>@aggTrade</code>, <code>@kline_1m</code>, bare <code>@markPrice</code>, and <code>@forceOrder</code> are subscribed</li>
-</ul>
-<h4 id="scenario-raw-trades-opt-in">Scenario: Raw trades opt-in<a class="headerlink" href="#scenario-raw-trades-opt-in" title="Permanent link">&para;</a></h4>
-<ul>
-<li><strong>WHEN</strong> aggregate-trade preference is disabled</li>
-<li><strong>THEN</strong> <code>@trade</code> is additionally subscribed and raw fills are written as <code>trades</code> events
-  alongside <code>aggtrades</code></li>
-</ul>
-<h3 id="requirement-websocket-persistence-semantics">Requirement: WebSocket persistence semantics<a class="headerlink" href="#requirement-websocket-persistence-semantics" title="Permanent link">&para;</a></h3>
-<p>The system SHALL persist via the writer only: <code>aggtrades</code>, closed <code>klines</code>, <code>markprice</code> (usdm),
-<code>forceorder</code> (usdm, when enabled), <code>trades</code> (when subscribed), and <code>booksnapshot</code> (order-book
-snapshots). Depth diffs SHALL never be persisted: they feed only the in-process order book and
-health counters. Running (unclosed) klines and unknown streams SHALL be dropped silently.</p>
-<h4 id="scenario-depth-diff-bypass">Scenario: Depth diff bypass<a class="headerlink" href="#scenario-depth-diff-bypass" title="Permanent link">&para;</a></h4>
-<ul>
-<li><strong>WHEN</strong> a <code>@depth</code> message arrives and an order-book manager is present</li>
-<li><strong>THEN</strong> it is routed to the book manager and health counters only, and the writer is never
-  invoked</li>
-</ul>
-<h4 id="scenario-depth-diff-debug-logging-hook">Scenario: Depth-diff debug logging hook<a class="headerlink" href="#scenario-depth-diff-debug-logging-hook" title="Permanent link">&para;</a></h4>
-<ul>
-<li><strong>WHEN</strong> the depth-log interval setting is configured to a positive value</li>
-<li><strong>THEN</strong> the first and then every Nth depth diff per stream is logged at debug level</li>
-</ul>
-<h4 id="scenario-malformed-frame-resilience">Scenario: Malformed-frame resilience<a class="headerlink" href="#scenario-malformed-frame-resilience" title="Permanent link">&para;</a></h4>
-<ul>
-<li><strong>WHEN</strong> an incoming frame fails to parse with <code>JSONDecodeError</code>, <code>KeyError</code>, or <code>ValueError</code> (bad
-  JSON, missing keys, wrong value types)</li>
-<li><strong>THEN</strong> the frame is logged with the error trace and skipped, and the WS connection deliberately
-  survives; other unexpected exceptions are treated as code bugs and escalate (abort the run) rather
-  than being masked by a reconnect</li>
-</ul>
-<h4 id="scenario-silent-unknown-stream-drop">Scenario: Silent unknown-stream drop<a class="headerlink" href="#scenario-silent-unknown-stream-drop" title="Permanent link">&para;</a></h4>
-<ul>
-<li><strong>WHEN</strong> a message matches no known stream</li>
-<li><strong>THEN</strong> it is ignored without failing the connection</li>
-</ul>
-<h3 id="requirement-websocket-reconnect-policy">Requirement: WebSocket reconnect policy<a class="headerlink" href="#requirement-websocket-reconnect-policy" title="Permanent link">&para;</a></h3>
-<p>The system SHALL reconnect a closed or failed connection with exponential backoff starting at 1
-second and doubling, capped at 60 seconds, reset to 1 on any successful connection. The connection
-SHALL keep an application-level heartbeat (ping every 20 seconds, timeout 10 seconds, close timeout
-5 seconds). After 30 consecutive reconnect failures the listener SHALL raise an error to its
-supervisor instead of retrying forever. Unexpected (non-network) exceptions SHALL propagate
-immediately, never being masked as reconnects. Every reconnect except the first SHALL be recorded
-with the disconnection gap.</p>
-<h4 id="scenario-backoff-reset-on-success">Scenario: Backoff reset on success<a class="headerlink" href="#scenario-backoff-reset-on-success" title="Permanent link">&para;</a></h4>
-<ul>
-<li><strong>WHEN</strong> a connection attempt succeeds after prior failures</li>
-<li><strong>THEN</strong> the backoff timer resets to 1 second and the failure counter clears</li>
-</ul>
-<h4 id="scenario-give-up-escalation">Scenario: Give-up escalation<a class="headerlink" href="#scenario-give-up-escalation" title="Permanent link">&para;</a></h4>
-<ul>
-<li><strong>WHEN</strong> 30 consecutive reconnect attempts fail</li>
-<li><strong>THEN</strong> the listener raises a runtime error describing the failure count</li>
-</ul>
-<h4 id="scenario-code-error-escalation">Scenario: Code error escalation<a class="headerlink" href="#scenario-code-error-escalation" title="Permanent link">&para;</a></h4>
-<ul>
-<li><strong>WHEN</strong> a frame handler raises an unexpected exception</li>
-<li><strong>THEN</strong> the exception propagates immediately and the loop does not attempt a reconnect</li>
-</ul>
-<h3 id="requirement-buffered-parquet-writer">Requirement: Buffered parquet writer<a class="headerlink" href="#requirement-buffered-parquet-writer" title="Permanent link">&para;</a></h3>
-<p>The system SHALL buffer records in memory and flush them to parquet under a Hive-partitioned layout:
-<code>data/market={m}/type={t}/dt=YYYY-MM-DD/symbol={SYM}/part-*.parquet</code>. Flush SHALL trigger when the
-total buffered record count reaches 100,000 or a 60-second timer elapses. At flush, records SHALL be
-grouped by their own event-UTC-date so buckets straddling midnight land in the correct <code>dt=</code>
-partition. Writes SHALL use zstd compression (level 3), write to a sibling temp file, and atomically
-replace the target path. A failed partition write SHALL be retried (3 attempts, escalating backoff)
-and the failure SHALL be raised after the flush completes the remaining partitions.</p>
-<h4 id="scenario-midnight-partition-correctness">Scenario: Midnight partition correctness<a class="headerlink" href="#scenario-midnight-partition-correctness" title="Permanent link">&para;</a></h4>
-<ul>
-<li><strong>WHEN</strong> a flush contains records whose event times fall on different UTC dates</li>
-<li><strong>THEN</strong> each record lands in the parquet file of its own event date partition</li>
-</ul>
-<h4 id="scenario-atomic-part-write">Scenario: Atomic part write<a class="headerlink" href="#scenario-atomic-part-write" title="Permanent link">&para;</a></h4>
-<ul>
-<li><strong>WHEN</strong> a parquet part is written</li>
-<li><strong>THEN</strong> it is first written to a temporary sibling file and then atomically renamed, so a crash
-  never leaves a corrupt file at the canonical path</li>
-</ul>
-<h4 id="scenario-flush-by-record-count">Scenario: Flush by record count<a class="headerlink" href="#scenario-flush-by-record-count" title="Permanent link">&para;</a></h4>
-<ul>
-<li><strong>WHEN</strong> the total buffered record count reaches 100,000 before the 60-second timer</li>
-<li><strong>THEN</strong> a flush occurs immediately</li>
-</ul>
-<h3 id="requirement-order-book-state-lifecycle">Requirement: Order-book state lifecycle<a class="headerlink" href="#requirement-order-book-state-lifecycle" title="Permanent link">&para;</a></h3>
-<p>The system SHALL maintain one in-memory order book per (market, symbol), seeded from a REST depth
-snapshot and kept in sync with <code>@depth</code> diffs. The book SHALL have states <code>bootstrapping</code>, <code>live</code>,
-and <code>resyncing</code>. Spot and usdm SHALL apply the venue-specific contiguity rules: spot drops diffs
-with <code>u &lt;= snapshot id</code>, bridges when <code>U &lt;= snapshot id + 1 &lt;= u</code>, and requires <code>U == previous u +
-1</code>; usdm drops diffs with <code>u &lt; snapshot id</code>, bridges when <code>U &lt;= snapshot id &lt;= u</code>, and requires <code>pu
-== previous u</code>. A level with quantity zero SHALL remove the level. A non-contiguous live diff SHALL
-move the book to <code>resyncing</code> and re-bootstrap.</p>
-<h4 id="scenario-level-removal-by-zero-quantity">Scenario: Level removal by zero quantity<a class="headerlink" href="#scenario-level-removal-by-zero-quantity" title="Permanent link">&para;</a></h4>
-<ul>
-<li><strong>WHEN</strong> a diff carries a level with quantity zero</li>
-<li><strong>THEN</strong> the corresponding price level is removed from the book</li>
-</ul>
-<h4 id="scenario-gap-triggers-resync">Scenario: Gap triggers resync<a class="headerlink" href="#scenario-gap-triggers-resync" title="Permanent link">&para;</a></h4>
-<ul>
-<li><strong>WHEN</strong> a live diff is not contiguous with the previous one</li>
-<li><strong>THEN</strong> the book transitions to <code>resyncing</code>, the gap is counted, and a re-bootstrap is scheduled</li>
-</ul>
-<h4 id="scenario-usdm-overlapping-ranges-tolerated">Scenario: Usdm overlapping ranges tolerated<a class="headerlink" href="#scenario-usdm-overlapping-ranges-tolerated" title="Permanent link">&para;</a></h4>
-<ul>
-<li><strong>WHEN</strong> a usdm diff overlaps the previous range instead of extending it exactly</li>
-<li><strong>THEN</strong> the diff is applied and the book remains live (usdm contiguity is defined by <code>pu</code>)</li>
-</ul>
-<h4 id="scenario-diff-observers">Scenario: Diff observers<a class="headerlink" href="#scenario-diff-observers" title="Permanent link">&para;</a></h4>
-<ul>
-<li><strong>WHEN</strong> observers are registered on a live book and a diff arrives</li>
-<li><strong>THEN</strong> each observer is invoked before the diff is applied, with the touched price levels and
-  the mid price; an observer failure is logged and never interrupts the dispatch loop</li>
-</ul>
-<h3 id="requirement-order-book-bootstrap">Requirement: Order-book bootstrap<a class="headerlink" href="#requirement-order-book-bootstrap" title="Permanent link">&para;</a></h3>
-<p>The system SHALL bootstrap a book by fetching the venue's deepest snapshot (spot up to 5000 levels,
-usdm up to 1000), then replaying buffered diffs sorted by final update id: stale diffs dropped, the
-first surviving diff must bridge the snapshot, and subsequent diffs must be contiguous, else
-bootstrap repeats. Cold-start snapshot fetches SHALL be staggered per symbol (spot 2.5s, usdm 0.5s)
-with at most 2 concurrent fetches. USD-M snapshot fetches SHALL charge the shared rate limiter
-(weight 20 at max depth); spot bootstrap in the standalone run passes no limiter and relies on the
-stagger plus the concurrency cap. A 200 response without <code>lastUpdateId</code> (delisted or renamed symbol)
-SHALL raise an error that is absorbed by the retry backoff. Rate-limit responses SHALL be honored
-via Retry-After plus 5-30 seconds of jitter; other failures SHALL back off exponentially to 30
-seconds.</p>
-<h4 id="scenario-snapshot-limited-bootstrap">Scenario: Snapshot-limited bootstrap<a class="headerlink" href="#scenario-snapshot-limited-bootstrap" title="Permanent link">&para;</a></h4>
-<ul>
-<li><strong>WHEN</strong> a book cannot bridge the snapshot with the buffered diffs</li>
-<li><strong>THEN</strong> bootstrap is retried after a fixed 2-second wait and the book keeps its current state: a
-  cold-start book stays <code>bootstrapping</code>, while a book that fell behind after going live stays
-  <code>resyncing</code> (bootstrap itself never sets the state, it only flips to <code>live</code> on success)</li>
-</ul>
-<h4 id="scenario-rate-limited-bootstrap-wait">Scenario: Rate-limited bootstrap wait<a class="headerlink" href="#scenario-rate-limited-bootstrap-wait" title="Permanent link">&para;</a></h4>
-<ul>
-<li><strong>WHEN</strong> a depth snapshot fetch returns 429 or 418</li>
-<li><strong>THEN</strong> the retry sleeps for the response's Retry-After plus a random 5-30 second jitter</li>
-</ul>
-<h4 id="scenario-buffered-diffs-after-failed-bridge">Scenario: Buffered diffs after failed bridge<a class="headerlink" href="#scenario-buffered-diffs-after-failed-bridge" title="Permanent link">&para;</a></h4>
-<ul>
-<li><strong>WHEN</strong> a bootstrap attempt fails contiguity after applying the bridging diff</li>
-<li><strong>THEN</strong> the buffered diffs are discarded and the next bootstrap re-seeds from a fresh snapshot
-  (only the no-bridge case keeps the buffer)</li>
-</ul>
-<h4 id="scenario-watchdog-force-resync">Scenario: Watchdog force-resync<a class="headerlink" href="#scenario-watchdog-force-resync" title="Permanent link">&para;</a></h4>
-<ul>
-<li><strong>WHEN</strong> a live book receives no diffs for more than 30 seconds, or a resyncing book stays
-  resyncing for more than 60 seconds</li>
-<li><strong>THEN</strong> the watchdog forces a resync and counts it</li>
-</ul>
-<h3 id="requirement-order-book-snapshots">Requirement: Order-book snapshots<a class="headerlink" href="#requirement-order-book-snapshots" title="Permanent link">&para;</a></h3>
-<p>The system SHALL persist the full book (bids and asks as parallel float32 price/size arrays, one row
-per event, carrying also the symbol, snapshot timestamp, and the book's last update id) into
-<code>type=booksnapshot</code> partitions at a UTC-aligned cadence of 30 minutes (configurable; zero disables
-persistence), i.e. at <code>:00</code> and <code>:30</code> UTC, 48 snapshots per symbol per day. Only books in <code>live</code>
-state SHALL be snapshotted; a half-bootstrapped book SHALL be skipped. A separate 1-second
-in-process bus snapshot loop SHALL exist for metric consumers and SHALL never touch disk; it is not
-started in standalone parser runs.</p>
-<h4 id="scenario-utc-aligned-snapshot-ticks">Scenario: UTC-aligned snapshot ticks<a class="headerlink" href="#scenario-utc-aligned-snapshot-ticks" title="Permanent link">&para;</a></h4>
-<ul>
-<li><strong>WHEN</strong> the snapshot loop runs with the default 30-minute interval</li>
-<li><strong>THEN</strong> snapshots are written at <code>:00</code> and <code>:30</code> UTC regardless of process start time</li>
-</ul>
-<h4 id="scenario-unready-book-skipped">Scenario: Unready book skipped<a class="headerlink" href="#scenario-unready-book-skipped" title="Permanent link">&para;</a></h4>
-<ul>
-<li><strong>WHEN</strong> a book is not in <code>live</code> state at snapshot time</li>
-<li><strong>THEN</strong> no snapshot row is written for it for that tick</li>
-</ul>
-<h4 id="scenario-snapshot-persistence-disabled">Scenario: Snapshot persistence disabled<a class="headerlink" href="#scenario-snapshot-persistence-disabled" title="Permanent link">&para;</a></h4>
-<ul>
-<li><strong>WHEN</strong> the snapshot interval is set to zero</li>
-<li><strong>THEN</strong> no booksnapshot parquet files are written and a notice is printed</li>
-</ul>
-<h3 id="requirement-health-and-pipeline-statistics">Requirement: Health and pipeline statistics<a class="headerlink" href="#requirement-health-and-pipeline-statistics" title="Permanent link">&para;</a></h3>
-<p>The system SHALL track health counters (trade-id gaps - incremented only for raw <code>@trade</code> events
-when a trade id is not exactly the previous plus one; since the default subscription prefers
-<code>@aggTrade</code> and the raw <code>@trade</code> stream is not subscribed by default, this counter stays at zero
-unless raw trades are explicitly enabled; WS reconnects; order-book force resyncs; plus a
-clock-drift counter that the parser's own live run never increments - the standalone run leaves it
-at zero, and the only caller of <code>record_clock_drift()</code> is the alpha-engine live time-sync process)
-and per-symbol last-event timestamps. It SHALL expose a Python snapshot of these counters via the
-health object's snapshot method for in-process consumers; no HTTP or metrics endpoint exists (a
-Prometheus exporter is intentionally excluded). The pipeline SHALL report periodic statistics:
-message counts and lag per stream, reconnect count, and depth-resync counts per symbol, reported
-every 60 seconds; a high-frequency stream (aggtrades) that has never delivered a message, or whose
-lag exceeds 10 times its 30-second threshold (i.e. 300 seconds), SHALL trigger a warning.</p>
-<h4 id="scenario-trade-id-gap-detection">Scenario: Trade id gap detection<a class="headerlink" href="#scenario-trade-id-gap-detection" title="Permanent link">&para;</a></h4>
-<ul>
-<li><strong>WHEN</strong> a trade arrives whose id is not the previously seen id plus one</li>
-<li><strong>THEN</strong> the trade-id-gap counter increments and a warning is logged</li>
-</ul>
-<h4 id="scenario-silent-stream-warning">Scenario: Silent stream warning<a class="headerlink" href="#scenario-silent-stream-warning" title="Permanent link">&para;</a></h4>
-<ul>
-<li><strong>WHEN</strong> the aggtrades stream has never received a message after the first report, or its lag
-  exceeds 300 seconds (10 times its 30-second threshold)</li>
-<li><strong>THEN</strong> the reporter logs a stream-silent or stream-lag warning</li>
-</ul>
-<h3 id="requirement-live-run-composition">Requirement: Live run composition<a class="headerlink" href="#requirement-live-run-composition" title="Permanent link">&para;</a></h3>
-<p>The system SHALL run the live pipeline as a task group sharing one writer, one stats object, one
-health object, and one shared USD-M rate limiter across all components. It SHALL start, per selected
-market: a WS listener; on usdm, the exchange-info poller and market-stats poller; and,
-conditionally: the order-book manager and its snapshot/watchdog loops (<code>--order-book</code>), the funding
-poller (<code>--with-funding</code>, usdm only, ignored with a printed notice otherwise), the legacy periodic
-metrics pollers (when enabled), and the spot margin-interest poller (when enabled and spot is
-selected). Symbol validation against exchange-info SHALL be a soft check: network, timeout, and
-JSON-parse failures, as well as invalid symbols, SHALL warn but never abort (non-network parse bugs
-SHALL still propagate). The first task exception SHALL cancel all sibling tasks.</p>
-<h4 id="scenario-funding-flag-without-usdm">Scenario: Funding flag without usdm<a class="headerlink" href="#scenario-funding-flag-without-usdm" title="Permanent link">&para;</a></h4>
-<ul>
-<li><strong>WHEN</strong> <code>--with-funding</code> is set but usdm is not among the markets</li>
-<li><strong>THEN</strong> the flag is ignored with a printed notice and no funding poller starts</li>
-</ul>
-<h4 id="scenario-soft-symbol-validation">Scenario: Soft symbol validation<a class="headerlink" href="#scenario-soft-symbol-validation" title="Permanent link">&para;</a></h4>
-<ul>
-<li><strong>WHEN</strong> the exchange-info validation request fails or a symbol is not trading</li>
-<li><strong>THEN</strong> the pipeline continues with a warning</li>
-</ul>
-<h4 id="scenario-first-exception-cancels-all">Scenario: First-exception cancels all<a class="headerlink" href="#scenario-first-exception-cancels-all" title="Permanent link">&para;</a></h4>
-<ul>
-<li><strong>WHEN</strong> any task in the group fails</li>
-<li><strong>THEN</strong> all sibling tasks are cancelled and the failure propagates out of the run</li>
-</ul>
 
 
 
 
 
-
-
-  
-  
 
 
 
@@ -3033,44 +2891,6 @@ SHALL still propagate). The first task exception SHALL cancel all sibling tasks.
       
         <footer class="md-footer">
   
-    
-      
-      <nav class="md-footer__inner md-grid" aria-label="Footer" >
-        
-          
-          <a href="../live-trading/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Live Trading">
-            <div class="md-footer__button md-icon">
-              
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
-            </div>
-            <div class="md-footer__title">
-              <span class="md-footer__direction">
-                Previous
-              </span>
-              <div class="md-ellipsis">
-                Live Trading
-              </div>
-            </div>
-          </a>
-        
-        
-          
-          <a href="../metrics-aggregation/" class="md-footer__link md-footer__link--next" aria-label="Next: Metrics Aggregation">
-            <div class="md-footer__title">
-              <span class="md-footer__direction">
-                Next
-              </span>
-              <div class="md-ellipsis">
-                Metrics Aggregation
-              </div>
-            </div>
-            <div class="md-footer__button md-icon">
-              
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
-            </div>
-          </a>
-        
-      </nav>
     
   
   <div class="md-footer-meta md-typeset">
@@ -3111,12 +2931,12 @@ SHALL still propagate). The first task exception SHALL cancel all sibling tasks.
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.instant", "navigation.instant.progress", "navigation.tracking", "navigation.tabs", "navigation.tabs.sticky", "navigation.sections", "navigation.expand", "navigation.indexes", "navigation.top", "navigation.footer", "search.suggest", "search.highlight", "search.share", "toc.follow", "content.code.copy", "content.code.annotate", "content.tabs.link", "content.tooltips"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["navigation.instant", "navigation.instant.progress", "navigation.tracking", "navigation.tabs", "navigation.tabs.sticky", "navigation.sections", "navigation.expand", "navigation.indexes", "navigation.top", "navigation.footer", "search.suggest", "search.highlight", "search.share", "toc.follow", "content.code.copy", "content.code.annotate", "content.tabs.link", "content.tooltips"], "search": "../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
     
     
-      <script src="../../assets/javascripts/bundle.d7400e89.min.js"></script>
+      <script src="../../../assets/javascripts/bundle.d7400e89.min.js"></script>
       
-        <script src="../../javascripts/katex.js"></script>
+        <script src="../../../javascripts/katex.js"></script>
       
         <script src="https://unpkg.com/katex@0/dist/katex.min.js"></script>
       
