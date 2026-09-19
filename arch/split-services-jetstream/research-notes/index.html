@@ -1,0 +1,3604 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Quantitative research and live-trading stack on top of Binance market data. Strategy engine + WebSocket data pipeline + local L2 order book.
+">
+      
+      
+      
+        <link rel="canonical" href="https://sncapital.github.io/Docs/arch/split-services-jetstream/research-notes/">
+      
+      
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>research-notes.md — консолидированный research-след ADR-0002 - SN Capital — Backend</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="https://unpkg.com/katex@0/dist/katex.min.css">
+    
+    <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#research-notesmd-research-adr-0002" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../../.." title="SN Capital — Backend" class="md-header__button md-logo" aria-label="SN Capital — Backend" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            SN Capital — Backend
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              research-notes.md — консолидированный research-след ADR-0002
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m14.3 16-.7-2h-3.2l-.7 2H7.8L11 7h2l3.2 9zM20 8.69V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12zm-9.15 3.96h2.3L12 9z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_2" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to system preference"  type="radio" name="__palette" id="__palette_2">
+    
+      <label class="md-header__button md-icon" title="Switch to system preference" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+          <a href="javascript:void(0)" class="md-search__icon md-icon" title="Share" aria-label="Share" data-clipboard data-clipboard-text="" data-md-component="search-share" tabindex="-1">
+            
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9a3 3 0 0 0-3 3 3 3 0 0 0 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.15c-.05.21-.08.43-.08.66 0 1.61 1.31 2.91 2.92 2.91s2.92-1.3 2.92-2.91A2.92 2.92 0 0 0 18 16.08"/></svg>
+          </a>
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/SNCapital/Backend" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    SNCapital/Backend
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+    
+      
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../getting-started/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Getting started
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../alpha-engine/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Alpha engine
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../binance-parser/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Binance parser
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../strategies/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Strategies
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../reference/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Reference
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../development/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Development
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../adr/0001-collector-trader-split/0001-collector-trader-split/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Architecture decisions
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../../research-log/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Research log
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../research/nsc-14-aggtrade-vs-trade/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Research notes
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../openspec/batch-backtest/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Specs
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+    
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../.." title="SN Capital — Backend" class="md-nav__button md-logo" aria-label="SN Capital — Backend" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    SN Capital — Backend
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/SNCapital/Backend" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    SNCapital/Backend
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../../getting-started/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Getting started
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_2" id="__nav_2_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Getting started
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../getting-started/installation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Installation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../getting-started/quickstart/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Quick start
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../getting-started/architecture/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../../alpha-engine/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Alpha engine
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_3" id="__nav_3_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Alpha engine
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../alpha-engine/pipeline/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Pipeline overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../alpha-engine/data-layer/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Data layer
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../alpha-engine/writing-a-strategy/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Writing a strategy
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../alpha-engine/markowitz/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Markowitz combination
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../alpha-engine/backtesting/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Backtesting & PnL
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../alpha-engine/live-trading/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Live trading
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../../binance-parser/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Binance parser
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_4" id="__nav_4_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Binance parser
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../binance-parser/live/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Live WebSocket
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../binance-parser/historical/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Historical download
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../binance-parser/storage/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Storage layout
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../binance-parser/order-book/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Local order book
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../binance-parser/extending/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Extending the parser
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../../strategies/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Strategies
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_5" id="__nav_5_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Strategies
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../methodology/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Methodology
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../strategies/funding_reversion/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Funding mean reversion
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../strategies/trade_imbalance/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Trade imbalance
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../strategies/ob_mispricing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Orderbook mispricing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../strategies/book_depth_imbalance/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Book depth imbalance
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../strategies/vol_mean_reversion/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Volatility mean reversion
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../strategies/vol_ob_entropy/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Volume / OB entropy
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_6" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../../reference/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Reference
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_6" id="__nav_6_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Reference
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../reference/cli/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    CLI
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../reference/operators/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Operators
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../reference/metrics/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Metrics catalogue
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../reference/glossary/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Glossary
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_7" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../../development/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Development
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_7" id="__nav_7_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Development
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../development/setup/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Setup
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../development/testing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Testing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../development/contributing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Contributing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_8" >
+        
+          
+          <label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Architecture decisions
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Architecture decisions
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../adr/0001-collector-trader-split/0001-collector-trader-split/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ADR-0001 Collector / trader split
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../adr/0002-split-services-jetstream/0002-split-services-jetstream/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ADR-0002 Split services + JetStream
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../research-log/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Research log
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_10" >
+        
+          
+          <label class="md-nav__link" for="__nav_10" id="__nav_10_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Research notes
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_10_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_10">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Research notes
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../research/nsc-14-aggtrade-vs-trade/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    NSC-14 aggTrade vs trade
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_11" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../../openspec/batch-backtest/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Specs
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_11" id="__nav_11_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_11_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_11">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Specs
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../openspec/dashboard/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Dashboard
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../openspec/historical-download/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Historical download
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../openspec/live-trading/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Live Trading
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../openspec/live-ws/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Live WebSocket pipeline
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../openspec/metrics-aggregation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Metrics Aggregation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../openspec/metrics-engine/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Metrics Engine
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../openspec/models/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Data models
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../openspec/rest-pollers/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    REST pollers
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="research-notesmd-research-adr-0002">research-notes.md — консолидированный research-след ADR-0002<a class="headerlink" href="#research-notesmd-research-adr-0002" title="Permanent link">&para;</a></h1>
+<p>Историческая справка. Здесь СВЕДЕНЫ мелкие рабочие артефакты фаз/гейтов
+(решения D-<em>, вопросы Q-</em>, инварианты INV-<em>, протоколы старта S-</em>, эксперименты
+X-001/002/003, а также registers/handover/completeness/overview/ADR-MAP/
+transactions), которые раньше лежали отдельными файлами.</p>
+<p>АВТОРИТЕТНЫЙ источник — ADR (<code>docs/adr/0002-split-services-jetstream/</code>) и
+<code>dev-plan.md</code>. Этот файл — аудит-след «почему так»; при расхождении верить ADR.
+Отдельными остались: <code>bars-contract.md</code>, <code>OBS-SPEC.md</code>, <code>soak-runbooks.md</code>,
+<code>transition-plan.md</code>, <code>X-004.md</code> (сырые замеры), <code>dev-plan.md</code>.</p>
+<p>Кросс-уок id решений: workspace <code>D-001</code> (retention/offset/wait) → ADR D2/D4/D6;
+<code>D-002</code> (S3 layout) → ADR D8; <code>D-003</code> (archiver отдельно) → ADR D3.
+Консолидировано 2026-09-13.</p>
+<hr />
+<!-- consolidated from overview.md -->
+
+<h1 id="overviewmd-data-movement-storage-decisions-graphs-derived-text-normative">overview.md — data movement, storage, decisions (graphs derived; text normative)<a class="headerlink" href="#overviewmd-data-movement-storage-decisions-graphs-derived-text-normative" title="Permanent link">&para;</a></h1>
+<pre class="mermaid"><code>flowchart LR
+    subgraph INGEST [C-1 proxy shards]
+        WS1[Binance WS public depth]
+        WS2[Binance WS market rest]
+        REST[Binance REST]
+    end
+    P1[Data proxy shard 1] --&gt; JS
+    P2[Data proxy shard 2] --&gt; JS
+    PN[Data proxy shard N] --&gt; JS
+    WS1 --&gt; P1
+    WS2 --&gt; P2
+    REST --&gt; PN
+    subgraph JS [C-2 NATS JetStream single host]
+        MD[md.binance.usdm.* file storage 48h+max_bytes]
+        BARS[bars.binance.usdm.*]
+    end
+    JS --&gt; ARC[C-3 Raw archiver durable+ack]
+    JS --&gt; CALC[C-4 Metric calc xN per-symbol]
+    CALC --&gt; JS
+    ARC --&gt; PQ[Parquet 1 file/day/type] --&gt; S3
+    JS --&gt; TR[C-5 Trader ONE/account] --&gt; TAPI[Binance Trade API direct]
+    UDS[user data stream] --&gt; TR
+    PG[(PG16 cursors + checkpoints)] &lt;--&gt; CALC
+    PG &lt;--&gt; TR</code></pre>
+<h2 id="critical-flows">Critical flows<a class="headerlink" href="#critical-flows" title="Permanent link">&para;</a></h2>
+<ul>
+<li>F-ingress: WS/REST → mem buffer (30–60s, cap + drop counter) → async publish <code>md.binance.usdm.&lt;sym&gt;.&lt;type&gt;</code> (MsgId dedup 300s, ingress_time + exchange ts + connection id).</li>
+<li>F-calc (vertical slice): md.* (non-durable + PG cursor, exact-subject resume per X-001) → server-time 30m bar, ALWAYS (NULL by redesign Q-003) + quality stamp → <code>bars.binance.usdm.*</code>, 1 msg = 1 closed bar.</li>
+<li>F-archive: md.* (durable + ack) → daily merge → S3 copy-verify-delete → local delete after verify (Q-005(b) daily bound).</li>
+<li>F-trade: bars.* → wait-full-set 5 min (Q-004 builds) → 3-state gate (S-trader) → direct REST orders + user-data reconcile; stale bars ack+drop.</li>
+</ul>
+<h2 id="decisions-index">Decisions index<a class="headerlink" href="#decisions-index" title="Permanent link">&para;</a></h2>
+<p>D-001 (retention/offset/wait/alerting, implemented), D-002 (S3 layout + offline backtest), D-003 (bar payload findings; Q-003 direction: nullable redesign), Q-004 (build all), Q-005 (deploy order + daily merge; fencing by order).</p>
+<h2 id="invariants-index">Invariants index<a class="headerlink" href="#invariants-index" title="Permanent link">&para;</a></h2>
+<p>INV-001 (one bar/window, NULL — VIOLATED by engine path until Q-003 redesign), INV-002 (no silent loss — unowned on bars leg until stamp), INV-003 (disk bounded — JetStream static-done, files by daily merge).</p>
+<hr />
+<!-- consolidated from registers.md -->
+
+<h1 id="registersmd-round-1-merged-2026-09-12">registers.md (round 1 merged 2026-09-12)<a class="headerlink" href="#registersmd-round-1-merged-2026-09-12" title="Permanent link">&para;</a></h1>
+<h2 id="decided-human-merged-research">Decided (human + merged research)<a class="headerlink" href="#decided-human-merged-research" title="Permanent link">&para;</a></h2>
+<ul>
+<li>NATS: same host, single VM loopback, no auth/cluster (Gate 0).</li>
+<li>Budget + NG1-NG4: approved (Gate 0).</li>
+<li>Offset store: SAME PG16 <code>trader</code> DB, separate schema, calc owns migrations.</li>
+<li>Trade trigger: WAIT FULL SET, 5 min past bar close, then trade available + mark missing (D-001).</li>
+<li>Retention: age-wins (limits+discard old, first-limit-wins, ack does not protect — R-1/R-2 coincident, NATS docs stated).</li>
+<li>Volumes basis: 22–40 GB/day measured (measurements.md §6, cross §9); 13 GB/day + 61.6s/1220 REJECTED as sizing inputs.</li>
+<li>Alerting: logs (ASCII) + Prometheus metrics, alerting via Prometheus.</li>
+<li>S3 layout D-002: 1 file/day/type, all symbols. Backtest NG5 offline S3.</li>
+<li>Resume: exact-subject ephemeral consumers (RC-1 R1 narrowing). Kline R4 REFUTED (closed-only publisher). Pinning = app duty.</li>
+</ul>
+<h2 id="open-blocking-gates-plannerclosure">Open blocking (gates planner/closure)<a class="headerlink" href="#open-blocking-gates-plannerclosure" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Q-002: code ships 72h + no max_bytes + no bars.* stream (INV-003 violated). Needs implementation: max_bytes (+max_msgs), 72→48, bars.* spec + owner + retention. HUMAN AGREED 2026-09-12 (items 1–2) — IMPLEMENTED same day (see D-001 note). Leftover: occupancy soak to size max_bytes byte value (measurement, not code).</li>
+<li>Q-001: CLOSED by X-001 (reproduced run 2.10.29). Compat C-3 blocking lifted with nuance: hole signal comes from code probe, not broker.</li>
+</ul>
+<h2 id="open-non-blocking-deferred-in-acceptance">Open non-blocking (deferred, in acceptance)<a class="headerlink" href="#open-non-blocking-deferred-in-acceptance" title="Permanent link">&para;</a></h2>
+<ul>
+<li>S2 ratio + file-store overhead + 48h occupancy + production-day+peak measurement (soak A-3 R-2). max_bytes byte value = formula only.</li>
+<li>RC-2 FYIs: V-4 wording (tar-raw), V-3 drops=214 floor-not-ceiling, V-2 class (estimate+contradiction), decimal GB units.</li>
+<li>Whole-stream max_bytes skew (noisy symbol evicts quiet; no per-subject limits) — accepted limitation.</li>
+</ul>
+<h2 id="boundary-ruling-2026-09-12-boundary-red-presented-human-ruled-keep-8-prodconfig-files-10-test-files-stay-limit-touch-overrun-disclosed">Boundary ruling (2026-09-12): BOUNDARY-RED presented, human ruled KEEP (8 prod/config files + 10 test files stay). Limit-touch overrun disclosed.<a class="headerlink" href="#boundary-ruling-2026-09-12-boundary-red-presented-human-ruled-keep-8-prodconfig-files-10-test-files-stay-limit-touch-overrun-disclosed" title="Permanent link">&para;</a></h2>
+<h2 id="gate-4-2026-09-12-accepted-by-human-q-003-nullable-redesign-q-004-build-all-against-lead-recommendation-human-decision-stands-q-005-open-premise-questioned-clarified-in-chat-awaits-verdict-stays-unresolved-blocking-for-steps-56">Gate 4 (2026-09-12): ACCEPTED by human. Q-003 = nullable redesign; Q-004 = build all (against lead recommendation — human decision stands); Q-005 OPEN (premise questioned, clarified in chat, awaits verdict) → stays unresolved-blocking for steps 5–6.<a class="headerlink" href="#gate-4-2026-09-12-accepted-by-human-q-003-nullable-redesign-q-004-build-all-against-lead-recommendation-human-decision-stands-q-005-open-premise-questioned-clarified-in-chat-awaits-verdict-stays-unresolved-blocking-for-steps-56" title="Permanent link">&para;</a></h2>
+<h2 id="process-note-2026-09-12">Process note (2026-09-12)<a class="headerlink" href="#process-note-2026-09-12" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Deviation: implementation of D-001 code part (48h + max_bytes + bars.* spec, items 1–2) ran BEFORE Gate 4 acceptance, on direct human instruction ("ну сделаем"). Per skill, unresolved-blocking stops planning and Gate 4 precedes handover — this jumped the gate. Recorded, not hidden. The code implements decided D-001/D-002 only (no new guarantees/boundaries), but formal acceptance is still outstanding.</li>
+<li>To return on track: finish round 2 (bar payload + quality-stamp fields + T=5 rule + R43 transition) → Gate 4 acceptance → planner handover. DONE 2026-09-12: Gate 4 accepted (see above). Services implementation (proxy/calc/archiver/trader-on-bars) was NOT started during design; planner may now take fixed/free parts only.</li>
+</ul>
+<h2 id="measurements-2026-09-12-x-002-sizesoccupancys2-read-only-x-003-jittereviction-isolated-test-streams">Measurements (2026-09-12): X-002 (sizes/occupancy/S2, read-only) + X-003 (jitter/eviction, isolated TEST streams)<a class="headerlink" href="#measurements-2026-09-12-x-002-sizesoccupancys2-read-only-x-003-jittereviction-isolated-test-streams" title="Permanent link">&para;</a></h2>
+<ul>
+<li>s2 ≈ 0.37 disk/wire (приближённо); 2-символьный контур ~18.5 КБ/s среднее (не пик), масштабируется к §6.</li>
+<li>Jitter: market-stats aligned (даблов нет конструктивно); restart-immediate опрос — измеренный механизм коллизии, в 4ч ноль случаев (+1 необъяснённый double); недельная процедура написана, не снята → Q-006(d) остаётся unknown.</li>
+<li>Eviction: head двигается мимо lagging durable; publish не блокируется; start-seq в дыре = пусто без ошибки (подтверждает X-001 нюанс на живом прод-близком конфиге).</li>
+<li>НАХОДКА X-002/X-003: прод MD_* = 72h + max_bytes=-1 (дрейф, log-only) — контракт в коде их не сводит; планировщику нужен update/recreate в шаге 1. BARS уже по контракту.</li>
+</ul>
+<h2 id="measurements-2026-09-13-x-004-occupancy-series-s2-precise-peak-kill-archiver-dry-run-obs-spec-wiring-spec">Measurements (2026-09-13): X-004 (occupancy series / S2 precise / peak / kill-archiver dry-run) + OBS-SPEC (wiring spec)<a class="headerlink" href="#measurements-2026-09-13-x-004-occupancy-series-s2-precise-peak-kill-archiver-dry-run-obs-spec-wiring-spec" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Occupancy (2 символа, тихий вечер субботы, 16-мин окно): рост logical 1.075 MB/min
+  (DIFF 0.931 + TRADE 0.134 + EVENTS 0.011); экстраполяция 48h +3.10 GB logical / ~+1.15 GB disk;
+  72h steady-state ~1.7 GB disk. Пилотный объём считать по measurements §6 (22-40 GB/day),
+  не умножением этого окна — X-004 даёт форму retention-математики, не объём пилота.</li>
+<li>S2 refined: bulk 0.32-0.38 mean ~0.37 (&plusmn;0.01 minute-scale, рекомпрессия/GC);
+  мелкосообщённые потоки (EVENTS 214 B avg) overhead-dominated ratio &gt;= 1.0.
+  Фикс. overhead пустого стрима ~12.8 KB. Долгая процедура: sampler 60s + du/df каждые 5 мин &gt;= 6ч.</li>
+<li>Peak (per-minute deltas): DIFF msgs 1.00 / MB 1.49; TRADE 2.35 / 2.34; EVENTS 1.51.
+  Сессионного спайка за 16 мин нет. Процедура волатильной сессии: sampler 5h + sidecar в окно UTC 13:30-16:00.</li>
+<li>Kill-archiver dry-run (изолированный TEST_KA file/max_bytes=200k/max_age=60s): head advance
+  точный (first_seq 1-&gt;614 = 800-187+1), publish не блокируется у капа и после expiry,
+  lagging durable num_pending 20-&gt;0 при expiry, empty-on-expired-start, удаление с верификацией.
+  File-side метод продемонстрирован: per-stream du изолируем на shared volume; soak-процедура:
+  семплировать per-stream path + df -v каждые 5 мин.</li>
+<li>Дрейф подтверждён повторно: прод MD_* всё ещё 72h/unlimited (X-004 §0).</li>
+<li>OBS-SPEC.md: проводка counter -&gt; stamp -&gt; trading_* metric -&gt; alert по всем сигналам D-001 +
+  dedup + Q-006 + retention-hole + replay outcomes; вердикты wired/missing; экспортёр/имена/правила
+  отсутствуют в коде; пороги TBD-soak кроме RTO 120s.</li>
+<li>ADR-MAP.md: задняя сверка с docs/adr (при проектировании не читались — disclosed);
+  совпадения + 2 conscious deviations (48h vs 72h; archiver отдельным сервисом vs D8).</li>
+</ul>
+<h2 id="unexplored-r32-by-budget">Unexplored (R32, by budget)<a class="headerlink" href="#unexplored-r32-by-budget" title="Permanent link">&para;</a></h2>
+<ul>
+<li>S3 cost/lifecycle, TLS/SCRAM multi-host, PG failover, 12000-stream startup optimization — no decision affected.</li>
+<li>Calc sharding (processes/shards, symbol→shard cut): DEFERRED by human 2026-09-12 ("пока без шардов"); planner decides when scaling needs it.</li>
+<li>Blind-sec method DECIDED 2026-09-12: 1Hz sentinel (heartbeat) per connection — mechanism exists in code (ws_client.py:76-177); missing loss-check code (expected vs received per second → blind_sec counter) is planner direction (bars-contract stamp rows).</li>
+</ul>
+<hr />
+<!-- consolidated from handover.md -->
+
+<h1 id="handovermd-split-services-jetstream-gate-4-accepted-2026-09-12-planner-handover">handover.md — split-services-jetstream (Gate 4 ACCEPTED 2026-09-12; planner handover)<a class="headerlink" href="#handovermd-split-services-jetstream-gate-4-accepted-2026-09-12-planner-handover" title="Permanent link">&para;</a></h1>
+<p>Rounds spent: 2 of max 2. Round 2: R-3 (bars payload) + R-4 (wait/degraded) + R-5 (R43 transition), named arch-researcher, blind B/A/B, compare B/A/B (RC-3 blocked, RC-4 approved, RC-5 blocked), compat A on D-003/Q-003/Q-004: BLOCKING-CONDITIONAL. Full audit in reviews/.</p>
+<h2 id="status-per-t9">Status per участок (T9)<a class="headerlink" href="#status-per-t9" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Участок</th>
+<th>Статус</th>
+<th>Ссылка / ограничения</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>md.* retention 48h + max_bytes + BARS declared</td>
+<td>зафиксировано + реализовано</td>
+<td>D-001; code shipped TDD (10 tests), fast gate green</td>
+</tr>
+<tr>
+<td>Resume exact-subject + PG cursor</td>
+<td>зафиксировано</td>
+<td>D-001; X-001 reproduced (2.10.29); hole signal = code probe</td>
+</tr>
+<tr>
+<td>Volumes 22–40 GB/day; 13 GB + 61.6s rejected</td>
+<td>зафиксировано</td>
+<td>measurements §6/§9</td>
+</tr>
+<tr>
+<td>S3 layout + backtest NG5 offline</td>
+<td>зафиксировано</td>
+<td>D-002</td>
+</tr>
+<tr>
+<td>Wait-full-set 5 min</td>
+<td>зафиксировано как требование</td>
+<td>D-001; code: 10s settlement, no wait (Q-004)</td>
+</tr>
+<tr>
+<td>Bar payload (form/NULL/stamp/subject/MsgId)</td>
+<td>зафиксировано направлением</td>
+<td>Q-003: nullable redesign (Gate 4); subject без .30m</td>
+</tr>
+<tr>
+<td>Trader wait/3-state/stamp/Prometheus/order-id</td>
+<td>зафиксировано направлением</td>
+<td>Q-004: build all (Gate 4, против рекомендации лида); экспортёр+имена+правила отсутствуют в коде — отдельная плановая задача, проводка spec готовится</td>
+</tr>
+<tr>
+<td>Transition steps 1–2 (freeze, shadow archiver)</td>
+<td>отдано реализации</td>
+<td>ограничение: freeze subject first (Q-003d); own file-disk bound (Q-005b); существующие MD_* НЕ сводятся кодом — шаг 1 включает update/recreate стримов (X-002)</td>
+</tr>
+<tr>
+<td>Transition step 4 (history to S3)</td>
+<td>отдано реализации</td>
+<td>ограничение: в границах замечаний COMP-2 2–4</td>
+</tr>
+<tr>
+<td>Transition steps &#8535;/6 (shadow calc pub, cutover, retire)</td>
+<td>не решено и блокирует</td>
+<td>детали полей Q-003 + файловый предел Q-005(b), soaks + Hive→daily tool</td>
+</tr>
+<tr>
+<td>Single-trader fencing</td>
+<td>зафиксировано направлением</td>
+<td>Q-005: stop-first redeploy (писатель/трейдер), start-first (коллектор); кодирует планировщик</td>
+</tr>
+<tr>
+<td>File-disk bound in shadow</td>
+<td>зафиксировано направлением</td>
+<td>Q-005(b): дневное слияние в S3 + удаление после проверки; граница ~1–2 суток; сжатие подтвердить soak</td>
+</tr>
+</tbody>
+</table>
+<h2 id="critical-scenarios-prose-decisions">Critical scenarios (prose + decisions)<a class="headerlink" href="#critical-scenarios-prose-decisions" title="Permanent link">&para;</a></h2>
+<ol>
+<li>Proxy burst: buffer caps (~1h sustained, ~22–30 min minute-peak), drop-oldest + counter, alert; no spill/backpressure.</li>
+<li>Archiver stalls: discard-old eats tail regardless of ack; restarts see gap → hole verdict via code probe (broker returns empty, X-001 nuance).</li>
+<li>Calc restart: exact-subject consumer from per-subject seq+1, U/u second stage; past retention → hole.</li>
+<li>Incomplete window: wait 5 min (REQUIRED, unimplemented), trade available, mark missing (REQUIRED stamp fields, undefined).</li>
+<li>Fresh infra: bootstrap ensure creates md.*+BARS idempotent before first publish (BARS subject frozen first).</li>
+<li>Two traders, one account: NO mechanism today — fencing required before cutover (Q-005).</li>
+<li>Shadow file growth: two layouts at once, unbounded today — bound + file-watching soak required (Q-005).</li>
+<li>Retire: POINT OF NO RETURN (volumes deleted + JetStream expired beyond S3) — only after soaks + migration tool.</li>
+</ol>
+<h2 id="ranked-fragile-decisions-basis-class-each">Ranked fragile decisions (basis class each)<a class="headerlink" href="#ranked-fragile-decisions-basis-class-each" title="Permanent link">&para;</a></h2>
+<ol>
+<li>NULL/stamp payload design (Q-003) — human decision missing; engine path bakes 0.0+ffill today. Watch: first published bar validation.</li>
+<li>Single-trader fencing (Q-005) — no mechanism; monetary irreversible. Watch: two-writer probe test.</li>
+<li>File-disk bound (Q-005) — INV-003 as written covers whole host; shadow doubles files. Watch: file-watching soak.</li>
+<li>opt_start_seq × filter — REPRODUCED (X-001 2.10.29). Closed.</li>
+<li>Volumes 22–40 — measured bases + extrapolation; S2/overhead/peak unmeasured. Watch: prod-profile soak.</li>
+<li>max_bytes = 100G orientir — not sized. Watch: occupancy soak.</li>
+</ol>
+<h2 id="registries-uncheckable-human-only-gate-4-material">Registries / uncheckable / human-only (Gate 4 material)<a class="headerlink" href="#registries-uncheckable-human-only-gate-4-material" title="Permanent link">&para;</a></h2>
+<ul>
+<li>registers.md (decided/blocking/FYI/Unexplored + process note on pre-acceptance implementation), Q-001 closed, Q-002 code-done/measurement-open, Q-003/Q-004/Q-005 open-blocking.</li>
+<li>Uncheckable (accumulated): bars wire bytes/MsgId/stamp-mapping (no publisher); prod bar-set latency (T=5 basis); per-state metric set; PG-cursor DDL; S3→JetStream backfill path; Hive→daily tool; NATS docs-vs-2.10 delta outside Q-001; file occupancy; two-writer probe.</li>
+<li>MEASURED 2026-09-13 (X-004, closes part of uncheckable): S2 precise 0.37±0.01 bulk / ≥1.0 small-msg;
+  48h occupancy shape +3.10 GB logical / ~+1.15 GB disk (2-symbol window, pilot via §6); per-minute peak
+  factors DIFF 1.0–1.5 / TRADE 2.35 / EVENTS 1.5; file-side per-stream watch demonstrated + soak procedure.
+  OBS-SPEC.md wires every signal counter→stamp→metric→alert (spec-only, thresholds TBD-soak).
+  Still uncheckable: volatile-session peak (hours), 6h+ S2 baseline, pilot-scale occupancy, two-writer probe,
+  PG-cursor DDL demo, S3→JetStream backfill, per-state metrics.</li>
+<li>Human-only: Q-003(a–d) payload/NULL/stamp/subject; Q-004 build-vs-narrow C-5; Q-005 fencing choice + file-bound-or-narrow-INV-003; soak procedures (R-1 §5 p.2–3 open, R-2 A-3, kill-archiver incl. files); max_bytes byte value after soak.</li>
+</ul>
+<hr />
+<!-- consolidated from completeness.md -->
+
+<h1 id="completenessmd-review-of-the-assembled-deliverable-phase-4">completeness.md — review of the assembled deliverable (Phase 4)<a class="headerlink" href="#completenessmd-review-of-the-assembled-deliverable-phase-4" title="Permanent link">&para;</a></h1>
+<h2 id="checked-per-area-reviewer-seats-ab-lead-merge">Checked per area (reviewer seats A/B + lead merge)<a class="headerlink" href="#checked-per-area-reviewer-seats-ab-lead-merge" title="Permanent link">&para;</a></h2>
+<ul>
+<li>F-calc resume/mechanism: R-1 + blind + compare + X-001 reproduced (2.10.29). Closed.</li>
+<li>Volumes/retention: R-2 + blind + compare; 22–40 measured, 13/61.6s rejected. Closed as basis; byte value open (soak).</li>
+<li>Bar payload/stamp: R-3 + blind + compare; violations recorded (INV-001 by engine path, stamp absent). Direction decided Q-003; field details open.</li>
+<li>Trader wait/states: R-4 + blind + compare; zero coverage verified; Q-004 build-all decided.</li>
+<li>Transition: R-5 + blind + compare + compat COMP-2 (blocking-conditional); order frozen, gates per step.</li>
+<li>Compat: COMP-1 (md.* core) + COMP-2 (round-2 merge) with disclosed seat limits.</li>
+</ul>
+<h2 id="excluded-paths-with-reason">Excluded paths with reason<a class="headerlink" href="#excluded-paths-with-reason" title="Permanent link">&para;</a></h2>
+<ul>
+<li>S3 lifecycle/costs, TLS/SCRAM multi-host, PG failover, 12000-stream startup: affect no decided behavior (R32 unexplored).</li>
+<li>Live S3→JetStream backfill: unspecified path, recorded unknown (R-5 §7.2), not silently assumed.</li>
+<li>Dedup-window &gt;300s procedures (R-1 §5 p.2–3): non-load-bearing (ingress idempotent by construction).</li>
+</ul>
+<h2 id="uncheckable-list-accepted-as-unknown-not-facts">Uncheckable list (accepted as unknown, not facts)<a class="headerlink" href="#uncheckable-list-accepted-as-unknown-not-facts" title="Permanent link">&para;</a></h2>
+<ol>
+<li>Bars wire bytes/MsgId/stamp mapping — no publisher exists.</li>
+<li>Prod bar-set latency (basis for T=5) — no measurement.</li>
+<li>Per-state metric set + Prometheus wiring end-to-end.</li>
+<li>PG-cursor DDL/owner demonstration from empty infra.</li>
+<li>S2 ratio, file-store overhead, 48h occupancy, prod peak.</li>
+<li>Hive→daily migration tool behavior.</li>
+<li>NATS docs-vs-2.10 delta outside X-001 paths.</li>
+<li>Two-writer fencing probe (decided by deploy order instead).</li>
+<li>Live/replay bar-boundary parity run; kill-archiver soak incl. files.</li>
+</ol>
+<h2 id="handover-state">Handover state<a class="headerlink" href="#handover-state" title="Permanent link">&para;</a></h2>
+<p>Gate 4 ACCEPTED with Q-005(b) verdict (daily merge) recorded after. Planner takes: steps 1–2, 4 now; steps &#8535;/6 gated (Q-003 field details, soaks, migration tool). New artifacts since acceptance: S-bar, S-trader, S-archiver, S-offset, transactions.md, overview.md, completeness.md (this file) — extensions, no guarantee/boundary/ownership changes (no re-discussion triggered).</p>
+<h2 id="adr-0002-takes-absorbed-2026-09-13-no-re-discussion-refinements-not-guarantee-changes">ADR-0002 takes absorbed (2026-09-13, no re-discussion: refinements, not guarantee changes)<a class="headerlink" href="#adr-0002-takes-absorbed-2026-09-13-no-re-discussion-refinements-not-guarantee-changes" title="Permanent link">&para;</a></h2>
+<ol>
+<li>C9 subject freeze: raw stays <code>md.{market}.{kind}.{symbol}</code> (no migration); exchange-in-subject for <code>bars.binance.usdm.*</code> only → transition-plan step 1.</li>
+<li>bars.* short retention formula <code>&gt;= trader downtime + shard skew window</code> → bars-contract.</li>
+<li>Calc publish path (checkpoint read → u-check → ring → stamp → COMMIT → publish, always emit incl. NULL) → S-bar.</li>
+<li>Trader/calc restart asymmetry (trader resumes live, never restarts on calc restart; positions re-read) → S-trader.</li>
+<li>Archiver row-group assembly into one open day-writer; ack after S3 verify → D-002.</li>
+<li>C6 12000-stream ~32s startup into RTO/lift order — NOT absorbed: unmeasured on our host
+   (board <code>measured</code>), recorded as soak item, not a plan constraint.</li>
+</ol>
+<hr />
+<!-- consolidated from ADR-MAP.md -->
+
+<h1 id="adr-map-split-services-jetstream-vs-docsadr-reconciliation-2026-09-13">ADR-MAP — split-services-jetstream vs docs/adr (reconciliation 2026-09-13)<a class="headerlink" href="#adr-map-split-services-jetstream-vs-docsadr-reconciliation-2026-09-13" title="Permanent link">&para;</a></h1>
+<p>Disclosure: workspace <code>docs/arch/split-services-jetstream/</code> проектировался БЕЗ чтения
+<code>docs/adr</code> (grep: ноль ссылок). Ниже — сверка задним числом: что совпадает, что уточняет,
+где conscious deviation.</p>
+<p>NOTE 2026-09-13: черновик <code>docs/adr/0002-proxy-shards-bars-stream/</code> УДАЛЁН решением человека
+(всё ценное поглощено в настоящий workspace — см. completeness.md §ADR-0002 takes; остаток —
+дубли Gate-4 решений либо superseded Phase &frac34;). Этот файл — след поглощения.
+ADR-0002 как номер — свободен; настоящий дизайн считается вторым (ветка feat/adr-0002-*, PR #97).</p>
+<h2 id="adr-0001-accepted-collectortrader-split-durable">ADR-0001 (Accepted) — collector/trader split через durable лог<a class="headerlink" href="#adr-0001-accepted-collectortrader-split-durable" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>ADR-0001</th>
+<th>split-services-jetstream</th>
+<th>Вердикт</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>D0 split collector/trader, JetStream durability-граница</td>
+<td>Принято как база (00-context)</td>
+<td>совпадает</td>
+</tr>
+<tr>
+<td>D2 NATS JetStream file storage, 3 стрима MD_DIFF/MD_TRADE/MD_EVENTS, retention limits</td>
+<td>Принято; + BARS 4-м стримом</td>
+<td>расширяет (BARS — новое)</td>
+</tr>
+<tr>
+<td>Retention 72ч (implementation-notes: <code>nats.retention</code> 72ч, ~66-120 ГБ)</td>
+<td>D-001: 48h + max_bytes ~100G orientir (решение человека 2026-09-12)</td>
+<td>CONSCIOUS DEVIATION: 48h вместо 72h. Rationale: bound диска + S3-прогресс архиватора. ADR-0001 §8 формула (<code>простой + худший + буфер</code>) соблюдена — число другое</td>
+</tr>
+<tr>
+<td>D5 чекпойнт книги блобом + 3 seq одной tx, keep 2</td>
+<td>Принято без изменений (A3 в ADR-0002 decided: чекпойнты остаются в PG)</td>
+<td>совпадает</td>
+</tr>
+<tr>
+<td>D7 MsgId из явных полей Binance, таблица §8</td>
+<td>Q-006 вердикты уточняют: (b) kline closed-only фильтр, &copy; liq +E в id, (d) stats minute-bucket</td>
+<td>REFINEMENT D7, не конфликт</td>
+</tr>
+<tr>
+<td>D8 FileWriter durable в trader (только поллеры)</td>
+<td>Archiver ВЫНЕСЕН в отдельный сервис со своим durable-курсором</td>
+<td>BOUNDARY CHANGE: writer покидает trader. Rationale: деплой трейдера не должен трогать архив; ack после S3-verify</td>
+</tr>
+<tr>
+<td>D9 RAM-буфер коллектора ~1ч, кап формулой</td>
+<td>Принято (proxy burst scenario)</td>
+<td>совпадает</td>
+</tr>
+<tr>
+<td>D10 позиции локально не хранятся</td>
+<td>Принято (trader × E, позиции с биржи)</td>
+<td>совпадает</td>
+</tr>
+<tr>
+<td>RTO-неравенство §9, volumes 22-40 GB/day measured</td>
+<td>Принято как basis (registers, D-001); 13 GB/day REJECTED</td>
+<td>совпадает</td>
+</tr>
+<tr>
+<td>D4 производное не хранится, реплей от границы</td>
+<td>bars.* — производное и выкидываемое (короткий retention)</td>
+<td>совпадает</td>
+</tr>
+</tbody>
+</table>
+<h2 id="adr-0002-draft-phase-1-approved">ADR-0002 (Draft, Phase 1 approved) — горизонталь + контракт баров<a class="headerlink" href="#adr-0002-draft-phase-1-approved" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>ADR-0002</th>
+<th>split-services-jetstream</th>
+<th>Вердикт</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>G1 масштаб по осям E (collector/calc/trader ×E, старт E=1)</td>
+<td>Принято (00-context, blocks)</td>
+<td>совпадает</td>
+</tr>
+<tr>
+<td>G2 контракт bars.*: 1 msg = 1 закрытый бар + штамп, биржа в теме</td>
+<td>bars-contract.md v1, subject БЕЗ .30m (Gate 4)</td>
+<td>совпадает с уточнением subject</td>
+</tr>
+<tr>
+<td>G4 штамп качества + ingress time</td>
+<td>Stamp spec (Q-003 nullable, blind_sec, per-conn); ingress time — требование, код отсутствует</td>
+<td>совпадает направлением; ingress time — planner direction</td>
+</tr>
+<tr>
+<td>A3 чекпойнты остаются в PG (decided)</td>
+<td>Принято, курсор calc в той же PG отдельной схемой</td>
+<td>совпадает</td>
+</tr>
+<tr>
+<td>O1 NATS same-host vs отдельно</td>
+<td>Decided Gate 0: same host, single VM</td>
+<td>ЗАКРЫТ (O1 → decided)</td>
+</tr>
+<tr>
+<td>O2 per-symbol vs комплект (портфель)</td>
+<td>D-001 wait-full-set 5 min + trade available set</td>
+<td>ЗАКРЫТ веткой wait (решение человека); O2-форк снят</td>
+</tr>
+<tr>
+<td>O3 retention age vs ack (limits+max_age vs interest/workqueue)</td>
+<td>D-001 age-wins (limits + discard old, ack не защищает)</td>
+<td>ЗАКРЫТ (совпадает с O3-веткой limits+max_age)</td>
+</tr>
+<tr>
+<td>O4 консьюмер на шард vs на символ</td>
+<td>D-001: exact-subject ephemeral (X-001 reproduced)</td>
+<td>ЗАКРЫТ (per-symbol fetch)</td>
+</tr>
+<tr>
+<td>O5 blind-sec на /public</td>
+<td>blind_sec 1Hz sentinel per connection (ws_client механизм есть, loss-check — planner)</td>
+<td>Частично: механизм есть, счётчик — planner</td>
+</tr>
+<tr>
+<td>O6 каденция depth-снапшотов (61.6s vs 30min)</td>
+<td>REJECTED как sizing input (86400/1220=70.8 не 61.6)</td>
+<td>Закрыт отказом</td>
+</tr>
+<tr>
+<td>O7 паттерн чтения для parquet-партиционирования</td>
+<td>D-002: 1 file/day/type, все символы</td>
+<td>ЗАКРЫТ (date+type layout)</td>
+</tr>
+<tr>
+<td>C9 биржа в теме (<code>bars.binance...</code>)</td>
+<td>BARS <code>bars.binance.usdm.*</code> в STREAM_SPECS</td>
+<td>совпадает</td>
+</tr>
+<tr>
+<td>D10 (в §8): newClientOrderId=(символ+ts), listenKey renew</td>
+<td>Q-004 build-all (order-id + trader wait/3-state/stale-drop/exporter)</td>
+<td>совпадает направлением</td>
+</tr>
+</tbody>
+</table>
+<h2 id="_1">Что планировщику считать источником правды<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Границы сервисов, очередь, чекпойнты, MsgId-база: ADR-0001 (Accepted) — первичен.</li>
+<li>Bars-контракт, штамп, layout S3, wait-full-set: split-services-jetstream (Gate 4 accepted)
+  уточняет и закрывает O1–O4/O7 ADR-0002; при конфликте чисел (48h vs 72h) действует D-001.</li>
+<li>ADR-0002 Phase &frac34; (D-серия сплита калькулятора, точный шаблон тем, retention-семантика O3)
+  — superseded решениями D-001/Q-003/Q-006 настоящего workspace.</li>
+</ul>
+<hr />
+<!-- consolidated from D-001.md -->
+
+<h1 id="d-001-retention-offset-portfolio-wait-c-2c-4">D-001 Retention + offset + portfolio wait (C-2/C-4)<a class="headerlink" href="#d-001-retention-offset-portfolio-wait-c-2c-4" title="Permanent link">&para;</a></h1>
+<ul>
+<li>Task/requirement: bounded single-host disk + replayable md.* + portfolio bar set.</li>
+<li>Chosen: (1) retention age-wins: max_age 48h + max_bytes hard stop delete regardless of ack; lag = LOUD hole (quality-stamp gap + num_pending alert), never backpressure. (2) Archiver durable+ack commits S3 progress; calc non-durable + per-(symbol|type) cursor (stream seq + U/u) in SAME PG16 <code>trader</code> DB separate schema, calc owns migrations. (3) Portfolio wait-full-set: trader waits комплект bars per window; rule: wait 5 min past bar close (human 2026-09-12), then trade available set + mark missing shards in quality stamp; missing shard never blocks past 5 min. Alert target on hole/delay: logs (ASCII) + Prometheus metrics, alerting via Prometheus (human 2026-09-12). Hole signals: quality-stamp gap count, blind-sec counter, num_pending, stale-drop counter, degraded flag.</li>
+<li>Basis class: human decisions (2026-09-12) + MEASURED volumes 22-40 GB/day (measurements.md §6 L6/L7 10-min bases, 60-symbol USD-M extrapolation; cross-check §9 30.24 GB/day sustained). 13 GB/day (compressed-parquet board estimate) and 61.6s/1220 snapshots (O6, 86400/1220=70.8 not 61.6) REJECTED as sizing inputs (R-2 + RC-2 coincident; RC-2 FYI: V-4 is tar-raw not parquet, V-3 full-universe ~73 GB/day wire has drops=214 so it is a floor not a ceiling).</li>
+<li>Sizing (derived, no S2 discount — S2 ratio on raw Binance JSON UNMEASURED): disk_48h = daily_wire x 2 = 44-80 GB; at 72h code default = 65-117 GB. max_bytes &gt;= daily_wire_peak x 2d x s2_ratio x margin; working orientir ~100 GB until occupancy soak. Units: decimal GB for sizing.</li>
+<li>OPEN IMPLEMENTATION DIVERGENCE (blocking closure, Q-002): code = 72h, no max_bytes (live_config.yaml:46, nats_wire.py:31/42-46, streams.py:44-60, nats.conf); D-001 = 48h + max_bytes. INV-003 violated until shipped. Planner: add max_bytes (+max_msgs) to STREAM_SPECS/ensure_streams + invariants, flip 72-&gt;48, declare bars.* stream + owner + retention (STREAM_SPECS has no bars.* — blocks F-calc end-to-end check).</li>
+<li>IMPLEMENTED 2026-09-12 (tests/test_stream_retention_contract.py, 10 tests red-&gt;green; fast gate 1513 passed, 1 pre-existing unrelated fail in ai-agent/tests/test_ci_split.py): DEFAULT_RETENTION_HOURS=48, DEFAULT_MAX_BYTES=100_000_000_000 per stream (orientir, not sized), BARS stream bars.binance.usdm.* in STREAM_SPECS, ensure/check/invariants carry max_bytes, live_config nats_retention_hours=48 + nats_max_bytes, trader/config + main.py + run_live_trader (required) + replay/connect_live/poller/collector threading. Remaining: occupancy soak to size max_bytes (R-2 A-3); ~100 GB stays orientir.</li>
+<li>Resume narrowed to exact-subject consumers (RC-1 R1) and CONFIRMED by reproduced run X-001 on nats-server 2.10.29 (Q-001 closed): first match at/after start seq, no skip; expired/future → empty fetch, hole detection by code probe (replay_driver.py:474-510).</li>
+<li>Alternatives rejected: ack-wins (fills disk, stalls ingress — worse on one VM); separate offset store (new component, out of budget); per-symbol trading (conflicts with Markowitz combine in live_config).</li>
+<li>Applicability: single-host compose only; revisit on multi-host/R3.</li>
+<li>Check: fresh-infra boot creates streams/consumers; kill-archiver soak shows loud hole not stall; calc restart resumes from PG cursor without rescan.</li>
+</ul>
+<hr />
+<!-- consolidated from D-002.md -->
+
+<h1 id="d-002-s3-layout-backtest-scope-c-6-g3">D-002 S3 layout + backtest scope (C-6, G3)<a class="headerlink" href="#d-002-s3-layout-backtest-scope-c-6-g3" title="Permanent link">&para;</a></h1>
+<ul>
+<li>Task/requirement: Parquet/S3 layout + backtest source.</li>
+<li>Chosen (human 2026-09-12):</li>
+<li>Parquet = 1 file / day / type, ALL symbols inside one file (date+type partition, rows keyed by symbol+ts). Fits portfolio wait-full-set: one daily read gives full cross-section per window; symbol-long backtest scans date range + filters symbol.</li>
+<li>Backtest = OFFLINE from S3 parquet only (NG5 confirmed). No live C-8 consumer of bars.*. G3 parity via shared bar filter + quality-stamp filtering (backtest skips holes exactly like live degraded mode).</li>
+<li>Basis class: human decision.</li>
+<li>Rejected: per-symbol-per-day files (more files, worse for cross-sectional reads); live backtest consumer (out of budget, couples research to live stream).</li>
+<li>Applicability: archiver writes date+type files; calc/bars unaffected.</li>
+<li>Check: archiver output listing shows <code>&lt;date&gt;/&lt;type&gt;.parquet</code> with symbol column; backtest loads date range from S3 path and reproduces live filter on quality stamp.</li>
+<li>TAKE from ADR-0002 §5/§7 (archiver row-group assembly): daily file собирается дописыванием
+  row groups в ОДИН открытый writer за сутки (не per-batch файлами); ack после S3 copy-verify-delete.
+  Открытый writer за сутки — planner implementation, граница файла = сутки, не коммит.</li>
+</ul>
+<hr />
+<!-- consolidated from D-003.md -->
+
+<h1 id="d-003-bar-payload-findings-required-decisions-f-calc-publish-gate">D-003 Bar payload findings + required decisions (F-calc publish gate)<a class="headerlink" href="#d-003-bar-payload-findings-required-decisions-f-calc-publish-gate" title="Permanent link">&para;</a></h1>
+<ul>
+<li>Task/requirement: define the bars.* message before any publication (RC-5 R2 blocks shadow-calc publishing pre-decision; RC-5 R1 blocks prod BARS ensure pre-subject-freeze).</li>
+<li>VERIFIED code-side constraints (R-3 + RB-3 + RC-3 coincident, primary code):</li>
+<li>In-memory bar = 791 metrics + 2 transports (_bar_close_ts, _bar_complete); persisted = 4 columns (ts, symbol, bar_complete, keys map<string,double>) — NOT "791+2 columns" (RC-3 R1).</li>
+<li>Silence today = 0.0 everywhere + consumer ffill (empty_row, _sanitize_row, bridge replace/ffill, has_key vs _build_frame contradiction) — INV-001 violated by the current engine path, not just unimplemented.</li>
+<li>Quality stamp as required does not exist; only _bar_complete presence-bit + scattered health metrics; no U/u/pu, agg, blind-sec, per-connection, 3-state, missing-shard fields.</li>
+<li>No bars publisher/consumer/wire-format/MsgId in code; natural receiver-side key (symbol, bar_close_ts) with catch-up duplicates (replay drain loop; live has no drain loop — RC-3 R3).</li>
+<li>Dedup window 300s &lt; 1800s bar window — retries older than 5 min need an idempotent consumer (arithmetic, not a decision).</li>
+<li>Live vs replay diverge on liq family (TickReader 5 kinds) — stamp must mark it or backtest filter (D-002) reads nothing.</li>
+<li>Basis class: reproduced code reads (two independent generations + compare); no X-run for wire path (nothing to run).</li>
+<li>REQUIRED human decisions (Q-003, blocking F-calc publication + R-5 steps &#8535;):
+  (a) payload form: 793-key dict vs parquet-row vs new nullable format;
+  (b) NULL rule: redesign engine/bridge for NULL vs narrow INV-001;
+  &copy; stamp field names/types (gaps, blind-sec, per-conn, missing-shard, 3-state);
+  (d) subject with .30m or without (code+test pin WITHOUT; model wanted WITH) — freeze before ANY prod BARS ensure.</li>
+<li>Alternatives rejected: "0.0 IS null by convention" (indistinguishable; live/replay diverge); "_bar_complete + book_seq_gaps cover INV-002" (binary; book+live only).</li>
+<li>Applicability: single-host; revisit on multi-host/R3.</li>
+<li>Check: first published bar validates against (a)–(d); backtest skips holes exactly like live degraded (D-002) once stamp exists.</li>
+</ul>
+<hr />
+<!-- consolidated from INV-001.md -->
+
+<h1 id="inv-001-one-bar-per-window-never-forward-filled">INV-001 One bar per window, never forward-filled<a class="headerlink" href="#inv-001-one-bar-per-window-never-forward-filled" title="Permanent link">&para;</a></h1>
+<table>
+<thead>
+<tr>
+<th>Поле</th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Свойство</td>
+<td>Каждое 30m окно дает ровно один бар на символ; тишина = NULL, никогда forward-fill/0/предыдущее значение</td>
+</tr>
+<tr>
+<td>Поддерживающие решения</td>
+<td>D-001</td>
+</tr>
+<tr>
+<td>Признак нарушения</td>
+<td>Бар с ffill/0 вместо NULL при слепом окне; расхождение live vs replay на границах</td>
+</tr>
+<tr>
+<td>Проверка при изменении</td>
+<td>При изменении любого поддерживающего — перепроверить NULL-правило и live/replay паритет границ</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<!-- consolidated from INV-002.md -->
+
+<h1 id="inv-002-no-silent-loss">INV-002 No silent loss<a class="headerlink" href="#inv-002-no-silent-loss" title="Permanent link">&para;</a></h1>
+<table>
+<thead>
+<tr>
+<th>Поле</th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Свойство</td>
+<td>Любая потеря/дыра (U/u/pu, agg id, слепые секунды) посчитана в штампе качества бара + видна в логе/Prometheus; тихих потерь нет</td>
+</tr>
+<tr>
+<td>Поддерживающие решения</td>
+<td>D-001</td>
+</tr>
+<tr>
+<td>Признак нарушения</td>
+<td>Дыра в данных без gap-счетчика и без алерта; бэктест пропускает то, что live съел молча</td>
+</tr>
+<tr>
+<td>Проверка при изменении</td>
+<td>При изменении любого поддерживающего — прогнать кейс залипшего архиватора/ретрая паблиша и сверить счетчики</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<!-- consolidated from INV-003.md -->
+
+<h1 id="inv-003-single-host-disk-bounded">INV-003 Single-host disk bounded<a class="headerlink" href="#inv-003-single-host-disk-bounded" title="Permanent link">&para;</a></h1>
+<table>
+<thead>
+<tr>
+<th>Поле</th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Свойство</td>
+<td>Диск одного хоста ограничен: md.* удаляет по max_age 48h + max_bytes hard stop независимо от ack; лаг архиватора = громкая дыра, никогда backpressure в прокси</td>
+</tr>
+<tr>
+<td>Поддерживающие решения</td>
+<td>D-001</td>
+</tr>
+<tr>
+<td>Признак нарушения</td>
+<td>Рост JetStream store сверх лимита; блокировка паблиша из-за переполнения; тихая потеря при истечении retention без gap/алерта</td>
+</tr>
+<tr>
+<td>Проверка при изменении</td>
+<td>При изменении любого поддерживающего — soak с залипшим архиватором: диск стоит, дыра громкая</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<!-- consolidated from Q-001.md -->
+
+<h1 id="q-001-does-opt_start_seq-filter_subject-skip-matches-on-2100">Q-001 Does opt_start_seq + filter_subject skip matches on 2.10.0?<a class="headerlink" href="#q-001-does-opt_start_seq-filter_subject-skip-matches-on-2100" title="Permanent link">&para;</a></h1>
+<ul>
+<li>Вопрос к участку: resume C-4 от stream-глобального cursor+1 с subject-фильтром — первое доставленное равно первому совпавшему на/после start seq?</li>
+<li>Признак применимости: F-calc resume после рестарта.</li>
+<li>Породжено находкой: R-1 §1.2 (семантика комбинации подтверждена косвенно, несущее утверждение на допущении).</li>
+<li>Статус: CLOSED 2026-09-12 воспроизведённым запуском X-001 (nats-server 2.10.29): первое доставленное = первое совпавшее на/после start seq; expired/future = пусто без ошибки (дыра детектится кодом, не брокером).</li>
+</ul>
+<hr />
+<!-- consolidated from Q-002.md -->
+
+<h1 id="q-002-is-max_bytes-enforced-and-bars-stream-declared">Q-002 Is max_bytes enforced and bars.* stream declared?<a class="headerlink" href="#q-002-is-max_bytes-enforced-and-bars-stream-declared" title="Permanent link">&para;</a></h1>
+<ul>
+<li>Вопрос к участку: max_bytes hard stop выставлен и сверяется инвариантами? Стрим bars.binance.usdm.* объявлен, владелец creation назначен?</li>
+<li>Признак применимости: C-2/D-001/INV-003 (disk bound), F-calc (куда паблишатся бары).</li>
+<li>Порождено находкой: R-1 §1.6 + R-2 §V-8 (ensure_streams без max_bytes; STREAM_SPECS без bars.*; код 72h против 48h D-001).</li>
+<li>Приоритет: blocking для закрытия D-001/INV-003. Адресован: реализации (common/nats_wire.py, live_config.yaml).</li>
+</ul>
+<hr />
+<!-- consolidated from Q-003.md -->
+
+<h1 id="q-003-bar-payload-nullstamp-design-needs-human-decision">Q-003 Bar payload + NULL/stamp design needs human decision<a class="headerlink" href="#q-003-bar-payload-nullstamp-design-needs-human-decision" title="Permanent link">&para;</a></h1>
+<ul>
+<li>Вопрос к участку: F-calc bars.* payload: (a) перенос 793-key dict vs parquet-row (ts+bar_complete+keys-map) vs новый nullable-формат; (b) тишина = NULL требует смены схемы (map<string,double> не несёт NULL; _sanitize 0.0; bridge ffill) — принять редизайн engine/bridge или сузить INV-001; &copy; поля штампа (U/u/pu, agg, blind-sec, per-conn, missing-shard, 3-state) — имена/типы; (d) subject с .30m или без (тест пинит без; срез хотел с).</li>
+<li>Признак применимости: публикация первого бара в bars.*.</li>
+<li>Порождено находкой: R-3 п.2/п.4/п.5 + RB-3 (NULL нарушено штатно; stamp отсутствует; wire-format не существует).</li>
+<li>Вердикт человека (Gate 4, 2026-09-12): РЕДИЗАЙН ПОД ПУСТОТУ (против сужения INV-001 и провода-как-parquet). Движок и мост несут явную пустоту, штамп задается полями, имя темы как в коде (без .30m).</li>
+</ul>
+<hr />
+<!-- consolidated from Q-004.md -->
+
+<h1 id="q-004-wait-full-set-3-state-prometheus-scope-needs-human-decision">Q-004 Wait-full-set / 3-state / Prometheus scope needs human decision<a class="headerlink" href="#q-004-wait-full-set-3-state-prometheus-scope-needs-human-decision" title="Permanent link">&para;</a></h1>
+<ul>
+<li>Вопрос к участку: F-trade: реализовывать wait T=5 + missing-marking + 3-state + stale-drop + Prometheus-экспортёр как новую работу (код: settlement 10s, freshness guard, ack+drop md.*, HealthCounters-dict, healthz-ok) или сузить C-5 до freshness-guard + HOLD как есть?</li>
+<li>Признак применимости: cutover трейдера на bars.* (R-5 шаг 5).</li>
+<li>Порождено находкой: R-4 A–E + RB-4 (нулевое покрытие пяти механизмов; newClientOrderId тоже отсутствует).</li>
+<li>Вердикт человека (Gate 4, 2026-09-12): СТРОИТЬ ВСЕ (wait T=5 + missing-marking + 3-state + stale-drop + Prometheus-экспортер + order-id) — против рекомендации лида (оставить guard до замеров). Решение человека имеет силу; T=5 остается без замерного основания до тени.</li>
+</ul>
+<hr />
+<!-- consolidated from Q-005.md -->
+
+<h1 id="q-005-fencing-file-disk-bound-needs-human-decision-compat-blockers">Q-005 Fencing + file-disk bound needs human decision (compat blockers)<a class="headerlink" href="#q-005-fencing-file-disk-bound-needs-human-decision-compat-blockers" title="Permanent link">&para;</a></h1>
+<ul>
+<li>Вопрос к участку: (a) fencing одного активного трейдера (advisory-lock/лидерство в PG, разные ключи, exchange-side guard, kill-switch+проба) — механизм, не процедура; запретить cutover/retire без его демонстрации; (b) граница файлового диска в shadow (два layout одновременно) + владелец + наблюдение soak — или человеческим решением сузить INV-003 до JetStream-only и завести новый инвариант на файлы.</li>
+<li>Признак применимости: R-5 шаги 5–6 (cutover/retire); шаги 1–2, 4 вне блока.</li>
+<li>Порождено находкой: COMP-2 замечания 1 (blocking: INV-003 как написан vs файловый рост) и 5 (blocking: "must never" без механизма, последствие денежное).</li>
+<li>Вердикт человека (Gate 4 продолжение, 2026-09-12): порядок деплоя как механизм единственности. Писатель и трейдер: Docker сначала останавливает старые контейнеры и только потом поднимает новые (stop-first, overlap невозможен — fencing не нужен, механизм = stop-first redeploy + одна реплика; планировщик обязан это закодировать). Коллектор: наоборот, start-first — новый полностью запускается и подключается ко всем стримам, и только потом гасится старый (перекрытие на ingress допустимо: дубликаты гасятся детерминированным MsgId-дедапом 300s, двойная WS-подписка транзиентна).</li>
+<li>Вердикт человека (2026-09-12) по файловому пределу: в конце каждого дня файлы сливаются в S3 (компактификация посимвольных частей в 1 файл/день/тип) с удалением локального только после проверки; слитые файлы легче за счет сжатия parquet и колоночной организации. Граница файлового диска = ~1–2 суток локала (текущие части + стейджинг слияния). Условие: коэффициент сжатия подтвердить soak-замером; проверка-перед-удалением обязательна (уже в D-002 copy-verify-delete).</li>
+</ul>
+<hr />
+<!-- consolidated from Q-006.md -->
+
+<h1 id="q-006-msgid-fixes-needs-owner-decision-r-6-findings">Q-006 MsgId fixes needs owner decision (R-6 findings)<a class="headerlink" href="#q-006-msgid-fixes-needs-owner-decision-r-6-findings" title="Permanent link">&para;</a></h1>
+<ul>
+<li>Вопрос к участку: F-ingress ключи: (a) DONE в workspace: текст C-1 поправлен (без ingress_uuid; R-6 + RB-6 + RC-6 совпали). Осталось кодовое: (b) kline missing/None-x публикуется с id закрытой свечи + комментарий врёт (RC-6 R4, новое): fail-fast в билдере ИЛИ фильтр <code>x is not True</code> + регресс-тест TDD + поправить комментарий; существующий пин <code>test_ws_diff_publish_order.py:173</code> НЕ УДАЛЯТЬ (RC-6 R7); &copy; forceOrder same-ms коллизия: формулировка условна до первички Binance (RC-6 R2) — либо ссылка, либо даунгрейд + gap-счётчик/хеш payload; (d) stats-бакет: существование схлопывания безусловно, частота условна (RC-6 R3) — решение владельца + gap-счётчик внутрибакетных давок, слово «inevitable» только с замером; (e) replay_msg_id: расширить на diff+hb+stats+info с пометкой о недостижимости части веток (RC-6 R6); единицы: бакет 300 с / 300 000 мс (RC-6 R1).</li>
+<li>Признак применимости: любой ретрай/ределивери в окне 300s.</li>
+<li>Порождено находкой: R-6 п.4/6/8/12 + RB-6 п.&#8538;/12 (совпадение двух генераций; первичные доки NATS 2.14 + X-R6-1..5).</li>
+<li>COMP-3 (2026-09-12): слияние условно, блокирующие C-1..C-4 до (b–e) + сужения applicability. Дополнения: applicability читать как «каждый ретрай внутри 300s, КРОМЕ kline-вне-closed-only, forceOrder-same-ms, stats-внутри-бакета»; consumer-duty требует поименного исполнителя на diff/hb/stats/info (зеркала нет — C-2); решить нужен ли счётчик PubAck.duplicate (C-4); дописать STAT_BUCKET_MS == duplicate_window — единственный вид где легитимная cadence равна окну (C-5); фактическое окно 300s на брокере предполагается (enforcement log-only) — граница условна (C-6).</li>
+<li>Приоритет: (a)(b) — до смены publisher-политик; &copy;(d)(e) — владельцы F-calc/S-*.</li>
+<li>Вердикты Gate 4-R6 (2026-09-12): (b) CLOSED-ONLY НА КОЛЛЕКТОРЕ (вердикт-уточнение: отправляем только закрытие, без промежуточных — скип всего где x не True прямо в паблишере коллектора) + TDD регресс-тест + правка комментария, пин не удалять (направление планировщику); (e) расширить зеркало на diff+hb+stats+info (направление планировщику). &copy; liq:{T}:{E}:{S}:{q}:{p}:{ap}:{l}:{z} + счётчик задавленных same-ms (вердикт; старые id протухают за 300s). (d) ВЕРДИКТ (2026-09-12): ключ с точностью до МИНУТЫ (symbol+kind+minute-bucket вместо 5-мин) — опросы в разные минуты проходят оба, чаще не страшно. Оговорка: даблы внутри одной минуты схлопываются молча → счётчик внутриминутных давок обязателен. Окно 300s заморожено (600s проблему не решает — коллизия от равенства ключей). Низ по течению: calc хранит все строки, берёт latest на корзину.</li>
+</ul>
+<hr />
+<!-- consolidated from S-bar.md -->
+
+<h1 id="s-bar-lifecycle-of-one-30m-bar-in-c-4-normative-graph-derived">S-bar: lifecycle of one 30m bar in C-4 (normative; graph derived)<a class="headerlink" href="#s-bar-lifecycle-of-one-30m-bar-in-c-4-normative-graph-derived" title="Permanent link">&para;</a></h1>
+<table>
+<thead>
+<tr>
+<th>Состояние</th>
+<th>Событие</th>
+<th>Условие</th>
+<th>Следующее</th>
+<th>Эффект</th>
+<th>Решение</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>accumulating</td>
+<td>window close (server bar_ts)</td>
+<td>ticks present</td>
+<td>closed-full</td>
+<td>row 791 + transports; stamp counts final</td>
+<td>D-003 (payload TBD)</td>
+</tr>
+<tr>
+<td>accumulating</td>
+<td>window close</td>
+<td>silence</td>
+<td>closed-empty</td>
+<td>row of NULLs (Q-003 redesign; today 0.0 — INV-001 violated)</td>
+<td>Q-003(b)</td>
+</tr>
+<tr>
+<td>closed-*</td>
+<td>publish to bars.*</td>
+<td>broker ack</td>
+<td>published</td>
+<td>MsgId = bars:{exchange}:{symbol}:{bar_ts} (Q-003d; receiver key (symbol, bar_close_ts))</td>
+<td>D-003</td>
+</tr>
+<tr>
+<td>closed-*</td>
+<td>publish timeout / NATS down</td>
+<td>retry inside 300s dedup window</td>
+<td>published</td>
+<td>broker dedups retry</td>
+<td>D-001 (dedup &lt; bar window)</td>
+</tr>
+<tr>
+<td>closed-*</td>
+<td>publish timeout</td>
+<td>retry older than 300s</td>
+<td>published-duplicate</td>
+<td>passes broker dedup; absorbed by idempotent consumer (REQUIRED, Q-003)</td>
+<td>D-003</td>
+</tr>
+<tr>
+<td>closed-*</td>
+<td>publish result unknown</td>
+<td>ambiguous ack</td>
+<td>published-uncertain</td>
+<td>MUST re-read by (symbol, bar_ts); never assume</td>
+<td>D-003 (receiver key)</td>
+</tr>
+<tr>
+<td>published</td>
+<td>retention expiry (48h/max_bytes)</td>
+<td>consumer lagged past window</td>
+<td>hole</td>
+<td>gap counter + alert; loud, never silent</td>
+<td>D-001, INV-002</td>
+</tr>
+<tr>
+<td>published</td>
+<td>consumer fetch</td>
+<td>per-symbol cursor</td>
+<td>consumed</td>
+<td>offset commit in PG (separate schema)</td>
+<td>D-001</td>
+</tr>
+</tbody>
+</table>
+<p>TAKE from ADR-0002 §7 (calc publish path): calc reads PG checkpoint @ bar boundary -&gt;
+apply diff (u-check), ring, close bar + stamp -&gt; COMMIT checkpoint (A3) -&gt; publish
+1 msg = 1 closed bar (empty = NULL, ALWAYS emit, never skip silent symbols).
+Bar lifecycle terminals: Incomplete (gap/cold/missing slot) -&gt; Complete (slot per every
+second, fresh-event-per-second) -&gt; Closed (edge COMMIT + publish). No hanging states.</p>
+<hr />
+<!-- consolidated from S-trader.md -->
+
+<h1 id="s-trader-3-state-gate-wait-full-set-t5-normative-q-004-builds-it">S-trader: 3-state gate + wait-full-set T=5 (normative; Q-004 builds it)<a class="headerlink" href="#s-trader-3-state-gate-wait-full-set-t5-normative-q-004-builds-it" title="Permanent link">&para;</a></h1>
+<table>
+<thead>
+<tr>
+<th>Состояние</th>
+<th>Событие</th>
+<th>Условие</th>
+<th>Следующее</th>
+<th>Эффект</th>
+<th>Решение</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>norm</td>
+<td>bar window closes</td>
+<td>full set by T+5min</td>
+<td>trade-full</td>
+<td>rebalance on complete cross-section</td>
+<td>D-001, Q-004</td>
+</tr>
+<tr>
+<td>norm</td>
+<td>deadline T+5min</td>
+<td>shards missing</td>
+<td>degraded</td>
+<td>trade available set + mark missing in stamp; alert</td>
+<td>D-001, Q-004</td>
+</tr>
+<tr>
+<td>norm</td>
+<td>daily drawdown breached</td>
+<td>risk latch</td>
+<td>poor</td>
+<td>flatten, no new orders until manual reset</td>
+<td>trader/risk (exists)</td>
+</tr>
+<tr>
+<td>degraded</td>
+<td>next full window</td>
+<td>full set by deadline</td>
+<td>norm</td>
+<td>resume full trading</td>
+<td>Q-004</td>
+</tr>
+<tr>
+<td>degraded</td>
+<td>new order signal</td>
+<td>state == degraded</td>
+<td>blocked-new</td>
+<td>closes allowed, opens forbidden</td>
+<td>Q-004 (absent in code)</td>
+</tr>
+<tr>
+<td>degraded</td>
+<td>drawdown breached</td>
+<td>risk latch</td>
+<td>poor</td>
+<td>flatten</td>
+<td>trader/risk (exists)</td>
+</tr>
+<tr>
+<td>poor</td>
+<td>manual reset</td>
+<td>operator clears</td>
+<td>norm</td>
+<td>trading resumes</td>
+<td>trader/risk (exists)</td>
+</tr>
+<tr>
+<td>any</td>
+<td>bar older than staleness limit</td>
+<td>late arrival</td>
+<td>dropped</td>
+<td>ack + drop + stale-drop counter</td>
+<td>Q-004 (absent for bars.*)</td>
+</tr>
+<tr>
+<td>any</td>
+<td>order result unknown</td>
+<td>timeout −1007</td>
+<td>reconcile-gated</td>
+<td>no blind retry; wait reconcile (exists)</td>
+<td>trader/binance_futures</td>
+</tr>
+<tr>
+<td>any</td>
+<td>trader restart</td>
+<td>always</td>
+<td>resume-live</td>
+<td>positions/balance re-read from exchange (never local); resume bars live from tail (short retention suffices); calc restart does NOT restart trader — gap visible via stamp</td>
+<td>ADR-0002 §7 take: D10</td>
+</tr>
+<tr>
+<td>any</td>
+<td>calc restart</td>
+<td>bars stop arriving</td>
+<td>wait-bars</td>
+<td>trader holds state, no restart; missing shards marked after T+5 deadline</td>
+<td>D-001</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<!-- consolidated from S-archiver.md -->
+
+<h1 id="s-archiver-file-merge-s3-delete-normative-q-005b-decided-daily-merge">S-archiver: file → merge → S3 → delete (normative; Q-005(b) decided daily merge)<a class="headerlink" href="#s-archiver-file-merge-s3-delete-normative-q-005b-decided-daily-merge" title="Permanent link">&para;</a></h1>
+<table>
+<thead>
+<tr>
+<th>Состояние</th>
+<th>Событие</th>
+<th>Условие</th>
+<th>Следующее</th>
+<th>Эффект</th>
+<th>Решение</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>written-parts</td>
+<td>day closes</td>
+<td>per-symbol parts complete</td>
+<td>merging</td>
+<td>compact to 1 file/day/type, all symbols (D-002)</td>
+<td>Q-005(b)</td>
+</tr>
+<tr>
+<td>merging</td>
+<td>merge ok</td>
+<td>checksum stable</td>
+<td>merged</td>
+<td>staging file ready</td>
+<td>Q-005(b)</td>
+</tr>
+<tr>
+<td>merging</td>
+<td>merge crash / partial</td>
+<td>restart</td>
+<td>merging</td>
+<td>idempotent re-merge (owner: archiver)</td>
+<td>Q-005(b)</td>
+</tr>
+<tr>
+<td>merged</td>
+<td>S3 PUT ok</td>
+<td>per-object ack</td>
+<td>uploaded</td>
+<td>object mirrors hive path under prefix</td>
+<td>D-002</td>
+</tr>
+<tr>
+<td>merged</td>
+<td>S3 PUT fail / timeout</td>
+<td>any</td>
+<td>merging</td>
+<td>stays local; next cycle retries (never delete)</td>
+<td>D-002</td>
+</tr>
+<tr>
+<td>uploaded</td>
+<td>verify (size/etag) ok</td>
+<td>matches local</td>
+<td>verified</td>
+<td>eligible for local delete</td>
+<td>D-002 copy-verify-delete</td>
+</tr>
+<tr>
+<td>uploaded</td>
+<td>verify mismatch / unknown</td>
+<td>ambiguous</td>
+<td>merging</td>
+<td>keep local; alert; never assume uploaded</td>
+<td>D-002</td>
+</tr>
+<tr>
+<td>verified</td>
+<td>local delete ok</td>
+<td>—</td>
+<td>deleted</td>
+<td>file-disk bound holds (~1–2 days local)</td>
+<td>Q-005(b)</td>
+</tr>
+<tr>
+<td>any</td>
+<td>archiver stalled &gt; 48h</td>
+<td>retention eats tail</td>
+<td>hole-loud</td>
+<td>gap counters + num_pending alert; disk bounded</td>
+<td>D-001, INV-003</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<!-- consolidated from S-offset.md -->
+
+<h1 id="s-offset-calc-cursor-in-pg-normative">S-offset: calc cursor in PG (normative)<a class="headerlink" href="#s-offset-calc-cursor-in-pg-normative" title="Permanent link">&para;</a></h1>
+<table>
+<thead>
+<tr>
+<th>Состояние</th>
+<th>Событие</th>
+<th>Условие</th>
+<th>Следующее</th>
+<th>Эффект</th>
+<th>Решение</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>consuming</td>
+<td>batch applied</td>
+<td>per-(symbol|type) done</td>
+<td>cursor-advanced</td>
+<td>commit (stream seq + U/u) in PG separate schema</td>
+<td>D-001</td>
+</tr>
+<tr>
+<td>consuming</td>
+<td>calc crash</td>
+<td>before commit</td>
+<td>cursor-stale</td>
+<td>resume replays from last commit; dedup absorbs (exact-subject)</td>
+<td>D-001, X-001</td>
+</tr>
+<tr>
+<td>consuming</td>
+<td>retention expired prefix</td>
+<td>first_seq probe shows gap</td>
+<td>hole</td>
+<td>loud verdict; no silent rescan</td>
+<td>D-001, INV-002</td>
+</tr>
+<tr>
+<td>cursor-stale</td>
+<td>broker empty on resume</td>
+<td>expired/future start seq</td>
+<td>hole-or-cold</td>
+<td>empty fetch (X-001 nuance); decide_start</td>
+<td>X-001</td>
+</tr>
+<tr>
+<td>any</td>
+<td>PG down</td>
+<td>commit impossible</td>
+<td>stalled-safe</td>
+<td>no publish without cursor durability (fail toward hole, never toward double-apply)</td>
+<td>D-001</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<!-- consolidated from X-001.md -->
+
+<h1 id="x-001-opt_start_seq-filter_subject-on-nats210-reproduced-run-2026-09-12">X-001 opt_start_seq × filter_subject on nats:2.10 (reproduced run, 2026-09-12)<a class="headerlink" href="#x-001-opt_start_seq-filter_subject-on-nats210-reproduced-run-2026-09-12" title="Permanent link">&para;</a></h1>
+<ul>
+<li>Проверяемое предположение: ephemeral pull consumer filter=A + opt_start_seq=<seq B> + by_start_sequence доставляет первым первое A на/после start seq; expired/future start seq не дают ошибки.</li>
+<li>Нагрузка и данные: стрим TEST_Q001 [TEST_Q001.A, TEST_Q001.B], 6 сообщений вперемешку A1,B1,A2,B2,A3,B3 (seq 1..6), file storage.</li>
+<li>Среда и настройки: nats-server 2.10.29 (docker backend-nats-1, image nats:2.10, /varz), nats-py 2.15.0, python 3.12.10, pull consumer ephemeral, ack=NONE. Скрипт: C:\Users\user\AppData\Local\Temp\opencode\probe_q001.py (subagent, в репо не вносился).</li>
+<li>Процедура: fetch filter=A start=2 (seq B1); start=3 (exact A2); purge + start=1; start=999999 (future); delete + verify (stream gone, остаются MD_DIFF/MD_EVENTS/MD_TRADE).</li>
+<li>Исходный результат:</li>
+<li>start=2 → A2(seq3), A3(seq5), num_pending 2→0, без ошибок. MATCHES-ASSUMPTION.</li>
+<li>start=3 → A2, A3 первым, без пропусков/ошибок. MATCHES-ASSUMPTION.</li>
+<li>purge + start=1 → consumer создан OK, num_pending=0, fetch пусто (TimeoutError клиента = пусто, НЕ ошибка брокера). MATCHES-ASSUMPTION с нюансом ниже.</li>
+<li>start=999999 → create OK, пусто, без API-ошибки. MATCHES-ASSUMPTION с нюансом ниже.</li>
+<li>Интерпретация: допущение C-4 подтверждено воспроизведённым запуском (класс основания повышен с unconfirmed). НЮАНС: брокер НЕ сигналит дыру — expired/future дают пустой fetch, а не ошибку; детекция hole целиком на коде (retention_hole + stream_first_seqs-проба, replay_driver.py:474-510) — она есть, связка держится на ней.</li>
+<li>Чем ограничен вывод: один кейс 6 сообщений; wildcard-паттерн min+dedup и multi-filter×start_seq не гонялись; dedup-окно 300s не гонялось (процедуры R-1 §5 п.2–п.3 открыты, но не несущие).</li>
+</ul>
+<hr />
+<!-- consolidated from X-002.md -->
+
+<h1 id="x-002-sizes-occupancy-s2-ratio-read-only-monitoring-deltas-2026-09-12">X-002 Sizes / occupancy / S2 ratio (read-only + monitoring deltas, 2026-09-12)<a class="headerlink" href="#x-002-sizes-occupancy-s2-ratio-read-only-monitoring-deltas-2026-09-12" title="Permanent link">&para;</a></h1>
+<ul>
+<li>Предположение: объёмы около 22–40 ГБ/сут (60 символов); s2 заметно режет диск; окно 48h держится.</li>
+<li>Среда: прод-NATS (docker backend-nats-1, server 2.10.x), контур usdm 2 символа (BTCUSDT, ETHUSDT); только чтение (stream_info, /jsz, /varz, docker logs --tail, du в throwaway alpine :ro). TEST-стримов не создавал.</li>
+<li>Процедура: stream_info MD_DIFF/MD_TRADE/MD_EVENTS/BARS; дельты /jsz + /varz за 81.255s; du тома backend_nats_data дважды (~5 мин apart).</li>
+<li>Исходный результат:</li>
+<li>MD_DIFF 60 520 msgs / 228.9 MB logical (3 782 B/msg); MD_TRADE 142 216 / 39.0 MB (274 B); MD_EVENTS 8 475 / 2.2 MB (255 B); BARS 0/0. first_seq=1 везде (эвикций ещё не было).</li>
+<li>Окно 81s: 15.41 msg/s, 18 468 B/s (≈18.0 KiB/s) — среднее 2-символьного тихого вечера, не пик; масштабируется к §6 (2/60 от 250–450 КБ/с — сходится).</li>
+<li>Диск тома ~99.75 MB при logical ~270 MB → disk/wire ≈ 0.37 (s2 экономит ~63%, приближённо: du гоняется с фоновой рекомпрессией).</li>
+<li>НАХОДКА (blocking для шага 1): прод MD_* созданы со старым контрактом — max_age 259200s (72h), max_bytes=-1 (без лимита); BARS уже 48h/100GB. Коллектор ERROR-логирует дрейф, политика log-only (nats_wire.py:136-160) — смена контракта в коде НЕ сводит существующие стримы (add_stream create-only). Планировщику: шаг 1 обязан включать обновление стримов (update API / пересоздание), иначе 48h+max_bytes останутся на бумаге.</li>
+<li>Ограничение: per-symbol split не измерен (агрегаты версию сервера отдают только суммарно); per-stream файлы из Docker Desktop VM не видны; пик требует многочасового захвата волатильной сессии.</li>
+</ul>
+<hr />
+<!-- consolidated from X-003.md -->
+
+<h1 id="x-003-jitter-eviction-probe-code-isolated-test-streams-2026-09-12">X-003 Jitter + eviction probe (code + isolated TEST streams, 2026-09-12)<a class="headerlink" href="#x-003-jitter-eviction-probe-code-isolated-test-streams-2026-09-12" title="Permanent link">&para;</a></h1>
+<ul>
+<li>Предположения: (6) джиттер 300s-опросов кладёт два опроса в один бакет; (7) age-evict двигает head мимо lagging consumer, publish не блокируется, start-seq в дыре даёт пустоту.</li>
+<li>Среда: тот же прод-NATS (только чтение прод-стримов) + изолированные TEST_EVICT_PROBE/TEST_EVICT_C (file, max_age=60s, max_bytes=200KB), удалены после с проверкой. Побочное: сервер отвергает duplicate_window &gt; max_age (10052).</li>
+<li>Процедура: (6) код cadence 4 поллеров + read-only get_msg скан MD_EVENTS (~4.1ч, 2 символа); (7) 30×5KB pubs → lagging durable (2 fetch, без ack) → burst +60 → publish → opt_start_seq в эвиктнутый префикс (пустой и живой хвост).</li>
+<li>Исходный результат:</li>
+<li>(6) market-stats UTC-aligned (дабл конструктивно невозможен); PeriodicPoller relative sleep (в проде OFF); restart-immediate первый опрос ВСЕХ поллеров &lt;300s после прошлого — механизм коллизии измерен, в 4ч наблюдено ноль коллизий (1 необъяснённый stored double + 3 гэпа у ETH top_long_accounts — причина unknown); funding: 6 строк = 1 settlement + 5 идентичных репаблишей (рестарты &gt;300s apart); exchange-info: 5 строк все рестартные, никогда не дедуплицируются. Недельная процедура написана (INFO-лог + correl restarts + scan_msgids по стриму как ground truth). WEEK LOG STARTED 2026-09-12 23:52 +05:00 (PID 32280) — STOPPED same day ~00:10 (всего ~15 мин захвата, только начальный буфер 1393 Б, новых строк нет — market-stats подавлен WARNING). Недельный замер не состоялся; Q-006(d) решён вердиктом (минутный бакет), не данными. Ограничение: market-stats пишет log.info (WARNING по умолчанию) — в захвате видны funding/exchange-info print-строки + баннеры рестартов; ground truth — повторный read-only scan MD_EVENTS через неделю.</li>
+<li>(7) (a) first 1→52 под lagging durable — измерено; (b) publish после эвикции OK (seq 91, duplicate=None), discard-old не давит — измерено; &copy; start-seq в эвиктнутом префиксе: consumer создан OK, delivered snapped to last, fetch пуст без ошибки; живой хвост — clamp к first available — измерено.</li>
+<li>Файлы: backend_nats_data 96.78 MB, raw_data 10.12 MB, pgdata 65.81 MB, metrics 176.9 kB; per-stream файлы из VM не видны; рост — повторным df -v + stream_info (сейчас MD 229/39/2.2 MB logical).</li>
+<li>Рост прод-контура: ~204k msgs / ~270 MB logical за ~4.2ч (≈64 MB/h) → 48h ≈ 3.1 GB logical ≈ ~1.1 GB disk при текущем s2 (2 символа!).</li>
+<li>Ограничение: недельный джиттер-лог не снят; per-stream файлы не видны; пик/перекос прод-универсума — нет.</li>
+</ul>
+<hr />
+<!-- consolidated from transactions.md -->
+
+<h1 id="transaction-boundaries-r49">Transaction boundaries (R49)<a class="headerlink" href="#transaction-boundaries-r49" title="Permanent link">&para;</a></h1>
+<table>
+<thead>
+<tr>
+<th>Граница</th>
+<th>Что атомарно</th>
+<th>Где локальная атомарность заканчивается</th>
+<th>Чем держится согласованность дальше</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>PG cursor commit (S-offset)</td>
+<td>один commit курсора per-(symbol|type)</td>
+<td>commit и публикация бара — НЕ атомарны</td>
+<td>at-least-once + идемпотентный приёмник по (symbol, bar_close_ts); дубликаты поглощаются</td>
+</tr>
+<tr>
+<td>Bar publish (S-bar)</td>
+<td>один NATS publish + брокерный ack</td>
+<td>ack старше 300s-окна дедупа</td>
+<td>receiver-side ключ (Q-003); ретрай старше окна — дубликат, не потеря</td>
+</tr>
+<tr>
+<td>S3 upload + local delete (S-archiver)</td>
+<td>ничто (две системы)</td>
+<td>PUT и delete разделены проверкой</td>
+<td>copy-verify-delete: удаление только после совпавшей проверки; неоднозначность = оставить локально + алерт</td>
+</tr>
+<tr>
+<td>Order + reconcile (S-trader)</td>
+<td>REST-ордер (venue)</td>
+<td>нет идемпотентности без newClientOrderId (Q-004 строит)</td>
+<td>сегодня: no-retry на timeout −1007 + reconcile до/после ребаланса; дальше: (symbol+bar ts) ключ</td>
+</tr>
+<tr>
+<td>Trader cutover flag (R-5 step 5)</td>
+<td>переключение источника чтения</td>
+<td>бары за окно расхождения не пересчитываются</td>
+<td>мост warm-start 30d / calc resume в retention / иначе hole; два трейдера запрещены порядком деплоя (Q-005)</td>
+</tr>
+<tr>
+<td>Shadow writes (R-5 steps 2–3)</td>
+<td>каждая запись отдельно</td>
+<td>двойной диск и двойной compute</td>
+<td>разные пути файлов (parts vs daily) и разные топики (md.* vs bars.*); сверка G3 на замороженном payload</td>
+</tr>
+</tbody>
+</table>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+</div>
+      
+        
+<div class="md-social">
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://github.com/SNCapital" target="_blank" rel="noopener" title="github.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+      <div class="md-progress" data-md-component="progress" role="progressbar"></div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["navigation.instant", "navigation.instant.progress", "navigation.tracking", "navigation.tabs", "navigation.tabs.sticky", "navigation.sections", "navigation.expand", "navigation.indexes", "navigation.top", "navigation.footer", "search.suggest", "search.highlight", "search.share", "toc.follow", "content.code.copy", "content.code.annotate", "content.tabs.link", "content.tooltips"], "search": "../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+        <script src="../../../javascripts/katex.js"></script>
+      
+        <script src="https://unpkg.com/katex@0/dist/katex.min.js"></script>
+      
+        <script src="https://unpkg.com/katex@0/dist/contrib/auto-render.min.js"></script>
+      
+    
+  </body>
+</html>

@@ -11,7 +11,7 @@
       
       
       
-        <link rel="canonical" href="https://sncapital.github.io/Docs/adr/0002-proxy-shards-bars-stream/0002-proxy-shards-bars-stream/">
+        <link rel="canonical" href="https://sncapital.github.io/Docs/arch/split-services-jetstream/bars-contract/">
       
       
       
@@ -24,7 +24,7 @@
     
     
       
-        <title>ADR-0002. Горизонталь прокси и калькуляторов + контракт баров - SN Capital — Backend</title>
+        <title>bars-contract.md — wire-контракт сообщения бара, v1 (проект для планировщика) - SN Capital — Backend</title>
       
     
     
@@ -77,7 +77,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#adr-0002" class="md-skip">
+        <a href="#bars-contractmd-wire-v1" class="md-skip">
           Skip to content
         </a>
       
@@ -113,7 +113,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              ADR-0002. Горизонталь прокси и калькуляторов + контракт баров
+              bars-contract.md — wire-контракт сообщения бара, v1 (проект для планировщика)
             
           </span>
         </div>
@@ -388,7 +388,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="../../0001-collector-trader-split/0001-collector-trader-split/" class="md-tabs__link">
+        <a href="../../../adr/0001-collector-trader-split/0001-collector-trader-split/" class="md-tabs__link">
           
   
   
@@ -1850,6 +1850,8 @@
       
         
       
+        
+      
     
     
     
@@ -1904,7 +1906,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../0001-collector-trader-split/0001-collector-trader-split/" class="md-nav__link">
+      <a href="../../../adr/0001-collector-trader-split/0001-collector-trader-split/" class="md-nav__link">
         
   
   
@@ -1912,6 +1914,34 @@
     
   
     ADR-0001 Collector / trader split
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../adr/0002-split-services-jetstream/0002-split-services-jetstream/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ADR-0002 Split services + JetStream
   
 
     
@@ -2395,10 +2425,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#0" class="md-nav__link">
+  <a href="#envelope" class="md-nav__link">
     <span class="md-ellipsis">
       
-        0. Шапка
+        Envelope
       
     </span>
   </a>
@@ -2406,10 +2436,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#1-overview" class="md-nav__link">
+  <a href="#stamp-v1" class="md-nav__link">
     <span class="md-ellipsis">
       
-        1. Overview
+        stamp — поля качества (все обязательны в v1)
       
     </span>
   </a>
@@ -2417,10 +2447,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#2-goals-non-goals-deferred" class="md-nav__link">
+  <a href="#_1" class="md-nav__link">
     <span class="md-ellipsis">
       
-        2. Goals / Non-Goals / Deferred
+        Что НЕ в баре (сознательно)
       
     </span>
   </a>
@@ -2428,10 +2458,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#3-constraints" class="md-nav__link">
+  <a href="#_2" class="md-nav__link">
     <span class="md-ellipsis">
       
-        3. Constraints
+        Требуемые изменения кода (планировщику, не архитектуре)
       
     </span>
   </a>
@@ -2439,91 +2469,13 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#4-context-c4-l1" class="md-nav__link">
+  <a href="#_3" class="md-nav__link">
     <span class="md-ellipsis">
       
-        4. Context (C4-L1)
+        Проверки приёмки контракта
       
     </span>
   </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#5-containers-c4-l2" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        5. Containers (C4-L2)
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="5. Containers (C4-L2)">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#phase-1-summary" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Phase 1 Summary
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#6-components" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        6. Components
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#7-runtime" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        7. Runtime
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#8-data" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        8. Data
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="8. Data">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#phase-2-summary" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Phase 2 Summary
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
@@ -2547,318 +2499,160 @@
   
 
 
-<h1 id="adr-0002">ADR-0002. Горизонталь прокси и калькуляторов + контракт баров<a class="headerlink" href="#adr-0002" title="Permanent link">&para;</a></h1>
-<h2 id="0">0. Шапка<a class="headerlink" href="#0" title="Permanent link">&para;</a></h2>
+<h1 id="bars-contractmd-wire-v1">bars-contract.md — wire-контракт сообщения бара, v1 (проект для планировщика)<a class="headerlink" href="#bars-contractmd-wire-v1" title="Permanent link">&para;</a></h1>
+<p>Направление Gate 4: редизайн под пустоту; имя темы как в коде (без <code>.30m</code>).
+Статус: проект контракта; требует реализации в движке/мосту/паблишере (см. «Требуемые изменения кода»).</p>
+<h2 id="envelope">Envelope<a class="headerlink" href="#envelope" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
 <tr>
-<th></th>
-<th></th>
+<th>Поле</th>
+<th>Тип</th>
+<th>Кто пишет</th>
+<th>Кто читает</th>
+<th>При отсутствии</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>Status</td>
-<td>Draft (Phase 1 approved: A3 decided — checkpoints stay in PG; O2 open, carried as fork. Phase 2 below — на аппруве)</td>
+<td><code>exchange</code></td>
+<td>string (<code>binance</code>)</td>
+<td>calc (константа; биржу в тему заложили сразу)</td>
+<td>trader, archiver, backtest</td>
+<td>invalid → громко без публикации (fail-loud, не дроп)</td>
 </tr>
 <tr>
-<td>Date</td>
-<td>Proposed 2026-09-12, revised 2026-09-12 (масштабируется всё, оси: биржи × очереди × ноды)</td>
+<td><code>symbol</code></td>
+<td>string (<code>BTCUSDT</code>)</td>
+<td>calc</td>
+<td>все</td>
+<td>invalid → громко без публикации</td>
 </tr>
 <tr>
-<td>Deciders</td>
-<td>Backend team</td>
+<td><code>bar_ts</code></td>
+<td>int64 ms, граница окна вверх (server time)</td>
+<td>calc из <code>_bar_close_ts</code></td>
+<td>trader (дедлайн T+5 от него), backtest</td>
+<td>нет бара без bar_ts — не публикуется</td>
 </tr>
 <tr>
-<td>Base</td>
-<td>ADR-0001 (<code>docs/adr/0001-collector-trader-split/0001-collector-trader-split.md</code>), схема с доски <code>architecture.excalidraw</code> («Предложение: раздельные сервисы + JetStream»)</td>
+<td><code>keys</code></td>
+<td>map<string,double>, ТОЛЬКО присутствующие ключи</td>
+<td>calc</td>
+<td>trader, backtest</td>
+<td>отсутствующий ключ = NULL (тишина). Запрещено: добивка 0.0, ffill на чтении</td>
 </tr>
 <tr>
-<td>Extends</td>
-<td>ADR-0001: забирает отложенный вариант C (метрики отдельным сервисом, D0) и масштабирование до 600 символов; не отменяет durability-границу (очередь) и per-symbol восстановление</td>
+<td><code>bar_complete</code></td>
+<td>bool (true = каждая 1s-корзина окна свежая; false = неполный, только degraded/скип)</td>
+<td>calc из <code>is_bar_complete</code></td>
+<td>trader (быстрый гейт), backtest (скип)</td>
+<td>false = неполный, торгуется только в degraded с пометкой</td>
 </tr>
 <tr>
-<td>Re-evaluation Trigger</td>
-<td>Пересмотреть, если: живой поток превысит десятки тысяч msg/s на единицу деления; bars-контракт не покрывает исполнение (нужны тики в трейдере); managed-очередь с replay-семантикой снимет вопрос retention</td>
+<td><code>stamp</code></td>
+<td>object (ниже)</td>
+<td>calc</td>
+<td>trader (маркировка комплекта), Prometheus (через трейдера), backtest (фильтр как live)</td>
+<td>нет stamp = бар невалиден, не публикуется</td>
 </tr>
 </tbody>
 </table>
-<blockquote>
-<p>Процесс: RULES.md I.7, по фазам. Эта сдача — только Phase 1. Phase 2 (Data/Runtime), Phase 3 (Decisions), Phase 4 (cross-cutting) — после аппрува границ ниже.</p>
-</blockquote>
-<h2 id="1-overview">1. Overview<a class="headerlink" href="#1-overview" title="Permanent link">&para;</a></h2>
-<p>Масштабируется всё, по трём осям: биржи (на каждую — свой collector, calculator и trader), очереди (очередь одна логически, скейлится по нодам; внутри — три семейства: стакан/диффы, трейды, всё остальное, по которым калькулятор делится ещё на 2–3, если метрики не пересекаются), ноды (PG в будущем тоже понодово). На старте биржа одна — значит collector, calculator и trader тоже по одному. Ключевое свойство: рост — это добавление единиц деления, а не переписывание; трейдер видит только закрытые бары своей биржи со штампом качества.</p>
-<h2 id="2-goals-non-goals-deferred">2. Goals / Non-Goals / Deferred<a class="headerlink" href="#2-goals-non-goals-deferred" title="Permanent link">&para;</a></h2>
-<p>Goals (этот док фиксирует):</p>
-<ul>
-<li>G1. Масштабирование всего: collector × E (по коллектору на биржу), calculator × E, trader × E (трейдер скейлится по биржам); очередь одна логически, скейлится по нодам; PG в будущем понодово. Старт: E = 1, всё по одному.</li>
-<li>G2. Контракт <code>bars.*</code> между калькуляторами и трейдером: 1 сообщение = 1 закрытый бар со всеми ключами и штампом качества; биржа в теме (<code>md.binance.usdm...</code>, <code>bars.binance...</code>), добавление биржи трейдер не меняет.</li>
-<li>G3. Трейдер на биржу (на аккаунт): ордера напрямую в Trade API своей биржи мимо шины, позиции — из user data stream со сверкой.</li>
-<li>G4. Штамп качества и ingress time как часть контракта данных (иначе live и replay/backтест расходятся).</li>
-<li>G5. Калькулятор делится по трём семействам очередей (стакан/диффы, трейды, остальное) до ×2–×3 тогда и только тогда, когда метрики между семействами не пересекаются (условие проверяется в Phase 3).</li>
-</ul>
-<p>Non-Goals (осознанно исключено):</p>
-<ul>
-<li>N1. Тьюнинг пулов/тредов/TCP/батчей — runbook, по RULES.md I.2 (в доке только формулы и инварианты).</li>
-<li>N2. PII/GDPR-механика — в контуре только маркет-дата (как в ADR-0001 §13).</li>
-<li>N3. Мультиаккаунт внутри одной биржи и мультирегион — один аккаунт на биржу, один контур (триггер в шапке).</li>
-</ul>
-<p>Deferred / Open (решает встреча с доски, см. «Вопросы на встречу»):</p>
-<ul>
-<li>O1. NATS на той же машине, что прокси, или отдельно (вопрос 1). Очередь одна логически в обоих случаях; отдельно — нужен кластер, не одиночка.</li>
-<li>O2. Решения по символам независимо или портфельно — определяет форму bars-контракта: одиночные бары vs комплект баров за окно + правило ожидания опоздавшего шарда (вопрос 2). Без ответа нельзя финализировать §5/§8.</li>
-<li>O3. Retention по возрасту или по ack: <code>limits + max_age</code> (отставший архиватор тихо теряет) vs <code>interest/workqueue</code> (залипший консьюмер забивает диск) — выбрать, какой отказ терпим (вопрос 3).</li>
-<li>O4. Гранулярность консьюмеров внутри шарда: консьюмер на шард (в 2.10+ несколько filter subjects) vs 1 символ = 1 консьюмер для порядка дифов (вопрос 4 + пометка с доски).</li>
-<li>O5. Метрика слепых секунд на <code>/public</code> (вопрос 5).</li>
-<li>O6. Каденция снапшотов depth (вопрос 6): в данных ~1220 снапшотов/сутки (интервал ~61.6 сек) против 30 мин в конфиге — разница ~25x и главный драйвер объёма.</li>
-<li>O7. Паттерн чтения (символ×период vs все символы×дата) для партиционирования parquet (вопрос 7).</li>
-</ul>
-<h2 id="3-constraints">3. Constraints<a class="headerlink" href="#3-constraints" title="Permanent link">&para;</a></h2>
-<p>Технические (наследуются из ADR-0001 §3, не дублирую: C2 лимит REST 2400 weight/мин, C3 срез REST depth, C4 каденции подписок, C5 роутинг fstream двумя соединениями). Новые с доски:</p>
-<ul>
-<li>C6. Подписка на ~12000 стримов стартует ~32 сек (<code>measured</code>, доска) — старт контура не мгновенный, заложить в RTO и порядок поднятия.</li>
-<li>C7. Сырьевой объём <code>estimate</code> доски ~13 ГБ/день (сжатый parquet) против <code>measured</code> 22–40 ГБ/день из <code>measurements.md</code> §6 — расходятся в ~2x, см. ASSUMPTION A2.</li>
-<li>C8. Parquet «1 файл/день/тип» (доска) против текущей Hive-раскладки <code>part-*.parquet</code> — смена формата архива требует окна миграции (Phase 3, Migration).</li>
-<li>C9. Биржа — часть темы (<code>md.binance.usdm.btcusdt.depth</code>, <code>bars.binance...</code>, доска) против текущих <code>md.{market}.{kind}.{symbol}</code> — смена контракта с простоем (Phase 3). Направление решено (биржа в теме сразу, «потом больно»), механика переезда — в Phase 3.</li>
-</ul>
-<p>Допущения (<code>ASSUMPTION</code> с ценой ошибки):</p>
-<ul>
-<li>A1. NATS живёт рядом с прокси (один VM/loopback), пока не отвечен O1. Ошибка: разъезд по хостам без кластера и пересмотра буфера — разрыв минутами вместо рестарта секундами.</li>
-<li>A2. Объём сырья для сайзинга retention/disk — 22–40 ГБ/день (<code>measurements.md</code>, не 13 с доски). Ошибка в меньшую сторону: диск очереди переполняется раньше расчёта (<code>discard: old</code> начнёт есть окно реплея).</li>
-<li>A3. DECIDED 2026-09-12: PG-чеkпойнты книги (ADR-0001 D5) остаются источником восстановления книги. Bars-стрим — производное (пересчитывается из сырья + чекпойнтов), не замена. Пересмотр отложен с триггером: окно retention доказуемо покрывает все рестарты И операционная цена PG становится связывающей — тогда отдельным ADR с миграцией. Понодовый скейл PG — будущее, не этот док.</li>
-<li>A4. Snapshot-каденция depth для сайзинга — текущая живая (вопрос O6 открыт). Ошибка: при 1/мин дифф-поток и объём — на порядок выше, чем при 1/30мин.</li>
-</ul>
-<h2 id="4-context-c4-l1">4. Context (C4-L1)<a class="headerlink" href="#4-context-c4-l1" title="Permanent link">&para;</a></h2>
-<p>Исследовательская live-платформа (как в ADR-0001 §4): стримит маркет-дату, считает метрики по 30-минутным барам, торгует трейдерами по одному на биржу, пишет архив в parquet → S3. Новое против ADR-0001: масштабируются все измерения (биржи, очереди/ноду, будущий PG), метрики вынесены в отдельный слой, трейдер потребляет только готовые бары своей биржи.</p>
-<pre class="mermaid"><code>graph TD
-    subgraph UNTRUSTED["Untrusted zone"]
-        BIN["Binance WS + REST + Trade API + user data"]
-        S3["S3 archive"]
-        USER["Operator browser"]
-    end
-    subgraph INTERNAL["Internal contour"]
-        SYS["Collectors + JetStream + archiver + metric calcs + traders"]
-    end
-    BIN --&gt;|"WS diffs/trades/klines/mark/liq; REST depth/exchange_info/funding"| SYS
-    SYS --&gt;|"orders per exchange (bypass bus); user data stream"| BIN
-    SYS --&gt;|"parquet 1 file/day/type"| S3
-    USER --&gt;|"HTTPS, read-only"| SYS</code></pre>
-<h2 id="5-containers-c4-l2">5. Containers (C4-L2)<a class="headerlink" href="#5-containers-c4-l2" title="Permanent link">&para;</a></h2>
-<p>Ответственность — ровно одна на единицу деления. Кратность: ×E — на биржу (старт E=1), очередь — одна логически на нодах. Sync помечен <code>S</code>, async — <code>A</code>.</p>
-<pre class="mermaid"><code>graph TD
-    subgraph UNTRUSTED2["Untrusted"]
-        BIN2["Binance WS/REST/Trade API"]
-        S32["S3"]
-        BRW["Browser"]
-    end
-    subgraph INTERNAL2["Internal contour"]
-        PRX["collector x E (1 per exchange): WS + reconnect + pollers, async publish, no book"]
-        NATS["NATS JetStream (1 logical, node-scaled): md.* raw + bars.* closed bars, file storage"]
-        ARC["raw archiver: separate consumer -&gt; parquet 1 file/day/type"]
-        CALC["metric calc x E (split x2-3 along queue families iff metrics disjoint)"]
-        TRD["trader x E (1 per exchange/account): own bars subscribe, orders direct"]
-        PG["Postgres (provisional, see A3; node-sharded in future)"]
-        VOL["NVMe volumes: raw staging + parquet"]
-        DSH["dashboard read-only"]
-    end
-    BIN2 --&gt;|"A: WSS streams; S: HTTPS REST"| PRX
-    PRX --&gt;|"A: NATS publish raw + Msg-Id"| NATS
-    NATS --&gt;|"A: replay + live subscribe"| ARC
-    NATS --&gt;|"A: 1 symbol = 1 consumer (diff order)"| CALC
-    CALC --&gt;|"A: 1 msg = 1 closed bar + quality stamp"| NATS
-    NATS --&gt;|"A: bars.&lt;exchange&gt;.*.30m"| TRD
-    TRD --&gt;|"S: orders bypass bus; user data stream + REST reconcile"| BIN2
-    TRD --&gt;|"S: checkpoint read/write (A3)"| PG
-    ARC --&gt;|"file write"| VOL
-    VOL --&gt;|"S: HTTPS PUT (copy, verify, then delete)"| S32
-    TRD --&gt;|"file: live_state.json"| DSH
-    BRW --&gt;|"S: HTTPS"| DSH</code></pre>
+<p>Subject: <code>bars.binance.usdm.&lt;SYMBOL&gt;</code> (без <code>.30m</code>; заморожено как в коде+тесте).
+MsgId публикации: <code>bars:{exchange}:{symbol}:{bar_ts}</code>. Ключ приёмника: <code>(symbol, bar_ts)</code> — дубликаты (catch-up, ретрай старше 300s) поглощаются.
+Сериализация v1: JSON (имена ключей как в <code>keys.py</code>); бинарь — только замером и отдельным решением.
+TAKE from ADR-0002 §8: retention <code>bars.*</code> короткий, формулой <code>&gt;= простой трейдера + окно скоса шардов</code>
+(бары пересчитываемы из сырья + чекпойнтов); точное число — замером хвоста рестарта трейдера, не выдумывать.
+Долгий простой трейдера → холодный старт ленты (позиции — с биржи, D10).</p>
+<h2 id="stamp-v1">stamp — поля качества (все обязательны в v1)<a class="headerlink" href="#stamp-v1" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
 <tr>
-<th>Единица</th>
-<th>Отвечает</th>
-<th>S/A</th>
+<th>Поле</th>
+<th>Тип</th>
+<th>Кто пишет</th>
+<th>Кто читает</th>
+<th>При отсутствии</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>collector × E</td>
-<td>Край своей биржи (два WS по C5 + поллеры), in-memory буфер сырыми байтами с потолком и счётчиком, асинхронный publish не из цикла чтения сокета; не считает, на диск не пишет</td>
-<td>A</td>
+<td><code>diff_u_gaps</code></td>
+<td>int64, число разрывов <code>u</code> в окне</td>
+<td>КОЛЛЕКТОР детектит (монотонность <code>u</code>), шлёт NATS-хедером <code>X-Gap-Count</code> на след. сообщении; calc аккумулирует по окну (E1-D1)</td>
+<td>trader, backtest</td>
+<td>0 только если проверено; непроверено = поле отсутствует, бар невалиден</td>
 </tr>
 <tr>
-<td>NATS JetStream (1 логическая)</td>
-<td>Три семейства сырья (стакан/диффы, трейды, остальное) + <code>bars.*</code> закрытых баров; durable лог, retention, replay; скейл по нодам</td>
-<td>A</td>
+<td><code>diff_lost_est</code></td>
+<td>int64, оценка потерянных diff-сообщений</td>
+<td>КОЛЛЕКТОР (хедер <code>X-Gap-Lost</code> = <code>actual_u - expected_u</code>); calc аккумулирует</td>
+<td>trader, backtest, алерт</td>
+<td>см. выше</td>
 </tr>
 <tr>
-<td>raw archiver</td>
-<td>Отдельный сервис со своим курсором в очереди (durable consumer, offset у брокера, ack после верификации в S3) → 1 файл/день/тип, собранный дописыванием row groups в один открытый writer за сутки; копия, проверка, потом удаление</td>
-<td>A + S к S3</td>
+<td><code>trade_agg_gaps</code></td>
+<td>int64, разрывы <code>agg id</code> (<code>a</code>)</td>
+<td>КОЛЛЕКТОР (монотонность <code>a</code>, хедер <code>X-Gap-Count</code> на trade-потоке); calc аккумулирует</td>
+<td>trader, backtest</td>
+<td>см. выше</td>
 </tr>
 <tr>
-<td>metric calc × E (÷2–3 опционально)</td>
-<td>Шарды по символам, далее сплит по семействам очередей при непересекающихся метриках (G5): книга, движок, штамп качества; 1 сообщение = 1 закрытый бар (пустое = NULL, всегда эмитим)</td>
-<td>A</td>
+<td><code>blind_sec</code></td>
+<td>int64 0..1800, секунд окна без событий вообще</td>
+<td>calc из пер-коннекшн heartbeat (механизм уже в коде: ws_client.py:76-177, 1с каденс, один hb на тихую символ-секунду) + дописать loss-check (ожидалось 1/сек vs пришло → счётчик) — направление планировщику</td>
+<td>trader (слепое окно ≠ тихий рынок), алерт</td>
+<td>см. выше</td>
 </tr>
 <tr>
-<td>trader × E</td>
-<td>Бары своей биржи; stale-бар старше N минут — не торгуем, ack и выкидываем; ордера напрямую, <code>newClientOrderId</code> из (символ + ts бара); user data + сверка</td>
-<td>A + S к бирже</td>
+<td><code>blind_sec_public</code> / <code>blind_sec_market</code></td>
+<td>int64, слепые секунды по соединениям</td>
+<td>calc из heartbeat per-connection (public несет depth, market — остальное; heartbeat loop per-connection уже есть) + loss-check планировщика</td>
+<td>trader, алерт per-conn</td>
+<td>см. выше</td>
 </tr>
 <tr>
-<td>Postgres</td>
-<td>Чекпойнты книги по D5 (A3 decided); понодовый шардинг — будущее, не этот док</td>
-<td>S</td>
+<td><code>first_ts</code> / <code>last_ts</code></td>
+<td>int64 ms, биржевое время первого/последнего события окна</td>
+<td>calc (trades уже хранит; расширить на окно)</td>
+<td>live/replay паритет границ</td>
+<td>РЕЗОЛВ (T-E1.6): <code>null</code> ВАЛИДНО, но ТОЛЬКО для полностью тихого окна (<code>blind_sec == длина окна</code>, т.е. ноль реальных событий) — тогда это верифицированный факт «событий не было», а не непроверенное поле; бар публикуется (INV-E1-e). Для любого окна, где <code>blind_sec</code> меньше длины окна, <code>first_ts</code>/<code>last_ts</code> обязательны как прежде; <code>null</code> там же (или ровно одно из двух <code>null</code>) — бар невалиден, не публикуется</td>
 </tr>
 <tr>
-<td>volumes / dashboard</td>
-<td>Parquet, read-only фид</td>
-<td>S/A</td>
+<td><code>live_liq</code></td>
+<td>bool, liq-семейство из живого фида (vs 0.0 в replay)</td>
+<td>calc</td>
+<td>backtest (различать live/replay расхождение)</td>
+<td>false = liq нули, фильтр знает</td>
 </tr>
 </tbody>
 </table>
-<p>Trust boundary: как в ADR-0001 §5/§13 (internal — контур, untrusted — Binance/S3/браузер); управляющей связи proxy ↔ trader нет; каждый трейдер — единственный writer в Trade API своей биржи.</p>
-<h3 id="phase-1-summary">Phase 1 Summary<a class="headerlink" href="#phase-1-summary" title="Permanent link">&para;</a></h3>
-<p>Инварианты Phase 1 (constraint для следующих фаз): масштабируется всё — оси биржи (collector/calc/trader ×E, старт E=1), очереди (одна логическая на нодах, внутри три семейства для сплита ×2–3 при непересекающихся метриках), ноды (PG понодово в будущем); два семейства стримов (<code>md.*</code> сырьё, <code>bars.*</code> закрытые бары), биржа в теме; контракт трейдера — только бары своей биржи со штампом качества + ingress time; ордера и позиции — вне шины. Открыто и блокирует Phase &#8532;: O2 (форма bars-контракта), O1/O3 (топология и retention-семантика), судьба PG-чеkпойнтов (A3), каденция снапшотов (O6). Числа до замеров — только как <code>measured(доска)</code>/<code>estimate</code> с ценой ошибки (A2, A4). [Phase 1 rev.3: A3 decided — чекпойнты остаются в PG.]</p>
-<h2 id="6-components">6. Components<a class="headerlink" href="#6-components" title="Permanent link">&para;</a></h2>
-<p>Только нетривиальные границы:</p>
+<h2 id="_1">Что НЕ в баре (сознательно)<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
 <ul>
-<li><code>metric calc</code> внутри: книга + движок + штамп качества на единицу деления. Сплит ×2–3 идёт по семействам очередей (диффы/книга, трейды, остальное) тогда и только тогда, когда метрики семейств не пересекаются (G5): пересечение — общий шард, иначе дубли состояния и сшивка. Проверка непересекаемости — Phase 3 (решение D-серии).</li>
-<li><code>trader</code> intake: подписка на бары своей биржи, stale-drop, исполнение. Комплект баров за окно (портфельный вариант O2) собирается здесь же, если O2 решится в его пользу, — движок баров при этом не меняется.</li>
+<li>Missing-список окна: его видит только трейдер (собирает комплект) — живёт в решении трейдера + Prometheus + логе, не в баре.</li>
+<li>Состояние norm/degraded/poor: состояние трейдера, не свойство бара.</li>
+<li>Order id <code>(symbol+bar ts)</code>: свойство ордера (Q-004 строит), не бара.</li>
 </ul>
-<h2 id="7-runtime">7. Runtime<a class="headerlink" href="#7-runtime" title="Permanent link">&para;</a></h2>
-<p>Дедупликация везде: брокер оппортунистически (<code>Nats-Msg-Id</code>), консьюмер обязательно; out-of-order внутри символа невозможен по построению (<code>u</code> монотонен, нарушение = дырка).</p>
-<pre class="mermaid"><code>sequenceDiagram
-  participant B as Binance WS/REST
-  participant P as data-proxy (своя биржа)
-  participant J as JetStream md.*
-  participant A as raw archiver
-  participant C as metric calc (шард)
-  participant G as PG checkpoints
-  B-&gt;&gt;P: depth diff / trade / kline(mark/liq) / REST
-  alt невалидный payload
-    P-&gt;&gt;P: WARN + dropped_invalid, без публикации (fail loud)
-  else валидное событие
-    P-&gt;&gt;P: ingress time рядом с биржевым; RAM-буфер (потолок, счётчик)
-    P-&gt;&gt;J: publish raw + Nats-Msg-Id (асинхронно, не из цикла чтения)
-    J--&gt;&gt;P: PubAck (duplicate:true при повторе в окне)
-    J-&gt;&gt;A: live deliver (свой durable-курсор) -&gt; дописывание row groups в открытый writer дня -&gt; S3 (копия, проверка, удаление; ack после верификации)
-    J-&gt;&gt;C: live deliver + replay от чекпойнта
-    C-&gt;&gt;G: read checkpoint @ bar boundary
-    C-&gt;&gt;C: apply diff (u-check), ring, close bar + quality stamp
-    C-&gt;&gt;G: COMMIT checkpoint (A3)
-    C-&gt;&gt;J: publish 1 msg = 1 closed bar (пустое = NULL, всегда эмитим)
-  end</code></pre>
-<pre class="mermaid"><code>sequenceDiagram
-  participant J as JetStream bars.*
-  participant T as trader (своя биржа)
-  participant V as Trade API + user data
-  participant G as PG checkpoints
-  J-&gt;&gt;T: bars.&lt;ex&gt;.*.30m live (+ replay хвоста при рестарте)
-  alt бар старше N минут (stale)
-    T-&gt;&gt;T: не торгуем, ack и выкидываем
-  else свежий бар
-    T-&gt;&gt;T: решение (per-symbol; O2-форк ниже)
-    T-&gt;&gt;V: ордера напрямую, newClientOrderId=(символ + ts бара)
-    T-&gt;&gt;V: user data stream + REST reconcile (listenKey renew ~30 мин)
-  end
-  alt рестарт трейдера
-    T-&gt;&gt;V: позиции/баланс с биржи заново (локально не храним, D10)
-    T-&gt;&gt;J: resume live с последнего (bars короткого retention хватает)
-  else рестарт калькулятора
-    T-&gt;&gt;T: ждём бары (трейдер не рестартится, гэп виден по штампу)
-  end</code></pre>
-<pre class="mermaid"><code>stateDiagram-v2
-  state Bar {
-    [*] --&gt; Incomplete: gap / cold start / missing slot
-    Incomplete --&gt; Complete: слот на каждую секунду бара
-    Complete --&gt; Closed: граница бара (checkpoint COMMIT + publish)
-    Closed --&gt; [*]
-  }</code></pre>
-<blockquote>
-<p>O2-ФОРК (открыт, обе ветки живут до решения встречи):
-- Ветка S (per-symbol): калькулятор публикует бары посимвольно, трейдер реагирует на каждый бар; разделение дешёвое, комплектов не нужно.
-- Ветка P (портфельно): трейдеру нужен КОМПЛЕКТ баров за окно от N калькуляторов — тогда в §8 добавляются правило «сколько ждём» и поведение «шард не прислал» (таймаут комплекта + неполный флаг, без блокировки).
-База Phase 2 — ветка S (совпадает с текущим движком и ADR-0001); ветка P не должна ломать формат одиночного бара, только добавлять сборку.</p>
-</blockquote>
-<h2 id="8-data">8. Data<a class="headerlink" href="#8-data" title="Permanent link">&para;</a></h2>
-<p>Парадигма: лог как источник истины (JetStream <code>md.*</code>) + регенерируемый чекпойнт книги (PG, A3) + пересчитываемое производное (bars, ring, позиции). Bars-стрим — производное и выкидываемое: пересчитывается из сырья + чекпойнтов, долгим не хранится.</p>
-<p>Владельцы стейта: книга — calc (RAM) + чекпойнт в PG; сырьё — JetStream; бары — JetStream коротким окном; позиции — биржа (user data + reconcile); архив — parquet → S3.</p>
-<p>Контракты на уровне инвариантов:</p>
+<h2 id="_2">Требуемые изменения кода (планировщику, не архитектуре)<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h2>
+<ol>
+<li><code>empty_row</code>/<code>_sanitize_row</code>: не заливать 0.0; отсутствующий ключ = NULL (меняет поведение движка; паритетные тесты Go/Python обновить).</li>
+<li><code>live_bridge</code> ffill (<code>replace(0.0,NaN).ffill()</code> для price-like) — убрать; <code>has_key</code>/<code>_build_frame</code> противоречие 0.0 — устранить.</li>
+<li>Монотонность id (<code>u</code> диффов, <code>a</code> трейдов) детектит КОЛЛЕКТОР (единая точка,
+   видит per-connection сырой поток) и штампует NATS-хедеры <code>X-Gap-Count</code>/
+   <code>X-Gap-Lost</code> на сообщении, вскрывшем гэп; calc аккумулирует по окну в штамп.
+   <code>Aggregate</code> U/u/pu/agg-id НЕ хранит (решение E1-D1, 2026-09-13). Хедеры лежат
+   в JetStream с сообщением → replay воспроизводит те же счётчики (паритет).</li>
+<li>Прокси: штамповать connection id (иначе per-conn поля не из чего считать).</li>
+<li><code>bar_complete</code> — bool сразу (вердикт Gate 4: на миграцию забить). Движок эмитит True/False, писатели кладут bool-колонку, читатели (бэктест, прогрев) читают bool. Старые parquet с float-колонкой несовместимы — сознательно, без переходного периода.</li>
+<li>Паблишер calc→<code>bars.*</code> с MsgId выше; консьюмер трейдера с ключом (symbol, bar_ts).</li>
+</ol>
+<h2 id="_3">Проверки приёмки контракта<a class="headerlink" href="#_3" title="Permanent link">&para;</a></h2>
 <ul>
-<li>Темы (принцип решён, C9; точный шаблон — решение Phase 3): биржа первая, далее рынок/вид/символ; бары — <code>bars.&lt;exchange&gt;...30m</code>-формой с интервалом в теме. Своей схемы между сервисами нет, payload сырья 1:1 с Binance (D7 из ADR-0001).</li>
-<li><code>Nats-Msg-Id</code> — из явных полей Binance (таблица ADR-0001 §8) + для баров <code>bars:{exchange}:{symbol}:{bar_ts}</code>; невалид — громко, без публикации.</li>
-<li>Ingress time пишется рядом с биржевым временем в каждом событии: без него live и replay расходятся на границах баров (доска).</li>
-<li>Штамп качества в каждом баре (поля контракта): разрывы <code>U/u/pu</code> и <code>agg id</code> (точный счёт потерянных), счётчик markPrice = слепые секунды (1800 на 30-мин бар), измерение по коннектам отдельно (<code>/public</code> vs <code>/market</code>), трёхуровневый статус (норм / деградация / плохо), флаг полноты. Бэктест фильтрует так же, как живой трейдер.</li>
-<li>Ключ партиционирования: биржа → символ (книги независимы → параллельный реплей и шарды без skew по построению).</li>
-<li>Консистентность: per-symbol strong order (через <code>u</code>), глобально eventual (бары закрываются по settlement); read-your-writes не требуется.</li>
-<li>Доставка: at-least-once + идемпотентные консьюмеры; exactly-once не заявляется. Ордера идемпотентны через <code>newClientOrderId=(символ + ts бара)</code>.</li>
+<li>Первый опубликованный бар валидируется по таблице выше целиком.</li>
+<li>Тихий символ: бар из NULL + <code>bar_complete=false</code> + <code>blind_sec=1800</code>; бэктест скипает ровно как live degraded.</li>
+<li>Дубликат (catch-up, ретрай &gt;300s): поглощён приёмником, двойного применения нет.</li>
+<li>Дрейф имени/полей: <code>check_stream_invariants</code> + JSON-schema тест контракта (планировщик).</li>
 </ul>
-<p>Design Limits (формулы; числа — только <code>measured</code> или конфиг):</p>
-<table>
-<thead>
-<tr>
-<th>Parameter / Invariant</th>
-<th>Value / Formula</th>
-<th>Rationale</th>
-<th>Consequence of Violation</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Retention <code>md.*</code></td>
-<td><code>&gt;= возраст старейшего чекпойнта + худший простой + буфер drain</code></td>
-<td>Пережить рестарт/откат без потери книги</td>
-<td>Retention hole → остаёмся на книге, бары неполные (явный флаг)</td>
-</tr>
-<tr>
-<td>Retention <code>bars.*</code></td>
-<td><code>&gt;= простой трейдера + окно скоса шардов</code> (короткое: бары пересчитываемы)</td>
-<td>Трейдеру нужен только хвост, не история</td>
-<td>Долгий простой трейдера → холодный старт ленты (позиции — с биржи, D10)</td>
-</tr>
-<tr>
-<td>Dedup window</td>
-<td><code>W_dedup &gt;= max_retry + max_reconnect + clock_skew</code></td>
-<td>Покрыть ретраи и простой на деплое</td>
-<td>Дубль бизнес-операции (для ring — удвоение объёма)</td>
-</tr>
-<tr>
-<td>Proxy buffer</td>
-<td><code>buffer_bytes &gt;= throughput_peak * T_repair</code>, переполнение — дроп со счётчиком + алерт, без spill-файла (доска)</td>
-<td>Без буфера рестарт NATS теряет данные у источника</td>
-<td>Дырка в диффах → бары неполные</td>
-</tr>
-<tr>
-<td>Checkpoint cadence</td>
-<td>строго на границу бара; <code>keep &gt;= 2</code> (D5)</td>
-<td>Снапшот среди бара не восстанавливает его начало</td>
-<td>Невосстановимые секунды / двойной реплей при краше на границе</td>
-</tr>
-<tr>
-<td>Book depth stored</td>
-<td>целиком, без среза (D6)</td>
-<td>Срез ломает бакеты непредсказуемо по символам</td>
-<td>Недостоверные книжные метрики</td>
-</tr>
-<tr>
-<td>Stale bar</td>
-<td><code>bar_age &gt; N</code> → не торгуем, ack и выкидываем</td>
-<td>Протухший сигнал хуже отсутствия сигнала</td>
-<td>Торговля по протухшему бару</td>
-</tr>
-<tr>
-<td>ListenKey</td>
-<td>renew ~каждые 30 мин + сверка по таймеру и после ордера</td>
-<td>Без подтверждения позиция/филлы расходятся с биржей</td>
-<td>Тихий разрыв учёта (пример с доски: 4 символа молчали 2 суток)</td>
-</tr>
-</tbody>
-</table>
-<h3 id="phase-2-summary">Phase 2 Summary<a class="headerlink" href="#phase-2-summary" title="Permanent link">&para;</a></h3>
-<p>Инварианты Phase 2 (constraint для Phase 3): сырьё 1:1 + MsgId + ingress time; бары — производное с полным контрактом (все ключи + штамп качества + NULL вместо forward fill); PG-чеkпойнты — восстановление книги; ордера идемпотентны по (символ + ts бара); потоки replay/live/hole/cold — как на диаграммах; O2 несётся форком (база — per-symbol). Следующая фаза: решения D-серии (сплит калькулятора по G5, точный шаблон тем, retention-семантика O3, число шардов O4) + риски и лимиты.</p>
 
 
 
