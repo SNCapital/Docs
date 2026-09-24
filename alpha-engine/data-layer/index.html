@@ -449,28 +449,6 @@
   
 
       
-        
-  
-  
-  
-  
-    
-    
-      <li class="md-tabs__item">
-        <a href="../../openspec/batch-backtest/" class="md-tabs__link">
-          
-  
-  
-    
-  
-  Specs
-
-        </a>
-      </li>
-    
-  
-
-      
     </ul>
   </div>
 </nav>
@@ -2232,322 +2210,6 @@
   
 
     
-      
-      
-  
-  
-  
-  
-    
-    
-      
-        
-          
-        
-      
-        
-      
-        
-      
-        
-      
-        
-      
-        
-      
-        
-      
-        
-      
-        
-      
-    
-    
-    
-      
-      
-        
-      
-    
-    
-    <li class="md-nav__item md-nav__item--nested">
-      
-        
-        
-          
-        
-        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_11" >
-        
-          
-          <div class="md-nav__link md-nav__container">
-            <a href="../../openspec/batch-backtest/" class="md-nav__link ">
-              
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Specs
-  
-
-    
-  </span>
-  
-  
-
-            </a>
-            
-              
-              <label class="md-nav__link " for="__nav_11" id="__nav_11_label" tabindex="0">
-                <span class="md-nav__icon md-icon"></span>
-              </label>
-            
-          </div>
-        
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_11_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_11">
-            <span class="md-nav__icon md-icon"></span>
-            
-  
-    Specs
-  
-
-          </label>
-          <ul class="md-nav__list" data-md-scrollfix>
-            
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../openspec/dashboard/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Dashboard
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../openspec/historical-download/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Historical download
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../openspec/live-trading/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Live Trading
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../openspec/live-ws/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Live WebSocket pipeline
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../openspec/metrics-aggregation/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Metrics Aggregation
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../openspec/metrics-engine/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Metrics Engine
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../openspec/models/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Data models
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../openspec/rest-pollers/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    REST pollers
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-          </ul>
-        </nav>
-      
-    </li>
-  
-
-    
   </ul>
 </nav>
                   </div>
@@ -2707,7 +2369,7 @@ expose via a lazy dict.</p>
 </ul>
 <p>Strategies see <code>ExchangeData</code>. They write
 <code>data["binance-f"]["mark_price"]</code> and stay agnostic to whether the
-backing reader is parquet, mock, or live deque.</p>
+backing reader is parquet, mock, or completed live bars.</p>
 <h2 id="readers-pick-the-right-one">Readers — pick the right one<a class="headerlink" href="#readers-pick-the-right-one" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
@@ -2721,7 +2383,7 @@ backing reader is parquet, mock, or live deque.</p>
 <tr>
 <td><code>MultiFileParquetReader</code></td>
 <td>parser's Hive layout <code>data/market=…/type=…/dt=YYYY-MM-DD/symbol=…/part-*</code></td>
-<td><strong>Default for production.</strong> Reads what <code>binance_parser</code> writes. Partition-prunes by <code>dt=</code>.</td>
+<td><strong>Raw backtest input.</strong> Reads what the historical downloader writes. Partition-prunes by <code>dt=</code>.</td>
 </tr>
 <tr>
 <td><code>ParquetFileReader</code></td>
@@ -2734,13 +2396,13 @@ backing reader is parquet, mock, or live deque.</p>
 <td>Tests and the <code>--mock</code> flag on the CLI.</td>
 </tr>
 <tr>
-<td><code>LiveRawDataReader</code></td>
-<td>rolling deques fed by <code>LiveTickBus</code></td>
+<td><code>BarsReader</code></td>
+<td>completed metric bars from calc</td>
 <td>Live runtime — see <a href="../live-trading/">Live trading</a>.</td>
 </tr>
 </tbody>
 </table>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">alpha_engine.metrics.raw_data_reader</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">metrics.raw_data_reader</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
 </span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>    <span class="n">MultiFileParquetReader</span><span class="p">,</span> <span class="n">ParquetFileReader</span><span class="p">,</span> <span class="n">MockRawDataReader</span><span class="p">,</span>
 </span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="p">)</span>
 </span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
@@ -2757,9 +2419,9 @@ backing reader is parquet, mock, or live deque.</p>
 <h2 id="aggregators-what-they-produce">Aggregators — what they produce<a class="headerlink" href="#aggregators-what-they-produce" title="Permanent link">&para;</a></h2>
 <p>Aggregators take <strong>raw ticks for one ticker over [since, until]</strong> and
 return a <code>dict[metric_name → pd.Series]</code> indexed at 30-min bars.</p>
-<div class="language-python highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">alpha_engine.metrics.trades_aggregator</span><span class="w">    </span><span class="kn">import</span> <span class="n">aggregate_trades_30min</span>
-</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="kn">from</span><span class="w"> </span><span class="nn">alpha_engine.metrics.orderbook_aggregator</span><span class="w"> </span><span class="kn">import</span> <span class="n">aggregate_orderbook_30min</span>
-</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="kn">from</span><span class="w"> </span><span class="nn">alpha_engine.metrics.market_data_aggregator</span><span class="w"> </span><span class="kn">import</span> <span class="n">aggregate_klines_30min</span><span class="p">,</span> <span class="n">aggregate_funding_30min</span>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">metrics.trades_aggregator</span><span class="w">    </span><span class="kn">import</span> <span class="n">aggregate_trades_30min</span>
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="kn">from</span><span class="w"> </span><span class="nn">metrics.orderbook_aggregator</span><span class="w"> </span><span class="kn">import</span> <span class="n">aggregate_orderbook_30min</span>
+</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="kn">from</span><span class="w"> </span><span class="nn">metrics.market_data_aggregator</span><span class="w"> </span><span class="kn">import</span> <span class="n">aggregate_klines_30min</span><span class="p">,</span> <span class="n">aggregate_funding_30min</span>
 </span></code></pre></div>
 <p><code>AggregatedMetricsDict</code> lazily aggregates <strong>all metrics in a group</strong> the
 first time <em>any</em> metric in that group is requested, then caches. Groups:
@@ -2770,7 +2432,7 @@ first time <em>any</em> metric in that group is requested, then caches. Groups:
 group as "computed" without populating any metrics. Subsequent
 <code>data["binance-f"]["bid_25_cost"]</code> raises a clear <code>KeyError</code> rather than
 silently returning a NaN frame — see
-<a href="https://github.com/SNCapital/-Backend/blob/main/alpha_engine/metrics/metrics_dict.py#L99"><code>metrics_dict.py:99</code></a>.</p>
+<a href="https://github.com/SNCapital/Backend/blob/main/metrics/metrics_dict.py"><code>metrics_dict.py:99</code></a>.</p>
 <h2 id="exchange-tags">Exchange tags<a class="headerlink" href="#exchange-tags" title="Permanent link">&para;</a></h2>
 <p>Two exchange tags ship by default:</p>
 <table>
@@ -2799,7 +2461,7 @@ silently returning a NaN frame — see
 <ol>
 <li>Add the entry to <code>_EXCHANGE_TO_MARKET</code>.</li>
 <li>Make sure the parser writes under the corresponding <code>market=…/</code>.</li>
-<li>Pass <code>exchanges=["…", …]</code> to <code>AlphaPipeline</code> / <code>LiveEngineConfig</code>.</li>
+<li>Pass <code>exchanges=["…", …]</code> to <code>AlphaPipeline</code>.</li>
 </ol>
 <h2 id="lazy-access-semantics">Lazy access semantics<a class="headerlink" href="#lazy-access-semantics" title="Permanent link">&para;</a></h2>
 <div class="language-python highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="n">data</span> <span class="o">=</span> <span class="n">ExchangeData</span><span class="p">(</span><span class="n">reader</span><span class="p">,</span> <span class="n">since</span><span class="p">,</span> <span class="n">until</span><span class="p">,</span> <span class="n">exchanges</span><span class="o">=</span><span class="p">[</span><span class="s2">"binance-f"</span><span class="p">])</span>

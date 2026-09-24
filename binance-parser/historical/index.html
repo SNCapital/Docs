@@ -449,28 +449,6 @@
   
 
       
-        
-  
-  
-  
-  
-    
-    
-      <li class="md-tabs__item">
-        <a href="../../openspec/batch-backtest/" class="md-tabs__link">
-          
-  
-  
-    
-  
-  Specs
-
-        </a>
-      </li>
-    
-  
-
-      
     </ul>
   </div>
 </nav>
@@ -2221,322 +2199,6 @@
   
 
     
-      
-      
-  
-  
-  
-  
-    
-    
-      
-        
-          
-        
-      
-        
-      
-        
-      
-        
-      
-        
-      
-        
-      
-        
-      
-        
-      
-        
-      
-    
-    
-    
-      
-      
-        
-      
-    
-    
-    <li class="md-nav__item md-nav__item--nested">
-      
-        
-        
-          
-        
-        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_11" >
-        
-          
-          <div class="md-nav__link md-nav__container">
-            <a href="../../openspec/batch-backtest/" class="md-nav__link ">
-              
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Specs
-  
-
-    
-  </span>
-  
-  
-
-            </a>
-            
-              
-              <label class="md-nav__link " for="__nav_11" id="__nav_11_label" tabindex="0">
-                <span class="md-nav__icon md-icon"></span>
-              </label>
-            
-          </div>
-        
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_11_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_11">
-            <span class="md-nav__icon md-icon"></span>
-            
-  
-    Specs
-  
-
-          </label>
-          <ul class="md-nav__list" data-md-scrollfix>
-            
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../openspec/dashboard/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Dashboard
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../openspec/historical-download/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Historical download
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../openspec/live-trading/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Live Trading
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../openspec/live-ws/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Live WebSocket pipeline
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../openspec/metrics-aggregation/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Metrics Aggregation
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../openspec/metrics-engine/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Metrics Engine
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../openspec/models/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Data models
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../openspec/rest-pollers/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    REST pollers
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-          </ul>
-        </nav>
-      
-    </li>
-  
-
-    
   </ul>
 </nav>
                   </div>
@@ -2670,9 +2332,10 @@
 <p>Pull historical Binance market data from
 <a href="https://data.binance.vision"><code>data.binance.vision</code></a> (ZIP archives) and
 the REST <code>/fundingRate</code> endpoint, normalised into the same Hive-parquet
-layout the live writer produces.</p>
+partition layout used by the archiver. Historical ZIP files and live raw
+events have different coverage; a ZIP download does not reconstruct live L2.</p>
 <h2 id="zip-downloader">ZIP downloader<a class="headerlink" href="#zip-downloader" title="Permanent link">&para;</a></h2>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>python<span class="w"> </span>main.py<span class="w"> </span><span class="nb">history</span><span class="w"> </span>download<span class="w"> </span>--market<span class="w"> </span><span class="o">{</span>spot,usdm,both<span class="o">}</span><span class="w"> </span><span class="se">\</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>python<span class="w"> </span>-m<span class="w"> </span>collector.tools.history<span class="w"> </span>download<span class="w"> </span>--market<span class="w"> </span><span class="o">{</span>spot,usdm,both<span class="o">}</span><span class="w"> </span><span class="se">\</span>
 </span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="w">    </span><span class="o">[</span>--group<span class="w"> </span><span class="o">{</span>all,major<span class="o">}]</span><span class="w"> </span><span class="o">[</span>--symbols<span class="w"> </span>SYM1<span class="w"> </span>SYM2<span class="w"> </span>…<span class="o">]</span><span class="w"> </span><span class="se">\</span>
 </span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">    </span><span class="o">[</span>--types<span class="w"> </span>DATA_TYPES<span class="w"> </span>…<span class="o">]</span><span class="w"> </span><span class="o">[</span>--months<span class="w"> </span>N<span class="o">]</span><span class="w"> </span><span class="se">\</span>
 </span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">    </span><span class="o">[</span>--intervals<span class="w"> </span>INTERVALS<span class="w"> </span>…<span class="o">]</span><span class="w"> </span><span class="o">[</span>--workers<span class="w"> </span>W<span class="o">]</span><span class="w"> </span><span class="se">\</span>
@@ -2736,7 +2399,7 @@ month</strong>. The downloader fans them out into daily <code>dt=</code> partiti
 disk to match the live layout — strategies don't see a difference.</p>
 <p>The <code>aggTrades</code> history exposes a <code>is_buyer_maker</code> boolean instead of
 the live stream's pre-flipped <code>side</code> string. The reader's
-<code>_normalise_columns</code> (<code>alpha_engine/metrics/raw_data_reader.py</code>) maps
+<code>_normalise_columns</code> (<code>metrics/raw_data_reader.py</code>) maps
 <code>is_buyer_maker → side</code> (<code>True ⇒ "sell"</code>, <code>False ⇒ "buy"</code>) so the
 trades aggregator sees a uniform schema.</p>
 <h3 id="checkpoint-resume">Checkpoint resume<a class="headerlink" href="#checkpoint-resume" title="Permanent link">&para;</a></h3>
@@ -2748,21 +2411,21 @@ arguments and it picks up where it stopped. Checkpoint keys are
 "resets" the checkpoint.</p>
 <h3 id="common-recipes">Common recipes<a class="headerlink" href="#common-recipes" title="Permanent link">&para;</a></h3>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Top-20 USD-M, last 6 months, 1m klines + aggTrades</span>
-</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>python<span class="w"> </span>main.py<span class="w"> </span><span class="nb">history</span><span class="w"> </span>download<span class="w"> </span>--market<span class="w"> </span>usdm<span class="w"> </span>--group<span class="w"> </span>major<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>python<span class="w"> </span>-m<span class="w"> </span>collector.tools.history<span class="w"> </span>download<span class="w"> </span>--market<span class="w"> </span>usdm<span class="w"> </span>--group<span class="w"> </span>major<span class="w"> </span><span class="se">\</span>
 </span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">    </span>--types<span class="w"> </span>klines<span class="w"> </span>aggTrades<span class="w"> </span>--months<span class="w"> </span><span class="m">6</span>
 </span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
 </span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="c1"># All spot pairs, 1 month of bookTicker</span>
-</span><span id="__span-2-6"><a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>python<span class="w"> </span>main.py<span class="w"> </span><span class="nb">history</span><span class="w"> </span>download<span class="w"> </span>--market<span class="w"> </span>spot<span class="w"> </span>--group<span class="w"> </span>all<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-2-6"><a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>python<span class="w"> </span>-m<span class="w"> </span>collector.tools.history<span class="w"> </span>download<span class="w"> </span>--market<span class="w"> </span>spot<span class="w"> </span>--group<span class="w"> </span>all<span class="w"> </span><span class="se">\</span>
 </span><span id="__span-2-7"><a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="w">    </span>--types<span class="w"> </span>bookTicker<span class="w"> </span>--months<span class="w"> </span><span class="m">1</span>
 </span><span id="__span-2-8"><a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>
 </span><span id="__span-2-9"><a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="c1"># A specific list of symbols, default types, last 3 months</span>
-</span><span id="__span-2-10"><a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>python<span class="w"> </span>main.py<span class="w"> </span><span class="nb">history</span><span class="w"> </span>download<span class="w"> </span>--market<span class="w"> </span>usdm<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-2-10"><a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>python<span class="w"> </span>-m<span class="w"> </span>collector.tools.history<span class="w"> </span>download<span class="w"> </span>--market<span class="w"> </span>usdm<span class="w"> </span><span class="se">\</span>
 </span><span id="__span-2-11"><a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="w">    </span>--symbols<span class="w"> </span>BTCUSDT<span class="w"> </span>ETHUSDT<span class="w"> </span>SOLUSDT<span class="w"> </span>--months<span class="w"> </span><span class="m">3</span>
 </span></code></pre></div>
 <h2 id="funding-rate-backfill-usd-m-only">Funding-rate backfill (USD-M only)<a class="headerlink" href="#funding-rate-backfill-usd-m-only" title="Permanent link">&para;</a></h2>
 <p>The official funding rate endpoint returns one row per settlement (3 per
 day). Use the <code>history funding</code> subcommand to backfill any window:</p>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>python<span class="w"> </span>main.py<span class="w"> </span><span class="nb">history</span><span class="w"> </span>funding<span class="w"> </span><span class="o">[</span>--group<span class="w"> </span><span class="o">{</span>all,major<span class="o">}]</span><span class="w"> </span><span class="se">\</span>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>python<span class="w"> </span>-m<span class="w"> </span>collector.tools.history<span class="w"> </span>funding<span class="w"> </span><span class="o">[</span>--group<span class="w"> </span><span class="o">{</span>all,major<span class="o">}]</span><span class="w"> </span><span class="se">\</span>
 </span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="w">    </span><span class="o">[</span>--symbols<span class="w"> </span>SYM1<span class="w"> </span>SYM2<span class="w"> </span>…<span class="o">]</span><span class="w"> </span><span class="o">[</span>--months<span class="w"> </span>N<span class="o">]</span><span class="w"> </span><span class="o">[</span>--dry-run<span class="o">]</span>
 </span></code></pre></div>
 <table>
@@ -2801,10 +2464,10 @@ day). Use the <code>history funding</code> subcommand to backfill any window:</p
 (float32, optional).</p>
 <p>Recipes:</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Backfill a year of funding for the major pairs</span>
-</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>python<span class="w"> </span>main.py<span class="w"> </span><span class="nb">history</span><span class="w"> </span>funding<span class="w"> </span>--months<span class="w"> </span><span class="m">12</span>
+</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>python<span class="w"> </span>-m<span class="w"> </span>collector.tools.history<span class="w"> </span>funding<span class="w"> </span>--months<span class="w"> </span><span class="m">12</span>
 </span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
 </span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># Two specific symbols, 6 months</span>
-</span><span id="__span-5-5"><a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>python<span class="w"> </span>main.py<span class="w"> </span><span class="nb">history</span><span class="w"> </span>funding<span class="w"> </span>--months<span class="w"> </span><span class="m">6</span><span class="w"> </span>--symbols<span class="w"> </span>BTCUSDT<span class="w"> </span>ETHUSDT
+</span><span id="__span-5-5"><a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>python<span class="w"> </span>-m<span class="w"> </span>collector.tools.history<span class="w"> </span>funding<span class="w"> </span>--months<span class="w"> </span><span class="m">6</span><span class="w"> </span>--symbols<span class="w"> </span>BTCUSDT<span class="w"> </span>ETHUSDT
 </span></code></pre></div>
 <h2 id="storage-cost-estimates">Storage cost estimates<a class="headerlink" href="#storage-cost-estimates" title="Permanent link">&para;</a></h2>
 <p>Order of magnitude for a single major-pair, 1 month, USD-M:</p>

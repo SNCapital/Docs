@@ -443,28 +443,6 @@
   
 
       
-        
-  
-  
-  
-  
-    
-    
-      <li class="md-tabs__item">
-        <a href="../../../openspec/batch-backtest/" class="md-tabs__link">
-          
-  
-  
-    
-  
-  Specs
-
-        </a>
-      </li>
-    
-  
-
-      
     </ul>
   </div>
 </nav>
@@ -2082,322 +2060,6 @@
   
 
     
-      
-      
-  
-  
-  
-  
-    
-    
-      
-        
-          
-        
-      
-        
-      
-        
-      
-        
-      
-        
-      
-        
-      
-        
-      
-        
-      
-        
-      
-    
-    
-    
-      
-      
-        
-      
-    
-    
-    <li class="md-nav__item md-nav__item--nested">
-      
-        
-        
-          
-        
-        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_11" >
-        
-          
-          <div class="md-nav__link md-nav__container">
-            <a href="../../../openspec/batch-backtest/" class="md-nav__link ">
-              
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Specs
-  
-
-    
-  </span>
-  
-  
-
-            </a>
-            
-              
-              <label class="md-nav__link " for="__nav_11" id="__nav_11_label" tabindex="0">
-                <span class="md-nav__icon md-icon"></span>
-              </label>
-            
-          </div>
-        
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_11_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_11">
-            <span class="md-nav__icon md-icon"></span>
-            
-  
-    Specs
-  
-
-          </label>
-          <ul class="md-nav__list" data-md-scrollfix>
-            
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../../openspec/dashboard/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Dashboard
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../../openspec/historical-download/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Historical download
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../../openspec/live-trading/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Live Trading
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../../openspec/live-ws/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Live WebSocket pipeline
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../../openspec/metrics-aggregation/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Metrics Aggregation
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../../openspec/metrics-engine/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Metrics Engine
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../../openspec/models/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Data models
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../../openspec/rest-pollers/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    REST pollers
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-          </ul>
-        </nav>
-      
-    </li>
-  
-
-    
   </ul>
 </nav>
                   </div>
@@ -2546,8 +2208,9 @@ transactions), которые раньше лежали отдельными ф�
   семплировать per-stream path + df -v каждые 5 мин.</li>
 <li>Дрейф подтверждён повторно: прод MD_* всё ещё 72h/unlimited (X-004 §0).</li>
 <li>OBS-SPEC.md: проводка counter -&gt; stamp -&gt; trading_* metric -&gt; alert по всем сигналам D-001 +
-  dedup + Q-006 + retention-hole + replay outcomes; вердикты wired/missing; экспортёр/имена/правила
-  отсутствуют в коде; пороги TBD-soak кроме RTO 120s.</li>
+  dedup + Q-006 + retention-hole + replay outcomes; вердикты wired/missing; на момент записи
+  экспортёр/имена/правила отсутствовали в коде — экспортёр, имена и alerts.yml частично
+  реализованы в PR по review-hardening-plan; пороги TBD-soak кроме RTO 120s.</li>
 <li>ADR-MAP.md: задняя сверка с docs/adr (при проектировании не читались — disclosed);
   совпадения + 2 conscious deviations (48h vs 72h; archiver отдельным сервисом vs D8).</li>
 </ul>
@@ -2555,7 +2218,7 @@ transactions), которые раньше лежали отдельными ф�
 <ul>
 <li>S3 cost/lifecycle, TLS/SCRAM multi-host, PG failover, 12000-stream startup optimization — no decision affected.</li>
 <li>Calc sharding (processes/shards, symbol→shard cut): DEFERRED by human 2026-09-12 ("пока без шардов"); planner decides when scaling needs it.</li>
-<li>Blind-sec method DECIDED 2026-09-12: 1Hz sentinel (heartbeat) per connection — mechanism exists in code (ws_client.py:76-177); missing loss-check code (expected vs received per second → blind_sec counter) is planner direction (bars-contract stamp rows).</li>
+<li>Blind-sec method DECIDED 2026-09-12: 1Hz sentinel (heartbeat) per connection — mechanism exists in code (ws_client.py:62-152); loss-check (expected vs received per second → blind_sec) реализован в этом PR в <code>calc/stamp.py</code> <code>PresenceStampAccumulator</code>.</li>
 </ul>
 <hr />
 <!-- consolidated from handover.md -->
@@ -2605,7 +2268,7 @@ transactions), которые раньше лежали отдельными ф�
 <tr>
 <td>Trader wait/3-state/stamp/Prometheus/order-id</td>
 <td>зафиксировано направлением</td>
-<td>Q-004: build all (Gate 4, против рекомендации лида); экспортёр+имена+правила отсутствуют в коде — отдельная плановая задача, проводка spec готовится</td>
+<td>Q-004: build all (Gate 4, против рекомендации лида); механизмы реализованы в PR (wait-full-set, gate.py, stale-drop, order-id); экспортёр+имена+alerts частично в коде — остаток проводки по OBS-SPEC</td>
 </tr>
 <tr>
 <td>Transition steps 1–2 (freeze, shadow archiver)</td>
@@ -2896,9 +2559,12 @@ ADR-0002 как номер — свободен; настоящий дизайн
 <li>Rejected: per-symbol-per-day files (more files, worse for cross-sectional reads); live backtest consumer (out of budget, couples research to live stream).</li>
 <li>Applicability: archiver writes date+type files; calc/bars unaffected.</li>
 <li>Check: archiver output listing shows <code>&lt;date&gt;/&lt;type&gt;.parquet</code> with symbol column; backtest loads date range from S3 path and reproduces live filter on quality stamp.</li>
-<li>TAKE from ADR-0002 §5/§7 (archiver row-group assembly): daily file собирается дописыванием
-  row groups в ОДИН открытый writer за сутки (не per-batch файлами); ack после S3 copy-verify-delete.
-  Открытый writer за сутки — planner implementation, граница файла = сутки, не коммит.</li>
+<li>TAKE from ADR-0002 §5/§7 (archiver assembly, актуализировано под H1–H8
+  review-hardening-plan): daily file собирается суточным слиянием из минутных
+  сегментов (60s + 30s grace, writers keyed <code>(kind, segment_start_ms)</code>); ack
+  брокеру — после локального durable-закрытия сегмента; S3 copy-verify-delete
+  идёт над слитым файлом, минутные входы чистятся после verify.
+  Граница файла = сегмент, не коммит.</li>
 </ul>
 <hr />
 <!-- consolidated from D-003.md -->
@@ -3217,7 +2883,7 @@ second, fresh-event-per-second) -&gt; Closed (edge COMMIT + publish). No hanging
 <td>state == degraded</td>
 <td>blocked-new</td>
 <td>closes allowed, opens forbidden</td>
-<td>Q-004 (absent in code)</td>
+<td>Q-004 (реализовано: gate.py)</td>
 </tr>
 <tr>
 <td>degraded</td>
@@ -3241,7 +2907,7 @@ second, fresh-event-per-second) -&gt; Closed (edge COMMIT + publish). No hanging
 <td>late arrival</td>
 <td>dropped</td>
 <td>ack + drop + stale-drop counter</td>
-<td>Q-004 (absent for bars.*)</td>
+<td>Q-004 (реализовано: intake.py + trading_stale_bar_drops_total)</td>
 </tr>
 <tr>
 <td>any</td>
@@ -3288,7 +2954,7 @@ second, fresh-event-per-second) -&gt; Closed (edge COMMIT + publish). No hanging
 <tr>
 <td>written-parts</td>
 <td>day closes</td>
-<td>per-symbol parts complete</td>
+<td>minute segments complete</td>
 <td>merging</td>
 <td>compact to 1 file/day/type, all symbols (D-002)</td>
 <td>Q-005(b)</td>
@@ -3327,7 +2993,7 @@ second, fresh-event-per-second) -&gt; Closed (edge COMMIT + publish). No hanging
 </tr>
 <tr>
 <td>uploaded</td>
-<td>verify (size/etag) ok</td>
+<td>verify (ChecksumSHA256 из HEAD; fallback single-part ETag=MD5) ok</td>
 <td>matches local</td>
 <td>verified</td>
 <td>eligible for local delete</td>

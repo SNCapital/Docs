@@ -1,0 +1,2996 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Quantitative research and live-trading stack on top of Binance market data. Strategy engine + WebSocket data pipeline + local L2 order book.
+">
+      
+      
+      
+        <link rel="canonical" href="https://sncapital.github.io/Docs/arch/split-services-jetstream/review-hardening-plan/">
+      
+      
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>Review hardening plan — ADR-0002 - SN Capital — Backend</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="https://unpkg.com/katex@0/dist/katex.min.css">
+    
+    <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#review-hardening-plan-adr-0002" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../../.." title="SN Capital — Backend" class="md-header__button md-logo" aria-label="SN Capital — Backend" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            SN Capital — Backend
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Review hardening plan — ADR-0002
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m14.3 16-.7-2h-3.2l-.7 2H7.8L11 7h2l3.2 9zM20 8.69V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12zm-9.15 3.96h2.3L12 9z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_2" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to system preference"  type="radio" name="__palette" id="__palette_2">
+    
+      <label class="md-header__button md-icon" title="Switch to system preference" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+          <a href="javascript:void(0)" class="md-search__icon md-icon" title="Share" aria-label="Share" data-clipboard data-clipboard-text="" data-md-component="search-share" tabindex="-1">
+            
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9a3 3 0 0 0-3 3 3 3 0 0 0 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.15c-.05.21-.08.43-.08.66 0 1.61 1.31 2.91 2.92 2.91s2.92-1.3 2.92-2.91A2.92 2.92 0 0 0 18 16.08"/></svg>
+          </a>
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/SNCapital/Backend" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    SNCapital/Backend
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+    
+      
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../getting-started/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Getting started
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../alpha-engine/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Alpha engine
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../binance-parser/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Binance parser
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../strategies/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Strategies
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../reference/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Reference
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../development/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Development
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../adr/0001-collector-trader-split/0001-collector-trader-split/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Architecture decisions
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../../research-log/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Research log
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../research/nsc-14-aggtrade-vs-trade/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Research notes
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+    
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../.." title="SN Capital — Backend" class="md-nav__button md-logo" aria-label="SN Capital — Backend" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    SN Capital — Backend
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/SNCapital/Backend" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    SNCapital/Backend
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../../getting-started/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Getting started
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_2" id="__nav_2_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Getting started
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../getting-started/installation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Installation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../getting-started/quickstart/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Quick start
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../getting-started/architecture/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../../alpha-engine/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Alpha engine
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_3" id="__nav_3_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Alpha engine
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../alpha-engine/pipeline/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Pipeline overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../alpha-engine/data-layer/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Data layer
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../alpha-engine/writing-a-strategy/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Writing a strategy
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../alpha-engine/markowitz/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Markowitz combination
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../alpha-engine/backtesting/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Backtesting & PnL
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../alpha-engine/live-trading/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Live trading
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../../binance-parser/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Binance parser
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_4" id="__nav_4_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Binance parser
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../binance-parser/live/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Live WebSocket
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../binance-parser/historical/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Historical download
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../binance-parser/storage/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Storage layout
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../binance-parser/order-book/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Local order book
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../binance-parser/extending/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Extending the parser
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../../strategies/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Strategies
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_5" id="__nav_5_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Strategies
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../methodology/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Methodology
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../strategies/funding_reversion/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Funding mean reversion
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../strategies/trade_imbalance/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Trade imbalance
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../strategies/ob_mispricing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Orderbook mispricing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../strategies/book_depth_imbalance/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Book depth imbalance
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../strategies/vol_mean_reversion/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Volatility mean reversion
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../strategies/vol_ob_entropy/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Volume / OB entropy
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_6" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../../reference/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Reference
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_6" id="__nav_6_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Reference
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../reference/cli/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    CLI
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../reference/operators/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Operators
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../reference/metrics/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Metrics catalogue
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../reference/glossary/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Glossary
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_7" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../../development/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Development
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_7" id="__nav_7_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Development
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../development/setup/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Setup
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../development/testing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Testing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../development/contributing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Contributing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_8" >
+        
+          
+          <label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Architecture decisions
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Architecture decisions
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../adr/0001-collector-trader-split/0001-collector-trader-split/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ADR-0001 Collector / trader split
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../adr/0002-split-services-jetstream/0002-split-services-jetstream/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ADR-0002 Split services + JetStream
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../research-log/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Research log
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_10" >
+        
+          
+          <label class="md-nav__link" for="__nav_10" id="__nav_10_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Research notes
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_10_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_10">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Research notes
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../research/nsc-14-aggtrade-vs-trade/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    NSC-14 aggTrade vs trade
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Карта покрытия находок
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#-" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Статус-легенда
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Зафиксированные решения
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Волна 1 — архиватор, целостность данных
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Волна 1 — архиватор, целостность данных">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#h1-kind-segment_start_ms-kind" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        H1. Писатели по ключу (kind, segment_start_ms), исполнитель на kind
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#h2-60-grace-30" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        H2. Сегмент 60с + grace 30с
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#h3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        H3. Запрет воскрешения закрытого сегмента + классификация ошибок
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#h4-ack_wait-30-120" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        H4. ack_wait 30с → 120с
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#h5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        H5. Метрики опозданий
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Волна 2 — слияние и выгрузка
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Волна 2 — слияние и выгрузка">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#h6" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        H6. Суточное слияние минуток
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#h7" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        H7. Выгрузка слитого файла + верификация
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#h8" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        H8. Идемпотентность и восстановление после крэша
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Волна 3 — остальные блокеры
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Волна 3 — остальные блокеры">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#h9" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        H9. Запрет отката курсора
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#h10-s3config" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        H10. Маскирование секретов в S3Config
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#h11-ci-" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        H11. Алерты + CI-гейт на плейсхолдеры
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Волна 4 — жизненный цикл сервисов и мелкие долги
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Волна 4 — жизненный цикл сервисов и мелкие долги">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#h12-sigterm" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        H12. Обработка SIGTERM во всех трёх сервисах
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#h13-nats-publisher-calc" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        H13. Закрытие NATS-соединения publisher'а в calc
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#h14" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        H14. Потеря бара при ошибке публикации
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#h15-prometheus_client" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        H15. Пин верхней границы prometheus_client
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#h16-cutover-deploy_order" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        H16. Откат cutover в deploy_order
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#h17-metrics_source-configpy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        H17. metrics_source — дефолт внутрь config.py
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Порядок и зависимости
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Проверка на каждом шаге
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pr-97" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Вне скоупа PR #97
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="review-hardening-plan-adr-0002">Review hardening plan — ADR-0002<a class="headerlink" href="#review-hardening-plan-adr-0002" title="Permanent link">&para;</a></h1>
+<p>Источник: ревью PR #97 (два прохода — функциональный и по качеству кода,
+скилл <code>code-that-fits-in-your-head</code>). Сверка находок с веткой сделана на
+<code>2a78111</code>. Связанные документы: <code>dev-plan.md</code> (эпики E0-E9), <code>OBS-SPEC.md</code>
+(метрики/алерты), <code>soak-runbooks.md</code> (E8).</p>
+<p>Этот план покрывает <strong>только</strong> то, что идёт в PR #97. Что вынесено за его
+пределы — в разделе «Вне скоупа».</p>
+<h2 id="_1">Карта покрытия находок<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h2>
+<p>Все находки обоих проходов и их судьба — чтобы ничего не потерялось.</p>
+<table>
+<thead>
+<tr>
+<th>Находка</th>
+<th>Где</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Гонка <code>write_rows</code> vs <code>close_stale</code> на <code>ParquetWriter</code></td>
+<td>H1</td>
+</tr>
+<tr>
+<td>Перезапись финализированного сегмента передоставкой</td>
+<td>H3</td>
+</tr>
+<tr>
+<td>Бесконечная передоставка (poison-loop)</td>
+<td>H3</td>
+</tr>
+<tr>
+<td>Верификация после PUT только по <code>ContentLength</code></td>
+<td>H7</td>
+</tr>
+<tr>
+<td>Откат курсора в <code>calc_cursor</code></td>
+<td>H9</td>
+</tr>
+<tr>
+<td>Креды в <code>__repr__</code> у <code>S3Config</code></td>
+<td>H10</td>
+</tr>
+<tr>
+<td>Алерт на лаг консьюмера <code>&gt; 999999999</code>; нет алертов на архиватор/S3/публикацию</td>
+<td>H11</td>
+</tr>
+<tr>
+<td>SIGTERM не обрабатывается в трёх сервисах</td>
+<td>H12</td>
+</tr>
+<tr>
+<td>NATS-соединение publisher'а в <code>calc</code> не закрывается</td>
+<td>H13</td>
+</tr>
+<tr>
+<td>Потеря бара при сбое публикации</td>
+<td>H14</td>
+</tr>
+<tr>
+<td><code>prometheus_client</code> без верхней границы</td>
+<td>H15</td>
+</tr>
+<tr>
+<td>Нет отката cutover в <code>deploy_order</code></td>
+<td>H16</td>
+</tr>
+<tr>
+<td><code>metrics_source</code>: дефолт вне <code>config.py</code></td>
+<td>H17</td>
+</tr>
+<tr>
+<td><code>assert</code> вместо <code>ValueError</code> в <code>client_order_id</code></td>
+<td>сделано, <code>2a78111</code></td>
+</tr>
+<tr>
+<td>Мёртвая ветка <code>if ...: pass</code> в <code>gate.py</code></td>
+<td>сделано, <code>2a78111</code></td>
+</tr>
+<tr>
+<td>Варм-старт баров при рестарте (<code>start_seqs</code>)</td>
+<td>закрыто upstream</td>
+</tr>
+<tr>
+<td>Подстановка чужих S3-кредов (<code>configs[0]</code>)</td>
+<td>закрыто upstream</td>
+</tr>
+<tr>
+<td>Обработка ошибок публикации в <code>calc</code></td>
+<td>частично закрыто upstream, остаток → H14</td>
+</tr>
+<tr>
+<td>4 <code>RawDataKind</code> → один <code>stats.parquet</code></td>
+<td>вне скоупа</td>
+</tr>
+<tr>
+<td>Эфемерные подписки баров и reconnect</td>
+<td>вне скоупа</td>
+</tr>
+<tr>
+<td><code>GateThresholds</code>, <code>present_only</code>, <code>nats_wire</code>, <code>PendingAckBuffer</code>, <code>health.py</code>, <code>check_stream_invariants</code></td>
+<td>вне скоупа (design-долг)</td>
+</tr>
+</tbody>
+</table>
+<h2 id="-">Статус-легенда<a class="headerlink" href="#-" title="Permanent link">&para;</a></h2>
+<p>Как в <code>dev-plan.md</code>: <code>done</code> / <code>partial</code> / <code>greenfield</code> / <code>gated:X</code>.</p>
+<h2 id="_2">Зафиксированные решения<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h2>
+<p>Приняты в обсуждении, меняют параметры E3:</p>
+<table>
+<thead>
+<tr>
+<th>Параметр</th>
+<th>Было</th>
+<th>Стало</th>
+<th>Почему</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>SEGMENT_SECONDS</code></td>
+<td>900 (15 мин)</td>
+<td><strong>60</strong></td>
+<td>Окно неподтверждённых сообщений падает с 15 мин до ~1.5; давление на <code>max_ack_pending=150_000</code> снижается ~15x</td>
+</tr>
+<tr>
+<td><code>GRACE_SECONDS</code></td>
+<td>—</td>
+<td><strong>30</strong></td>
+<td>Дозапись опоздавших строк в свой сегмент вместо ошибки</td>
+</tr>
+<tr>
+<td>Закрытие сегмента</td>
+<td><code>start + 900s &lt;= now</code></td>
+<td><code>start + 60s + 30s &lt;= now</code></td>
+<td>Учитывает grace</td>
+</tr>
+<tr>
+<td>Ключ писателя</td>
+<td><code>kind</code></td>
+<td><strong><code>(kind, segment_start_ms)</code></strong></td>
+<td>Без этого grace не работает: один открытый сегмент на kind вытесняется следующим</td>
+</tr>
+<tr>
+<td>Владение писателем</td>
+<td>общий, 2 потока</td>
+<td><strong>исполнитель на kind</strong></td>
+<td>Устраняет гонку <code>write_rows</code> vs <code>close_stale</code></td>
+</tr>
+<tr>
+<td><code>ARCHIVER_ACK_WAIT_MS</code></td>
+<td>30_000</td>
+<td><strong>120_000</strong></td>
+<td>Продление <code>in_progress()</code> ходит раз в 30с при <code>ack_wait</code> 30с — нулевой запас, самостоятельный источник передоставок</td>
+</tr>
+<tr>
+<td><code>ARCHIVER_SWEEP_INTERVAL_S</code></td>
+<td>30</td>
+<td>30 (без изменений)</td>
+<td>Рычаг — <code>ack_wait</code>, а не частота sweep</td>
+</tr>
+<tr>
+<td>Выгрузка в S3</td>
+<td>каждый закрытый сегмент</td>
+<td><strong>суточное слияние, 00:05 UTC</strong></td>
+<td>~9 объектов в сутки вместо ~13 000</td>
+</tr>
+</tbody>
+</table>
+<p>Обоснование окна риска для суточного слияния: ack привязан к <strong>локальной</strong>
+durability (<code>_ack_closed_segment</code> → после <code>fsync</code> + <code>os.replace</code>, лог
+<code>locally durable+acked</code>), а не к S3. Пока минутки лежат только на диске,
+второй экземпляр данных — сам стрим: <code>DEFAULT_RETENTION_HOURS = 48</code>,
+limits-retention, сообщения живут 48ч <strong>после</strong> ack. Суточное окно = 24ч
+экспозиции при 48ч возможности перечитать. Сходится с
+<code>ARCHIVER_MAX_LOCAL_STAGING_DAYS = 2</code> и с формулой из
+<code>_check_staging_bound</code>: <code>local_days &gt;= merge_window + verify_lag</code>.</p>
+<p><strong>Архиватор остаётся постоянно работающим сервисом.</strong> Раз в сутки
+запускается только этап слияния и выгрузки. Непрерывное потребление <code>md.*</code>
+и запись минуток остановить нельзя — упрётся <code>max_ack_pending</code>.</p>
+<h2 id="1">Волна 1 — архиватор, целостность данных<a class="headerlink" href="#1" title="Permanent link">&para;</a></h2>
+<p>Гейт входа: нет. Критический путь.</p>
+<h3 id="h1-kind-segment_start_ms-kind">H1. Писатели по ключу <code>(kind, segment_start_ms)</code>, исполнитель на kind<a class="headerlink" href="#h1-kind-segment_start_ms-kind" title="Permanent link">&para;</a></h3>
+<p><code>done</code> · <code>archiver/daily_writer.py</code>, <code>archiver/service.py</code></p>
+<p>Сейчас <code>_writers</code>/<code>_segments</code>/<code>_tmp_paths</code>/<code>_final_paths</code> ключуются по <code>kind</code>
+(скаляр — один открытый сегмент на тип). <code>write_rows</code> идёт в поток через
+<code>asyncio.to_thread</code> из консьюмера, <code>close_stale</code> — из sweep-цикла, <strong>без
+локов</strong>: <code>close_kind</code> может закрыть и переименовать файл ровно во время
+<code>write_table</code> в другом потоке.</p>
+<ul>
+<li>Все четыре словаря → ключ <code>(kind, segment_start_ms)</code>.</li>
+<li><code>_open(kind, day, seg)</code>, <code>close_segment(kind, seg)</code>; <code>close_stale(now)</code>
+  закрывает все пары, у которых <code>seg + SEGMENT_MS + GRACE_MS &lt;= now</code>.</li>
+<li><code>ThreadPoolExecutor(max_workers=1)</code> на каждый kind. Все операции писателя
+  для данного kind идут строго в его исполнитель.</li>
+<li><code>close_stale</code> и <code>close_all</code> раскладываются на per-kind вызовы, каждый — в
+  свой исполнитель. <strong>Иначе sweep продолжит трогать чужие writer'ы и гонка
+  останется на месте.</strong></li>
+</ul>
+<p>Приёмка: конкурентный тест «запись + закрытие одного kind» не портит parquet;
+разные kind пишутся параллельно; <code>close_all</code> на shutdown закрывает всё.</p>
+<p>Заметка: <code>_pending_acks</code> уже ключуется <code>(kind, segment_start_ms)</code> — совпадает
+с новым ключом писателя, дополнительных изменений не требует.</p>
+<h3 id="h2-60-grace-30">H2. Сегмент 60с + grace 30с<a class="headerlink" href="#h2-60-grace-30" title="Permanent link">&para;</a></h3>
+<p><code>done</code> · <code>archiver/daily_writer.py</code> · зависит от H1</p>
+<ul>
+<li><code>SEGMENT_SECONDS: 900 → 60</code>, новая <code>GRACE_SECONDS = 30</code>.</li>
+<li>Условие закрытия: <code>seg + SEGMENT_MS + GRACE_MS &lt;= now</code>.</li>
+<li>В течение grace одновременно открыты текущий сегмент и предыдущий.</li>
+</ul>
+<p>Приёмка: строка с <code>ts</code> внутри grace дозаписывается <strong>в свой</strong> сегмент, а не
+в текущий; после grace сегмент закрывается ровно один раз.</p>
+<h3 id="h3">H3. Запрет воскрешения закрытого сегмента + классификация ошибок<a class="headerlink" href="#h3" title="Permanent link">&para;</a></h3>
+<p><code>done</code> · <code>archiver/daily_writer.py</code>, <code>archiver/service.py</code> · зависит от H2</p>
+<p>Два дефекта, обнаруженные ревью, чинятся здесь.</p>
+<p><strong>Дефект 1 — перезапись финализированного сегмента (потеря данных).</strong>
+<code>close_kind</code> делает <code>self._segments.pop(kind, None)</code>. После закрытия по
+sweep состояние очищается, и передоставленное сообщение старого сегмента
+попадает в ветку «сегмента нет» → <code>_open</code> делает
+<code>tmp_path.unlink(missing_ok=True)</code> и создаёт новый writer <strong>без проверки,
+что финальный файл уже существует и выгружен</strong>. Следующий <code>os.replace</code>
+перезаписывает готовый файл одной поздней строкой. В S3 уходит PUT по тому
+же детерминированному ключу.</p>
+<p><strong>Дефект 2 — бесконечная передоставка.</strong> Пока сегмент открыт, строка более
+старого сегмента даёт <code>ValueError("Out-of-order segment")</code>, который ловится
+в <code>_consume_subject</code> как <code>"transient failure - no ack, will redeliver"</code>.
+Сбой не транзиентный: сегмент укатился вперёд, условие не разрешится
+никогда.</p>
+<p>Правки:</p>
+<ul>
+<li>Множество закрытых <code>(kind, seg)</code> в памяти + проверка существования
+  финального файла. Переоткрытие закрытого сегмента запрещено.</li>
+<li>Строка позже grace → <code>msg.term()</code> + <code>archiver_dropped_late_rows_total</code>.</li>
+<li>Перманентные ошибки (декод, схема, неизвестный kind, слишком поздняя
+  строка) → <code>term()</code>, из передоставки уходят.</li>
+<li>Транзиентные (диск, S3, брокер) → без ack, передоставка сохраняется.</li>
+<li>Докстринг <code>_consume_subject</code> («one bad payload can't wedge the subject»)
+  привести в соответствие с поведением.</li>
+</ul>
+<p>Приёмка: передоставка сообщения уже закрытого сегмента <strong>не</strong> перезаписывает
+файл и <strong>не</strong> зацикливается; счётчик отброшенных растёт; транзиентная ошибка
+по-прежнему приводит к повтору.</p>
+<h3 id="h4-ack_wait-30-120">H4. <code>ack_wait</code> 30с → 120с<a class="headerlink" href="#h4-ack_wait-30-120" title="Permanent link">&para;</a></h3>
+<p><code>done</code> · <code>archiver/service.py</code> · независима</p>
+<p><code>ARCHIVER_ACK_WAIT_MS: 30_000 → 120_000</code>. При минутных сегментах и grace 30с
+сообщение висит неподтверждённым ~90с — укладывается почти без продлений,
+<code>in_progress()</code> становится страховкой для застрявших случаев, а не основным
+путём.</p>
+<p>Цена: после падения архиватора передоставка начнётся через 2 мин вместо 30с.
+Для архиватора безразлично — он не в торговом пути.</p>
+<h3 id="h5">H5. Метрики опозданий<a class="headerlink" href="#h5" title="Permanent link">&para;</a></h3>
+<p><code>partial</code> · <code>common/health.py</code>, <code>archiver/service.py</code> · зависит от H3
+(счётчики и snapshot-поля сделаны; Prometheus-экспорт ждёт E6)</p>
+<ul>
+<li><code>archiver_late_rows_total{kind}</code> — пришли с опозданием, но в пределах
+  grace, записаны.</li>
+<li><code>archiver_dropped_late_rows_total{kind}</code> — позже grace, отброшены.</li>
+<li>Лаг <code>now - row_ts</code> (gauge или гистограмма) — чтобы на soak увидеть, хватает
+  ли 30 секунд, и подобрать число по факту, а не угадывать.</li>
+</ul>
+<p>Приёмка: метрики экспортируются, покрыты тестом.</p>
+<h2 id="2">Волна 2 — слияние и выгрузка<a class="headerlink" href="#2" title="Permanent link">&para;</a></h2>
+<p>Гейт входа: H1-H3.</p>
+<p>Путь заливки переписывается: сейчас <code>_archive_closed_file(path)</code> грузит
+каждый закрытый сегмент сразу.</p>
+<h3 id="h6">H6. Суточное слияние минуток<a class="headerlink" href="#h6" title="Permanent link">&para;</a></h3>
+<p><code>done</code> · <code>archiver/merge.py</code></p>
+<ul>
+<li>Запуск <strong>00:05 UTC</strong> для предыдущих суток. Не 00:00: сегмент 23:59 с grace
+  закрывается в 00:00:30, при старте ровно в полночь он в слияние не попадёт.</li>
+<li>Берутся только сегменты, для которых <code>start + SEGMENT_MS + GRACE_MS</code>
+  прошло, а не «все файлы в папке за вчера».</li>
+<li><strong>Потоковая запись</strong>: 1440 файлов на kind нельзя собирать в память —
+  читаем по одному, пишем row-group'ами в один <code>ParquetWriter</code>.</li>
+<li>Та же атомарность, что в <code>close_segment</code>: <code>.tmp</code> + <code>fsync</code> + <code>os.replace</code>.</li>
+</ul>
+<p>Приёмка: слитый файл содержит объединение строк; потребление памяти не
+растёт с числом входных файлов; повторный запуск даёт тот же результат.</p>
+<h3 id="h7">H7. Выгрузка слитого файла + верификация<a class="headerlink" href="#h7" title="Permanent link">&para;</a></h3>
+<p><code>done</code> · <code>archiver/s3_sink.py</code> · зависит от H6</p>
+<p>Сейчас проверка после PUT — только <code>ContentLength</code> из HEAD. Для дневного
+файла на десятки мегабайт сверка по длине особенно слаба: побитая передача
+той же длины пройдёт как успешная.</p>
+<ul>
+<li>Верификация по ETag или checksum.</li>
+<li>Минутки удаляются <strong>только</strong> после успешной верификации.</li>
+<li>Детерминированный ключ; повторный PUT идемпотентен.</li>
+</ul>
+<p>Приёмка: повреждение при передаче детектируется; минутки не удаляются при
+неуспешной верификации.</p>
+<h3 id="h8">H8. Идемпотентность и восстановление после крэша<a class="headerlink" href="#h8" title="Permanent link">&para;</a></h3>
+<p><code>done</code> · <code>archiver/merge.py</code> · зависит от H7</p>
+<ul>
+<li>Крэш на середине слияния оставляет <code>.tmp</code>, который при старте игнорируется
+  и пересобирается заново.</li>
+<li>Повторный запуск слияния для того же дня безопасен.</li>
+<li>Слияние обязано отрабатывать <strong>до</strong> <code>ARCHIVER_MAX_LOCAL_STAGING_DAYS = 2</code>,
+  иначе получим D9 BREACH вместо выгрузки. Суточное укладывается с запасом.</li>
+</ul>
+<p>Приёмка: тест на прерванное слияние; тест на повторный прогон.</p>
+<h2 id="3">Волна 3 — остальные блокеры<a class="headerlink" href="#3" title="Permanent link">&para;</a></h2>
+<p>Независимы друг от друга и от волн 1-2, можно параллельно.</p>
+<h3 id="h9">H9. Запрет отката курсора<a class="headerlink" href="#h9" title="Permanent link">&para;</a></h3>
+<p><code>done</code> · <code>calc/cursor_store.py</code></p>
+<p><code>_UPSERT_SQL</code> безусловно перезаписывает <code>stream_seq</code> в том числе <strong>меньшим</strong>
+значением — защиты от отката нет.</p>
+<p>Через <code>WHERE</code>, а не <code>GREATEST</code>: при <code>GREATEST</code> поле <code>u</code> может разъехаться со
+<code>stream_seq</code> независимо.</p>
+<div class="language-sql highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="k">ON</span><span class="w"> </span><span class="n">CONFLICT</span><span class="w"> </span><span class="p">(</span><span class="n">market</span><span class="p">,</span><span class="w"> </span><span class="n">symbol</span><span class="p">,</span><span class="w"> </span><span class="n">stream_type</span><span class="p">)</span><span class="w"> </span><span class="k">DO</span><span class="w"> </span><span class="k">UPDATE</span><span class="w"> </span><span class="k">SET</span><span class="w"> </span><span class="p">...</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="w">  </span><span class="k">WHERE</span><span class="w"> </span><span class="n">EXCLUDED</span><span class="p">.</span><span class="n">stream_seq</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="n">calc_cursor</span><span class="p">.</span><span class="n">stream_seq</span>
+</span></code></pre></div>
+<p>Плюс счётчик и WARN на попытку отката.</p>
+<p>Приёмка: запись меньшего <code>stream_seq</code> не меняет строку; счётчик растёт;
+<code>u</code> остаётся согласованным со <code>stream_seq</code>.</p>
+<h3 id="h10-s3config">H10. Маскирование секретов в <code>S3Config</code><a class="headerlink" href="#h10-s3config" title="Permanent link">&para;</a></h3>
+<p><code>done</code> · <code>common/s3_config.py</code></p>
+<p><code>@dataclass(frozen=True)</code> с <code>key_id</code>/<code>application_key</code> без переопределённого
+<code>__repr__</code>: любой <code>logger.info("%r", cfg)</code> или traceback выносит креды в лог
+открытым текстом.</p>
+<p>Приёмка: тест, что <code>repr()</code> и f-string форматирование не содержат значений
+кредов.</p>
+<h3 id="h11-ci-">H11. Алерты + CI-гейт на плейсхолдеры<a class="headerlink" href="#h11-ci-" title="Permanent link">&para;</a></h3>
+<p><code>done</code> · <code>deploy/alerts.yml</code>, CI</p>
+<p>Сейчас единственный алерт на лаг консьюмера — <code>&gt; 999999999</code> с
+<code>severity: warning</code>, то есть не сработает никогда. Алертов на архиватор, S3
+и остановку публикации коллектора нет вообще.</p>
+<ul>
+<li>Дописать недостающие алерты с теми же TBD-порогами (реальные числа
+  <code>gated:E8</code> — выводятся из soak, придумать их нельзя).</li>
+<li>Проверка в CI, запрещающая выкатку конфига с <code>999999999</code>.</li>
+</ul>
+<p>Тогда отсутствие порогов становится видимым блокером, а не тихой дырой.</p>
+<p>Приёмка: CI падает на конфиге с плейсхолдером; новые алерты валидны как YAML.</p>
+<h2 id="4">Волна 4 — жизненный цикл сервисов и мелкие долги<a class="headerlink" href="#4" title="Permanent link">&para;</a></h2>
+<p>Независимы друг от друга. H12 — гейт для H1: без него закрытие писателей на
+остановке, ради которого делается волна 1, не выполнится.</p>
+<h3 id="h12-sigterm">H12. Обработка SIGTERM во всех трёх сервисах<a class="headerlink" href="#h12-sigterm" title="Permanent link">&para;</a></h3>
+<p><code>done</code> · <code>common/service_runner.py</code> · <code>calc/__main__.py</code>, <code>archiver/__main__.py</code>, <code>main.py</code>,
+<code>trader/service.py</code> · <strong>блокирует приёмку H1</strong></p>
+<p><code>asyncio.run(...)</code> без <code>add_signal_handler</code>: по <code>SIGTERM</code> (то есть по
+<code>docker stop</code>, по рестарту в оркестраторе) корутина не отменяется штатно,
+и ветка <code>finally</code> с graceful shutdown <strong>не отрабатывает</strong>. Именно в ней
+закрываются NATS-соединения, флашатся буферы и — после H1 — закрываются
+писатели parquet.</p>
+<p>Без этого H1 даёт обещание, которого не выполняет: на остановке останутся
+незакрытые <code>.tmp</code>-файлы, и восстановление ляжет на передоставку вместо
+штатного закрытия.</p>
+<ul>
+<li><code>add_signal_handler(SIGTERM/SIGINT)</code> → отмена главной задачи.</li>
+<li>Ограниченное время на graceful shutdown, затем принудительный выход.</li>
+<li>Ненулевой код возврата при аварийной остановке.</li>
+</ul>
+<p>Приёмка: <code>SIGTERM</code> приводит к закрытию всех писателей и соединений; тест на
+отмену главной задачи; <code>.tmp</code> не остаётся.</p>
+<h3 id="h13-nats-publisher-calc">H13. Закрытие NATS-соединения publisher'а в calc<a class="headerlink" href="#h13-nats-publisher-calc" title="Permanent link">&para;</a></h3>
+<p><code>done</code> · <code>calc/bars_publisher.py</code>, <code>calc/service.py</code></p>
+<p><code>make_bars_publisher(url)</code> открывает собственное соединение (D1: calc не
+импортирует <code>collector.*</code>), но возвращает только <code>publish</code> — способа закрыть
+соединение нет. В <code>finally</code> у <code>run_calc_service</code> закрывается только
+<code>live_nc</code>. Утечка на каждом рестарте сервиса.</p>
+<p>Вернуть пару <code>(publish, close)</code> либо async-контекстменеджер; закрывать в том
+же <code>finally</code>, что и <code>live_nc</code>.</p>
+<p>Приёмка: тест, что после остановки сервиса соединение publisher'а закрыто.</p>
+<h3 id="h14">H14. Потеря бара при ошибке публикации<a class="headerlink" href="#h14" title="Permanent link">&para;</a></h3>
+<p><code>done</code> · <code>calc/service.py</code>, <code>calc/bars_publisher.py</code></p>
+<p>Upstream обернул <code>publish_bar</code> в <code>except NatsError</code> и отделил транспортные
+сбои от программных — это улучшение, но <strong>бар для закрытого окна всё равно
+теряется навсегда</strong>: следующая итерация цикла строит <code>present_row</code> уже для
+другого <code>bar_end_ms</code>, повторить публикацию некому.</p>
+<p><strong>Решение: ретрай с backoff + метрика + лог.</strong></p>
+<p>Ограничение, которое определяет форму ретрая: <code>await publish_bar</code> стоит в
+<strong>последовательном</strong> цикле по символам внутри <code>_drive_boundaries</code>. Ретрай
+«на месте» задержит публикацию всех оставшихся символов того же бара, а при
+недоступном брокере — умножится на число символов и съест окно целиком.
+Поэтому ретрай выносится из основного прохода:</p>
+<ol>
+<li>Первый проход по символам — без ретрая. Символ, у которого публикация
+   упала с <code>NatsError</code>, складывается в список неотправленных вместе с уже
+   построенным <code>present_row</code> и <code>stamp</code>.</li>
+<li>После прохода — повтор только по неотправленным, с экспоненциальным
+   backoff и <strong>двумя бюджетами</strong>: по числу попыток и по суммарному времени.
+   Оба параметра — в <code>live_config.yaml</code>, не захардкожены (политика CLAUDE.md).</li>
+<li>Временной бюджет заведомо меньше периода бара, чтобы ретрай не пересёкся
+   со следующей границей. Стартовые значения: 3 попытки, backoff 0.5/&frac12; с,
+   общий потолок 10 с — <code>estimate,remeasure</code> до E8, как <code>wait_deadline_seconds</code>.</li>
+<li>Исчерпан бюджет — бар признаётся потерянным: счётчик + ERROR с
+   <code>symbol</code>, <code>bar_end_ms</code>, числом попыток и последней ошибкой.</li>
+</ol>
+<p>Дедуп по <code>Nats-Msg-Id</code> (<code>make_msg_id("binance", symbol, bar_close_ms)</code>)
+делает повтор безопасным: даже если предыдущая попытка на самом деле дошла,
+брокер отбросит дубль. То есть ретрай здесь идемпотентен по построению и не
+может породить второй бар.</p>
+<p>Метрики и лог:</p>
+<ul>
+<li><code>calc_bars_publish_retries_total{symbol}</code> — сколько повторов потребовалось.</li>
+<li><code>calc_bars_publish_failed_total{symbol}</code> — бар потерян после исчерпания
+  бюджета. Это и есть сигнал для алерта (H11).</li>
+<li>Успех с первой попытки не логируется (сейчас там <code>logger.info</code> на каждый
+  бар); успех после ретрая — WARN с числом попыток; провал — ERROR.</li>
+</ul>
+<p>Приёмка: транспортный сбой с последующим восстановлением приводит к доставке
+бара, а не к потере; <code>retries_total</code> растёт; исчерпание бюджета даёт
+<code>failed_total</code> + ERROR; ретрай одного символа не задерживает публикацию
+остальных сверх временного бюджета; повторная публикация того же
+<code>(symbol, bar_close_ms)</code> не создаёт дубль в стриме.</p>
+<h3 id="h15-prometheus_client">H15. Пин верхней границы prometheus_client<a class="headerlink" href="#h15-prometheus_client" title="Permanent link">&para;</a></h3>
+<p><code>done</code> · <code>requirements.txt</code></p>
+<p><code>prometheus_client&gt;=0.20</code> без верхней границы, тогда как соседние записи
+запинены (<code>psycopg[binary]&gt;=3.1,&lt;4</code>). Мажорное обновление приедет молча.</p>
+<p>Приёмка: версия ограничена сверху по конвенции файла.</p>
+<h3 id="h16-cutover-deploy_order">H16. Откат cutover в deploy_order<a class="headerlink" href="#h16-cutover-deploy_order" title="Permanent link">&para;</a></h3>
+<p><code>done</code> · <code>deploy/deploy_order.py</code></p>
+<p>Есть <code>cutover</code> и <code>retire</code>, но нет закодированного действия отката для отмены
+cutover на середине: оператор поднимает stop-first сервис руками, без
+fail-loud защиты. При числе открытых блокеров в контуре вероятность отката
+на проде не теоретическая.</p>
+<p>Структура модуля это позволяет: <code>SERVICE_DEPLOY_POLICY</code> — данные, <code>deploy_plan</code>
+— чистая функция от политики, <code>assert_stop_first</code>/<code>_unknown_service</code> уже дают
+fail-loud. Добавить обратный план тем же приёмом.</p>
+<p>Приёмка: план отката выводится из той же политики; неверный порядок отката
+невыразим.</p>
+<h3 id="h17-metrics_source-configpy">H17. metrics_source — дефолт внутрь config.py<a class="headerlink" href="#h17-metrics_source-configpy" title="Permanent link">&para;</a></h3>
+<p><code>done</code> · <code>trader/config.py</code>, <code>main.py</code></p>
+<p>Поле nullable, дефолт <code>None → "inprocess"</code> разрешается в <code>main.py:42</code>
+(<code>cfg.metrics_source or "inprocess"</code>), то есть вне <code>config.py</code>. При
+невалидном значении <code>_coerce</code> падает корректно, но <strong>отсутствующее</strong>
+подставляется молча — расходится с политикой CLAUDE.md «падать громко» и с
+докстрингом <code>LiveConfig</code>, который утверждает «All fields are required».</p>
+<p>Само послабление сделано осознанно (совместимость старых конфигов при
+выкатке, комментарий в <code>_FIELDS</code>), поэтому задача не «запретить», а
+перенести разрешение дефолта в <code>LiveConfig.load()</code> и поправить докстринг —
+чтобы дефолт был один и в одном месте.</p>
+<p>Связано: <code>metrics_source</code> — временный флаг переходного периода
+<code>inprocess</code>/<code>bars</code> без зафиксированного условия исчезновения. Условие снятия
+стоит записать здесь же, вместе с флагом <code>present_only</code> (см. «Вне скоупа»):
+оба снимаются одним решением.</p>
+<p>Приёмка: дефолт разрешается внутри <code>config.py</code>; докстринг соответствует
+поведению; <code>main.py</code> не содержит подстановки.</p>
+<h2 id="_3">Порядок и зависимости<a class="headerlink" href="#_3" title="Permanent link">&para;</a></h2>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>H12 ─(гейт приёмки)─┐
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>                    ↓
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>       H1 → H2 → H3 → H5
+</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>                  ↓
+</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>            H6 → H7 → H8
+</span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
+</span><span id="__span-1-7"><a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>H4, H9, H10, H11, H13, H14, H15, H16, H17 — независимы
+</span></code></pre></div>
+<p>Волна 1 (H1-H5) — критический путь, закрывает потерю и порчу данных.
+Волна 2 (H6-H8) — можно начинать после H3.
+Волна 3 (H9-H11) — параллельно в любой момент.
+Волна 4 (H12-H17) — параллельно, но <strong>H12 делается раньше приёмки H1</strong>:
+без обработки SIGTERM закрытие писателей на остановке, ради которого
+затевается волна 1, не выполняется.</p>
+<p>Рекомендуемый порядок старта: H12 → H1 → H2 → H3, дальше по готовности.</p>
+<h2 id="_4">Проверка на каждом шаге<a class="headerlink" href="#_4" title="Permanent link">&para;</a></h2>
+<p>Baseline на <code>2a78111</code>: <strong>1972 passed, 26 skipped, 1 xfailed</strong> (~14 мин,
+исключая <code>tests/test_alpha_mining_dsr_gate.py</code> — падает на импорте из-за
+отсутствующего <code>sklearn</code>, к изменениям отношения не имеет).</p>
+<p>Каждая задача: <code>python -m compileall -q</code> по затронутым файлам + целевые
+тесты; перед коммитом — полный сьют и сверка с baseline.</p>
+<h2 id="pr-97">Вне скоупа PR #97<a class="headerlink" href="#pr-97" title="Permanent link">&para;</a></h2>
+<ul>
+<li><strong>Дискриминатор для <code>stats</code>.</strong> 4 <code>RawDataKind</code> (<code>open_interest</code>,
+  <code>taker_ratio</code>, <code>long_short_ratio</code>, <code>market_stats</code>) мапятся на один
+  <code>stats.parquet</code>; <code>_normalise_columns</code> ветвится только по
+  <code>trades</code>/<code>klines</code>/<code>funding</code>/<code>markprice</code>. Код сам помечает это как
+  <em>«UNION over ~5 aliased poller shapes with NO on-wire discriminator —
+  UNRESOLVED ambiguity»</em>. Нужна смена проводного контракта через три сервиса
+  с версионированием и порядком выкатки. Отдельный эпик.</li>
+<li><strong>Reconnect для консьюмера баров.</strong> Эфемерные подписки выжинаются по
+  <code>InactiveThreshold</code>; replay выполняется только на бутстрапе, поэтому после
+  длительного разрыва бары могут тихо перестать приходить. Рестарт при этом покрыт:
+  <code>connect_bars</code> прогоняет <code>replay_bars_on_boot</code> и открывает живые подписки с
+  <code>opt_start_seq = last_replayed + 1</code>, дедуп по <code>(symbol, bar_ts)</code> гасит
+  перекрытие. Требует проверки поведения <code>nats-py</code> на переподключении.</li>
+<li><strong>Design-долг</strong> (из второго прохода ревью): разнесение <code>common/nats_wire.py</code>
+  на streams/subjects (fan-in 12, три слоя в одном модуле);
+  <code>check_stream_invariants</code> → <code>diff_stream_invariants</code> (перекос CQS);
+  <code>_pending_acks</code> → тип <code>PendingAckBuffer</code>; <code>GateThresholds</code> без дефолтов +
+  именованная фабрика <code>tbd_soak_placeholder()</code>; удаление флага <code>present_only</code>
+  (легаси-ветка недостижима в проде); разделение <code>common/health.py</code>.</li>
+<li><strong>Компакция за пределами суток</strong> — если понадобится, отдельной задачей.</li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+</div>
+      
+        
+<div class="md-social">
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://github.com/SNCapital" target="_blank" rel="noopener" title="github.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+      <div class="md-progress" data-md-component="progress" role="progressbar"></div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["navigation.instant", "navigation.instant.progress", "navigation.tracking", "navigation.tabs", "navigation.tabs.sticky", "navigation.sections", "navigation.expand", "navigation.indexes", "navigation.top", "navigation.footer", "search.suggest", "search.highlight", "search.share", "toc.follow", "content.code.copy", "content.code.annotate", "content.tabs.link", "content.tooltips"], "search": "../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+        <script src="../../../javascripts/katex.js"></script>
+      
+        <script src="https://unpkg.com/katex@0/dist/katex.min.js"></script>
+      
+        <script src="https://unpkg.com/katex@0/dist/contrib/auto-render.min.js"></script>
+      
+    
+  </body>
+</html>

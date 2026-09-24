@@ -443,28 +443,6 @@
   
 
       
-        
-  
-  
-  
-  
-    
-    
-      <li class="md-tabs__item">
-        <a href="../../../openspec/batch-backtest/" class="md-tabs__link">
-          
-  
-  
-    
-  
-  Specs
-
-        </a>
-      </li>
-    
-  
-
-      
     </ul>
   </div>
 </nav>
@@ -2082,322 +2060,6 @@
   
 
     
-      
-      
-  
-  
-  
-  
-    
-    
-      
-        
-          
-        
-      
-        
-      
-        
-      
-        
-      
-        
-      
-        
-      
-        
-      
-        
-      
-        
-      
-    
-    
-    
-      
-      
-        
-      
-    
-    
-    <li class="md-nav__item md-nav__item--nested">
-      
-        
-        
-          
-        
-        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_11" >
-        
-          
-          <div class="md-nav__link md-nav__container">
-            <a href="../../../openspec/batch-backtest/" class="md-nav__link ">
-              
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Specs
-  
-
-    
-  </span>
-  
-  
-
-            </a>
-            
-              
-              <label class="md-nav__link " for="__nav_11" id="__nav_11_label" tabindex="0">
-                <span class="md-nav__icon md-icon"></span>
-              </label>
-            
-          </div>
-        
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_11_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_11">
-            <span class="md-nav__icon md-icon"></span>
-            
-  
-    Specs
-  
-
-          </label>
-          <ul class="md-nav__list" data-md-scrollfix>
-            
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../../openspec/dashboard/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Dashboard
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../../openspec/historical-download/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Historical download
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../../openspec/live-trading/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Live Trading
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../../openspec/live-ws/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Live WebSocket pipeline
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../../openspec/metrics-aggregation/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Metrics Aggregation
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../../openspec/metrics-engine/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Metrics Engine
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../../openspec/models/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Data models
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../../openspec/rest-pollers/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    REST pollers
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-          </ul>
-        </nav>
-      
-    </li>
-  
-
-    
   </ul>
 </nav>
                   </div>
@@ -2543,7 +2205,7 @@ D-<em>/Q-</em>/INV-<em>/S-</em>/X-001..003/registers/handover — id-ссылк�
 <li>collector: WS(2 соединения C5) + reconnect + поллеры + publish <code>md.*</code> c
   <code>Nats-Msg-Id</code>; RAM-буфер (<code>collector/buffer.py</code>). → основа для E5.</li>
 <li>NATS JetStream: <code>STREAM_SPECS</code> (MD_DIFF/MD_TRADE/MD_EVENTS + <strong>BARS declared</strong>),
-  48h + max_bytes=100G, <code>ensure_streams</code>/<code>check_stream_invariants</code>
+  24h + max_bytes=100G, <code>ensure_streams</code>/<code>check_stream_invariants</code>
   (<code>common/nats_wire.py</code>). → основа для E0.</li>
 <li>trader-монолит: book + engine + strategies + blotter + FileWriter + in-process
   bars через <code>metrics/metrics_engine/live_bridge.py</code>; чекпойнт книги + курсоры
@@ -2573,28 +2235,28 @@ D-<em>/Q-</em>/INV-<em>/S-</em>/X-001..003/registers/handover — id-ссылк�
 <tr>
 <td>E1</td>
 <td>Bars contract: явный NULL + quality stamp + wire</td>
-<td><code>greenfield</code></td>
+<td><code>partial</code></td>
 <td>E0</td>
 <td><strong>критич. путь</strong>; D5, INV-001/002, Q-003</td>
 </tr>
 <tr>
 <td>E2</td>
 <td>metric calc как отдельный сервис</td>
-<td><code>greenfield</code></td>
+<td><code>partial</code></td>
 <td>E0 (consume); E1 (publish)</td>
 <td>D1/D4; X-001; шаг 3</td>
 </tr>
 <tr>
 <td>E3</td>
 <td>raw archiver как отдельный сервис</td>
-<td><code>greenfield</code></td>
+<td><code>partial</code></td>
 <td>E0</td>
 <td>D3/D9; step 2 (shadow)</td>
 </tr>
 <tr>
 <td>E4</td>
 <td>trader на барах (intake)</td>
-<td><code>greenfield</code></td>
+<td><code>partial</code></td>
 <td>E1</td>
 <td>D6/D7/D10; intake-ckpt</td>
 </tr>
@@ -2608,21 +2270,21 @@ D-<em>/Q-</em>/INV-<em>/S-</em>/X-001..003/registers/handover — id-ссылк�
 <tr>
 <td>E6</td>
 <td>Observability wiring (<code>trading_*</code>)</td>
-<td><code>greenfield</code></td>
+<td><code>partial</code></td>
 <td>счётчики E1–E5</td>
 <td>§12; OBS-SPEC; D6</td>
 </tr>
 <tr>
 <td>E7</td>
 <td>Backtest offline из S3 + warm-start</td>
-<td><code>greenfield</code></td>
+<td><code>partial</code></td>
 <td>E3, E1</td>
 <td>D8; step 4; NG5</td>
 </tr>
 <tr>
 <td>E8</td>
 <td>Soak-гейты S-1..S-5</td>
-<td><code>greenfield</code></td>
+<td><code>partial</code></td>
 <td>E2/E3 живы</td>
 <td>числа max_bytes/T=5/N; §9</td>
 </tr>
@@ -2679,7 +2341,10 @@ D-<em>/Q-</em>/INV-<em>/S-</em>/X-001..003/registers/handover — id-ссылк�
   в бэклоге, жёсткий гейт перед mainnet real-money.</li>
 <li><strong>Числа за soak (E8):</strong> max_bytes (orientir 100G→S-1), <code>wait_deadline</code> T=5 и
   <code>N-stale</code> (формула есть, число после тени).</li>
-<li><strong>E6 не в коде:</strong> экспортёр/имена/правила отсутствуют (OBS-SPEC — только spec).</li>
+<li><strong>E6 частично в коде (этот PR):</strong> экспортёр + <code>/metrics</code> и имена <code>trading_*</code>
+  есть (<code>common/metrics_exporter.py</code>, <code>common/metrics_bridge.py</code>, mount в
+  <code>trader/service.py</code>), <code>deploy/alerts.yml</code> + CI-гейт плейсхолдеров есть;
+  недостающие счётчики и проводка — по OBS-SPEC.</li>
 </ul>
 <h2 id="_5">Куда это едет дальше<a class="headerlink" href="#_5" title="Permanent link">&para;</a></h2>
 <p>Слой 2 — детализация эпиков по одному (задачи + файлы + verification + гейты),
@@ -2779,9 +2444,9 @@ publisher/consumer. Контракт полей — <code>bars-contract.md</code
 </li>
 <li>
 <p><strong>T-E1.2. Engine: emit present-only + NULL вместо 0.0.</strong>
-  Файлы: <code>metrics/metrics_engine/engine.py</code> (<code>emit_if_ready</code> стр.312–352,
-  <code>_build_row</code> стр.437–459, <code>_sanitize_row</code> стр.461–468),
-  <code>metrics/metrics_engine/keys.py</code> (<code>empty_row</code> стр.148–149).
+  Файлы: <code>metrics/metrics_engine/engine.py</code> (<code>emit_if_ready</code> стр.281+,
+  <code>emit_present_if_ready</code>, <code>_sanitize_row</code> стр.434),
+  <code>metrics/metrics_engine/keys.py</code> (<code>empty_row</code> стр.142).
   Что сделать:</p>
 </li>
 <li>Ввести новый путь построения бара, который отдаёт МАПУ ТОЛЬКО присутствующих
@@ -2795,7 +2460,7 @@ publisher/consumer. Контракт полей — <code>bars-contract.md</code
      (см. E6). НЕ подменять на 0.0.</li>
 <li>
 <p><code>bar_complete</code> вернуть отдельным bool (не внутри <code>keys</code>), рядом с <code>bar_ts</code>.
-  Что НЕ делать: не менять <code>is_bar_complete</code> (стр.354–396) — правило полноты
+  Что НЕ делать: не менять <code>is_bar_complete</code> (стр.344) — правило полноты
   корректно; не менять экономику вычислений в группах.
   Verification: <code>tests/test_engine_emit_present_only.py</code> (создать): (a) окно с
   трейдами но без книги → <code>keys</code> содержит trade-ключи, НЕ содержит ни одного
@@ -2836,7 +2501,7 @@ publisher/consumer. Контракт полей — <code>bars-contract.md</code
 </li>
 <li><code>trade_agg_gaps</code>: НЕ здесь — собирается в T-E1.3 из gap-хедеров коллектора
     (E1-D1). Тут не дублировать.</li>
-<li><code>blind_sec</code> 0..1800: из heartbeat-механизма (ws_client.py:76–177 уже шлёт
+<li><code>blind_sec</code> 0..1800: из heartbeat-механизма (ws_client.py:62–152 уже шлёт
     1 hb/сек на тихую секунду) — считать секунды окна БЕЗ единого события
     (ни trade, ни book-update, ни hb). <code>blind_sec_public</code>/<code>blind_sec_market</code> — то
     же по connection id (public=depth, market=остальное). loss-check (ожидалось
@@ -2960,9 +2625,10 @@ publisher/consumer. Контракт полей — <code>bars-contract.md</code
 БЕЗ потери хвоста; BARS-стрим существует; bootstrap идемпотентен. Основа для всех.
 Гейт входа: —. Гейт выхода: <code>check_stream_invariants</code> зелёный на живом брокере.</p>
 <p>Контекст кода: <code>common/nats_wire.py</code> — <code>STREAM_SPECS</code> (MD_DIFF/MD_TRADE/MD_EVENTS +
-BARS), <code>ensure_streams</code> (сейчас <strong>create-only</strong>: <code>js.add_stream</code> в цикле, дрейф не
-сводит), <code>check_stream_invariants</code> (сверяет subjects/retention/max_age/max_bytes/
-duplicate_window). Прод сейчас (X-002/X-004): MD_* = 72h + max_bytes=-1 (дрейф от
+BARS), <code>ensure_streams</code> (boot-путь <strong>create-only</strong>: <code>js.add_stream</code> в цикле, дрейф не
+сводит) + <code>converge_streams</code> (T-E0.1, реализован: <code>update_stream</code> для MD_<em>),
+<code>check_stream_invariants</code> (сверяет subjects/retention/max_age/max_bytes/
+duplicate_window). Прод сейчас (X-002/X-004): MD_</em> = 72h + max_bytes=-1 (дрейф от
 контракта); BARS уже по контракту.</p>
 <h3 id="e0">Жёсткие инварианты E0<a class="headerlink" href="#e0" title="Permanent link">&para;</a></h3>
 <ul>
@@ -2992,7 +2658,7 @@ duplicate_window). Прод сейчас (X-002/X-004): MD_* = 72h + max_bytes=-
 <li>
 <p><strong>T-E0.2. Bootstrap идемпотентность (регрессия).</strong>
   Файл: путь boot коллектора/calc (<code>collector/shared/streams.py</code> +
-  <code>trader/nats_streams.py</code>).
+  <code>common/nats_wire.py</code>).
   Что сделать: подтвердить, что каждый boot-путь зовёт ensure-and-verify и на уже
   существующих стримах не падает (create-only + дрейф log-only). Добавить/проверить
   регрессионный тест пустой инфры (образец — <code>tests/test_book_store_schema_bootstrap.py</code>).
@@ -3013,10 +2679,10 @@ duplicate_window). Прод сейчас (X-002/X-004): MD_* = 72h + max_bytes=-
 (3) детект монотонности id (<code>u</code>/<code>a</code>) с сигналом гэпа; (4) буфер cap/counter/alert.
 Всё — через NATS-хедеры (payload остаётся 1:1 Binance, D7). Питает E1 (T-E1.3/T-E1.4).
 Гейт входа: —. Частично уже есть (буфер, глобальные gap-счётчики в health).</p>
-<p>Контекст кода: единственная точка публикации — <code>collector/live/ws_client.py</code>
-(<code>listen</code>, <code>await publish(subject, payload, msg_id)</code> ~стр.493); publisher —
-<code>collector/queue_publish.py:make_publisher</code> (кладёт только <code>Nats-Msg-Id</code>);
-<code>PublishFunc = Callable[[str,bytes,str], Awaitable]</code> (~стр.21). Буфер —
+<p>Контекст кода: read-loop отдаёт в <code>D9Buffer</code> (<code>put_nowait</code>), единственный
+egress — <code>drain_buffer</code> (<code>collector/buffer.py</code>), publisher —
+<code>collector/queue_publish.py:make_publisher</code> (кладёт <code>Nats-Msg-Id</code> + T-E5.3
+gap-хедеры на egress); <code>PublishFunc</code> принимает <code>headers</code>. Буфер —
 <code>collector/buffer.py</code> (drop-oldest + <code>dropped</code>, alert <code>collector_buffer_alert_ratio</code>).
 Гэп-счётчики (глобальные, для логов) — <code>common/health.py</code> (<code>trade_id_gaps</code>,
 <code>agg_id_gaps</code>, <code>seq_gaps</code>, <code>record_trade</code>, <code>record_agg_id_gap</code>). <code>route</code> в <code>listen</code>
@@ -3104,10 +2770,12 @@ duplicate_window). Прод сейчас (X-002/X-004): MD_* = 72h + max_bytes=-
 <li>
 <p><strong>T-E5.5. Async publish вне цикла чтения сокета (развязать).</strong>
   <strong>РЕШЕНО (человек, 2026-09-13): развязать; <code>buffer.py</code> — ОСНОВНОЙ путь; ОДИН
-  дренер, FIFO per-subject.</strong> Сегодня <code>await publish(...)</code> в <code>async for raw in ws</code>
-  (ws_client ~стр.493) — чтение ждёт NATS (ADR §5 нарушен).
-  Файлы: <code>collector/live/ws_client.py</code> (read-loop), <code>collector/buffer.py</code> (сделать
-  основным путём), <code>collector/queue_publish.py</code>.
+  дренер, FIFO per-subject.</strong> Реализовано в этом PR: <code>D9Buffer.put_nowait</code>
+  (неблокирующая отдача из read-loop) + один <code>drain_buffer</code>-таск
+  (<code>collector/services/live.py</code>), <code>wrap_publisher_with_buffer</code> — read-loop
+  больше не ждёт NATS.
+  Файлы: <code>collector/live/ws_client.py</code> (read-loop), <code>collector/buffer.py</code> (основной
+  путь), <code>collector/queue_publish.py</code>.
   Что сделать: цикл чтения делает НЕБЛОКИРУЮЩУЮ отдачу сообщения в очередь буфера и
   сразу читает следующий <code>raw</code>. ОДИН отдельный publisher-таск дренит очередь → NATS
   (buffer.py — не только fallback на ошибку, а штатный путь read→buffer→drain→publish).
@@ -3193,12 +2861,12 @@ per-subject replay), <code>trader/nats_live.py</code> (ephemeral push, per-subje
 <p><strong>T-E2.3. Resume exact-subject + hole-probe (verify/достроить).</strong>
   Файлы: <code>trader/replay_driver.py</code> (<code>decide_start</code>, <code>_replay_one</code>/<code>drive_replay</code>),
   <code>trader/nats_live.py</code> (<code>subject_start_seqs</code>).
-  Что сделать: сегодня <code>_replay_one</code> дренит ПУСТОЙ catch-up batch (стр.~216) —
-  реальный per-subject replay от <code>seq+1</code> НЕ дочитывает историю. Достроить: pull
-  ephemeral consumer на EXACT subject от <code>seq+1</code>; при пустом fetch на живом
-  чекпойнте → probe <code>stream_first_seqs</code> (первый seq стрима): если <code>first_seq &gt;
-  seq+1</code> → <code>retention_hole=True</code> (вердикт "hole", остаёмся на книге), иначе просто
-  «догнали». Дыру детектит КОД (INV-E2-c), не ждать ошибки брокера.
+  Что сделать (реализовано в этом PR): pull ephemeral consumer на EXACT subject
+  от <code>seq+1</code> — <code>replay_driver.replay_one_symbol</code> дочитывает историю; при пустом
+  fetch на живом чекпойнте → probe <code>stream_first_seqs</code> (первый seq стрима): если
+  <code>first_seq &gt; seq+1</code> → <code>retention_hole=True</code> (вердикт "hole", остаёмся на
+  книге), иначе просто «догнали». Дыру детектит КОД (INV-E2-c), не ждать ошибки
+  брокера.
   Что НЕ делать: не помечать hole по исключению брокера; не пересобирать книгу
   ресинком при hole (остаёмся на книге из чекпойнта).
   Verification: <code>tests/test_calc_resume_hole.py</code> на изолированном брокере:
@@ -3256,9 +2924,13 @@ per-subject replay), <code>trader/nats_live.py</code> (ephemeral push, per-subje
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Все тесты выше зелёные.</li>
 </ul>
 <h2 id="e3-raw-archiver">E3 — детализация: raw archiver как отдельный сервис<a class="headerlink" href="#e3-raw-archiver" title="Permanent link">&para;</a></h2>
-<p>Цель: НОВЫЙ отдельный сервис-архиватор со своим durable-курсором на <code>md.*</code>,
-пишет 1 файл/день/тип (все символы, row-group append в один открытый writer за
-сутки), S3 copy-verify-delete, ack после верификации. Идемпотентное дневное
+<p>Цель: НОВЫЙ отдельный сервис-архиватор со своим durable-курсором на <code>md.*</code>.
+Реализовано в этом PR с параметрами <code>review-hardening-plan.md</code> (H1–H8):
+писатели по ключу <code>(kind, segment_start_ms)</code>, сегмент 60s + grace 30s; минутные
+сегменты в S3 по одному не грузятся — суточное слияние (00:00 UTC + merge
+delay) собирает <code>merged/{day}/{kind}.parquet</code>, и слитый файл проходит
+S3 copy-verify-delete; ack брокеру — после локального durable-закрытия
+сегмента (fsync + atomic rename), не после S3. Идемпотентное дневное
 слияние (D9). Живёт в тени (step 2), пока не пройден kill-archiver soak (E8 S-2).
 Гейт входа: E0. Гейт выхода: DoD + kill-archiver soak (E8).</p>
 <p>Контекст: существующий <code>collector/services/archive.py</code> — это HIVE-архиватор
@@ -3271,7 +2943,9 @@ cutover; E3 в тени их НЕ трогает и локальное НЕ уд
 <h3 id="e3">Жёсткие инварианты E3<a class="headerlink" href="#e3" title="Permanent link">&para;</a></h3>
 <ul>
 <li>INV-E3-a. Локальный файл удаляется ТОЛЬКО после подтверждённой копии в S3
-  (copy-verify-delete). ack брокеру — ТОЛЬКО после верификации в S3.</li>
+  (copy-verify-delete на слитом дневном файле; минутные входы чистятся после
+  его verify). ack брокеру — после локального durable-закрытия сегмента, НЕ
+  от S3 (review-hardening «Зафиксированные решения»).</li>
 <li>INV-E3-b. В тени (step 2) E3 НЕ удаляет источник истины FileWriter'а. Двойной
   диск транзиентно — в границах D9 (≤ ~1–2 суток локала).</li>
 <li>INV-E3-c. Слияние идемпотентно: рестарт среди слияния = повторное слияние, тот
@@ -3280,60 +2954,72 @@ cutover; E3 в тени их НЕ трогает и локальное НЕ уд
 <h3 id="_13">Задачи<a class="headerlink" href="#_13" title="Permanent link">&para;</a></h3>
 <ul>
 <li>
-<p><em><em>T-E3.1. Скелет archiver-сервиса + durable consumer на md.<em>.</em></em>
-  Файл: новый <code>archiver/service.py</code> (+ entrypoint).
-  Что сделать: отдельный процесс; durable pull/push consumer на <code>md.*</code> (свой
+<p><em><em>T-E3.1. Скелет archiver-сервиса + durable consumer на md.</em> (реализовано в
+  этом PR).</em>*
+  Файл: <code>archiver/service.py</code> (+ <code>archiver/__main__.py</code>).
+  Реализовано: отдельный процесс; durable pull consumer на <code>md.*</code> (свой
   durable-name, отдельный от trader FileWriter-консьюмеров), AckExplicit. Offset у
   брокера. Читать несколькими консьюмерами безопасно (<code>retention: limits</code>).
   Что НЕ делать: не переиспользовать durable-name трейдера (конфликт offset);
   не читать локальные Hive-дирки (это старый архиватор).
   Verification: <code>tests/test_archiver_boot.py</code>: поднимается свой durable consumer,
-  читает тестовый md.</em>-поток, offset двигается независимо от trader-консьюмеров.</p>
+  читает тестовый md.*-поток, offset двигается независимо от trader-консьюмеров.</p>
 </li>
 <li>
-<p><strong>T-E3.2. Daily row-group writer (1 файл/день/тип, все символы).</strong>
+<p><strong>T-E3.2. Сегментные writers + daily merge (реализовано в этом PR, H1/H2/H6).</strong>
   Файл: <code>archiver/daily_writer.py</code>.
-  Что сделать: на каждый md-kind — ОДИН открытый parquet writer за UTC-сутки;
-  входящие сообщения дописываются как row groups (не per-batch файлы); строки
-  keyed <code>symbol</code>+<code>ts</code> (колонка символа обязательна, D-002). Граница файла = сутки
-  (UTC), не коммит. На смене суток — закрыть writer, запустить merge→S3 (T-E3.3).
+  Что сделано: писатели keyed <code>(kind, segment_start_ms)</code> — ОДИН открытый parquet
+  writer на сегмент 60s + grace 30s (per-kind executor убирает гонку
+  write/close); строки keyed <code>symbol</code>+<code>ts</code> (колонка символа обязательна, D-002).
+  Минутные сегменты <code>{day}/{kind}-{segment_start_ms}.parquet</code> — локальная
+  единица durability; дневной объект <code>merged/{day}/{kind}.parquet</code> собирается
+  слиянием (T-E3.4). На смене суток — дозакрытие оставшихся сегментов и merge
+  (00:00 UTC + merge delay, T-E3.3/T-E3.4).
   Что НЕ делать: не писать per-symbol/per-batch файлы (это Hive, отвергнуто); не
   делать границей файла коммит.
-  Verification: <code>tests/test_daily_writer.py</code>: поток за «день» по нескольким
-  символам/типам → на тип один файл <code>&lt;date&gt;/&lt;type&gt;.parquet</code> c колонкой symbol;
+  Verification: <code>tests/test_daily_writer.py</code>, <code>tests/test_archiver_boot.py</code>:
+  сегмент <code>{day}/{kind}-{segment_start_ms}.parquet</code> c колонкой symbol;
   строки читаются, порядок по ts.</p>
 </li>
 <li>
-<p><strong>T-E3.3. S3 copy-verify-delete + ack после верификации.</strong>
+<p><strong>T-E3.3. S3 copy-verify-delete слитого файла (реализовано в этом PR, H7).</strong>
   Файл: <code>archiver/s3_sink.py</code> (можно переиспользовать boto3-обвязку из
   <code>collector/services/archive.py</code>, но политика — copy-verify-delete, не tar).
-  Что сделать: по закрытии дневного файла — PUT в S3, verify (напр. head/size/
-  checksum совпал), только потом удалить локальный и ack соответствующие
-  сообщения брокеру. Неоднозначный PUT → НЕ удалять, алерт, повтор следующим
-  циклом (§11 «S3 PUT двусмыслен»).
-  Что НЕ делать: не ack'ать до верификации (INV-E3-a); не удалять при
-  неоднозначности.
+  Что сделано: PUT слитого <code>merged/{day}/{kind}.parquet</code> запрашивает
+  <code>ChecksumAlgorithm=SHA256</code>; verify — content-level: <code>ChecksumSHA256</code> из HEAD
+  побеждает, fallback — single-part ETag=MD5; ни того ни другого =
+  неподтверждено, локальная копия остаётся. После verify — purge ровно тех
+  минутных входов, что вошли в слияние, затем <code>.shipped</code>-маркер (блокирует
+  повторное слияние kind/day), затем удаление локальной слитой копии.
+  <code>retry_pending_merged_uploads</code> повторяет недогруженные слитые файлы на буте и
+  каждым sweep. Неоднозначный PUT → НЕ удалять, алерт, повтор следующим циклом
+  (§11 «S3 PUT двусмыслен»). ack брокеру — на локальном закрытии минутного
+  сегмента, не от S3 (INV-E3-a).
+  Что НЕ делать: не удалять при неоднозначности.
   Verification: <code>tests/test_s3_copy_verify_delete.py</code> (мок S3): успешный PUT+verify
-  → локальный удалён, ack; verify-fail → локальный на месте, без ack, повтор.</p>
+  → входы спуржены, shipped-маркер, локальная копия удалена; verify-fail →
+  локальный на месте, повтор.</p>
 </li>
 <li>
 <p><strong>T-E3.4. Идемпотентное дневное слияние + файловый предел (D9).</strong>
   Файл: <code>archiver/daily_writer.py</code> / <code>archiver/merge.py</code>.
-  Что сделать: слияние дня в S3 идемпотентно — рестарт среди слияния даёт тот же
-  daily-файл (детерминированный ключ <code>&lt;date&gt;/&lt;type&gt;</code>; повторный PUT перезаписывает).
-  Локальный стейджинг ≤ ~1–2 суток (D9, §8 File-disk bound: <code>local_days &gt;=
-  merge_window + verify_lag</code>). Наблюдение роста — метрика (E6).
-  Verification: <code>tests/test_merge_idempotent.py</code>: kill среди слияния → повторный
-  прогон даёт байт-в-байт тот же daily-файл (или эквивалентный по строкам);
-  стейджинг не растёт сверх границы.</p>
+  Реализовано в этом PR: слияние пишет локальный <code>merged/{day}/{kind}.parquet</code>
+  (streaming row-groups, <code>.tmp</code>+fsync+<code>os.replace</code>), после verify в S3 пишется
+  <code>.shipped</code>-маркер (блокирует повторное слияние kind/day — защита от
+  straggler'ов); <code>retry_pending_merged_uploads()</code> на буте и в каждом sweep.
+  Локальный стейджинг ≤ ~2 суток (D9, §8 File-disk bound: <code>local_days &gt;=
+  merge_window + verify_lag</code>, <code>ARCHIVER_MAX_LOCAL_STAGING_DAYS=2</code>).
+  Наблюдение роста — метрика (E6).</p>
 </li>
 <li>
 <p><strong>T-E3.5. Shadow-режим (transition step 2).</strong>
   Файл: <code>archiver/service.py</code> (флаг shadow).
-  Что сделать: в shadow archiver пишет daily+S3, но локальный source-of-truth
-  FileWriter'а НЕ удаляет; выход из тени — по kill-archiver soak (E8 S-2: диск
-  стоит, дыра громкая gap+num_pending, publish жив). Без прохождения soak шаг 6
-  (retire) запрещён.
+  Реализовано в этом PR: shadow-режим — жёсткий гейт <code>ARCHIVER_SHADOW_MODE</code>
+  (default true; <code>assert_shadow_mode_safe</code> отказывает в не-shadow запуске +
+  требует disjoint staging-рут от FileWriter). Archiver пишет сегменты+merge+S3,
+  локальный source-of-truth FileWriter'а НЕ трогает; выход из тени — по
+  kill-archiver soak (E8 S-2: диск стоит, дыра громкая gap+num_pending, publish
+  жив). Без прохождения soak шаг 6 (retire) запрещён.
   Что НЕ делать: не отключать FileWriter в тени; не удалять локальное.
   Verification: интеграционный shadow-прогон: два пути (FileWriter + archiver)
   сосуществуют; archiver-файлы в S3, локальные FileWriter-файлы целы.</p>
@@ -3341,8 +3027,9 @@ cutover; E3 в тени их НЕ трогает и локальное НЕ уд
 </ul>
 <h3 id="dod-e3">DoD E3<a class="headerlink" href="#dod-e3" title="Permanent link">&para;</a></h3>
 <ul class="task-list">
-<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> archiver — отдельный процесс, свой durable-курсор на md.*, daily row-group
-      writer (1 файл/день/тип, колонка symbol), copy-verify-delete, ack после S3.</li>
+<li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> archiver — отдельный процесс, свой durable-курсор на md.*, минутные
+      сегменты + суточное слияние в 1 файл/день/тип (колонка symbol),
+      copy-verify-delete слитого файла, ack после локального финализе.</li>
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Слияние идемпотентно; стейджинг в границе D9.</li>
 <li class="task-list-item"><label class="task-list-control"><input type="checkbox" disabled/><span class="task-list-indicator"></span></label> Shadow: сосуществует с FileWriter, локальное не удаляет. kill-archiver soak
       (E8) — гейт выхода из тени. Тесты зелёные.</li>
@@ -3354,10 +3041,11 @@ wait-full-set + 3-state + stale-drop + order-id; intake-чекпойнт в PG (
 таблица); позиции — с биржи (D10). Заменить нынешний freshness-guard/HOLD.
 Гейт входа: E1 (контракт бара + штамп). Гейт выхода: DoD.</p>
 <p>Контекст кода: <code>trader/trader.py</code> (LiveTrader, бар-луп; <code>weight_fn</code>;
-freshness-guard <code>_fresh_ob_symbols</code> + «HOLD book if all stale» стр.47–179 — ЭТО
-заменяется); данные сейчас из <code>GoExchangeData</code>/<code>live_bridge</code> in-process;
+freshness-guard <code>_fresh_ob_symbols</code> + «HOLD book if all stale» — ЗАМЕНЁН на
+<code>DataQualityGate</code> в этом PR); данные сейчас из <code>GoExchangeData</code>/<code>live_bridge</code> in-process;
 <code>trader/executor.py</code>, <code>trader/binance_futures.py</code> (ордера), <code>trader/user_data.py</code>
-(user data), <code>trader/state.py</code> (StateStore; сегодня «killed bool» state.py:189),
+(user data), <code>trader/state.py</code> (StateStore; «killed bool» остаётся как свойство,
+рядом — реализованный 3-state <code>DataQualityGate</code> <code>trader/gate.py</code>),
 <code>trader/bar_clock.py</code> (границы бара). Штамп/поля — <code>bars-contract.md</code>. Механика
 D6 — §6/§7 ADR + OBS-SPEC строки 4,5.</p>
 <h3 id="e4">Жёсткие инварианты E4<a class="headerlink" href="#e4" title="Permanent link">&para;</a></h3>
@@ -3403,7 +3091,9 @@ D6 — §6/§7 ADR + OBS-SPEC строки 4,5.</p>
 </li>
 <li>
 <p><strong>T-E4.3. 3-state gate (norm/degraded/poor) — замена freshness-guard.</strong>
-  Файл: <code>trader/trader.py</code> (заменить <code>_fresh_ob_symbols</code>+HOLD стр.47–179),
+  (реализовано в этом PR: <code>trader/gate.py</code> <code>DataQualityGate</code> +
+  <code>trader/intake.py</code>; бинарный freshness-guard снят)
+  Файл: <code>trader/trader.py</code> (заменить <code>_fresh_ob_symbols</code>+HOLD — сделано),
   <code>trader/state.py</code>.
   Что сделать: состояние трейдера: <code>norm</code> (торгует), <code>degraded</code> (только закрывает
   позиции), <code>poor</code> (flat до РУЧНОГО сброса). Переход — по качеству комплекта/штампа
@@ -3466,8 +3156,13 @@ D6 — §6/§7 ADR + OBS-SPEC строки 4,5.</p>
 <p>Цель: реализовать <code>OBS-SPEC.md</code> — экспортёр + метрики <code>trading_*</code> + недостающие
 счётчики + правила алертов. <code>OBS-SPEC.md</code> — АВТОРИТЕТНАЯ построчная спека (таблица
 «counter today | stamp field | metric | alert | log | verdict»); кодер идёт по ней
-строка за строкой. Сегодня в коде: экспортёра нет, <code>/metrics</code> нет, имена
-<code>trading_*</code> только в спеке, alerts.yml нет.
+строка за строкой. В этом PR: экспортёр + <code>/metrics</code> подняты в трейдере
+(<code>common/metrics_exporter.py</code>, <code>common/metrics_bridge.py</code>, <code>trader/service.py</code>),
+<code>trading_*</code> имена реально экспортируются, <code>deploy/alerts.yml</code> + CI-гейт
+<code>alerts_placeholder_gate</code> на месте. Не сделано: <code>/metrics</code> в calc/archiver/
+collector (у архиватора счётчики пока только в <code>HealthCounters</code>/snapshot),
+num_pending probe-loop не привязан к сервису, crush/bar_incomplete-счётчики
+из OBS-SPEC ещё missing.
 Гейт входа: счётчики появляются вместе с E1–E5 (метрика без счётчика = экспорт
 нулей). Делать по мере готовности источников.</p>
 <h3 id="e6">Жёсткие инварианты E6<a class="headerlink" href="#e6" title="Permanent link">&para;</a></h3>
@@ -3484,18 +3179,21 @@ D6 — §6/§7 ADR + OBS-SPEC строки 4,5.</p>
 <h3 id="_15">Задачи<a class="headerlink" href="#_15" title="Permanent link">&para;</a></h3>
 <ul>
 <li>
-<p><strong>T-E6.1. Экспортёр + <code>/metrics</code>.</strong>
-  Файл: новый <code>common/metrics_exporter.py</code> (prometheus_client) + route в каждом
+<p><strong>T-E6.1. Экспортёр + <code>/metrics</code>.</strong> (реализовано в этом PR на трейдере)
+  Файл: <code>common/metrics_exporter.py</code> (prometheus_client) + route в каждом
   сервисе (collector/calc/archiver/trader).
-  Что сделать: поднять <code>prometheus_client</code> реестр + HTTP <code>/metrics</code> (или pushless
-  scrape target в compose). Никаких метрик-пустышек: регистрировать метрику только
-  когда есть её источник-счётчик.
+  Что сделано/осталось: <code>prometheus_client</code> реестр + HTTP <code>/metrics</code> подняты —
+  <code>add_metrics_route</code> на health-server трейдера (<code>trader/service.py</code>); экспортёр
+  валидирует имена по INV-E6-a (<code>trading_</code> snake_case, <code>_total</code>/<code>_gauge</code>/<code>_info</code>).
+  Никаких метрик-пустышек: регистрировать метрику только
+  когда есть её источник-счётчик. Осталось: тот же route в calc/archiver/
+  collector (у архиватора счётчики есть в <code>HealthCounters</code>, моста нет).
   Verification: <code>tests/test_metrics_exporter.py</code>: <code>/metrics</code> отдаёт зарегистрированные
   <code>trading_*</code>; scrape target в compose (integration).</p>
 </li>
 <li>
 <p><strong>T-E6.2. Мост существующих счётчиков в экспортёр.</strong>
-  Файл: <code>common/health.py</code> (<code>snapshot()</code> стр.346–378), <code>trader/queue_writer.py</code>
+  Файл: <code>common/health.py</code> (<code>snapshot()</code> стр.413–462), <code>trader/queue_writer.py</code>
   (<code>dedup_drops</code>), <code>metrics/metrics_engine/engine.py</code> (<code>slot_jump_drops</code>).
   Что сделать: вывести уже существующие счётчики (gaps, reconnects, resyncs,
   staleness, bus/buffer drops, dedup live, replay duration/lag/RTO, checkpoint age,
@@ -3506,23 +3204,31 @@ D6 — §6/§7 ADR + OBS-SPEC строки 4,5.</p>
 </li>
 <li>
 <p><strong>T-E6.3. Недостающие счётчики (по OBS-SPEC «MISSING»).</strong>
-  Файлы: по строкам OBS-SPEC. Что сделать (каждое — со своим источником-эпиком):
-  windowed gap-счётчики из хедеров E5 (строка 1a → <code>trading_bar_gap_total</code>);
-  blind-sec loss-check (2a/2b, из E5 conn-id + heartbeat); <code>num_pending</code> probe-loop
-  (3, <code>trading_consumer_num_pending_gauge</code>); stale-drop (4, из E4);
-  3-state/degraded (5, из E4); replay outcomes + end_seqs (9, из E2);
-  retention-hole counter (8, из E2); Q-006 crush-счётчики (7b/7c/7d, из E5/collector).
+  Файлы: по строкам OBS-SPEC. Что сделано в этом PR (каждое — со своим
+  источником-эпиком): windowed gap-счётчики из хедеров E5 (строка 1a →
+  <code>trading_bar_gap_total</code>); blind-sec loss-check (2a/2b →
+  <code>trading_bar_blind_seconds_total</code> + <code>..._per_conn_total</code>); stale-drop (4 →
+  <code>trading_stale_bar_drops_total</code>); 3-state/degraded (5 → <code>trading_state_info</code> +
+  <code>trading_degraded_windows_total</code>); replay outcomes (9 →
+  <code>trading_replay_outcome_total</code>); retention-hole counter (8 →
+  <code>trading_retention_holes_total</code>); durable dedup в snapshot + slot_jump мост
+  (6b/7e → <code>trading_ingress_dedup_absorbs_total{path}</code> +
+  <code>trading_engine_suppressions_total</code>). Ещё нет: <code>num_pending</code> probe-loop
+  (3 — код <code>trader/consumer_lag.py</code> есть, в сервис не привязан), Q-006
+  crush-счётчики (7b/7c/7d), <code>trading_bar_incomplete_total{symbol,reason}</code> (1b),
+  replay-dedup absorbs counter (6c).
   Каждый счётчик → метрика ровно с именем из OBS-SPEC.
   Что НЕ делать: не экспортировать метрику раньше её счётчика (INV-E6-a «нулей нет»).
   Verification: по каждой строке OBS-SPEC — тест, что счётчик растёт на событии и
   виден как метрика (напр. <code>tests/test_obs_gap_metric.py</code>, <code>..._blind.py</code>, и т.д.).</p>
 </li>
 <li>
-<p><strong>T-E6.4. Правила алертов.</strong>
-  Файл: новый <code>deploy/alerts.yml</code> (+ подключение к Prometheus).
-  Что сделать: перенести колонку «Alert draft» OBS-SPEC в правила; пороги —
-  TBD-плейсхолдеры до E8 (кроме RTO 120s). Критические (retention-hole — данные
-  УШЛИ) пометить critical.
+<p><strong>T-E6.4. Правила алертов.</strong> (реализовано в этом PR)
+  Файл: <code>deploy/alerts.yml</code> (+ подключение к Prometheus).
+  Что сделано: реальные правила + sentinel <code>999999999</code> на TBD-порогах (E8),
+  <code>tools/check_alerts_placeholders.py</code> + CI-гейт <code>alerts_placeholder_gate</code>
+  запрещают выкатку с плейсхолдером; критические (retention-hole — данные
+  УШЛИ) помечены critical.
   Verification: <code>promtool check rules deploy/alerts.yml</code> зелёный; критические
   правила присутствуют (retention_holes, hole cluster-wide).</p>
 </li>
@@ -3682,7 +3388,7 @@ kill-archiver). Гейт выхода: система на split-сервиса�
 <p><strong>РЕШЕНО (человек, 2026-09-13): вариант C.</strong> Пилот (paper/testnet) и cutover E9 —
 на <strong>stop-first</strong> (порядок деплоя, одна реплика; D7). Переход на <strong>mainnet
 real-money</strong> — ЖЁСТКИЙ ГЕЙТ: не выпускать живые деньги без fencing-МЕХАНИЗМА
-(PG advisory-lock/лидерство). Сам механизм — в БЭКЛОГ (BACKLOG.md, задача
+(PG advisory-lock/лидерство). Сам механизм — в БЭКЛОГ (NSC-123, задача
 «trader fencing mechanism»), реализуется до mainnet, не на пилоте.
 - Значит: T-E9.1/T-E9.2 (cutover) кодируются на stop-first СЕЙЧАС (E9-D1 закрыт).
 - mainnet-переход (вне E9, отдельный гейт роадмапа) заблокирован до fencing-

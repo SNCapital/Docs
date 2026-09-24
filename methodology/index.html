@@ -449,28 +449,6 @@
   
 
       
-        
-  
-  
-  
-  
-    
-    
-      <li class="md-tabs__item">
-        <a href="../openspec/batch-backtest/" class="md-tabs__link">
-          
-  
-  
-    
-  
-  Specs
-
-        </a>
-      </li>
-    
-  
-
-      
     </ul>
   </div>
 </nav>
@@ -2226,322 +2204,6 @@
   
 
     
-      
-      
-  
-  
-  
-  
-    
-    
-      
-        
-          
-        
-      
-        
-      
-        
-      
-        
-      
-        
-      
-        
-      
-        
-      
-        
-      
-        
-      
-    
-    
-    
-      
-      
-        
-      
-    
-    
-    <li class="md-nav__item md-nav__item--nested">
-      
-        
-        
-          
-        
-        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_11" >
-        
-          
-          <div class="md-nav__link md-nav__container">
-            <a href="../openspec/batch-backtest/" class="md-nav__link ">
-              
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Specs
-  
-
-    
-  </span>
-  
-  
-
-            </a>
-            
-              
-              <label class="md-nav__link " for="__nav_11" id="__nav_11_label" tabindex="0">
-                <span class="md-nav__icon md-icon"></span>
-              </label>
-            
-          </div>
-        
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_11_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_11">
-            <span class="md-nav__icon md-icon"></span>
-            
-  
-    Specs
-  
-
-          </label>
-          <ul class="md-nav__list" data-md-scrollfix>
-            
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../openspec/dashboard/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Dashboard
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../openspec/historical-download/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Historical download
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../openspec/live-trading/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Live Trading
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../openspec/live-ws/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Live WebSocket pipeline
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../openspec/metrics-aggregation/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Metrics Aggregation
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../openspec/metrics-engine/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Metrics Engine
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../openspec/models/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Data models
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../openspec/rest-pollers/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    REST pollers
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-          </ul>
-        </nav>
-      
-    </li>
-  
-
-    
   </ul>
 </nav>
                   </div>
@@ -2679,7 +2341,7 @@
 <h1 id="methodology">Methodology<a class="headerlink" href="#methodology" title="Permanent link">&para;</a></h1>
 <p>How the backtest and live engine turn raw Binance data into a portfolio
 PnL series. Mirrors the three-layer pipeline in
-<a href="https://github.com/SNCapital/Backend/blob/main/alpha_engine/pipeline.py"><code>alpha_engine/pipeline.py</code></a>
+<a href="https://github.com/SNCapital/Backend/blob/main/trader/pipeline.py"><code>trader/pipeline.py</code></a>
 — see <a href="../alpha-engine/pipeline/">Pipeline overview</a> for the prose.</p>
 <h2 id="bar-cadence">Bar cadence<a class="headerlink" href="#bar-cadence" title="Permanent link">&para;</a></h2>
 <p>All metrics are aggregated on <strong>30-minute UTC-aligned bars</strong> (48 bars per
@@ -2687,7 +2349,7 @@ day). Lookbacks throughout the codebase are expressed in bars — e.g.
 <code>window=48*7</code> is one week, <code>span=48*3</code> is three days of EMA smoothing.</p>
 <h2 id="layers">Layers<a class="headerlink" href="#layers" title="Permanent link">&para;</a></h2>
 <ol>
-<li><strong>Data</strong> — <code>RawDataReader</code> loads parquet from <code>binance_parser/data/</code>,
+<li><strong>Data</strong> — <code>RawDataReader</code> loads parquet from <code>collector/data/</code>,
    <code>MetricsDict</code> exposes per-exchange features (mark price, OHLCV, book
    cost / VWAP at depths, trade-volume quantiles, funding).</li>
 <li><strong>Strategies</strong> — each alpha in <code>ALPHA_REGISTRY</code> produces a
@@ -2701,7 +2363,7 @@ day). Lookbacks throughout the codebase are expressed in bars — e.g.
    active-set water-filling. Single-strategy runs skip this step.</li>
 </ol>
 <h2 id="cost-model">Cost model<a class="headerlink" href="#cost-model" title="Permanent link">&para;</a></h2>
-<p>Implemented in <a href="https://github.com/SNCapital/Backend/blob/main/alpha_engine/backtest/pnl.py"><code>alpha_engine/backtest/pnl.py</code></a>
+<p>Implemented in <a href="https://github.com/SNCapital/Backend/blob/main/trader/backtest/pnl.py"><code>trader/backtest/pnl.py</code></a>
 (see <a href="../alpha-engine/backtesting/">Backtesting &amp; PnL</a> for prose).
 For each bar, accounting weight is carried forward by the price move
 (<code>w_acc = w_{t-1} · p_t/p_{t-1}</code>); the traded notional is
@@ -2709,7 +2371,7 @@ For each bar, accounting weight is carried forward by the price move
 <code>fee_rate + half quoted spread + flat slippage</code> (spread falls back to
 <code>spread_default_bps</code> where book data is missing).</p>
 <h2 id="pnl-definition">PnL definition<a class="headerlink" href="#pnl-definition" title="Permanent link">&para;</a></h2>
-<p>Implemented in <code>compute_pnl</code> in <code>alpha_engine/backtest/pnl.py</code>. The
+<p>Implemented in <code>compute_pnl</code> in <code>trader/backtest/pnl.py</code>. The
 per-bar math lives in <code>pnl_core</code> — the single kernel; never add a
 second PnL implementation (<code>tests/test_backtest_kernel.py</code> pins it):</p>
 <div class="language-text highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>gross_t = Σ_i w_{i, t-k} · r_{i, t}        # k=1 close-fill, k=2 vwap-fill
@@ -2766,12 +2428,12 @@ strategy set.</p>
 <li><strong>Fields.</strong> <code>mark_price</code>, <code>index_price</code>, <code>predicted_funding</code> (field <code>r</code>
   in the raw stream payload), <code>next_funding_time_ms</code>. See
   <code>MARKPRICE_METRICS</code> in
-  <a href="https://github.com/SNCapital/Backend/blob/main/alpha_engine/metrics/market_data_aggregator.py"><code>alpha_engine/metrics/market_data_aggregator.py</code></a>.</li>
+  <a href="https://github.com/SNCapital/Backend/blob/main/metrics/market_data_aggregator.py"><code>metrics/market_data_aggregator.py</code></a>.</li>
 <li><strong>Aggregation.</strong> Last-known value at each 30-min boundary, with
   forward-fill between two published ticks (so a quiet symbol still has
   a value on every bar). Implementation:
-  <a href="https://github.com/SNCapital/Backend/blob/main/alpha_engine/metrics/market_data_aggregator.py#L139-L169"><code>aggregate_markprice_30min</code></a>
-  (lines 139-169 of <code>alpha_engine/metrics/market_data_aggregator.py</code>).</li>
+  <a href="https://github.com/SNCapital/Backend/blob/main/metrics/market_data_aggregator.py"><code>aggregate_markprice_30min</code></a>
+  (lines 139-169 of <code>metrics/market_data_aggregator.py</code>).</li>
 <li><strong>Difference from <code>close_price</code>.</strong> <code>close_price</code> is the last trade in
   the 30-min window from 1m klines and can diverge from mark price on
   wicks and during low-liquidity periods (mark price is a smoothed

@@ -11,7 +11,7 @@
       
       
       
-        <link rel="canonical" href="https://sncapital.github.io/Docs/openspec/">
+        <link rel="canonical" href="https://sncapital.github.io/Docs/arch/split-services-jetstream/recovery-fix-plan/">
       
       
       
@@ -19,19 +19,19 @@
         
       
       
-      <link rel="icon" href="../assets/images/favicon.png">
+      <link rel="icon" href="../../../assets/images/favicon.png">
       <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
     
     
       
-        <title>OpenSpec specs - SN Capital — Backend</title>
+        <title>Recovery and archive corrections - SN Capital — Backend</title>
       
     
     
-      <link rel="stylesheet" href="../assets/stylesheets/main.ec1eaa64.min.css">
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.ec1eaa64.min.css">
       
         
-        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
+        <link rel="stylesheet" href="../../../assets/stylesheets/palette.ab4e12ef.min.css">
       
       
 
@@ -52,7 +52,7 @@
     
       <link rel="stylesheet" href="https://unpkg.com/katex@0/dist/katex.min.css">
     
-    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
       
 
@@ -76,6 +76,11 @@
     <label class="md-overlay" for="__drawer"></label>
     <div data-md-component="skip">
       
+        
+        <a href="#recovery-and-archive-corrections" class="md-skip">
+          Skip to content
+        </a>
+      
     </div>
     <div data-md-component="announce">
       
@@ -88,7 +93,7 @@
 
 <header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
   <nav class="md-header__inner md-grid" aria-label="Header">
-    <a href=".." title="SN Capital — Backend" class="md-header__button md-logo" aria-label="SN Capital — Backend" data-md-component="logo">
+    <a href="../../.." title="SN Capital — Backend" class="md-header__button md-logo" aria-label="SN Capital — Backend" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
@@ -108,7 +113,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              OpenSpec specs
+              Recovery and archive corrections
             
           </span>
         </div>
@@ -230,7 +235,7 @@
   
   
     <li class="md-tabs__item">
-      <a href=".." class="md-tabs__link">
+      <a href="../../.." class="md-tabs__link">
         
   
   
@@ -251,7 +256,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="../getting-started/" class="md-tabs__link">
+        <a href="../../../getting-started/" class="md-tabs__link">
           
   
   
@@ -273,7 +278,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="../alpha-engine/" class="md-tabs__link">
+        <a href="../../../alpha-engine/" class="md-tabs__link">
           
   
   
@@ -295,7 +300,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="../binance-parser/" class="md-tabs__link">
+        <a href="../../../binance-parser/" class="md-tabs__link">
           
   
   
@@ -317,7 +322,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="../strategies/" class="md-tabs__link">
+        <a href="../../../strategies/" class="md-tabs__link">
           
   
   
@@ -339,7 +344,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="../reference/" class="md-tabs__link">
+        <a href="../../../reference/" class="md-tabs__link">
           
   
   
@@ -361,7 +366,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="../development/" class="md-tabs__link">
+        <a href="../../../development/" class="md-tabs__link">
           
   
   
@@ -383,7 +388,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="../adr/0001-collector-trader-split/0001-collector-trader-split/" class="md-tabs__link">
+        <a href="../../../adr/0001-collector-trader-split/0001-collector-trader-split/" class="md-tabs__link">
           
   
   
@@ -403,7 +408,7 @@
   
   
     <li class="md-tabs__item">
-      <a href="../research-log/" class="md-tabs__link">
+      <a href="../../../research-log/" class="md-tabs__link">
         
   
   
@@ -424,35 +429,13 @@
     
     
       <li class="md-tabs__item">
-        <a href="../research/nsc-14-aggtrade-vs-trade/" class="md-tabs__link">
+        <a href="../../../research/nsc-14-aggtrade-vs-trade/" class="md-tabs__link">
           
   
   
     
   
   Research notes
-
-        </a>
-      </li>
-    
-  
-
-      
-        
-  
-  
-  
-  
-    
-    
-      <li class="md-tabs__item">
-        <a href="batch-backtest/" class="md-tabs__link">
-          
-  
-  
-    
-  
-  Specs
 
         </a>
       </li>
@@ -488,7 +471,7 @@
 
 <nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
-    <a href=".." title="SN Capital — Backend" class="md-nav__button md-logo" aria-label="SN Capital — Backend" data-md-component="logo">
+    <a href="../../.." title="SN Capital — Backend" class="md-nav__button md-logo" aria-label="SN Capital — Backend" data-md-component="logo">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
@@ -518,7 +501,7 @@
   
   
     <li class="md-nav__item">
-      <a href=".." class="md-nav__link">
+      <a href="../../.." class="md-nav__link">
         
   
   
@@ -576,7 +559,7 @@
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="../getting-started/" class="md-nav__link ">
+            <a href="../../../getting-started/" class="md-nav__link ">
               
   
   
@@ -620,7 +603,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../getting-started/installation/" class="md-nav__link">
+      <a href="../../../getting-started/installation/" class="md-nav__link">
         
   
   
@@ -648,7 +631,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../getting-started/quickstart/" class="md-nav__link">
+      <a href="../../../getting-started/quickstart/" class="md-nav__link">
         
   
   
@@ -676,7 +659,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../getting-started/architecture/" class="md-nav__link">
+      <a href="../../../getting-started/architecture/" class="md-nav__link">
         
   
   
@@ -748,7 +731,7 @@
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="../alpha-engine/" class="md-nav__link ">
+            <a href="../../../alpha-engine/" class="md-nav__link ">
               
   
   
@@ -792,7 +775,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../alpha-engine/pipeline/" class="md-nav__link">
+      <a href="../../../alpha-engine/pipeline/" class="md-nav__link">
         
   
   
@@ -820,7 +803,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../alpha-engine/data-layer/" class="md-nav__link">
+      <a href="../../../alpha-engine/data-layer/" class="md-nav__link">
         
   
   
@@ -848,7 +831,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../alpha-engine/writing-a-strategy/" class="md-nav__link">
+      <a href="../../../alpha-engine/writing-a-strategy/" class="md-nav__link">
         
   
   
@@ -876,7 +859,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../alpha-engine/markowitz/" class="md-nav__link">
+      <a href="../../../alpha-engine/markowitz/" class="md-nav__link">
         
   
   
@@ -904,7 +887,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../alpha-engine/backtesting/" class="md-nav__link">
+      <a href="../../../alpha-engine/backtesting/" class="md-nav__link">
         
   
   
@@ -932,7 +915,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../alpha-engine/live-trading/" class="md-nav__link">
+      <a href="../../../alpha-engine/live-trading/" class="md-nav__link">
         
   
   
@@ -1002,7 +985,7 @@
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="../binance-parser/" class="md-nav__link ">
+            <a href="../../../binance-parser/" class="md-nav__link ">
               
   
   
@@ -1046,7 +1029,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../binance-parser/live/" class="md-nav__link">
+      <a href="../../../binance-parser/live/" class="md-nav__link">
         
   
   
@@ -1074,7 +1057,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../binance-parser/historical/" class="md-nav__link">
+      <a href="../../../binance-parser/historical/" class="md-nav__link">
         
   
   
@@ -1102,7 +1085,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../binance-parser/storage/" class="md-nav__link">
+      <a href="../../../binance-parser/storage/" class="md-nav__link">
         
   
   
@@ -1130,7 +1113,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../binance-parser/order-book/" class="md-nav__link">
+      <a href="../../../binance-parser/order-book/" class="md-nav__link">
         
   
   
@@ -1158,7 +1141,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../binance-parser/extending/" class="md-nav__link">
+      <a href="../../../binance-parser/extending/" class="md-nav__link">
         
   
   
@@ -1232,7 +1215,7 @@
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="../strategies/" class="md-nav__link ">
+            <a href="../../../strategies/" class="md-nav__link ">
               
   
   
@@ -1276,7 +1259,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../methodology/" class="md-nav__link">
+      <a href="../../../methodology/" class="md-nav__link">
         
   
   
@@ -1304,7 +1287,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../strategies/funding_reversion/" class="md-nav__link">
+      <a href="../../../strategies/funding_reversion/" class="md-nav__link">
         
   
   
@@ -1332,7 +1315,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../strategies/trade_imbalance/" class="md-nav__link">
+      <a href="../../../strategies/trade_imbalance/" class="md-nav__link">
         
   
   
@@ -1360,7 +1343,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../strategies/ob_mispricing/" class="md-nav__link">
+      <a href="../../../strategies/ob_mispricing/" class="md-nav__link">
         
   
   
@@ -1388,7 +1371,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../strategies/book_depth_imbalance/" class="md-nav__link">
+      <a href="../../../strategies/book_depth_imbalance/" class="md-nav__link">
         
   
   
@@ -1416,7 +1399,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../strategies/vol_mean_reversion/" class="md-nav__link">
+      <a href="../../../strategies/vol_mean_reversion/" class="md-nav__link">
         
   
   
@@ -1444,7 +1427,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../strategies/vol_ob_entropy/" class="md-nav__link">
+      <a href="../../../strategies/vol_ob_entropy/" class="md-nav__link">
         
   
   
@@ -1512,7 +1495,7 @@
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="../reference/" class="md-nav__link ">
+            <a href="../../../reference/" class="md-nav__link ">
               
   
   
@@ -1556,7 +1539,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../reference/cli/" class="md-nav__link">
+      <a href="../../../reference/cli/" class="md-nav__link">
         
   
   
@@ -1584,7 +1567,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../reference/operators/" class="md-nav__link">
+      <a href="../../../reference/operators/" class="md-nav__link">
         
   
   
@@ -1612,7 +1595,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../reference/metrics/" class="md-nav__link">
+      <a href="../../../reference/metrics/" class="md-nav__link">
         
   
   
@@ -1640,7 +1623,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../reference/glossary/" class="md-nav__link">
+      <a href="../../../reference/glossary/" class="md-nav__link">
         
   
   
@@ -1706,7 +1689,7 @@
         
           
           <div class="md-nav__link md-nav__container">
-            <a href="../development/" class="md-nav__link ">
+            <a href="../../../development/" class="md-nav__link ">
               
   
   
@@ -1750,7 +1733,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../development/setup/" class="md-nav__link">
+      <a href="../../../development/setup/" class="md-nav__link">
         
   
   
@@ -1778,7 +1761,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../development/testing/" class="md-nav__link">
+      <a href="../../../development/testing/" class="md-nav__link">
         
   
   
@@ -1806,7 +1789,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../development/contributing/" class="md-nav__link">
+      <a href="../../../development/contributing/" class="md-nav__link">
         
   
   
@@ -1901,7 +1884,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../adr/0001-collector-trader-split/0001-collector-trader-split/" class="md-nav__link">
+      <a href="../../../adr/0001-collector-trader-split/0001-collector-trader-split/" class="md-nav__link">
         
   
   
@@ -1929,7 +1912,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../adr/0002-split-services-jetstream/0002-split-services-jetstream/" class="md-nav__link">
+      <a href="../../../adr/0002-split-services-jetstream/0002-split-services-jetstream/" class="md-nav__link">
         
   
   
@@ -1964,7 +1947,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../research-log/" class="md-nav__link">
+      <a href="../../../research-log/" class="md-nav__link">
         
   
   
@@ -2049,7 +2032,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../research/nsc-14-aggtrade-vs-trade/" class="md-nav__link">
+      <a href="../../../research/nsc-14-aggtrade-vs-trade/" class="md-nav__link">
         
   
   
@@ -2057,322 +2040,6 @@
     
   
     NSC-14 aggTrade vs trade
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-          </ul>
-        </nav>
-      
-    </li>
-  
-
-    
-      
-      
-  
-  
-  
-  
-    
-    
-      
-        
-          
-        
-      
-        
-      
-        
-      
-        
-      
-        
-      
-        
-      
-        
-      
-        
-      
-        
-      
-    
-    
-    
-      
-      
-        
-      
-    
-    
-    <li class="md-nav__item md-nav__item--nested">
-      
-        
-        
-          
-        
-        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_11" >
-        
-          
-          <div class="md-nav__link md-nav__container">
-            <a href="batch-backtest/" class="md-nav__link ">
-              
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Specs
-  
-
-    
-  </span>
-  
-  
-
-            </a>
-            
-              
-              <label class="md-nav__link " for="__nav_11" id="__nav_11_label" tabindex="0">
-                <span class="md-nav__icon md-icon"></span>
-              </label>
-            
-          </div>
-        
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_11_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_11">
-            <span class="md-nav__icon md-icon"></span>
-            
-  
-    Specs
-  
-
-          </label>
-          <ul class="md-nav__list" data-md-scrollfix>
-            
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="dashboard/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Dashboard
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="historical-download/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Historical download
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="live-trading/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Live Trading
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="live-ws/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Live WebSocket pipeline
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="metrics-aggregation/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Metrics Aggregation
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="metrics-engine/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Metrics Engine
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="models/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Data models
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="rest-pollers/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    REST pollers
   
 
     
@@ -2410,6 +2077,82 @@
   
   
   
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-boundary-checkpoint-first-priority" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Boundary checkpoint (first priority)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-archive-durability-and-late-arrivals" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Archive durability and late arrivals
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-replay-completeness" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Replay completeness
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-collector-continuity" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Collector continuity
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-documentation-and-validation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Documentation and validation
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#verification-result" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Verification result
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
   
 </nav>
                   </div>
@@ -2429,65 +2172,71 @@
   
 
 
-  <h1>OpenSpec specs</h1>
+<h1 id="recovery-and-archive-corrections">Recovery and archive corrections<a class="headerlink" href="#recovery-and-archive-corrections" title="Permanent link">&para;</a></h1>
+<p>Baseline: <code>c30aed8</code>, branch <code>feat/adr-0002-split-services-jetstream</code>.
+Execution: GPT-6 Sol, low reasoning; independent file ownership and final integration review.</p>
+<h2 id="1-boundary-checkpoint-first-priority">1. Boundary checkpoint (first priority)<a class="headerlink" href="#1-boundary-checkpoint-first-priority" title="Permanent link">&para;</a></h2>
+<p>Capture serialized books, update IDs and applied stream positions synchronously at
+the bar boundary, before any asynchronous publication or database access. Submit
+that immutable snapshot only after the bars are published. Retry the snapshot,
+not live state; coalesce pending boundaries to the latest complete one. Preserve
+atomic database writes and stream epoch validation.</p>
+<p>Verify mutation during publication, a prolonged database outage, retry identity,
+newer-boundary replacement and failed-publication checkpoint suppression.</p>
+<h2 id="2-archive-durability-and-late-arrivals">2. Archive durability and late arrivals<a class="headerlink" href="#2-archive-durability-and-late-arrivals" title="Permanent link">&para;</a></h2>
+<p>Partition immutable segments by archiver write time, retaining original event
+time and MsgId in each row. Restarting within a minute must not overwrite a
+finalized part. Preserve deduplication across parts and archive reads. Late
+additions use separate immutable daily objects. An existing verified object
+must never be replaced with a subset or different contents. Persist exact input
+membership for crash-safe cleanup; failed upload retry must not allow a partial
+re-merge to replace the complete pending object.</p>
+<p>Verify delayed unique events, redelivery after restart, partial cleanup followed
+by failed retry, equal-row-count conflicts and additional objects after shipping.
+Readers discover ingest-day objects and filter by event time; D and D+1 alone
+cannot cover multi-day consumer outages.</p>
+<h2 id="3-replay-completeness">3. Replay completeness<a class="headerlink" href="#3-replay-completeness" title="Permanent link">&para;</a></h2>
+<p>Validate depth continuity during replay. Once continuity is broken, stop deriving
+historical book metrics, but continue reconstructing independent trade, kline
+and mark metrics. Missing book history stays NULL and incomplete. Try an older
+valid checkpoint when the latest is corrupt. A fresh REST book can only seed
+future live processing after historical replay; it cannot repair historical
+metrics. Replay completes before live intake starts.</p>
+<p>Verify both venue continuity rules, a missing interior diff, corrupt newest
+checkpoint, no checkpoint, preserved nonbook observations and live handoff.</p>
+<h2 id="4-collector-continuity">4. Collector continuity<a class="headerlink" href="#4-collector-continuity" title="Permanent link">&para;</a></h2>
+<p>Seed each tracked subject's watermark from its last retained JetStream message.
+Do not advance it on a failed publication. Recover aggregate trade ID gaps using
+paginated REST fromId requests with the shared REST budget and original MsgIds.
+Depth gaps remain explicit because historical depth backfill is unavailable.</p>
+<p>Verify collector restart, publish retries, paginated trade recovery, unavailable
+history and ordering of recovered trades before the triggering live trade.</p>
+<h2 id="5-documentation-and-validation">5. Documentation and validation<a class="headerlink" href="#5-documentation-and-validation" title="Permanent link">&para;</a></h2>
+<p>Keep stream-reset detection; loss or manual clearing of NATS storage is outside
+the retained-history recovery guarantee. Funding ACK redesign and archive disk
+limits are deferred. S3 availability is an operating assumption, not an enforced
+local disk bound.</p>
+<p>Write regressions before implementation. Run tests after all edits are complete,
+including baseline failure checks in an isolated copy, focused regressions, the
+unit gate and relevant replay/load checks. Review the combined diff, commit and
+push the authorized changes, then verify remote synchronization.</p>
+<h2 id="verification-result">Verification result<a class="headerlink" href="#verification-result" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Full unit gate: 2416 passed, 16 skipped, 1 expected failure.</li>
+<li>Engine stress suite: 6 passed.</li>
+<li>Behavioral baseline checks reproduce late-event loss, archive overwrite,
+  missed delayed archive reads, post-boundary checkpoint mutation, missing
+  trade backfill and unchecked depth gaps; corrected behavior passes.</li>
+<li>Live NATS/Postgres/S3 integration was not run: service credentials and a
+  running local Docker daemon were unavailable. Existing fixture-dependent
+  skips remain visible in the unit report.</li>
+</ul>
 
-<p>Machine-checkable requirement-level contracts, rendered from
-<code>openspec/specs/**/spec.md</code> by <code>tools/render_openspec_docs.py</code>.</p>
-<table>
-<thead>
-<tr>
-<th>Capability</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><a href="batch-backtest/">Batch Backtest</a></td>
-<td><code>openspec/specs/batch-backtest/spec.md</code></td>
-</tr>
-<tr>
-<td><a href="dashboard/">Dashboard</a></td>
-<td><code>openspec/specs/dashboard/spec.md</code></td>
-</tr>
-<tr>
-<td><a href="historical-download/">Historical download</a></td>
-<td><code>openspec/specs/historical-download/spec.md</code></td>
-</tr>
-<tr>
-<td><a href="live-trading/">Live Trading</a></td>
-<td><code>openspec/specs/live-trading/spec.md</code></td>
-</tr>
-<tr>
-<td><a href="live-ws/">Live WebSocket pipeline</a></td>
-<td><code>openspec/specs/live-ws/spec.md</code></td>
-</tr>
-<tr>
-<td><a href="metrics-aggregation/">Metrics Aggregation</a></td>
-<td><code>openspec/specs/metrics-aggregation/spec.md</code></td>
-</tr>
-<tr>
-<td><a href="metrics-engine/">Metrics Engine</a></td>
-<td><code>openspec/specs/metrics-engine/spec.md</code></td>
-</tr>
-<tr>
-<td><a href="models/">Data models</a></td>
-<td><code>openspec/specs/models/spec.md</code></td>
-</tr>
-<tr>
-<td><a href="rest-pollers/">REST pollers</a></td>
-<td><code>openspec/specs/rest-pollers/spec.md</code></td>
-</tr>
-</tbody>
-</table>
 
 
 
 
 
-
-
-  
-  
 
 
 
@@ -2554,12 +2303,12 @@
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.instant", "navigation.instant.progress", "navigation.tracking", "navigation.tabs", "navigation.tabs.sticky", "navigation.sections", "navigation.expand", "navigation.indexes", "navigation.top", "navigation.footer", "search.suggest", "search.highlight", "search.share", "toc.follow", "content.code.copy", "content.code.annotate", "content.tabs.link", "content.tooltips"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["navigation.instant", "navigation.instant.progress", "navigation.tracking", "navigation.tabs", "navigation.tabs.sticky", "navigation.sections", "navigation.expand", "navigation.indexes", "navigation.top", "navigation.footer", "search.suggest", "search.highlight", "search.share", "toc.follow", "content.code.copy", "content.code.annotate", "content.tabs.link", "content.tooltips"], "search": "../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
     
     
-      <script src="../assets/javascripts/bundle.d7400e89.min.js"></script>
+      <script src="../../../assets/javascripts/bundle.d7400e89.min.js"></script>
       
-        <script src="../javascripts/katex.js"></script>
+        <script src="../../../javascripts/katex.js"></script>
       
         <script src="https://unpkg.com/katex@0/dist/katex.min.js"></script>
       
