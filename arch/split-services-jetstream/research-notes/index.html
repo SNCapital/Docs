@@ -2832,7 +2832,12 @@ second, fresh-event-per-second) -&gt; Closed (edge COMMIT + publish). No hanging
 <hr />
 <!-- consolidated from S-trader.md -->
 
-<h1 id="s-trader-3-state-gate-wait-full-set-t5-normative-q-004-builds-it">S-trader: 3-state gate + wait-full-set T=5 (normative; Q-004 builds it)<a class="headerlink" href="#s-trader-3-state-gate-wait-full-set-t5-normative-q-004-builds-it" title="Permanent link">&para;</a></h1>
+<h1 id="s-trader-3-state-gate-wait-full-set-t5-historical-q-004-build-record">S-trader: 3-state gate + wait-full-set T=5 (historical; Q-004 build record)<a class="headerlink" href="#s-trader-3-state-gate-wait-full-set-t5-historical-q-004-build-record" title="Permanent link">&para;</a></h1>
+<p>The table below preserves the original Q-004 design record. Its rows mapping a
+POOR quality state to flattening/manual reset are superseded by ADR-0002 D13 and
+must not be used as the current runtime contract. A POOR data-quality result holds
+signal calculation and rebalance while positions and reconciliation continue;
+risk/kill policy remains independent.</p>
 <table>
 <thead>
 <tr>

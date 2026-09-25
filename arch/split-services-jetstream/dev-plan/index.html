@@ -3039,6 +3039,8 @@ cutover; E3 в тени их НЕ трогает и локальное НЕ уд
 потребление ТОЛЬКО <code>bars.binance.usdm.*</code> из NATS; построить полный intake (D6):
 wait-full-set + 3-state + stale-drop + order-id; intake-чекпойнт в PG (своя
 таблица); позиции — с биржи (D10). Заменить нынешний freshness-guard/HOLD.
+POOR semantics corrected by D13: poor data suppresses strategy calculation and
+rebalance while preserving positions; order/account reconciliation continues.
 Гейт входа: E1 (контракт бара + штамп). Гейт выхода: DoD.</p>
 <p>Контекст кода: <code>trader/trader.py</code> (LiveTrader, бар-луп; <code>weight_fn</code>;
 freshness-guard <code>_fresh_ob_symbols</code> + «HOLD book if all stale» — ЗАМЕНЁН на
@@ -3091,19 +3093,27 @@ D6 — §6/§7 ADR + OBS-SPEC строки 4,5.</p>
 </li>
 <li>
 <p><strong>T-E4.3. 3-state gate (norm/degraded/poor) — замена freshness-guard.</strong>
-  (реализовано в этом PR: <code>trader/gate.py</code> <code>DataQualityGate</code> +
-  <code>trader/intake.py</code>; бинарный freshness-guard снят)
+  (контракт исправлен D13; код и регрессионное покрытие должны соответствовать)
   Файл: <code>trader/trader.py</code> (заменить <code>_fresh_ob_symbols</code>+HOLD — сделано),
   <code>trader/state.py</code>.
-  Что сделать: состояние трейдера: <code>norm</code> (торгует), <code>degraded</code> (только закрывает
-  позиции), <code>poor</code> (flat до РУЧНОГО сброса). Переход — по качеству комплекта/штампа
-  (полнота набора, <code>bar_complete</code>, gaps/blind_sec из штампа). Правила порога —
-  TBD-soak (§12), но МЕХАНИЗМ строим сейчас (D6 build-all). Persist состояния в
-  StateStore.
-  Что НЕ делать: не оставлять старый бинарный guard; <code>poor</code>→норм только вручную.
-  Verification: <code>tests/test_three_state.py</code>: полный свежий комплект → norm;
-  деградация штампа → degraded (новых позиций не открывает, закрывает); критично →
-  poor (flat), из poor без ручного сброса не выходит.</p>
+  Что сделать: состояние трейдера: <code>norm</code> (обычные решения), <code>degraded</code> (только
+  сокращает позиции), <code>poor</code> (пропускает расчёт стратегий и ребалансировку,
+  сохраняет позиции). В POOR продолжать сверку ордеров и состояния счёта. Оценка
+  нового свежего окна автоматически заменяет предыдущую: <code>norm</code> возобновляет
+  обычные решения, <code>degraded</code> включает ограничение degraded, <code>poor</code> продолжает
+  удержание. Качество определяется по комплекту/штампу (полнота набора,
+  <code>bar_complete</code>, gaps/blind_sec из штампа). Пороги — TBD-soak (§12), механизм
+  строим сейчас (D6 build-all). Аварийный stop/kill и риск-лимиты независимы;
+  чистый бар их не очищает и не перевзводит. После старта или рестарта дождаться
+  первой свежей проверенной границы до расчёта сигналов и ребалансировки; старый
+  сохранённый POOR не становится ручной блокировкой.
+  Что НЕ делать: не оставлять старый бинарный guard; не преобразовывать POOR в
+  нулевые целевые веса; не использовать ручной reset качества для продолжения.
+  Verification: регрессионные тесты фиксируют: плохой бар пропускает вызов стратегии
+  и <code>rebalance</code>, сохраняет позиции и продолжает reconciliation; следующее свежее
+  norm-окно автоматически возобновляет расчёты; повторный poor сохраняет hold;
+  после рестарта до свежей проверки сигналов и ребаланса нет; независимый kill/risk
+  latch остаётся после чистого окна.</p>
 </li>
 <li>
 <p><strong>T-E4.4. Stale-drop.</strong>
