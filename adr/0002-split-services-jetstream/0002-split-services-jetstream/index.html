@@ -3140,7 +3140,7 @@ parquet → S3. Новое против ADR-0001: метрики вынесен�
 </tr>
 <tr>
 <td>NATS JetStream (1 логическая)</td>
-<td>Сырьё <code>md.*</code> (24h + max_bytes, limits + discard old) + <code>bars.*</code> закрытых баров (короткий retention формулой <code>&gt;= простой трейдера + окно скоса шардов</code>); durable лог, retention, replay; скейл по нодам</td>
+<td>Сырьё <code>md.*</code> (24h + max_bytes, limits + discard old) + <code>bars.*</code> закрытых баров (короткий retention формулой <code>&gt;= простой трейдера + окно скоса шардов</code>); durable лог, retention, replay; скейл по нодам. ACK-политики: calc live — <code>AckPolicy.NONE</code> (позиция восстановления — PG <code>calc_cursor</code>, NATS-позиция не используется); archiver и trader bars — <code>AckPolicy.EXPLICIT</code> (durable, ACK = граница durability)</td>
 <td>A</td>
 </tr>
 <tr>
