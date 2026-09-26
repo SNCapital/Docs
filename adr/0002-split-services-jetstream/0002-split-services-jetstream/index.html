@@ -3196,7 +3196,13 @@ soak-замеры (S2-база, occupancy пилота, волатильная �
   шарды в штампе; отсутствующий шард никогда не блокирует past deadline.</li>
 <li><code>archiver</code> assembly: JetStream служит WAL; события складываются в immutable
   60-секундные Parquet-сегменты (+30с grace). ACK отправляется только после durable local close
-  (<code>footer → fsync(file) → atomic rename → fsync(directory)</code>). S3 upload/verify/delete
+  (<code>footer → fsync(file) → atomic rename → fsync(directory)</code>), одной пачкой за весь сегмент
+  (per-segment batch ack; строки внутри сегмента батчатся в row group по <code>archiver_max_rows_per_group</code>).
+  Консьюмеры durable; расхождение живого конфига durable с <code>live_config.yaml</code>
+  (<code>ack_wait</code>, <code>max_ack_pending</code>) лечится на старте сносом и пересозданием durable
+  (<code>converge_consumer</code>; unacked ределивернутся, at-least-once сохранён).
+  <code>max_ack_pending</code> sized от измеренного inbound x hold окна с запасом.
+  S3 upload/verify/delete
   слитого дневного файла не входит в ACK-грань и ретраится независимо; дневной файл собирается из сегментов
   идемпотентно (рестарт среди слияния = повторное слияние, владелец — archiver).
   Shipped-marker закрывает основной дневной объект, но не запрещает новые
