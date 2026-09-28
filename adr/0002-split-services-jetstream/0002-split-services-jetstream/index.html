@@ -1992,6 +1992,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#read-path-2026-09-28" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Обновление read-path, 2026-09-28
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#1-overview" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2192,10 +2203,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#d4-calc-non-durable-pg-resume-exact-subject" class="md-nav__link">
+  <a href="#d4-calc-acknone-published-watermark-pg" class="md-nav__link">
     <span class="md-ellipsis">
       
-        D4. Calc non-durable + ОТДЕЛЬНЫЕ курсоры в PG; resume exact-subject
+        D4. Calc AckNone + скалярный published-watermark в PG
       
     </span>
   </a>
@@ -2530,6 +2541,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#read-path-2026-09-28" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Обновление read-path, 2026-09-28
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#1-overview" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2730,10 +2752,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#d4-calc-non-durable-pg-resume-exact-subject" class="md-nav__link">
+  <a href="#d4-calc-acknone-published-watermark-pg" class="md-nav__link">
     <span class="md-ellipsis">
       
-        D4. Calc non-durable + ОТДЕЛЬНЫЕ курсоры в PG; resume exact-subject
+        D4. Calc AckNone + скалярный published-watermark в PG
       
     </span>
   </a>
@@ -2960,6 +2982,17 @@ handover, D-001/D-002/D-003, bars-contract v1, OBS-SPEC, transition-plan; экс
 X-001–X-003 — внутри research-notes.md, X-004 — отдельным файлом).
 Старый черновик того же номера удалён, ценное поглощено (research-notes.md §ADR-0002 takes).</p>
 </blockquote>
+<h2 id="read-path-2026-09-28">Обновление read-path, 2026-09-28<a class="headerlink" href="#read-path-2026-09-28" title="Permanent link">&para;</a></h2>
+<p><a href="../../0003-calc-single-stream-md/0003-calc-single-stream-md/">ADR-0003</a>
+заменяет внутренний путь чтения calc: один JetStream-стрим <code>MD</code>, один
+AckNone push-consumer <code>md.{market}.&gt;</code> и скалярный published-watermark
+<code>calc_stream_cursor(market, shard_index)</code>. Это замена старых трёх стримов,
+курсоров per-(symbol|type), funding durable и отдельного replay-режима движка.
+Очередь остаётся границей сервисов; calc владеет книгой и восстановлением,
+trader получает только <code>bars.*</code>, archiver сохраняет сырьё со своим durable.
+Исторические эксперименты и старые номера строк ниже описывают исходное
+решение; текущий норматив read-path — D4 и ADR-0003. Развёртывание использует
+пустую инфраструктуру: миграция прежних стримов и таблиц этим PR не реализована.</p>
 <h2 id="1-overview">1. Overview<a class="headerlink" href="#1-overview" title="Permanent link">&para;</a></h2>
 <p>Исследовательская live-платформа делится на раздельные сервисы через NATS JetStream:
 data proxy держит край биржи, raw archiver пишет архив, metric calc считает бары со штампом
@@ -3140,7 +3173,7 @@ parquet → S3. Новое против ADR-0001: метрики вынесен�
 </tr>
 <tr>
 <td>NATS JetStream (1 логическая)</td>
-<td>Сырьё <code>md.*</code> (24h + max_bytes, limits + discard old) + <code>bars.*</code> закрытых баров (короткий retention формулой <code>&gt;= простой трейдера + окно скоса шардов</code>); durable лог, retention, replay; скейл по нодам. ACK-политики: calc live — <code>AckPolicy.NONE</code> (позиция восстановления — PG <code>calc_cursor</code>, NATS-позиция не используется); archiver и trader bars — <code>AckPolicy.EXPLICIT</code> (durable, ACK = граница durability)</td>
+<td>Сырьё <code>md.*</code> (24h + max_bytes, limits + discard old) + <code>bars.*</code> закрытых баров (короткий retention формулой <code>&gt;= простой трейдера + окно скоса шардов</code>); durable лог, retention, replay; скейл по нодам. ACK-политики: calc live — <code>AckPolicy.NONE</code> (позиция восстановления — PG <code>calc_stream_cursor</code>, NATS-позиция не используется); archiver и trader bars — <code>AckPolicy.EXPLICIT</code> (durable, ACK = граница durability)</td>
 <td>A</td>
 </tr>
 <tr>
@@ -3155,12 +3188,12 @@ parquet → S3. Новое против ADR-0001: метрики вынесен�
 </tr>
 <tr>
 <td>trader × E</td>
-<td>Бары своей биржи; wait-full-set 5 мин, stale-бар старше N минут — не торгуем, ack и выкидываем; 3 состояния (norm/degraded/poor); ордера напрямую, <code>newClientOrderId</code> из (символ + ts бара); user data + сверка. Pre-cutover md.*-петля удалена вместе с <code>trader/service.py</code>; общие replay/boot-хелперы (replay, book-чекпойнты, funding-поллер calc, health/metrics) живут в <code>trader/replay_boot.py</code> и переиспользуются calc и archiver</td>
+<td>Бары своей биржи; wait-full-set 5 мин, stale-бар старше N минут — не торгуем, ack и выкидываем; 3 состояния (norm/degraded/poor); ордера напрямую, <code>newClientOrderId</code> из (символ + ts бара); user data + сверка. Pre-cutover md.*-петля удалена вместе с <code>trader/service.py</code>; calc read-path живёт в <code>calc/pump.py</code>, <code>calc/completion.py</code> и <code>calc/service.py</code>; отдельные replay/boot-хелперы и funding-поллер удалены</td>
 <td>A + S к бирже</td>
 </tr>
 <tr>
 <td>Postgres (1 инстанс)</td>
-<td>Три владельца стейта, разные таблицы/схемы (конфликта записи нет): книга — чекпойнт по D5 из ADR-0001 (A3, writer/reader — calc) + курсоры calc per-(symbol|type) (writer — calc); intake-чекпойнт трейдера (набор комплекта за окно; в будущем — статистика торговли; writer/reader — trader; позиции сюда НЕ пишутся, D10). Один инстанс = общий SPOF (§11); понодовый шардинг — будущее, не этот док</td>
+<td>Три владельца стейта, разные таблицы/схемы (конфликта записи нет): книга — чекпойнт по D5 из ADR-0001 (A3, writer/reader — calc) + скалярный published-watermark calc per-(market|shard_index) (writer — calc); intake-чекпойнт трейдера (набор комплекта за окно; в будущем — статистика торговли; writer/reader — trader; позиции сюда НЕ пишутся, D10). Один инстанс = общий SPOF (§11); понодовый шардинг — будущее, не этот док</td>
 <td>S</td>
 </tr>
 <tr>
@@ -3241,7 +3274,7 @@ retry логируется и учитывается в
 <code>calc_bars_publish_carry_over_max_bars</code> × число активных символов
 (<code>_carry_over_or_raise</code>, <code>calc/service.py:67-85</code>), а также на fail-loud
 ветках вне транспорта: отказ публикации gap-маркера, отсутствие engine по
-символу, ошибка конверта/штампа. Сбой PG-чекпойнта или <code>calc_cursor</code> calc не
+символу, ошибка конверта/штампа. Сбой PG-чекпойнта или <code>calc_stream_cursor</code> calc не
 роняет: запись чекпойнта вынесена в отдельный writer-цикл
 (<code>_checkpoint_writer_loop</code>), который ретраит с капнутым экспоненциальным
 backoff (<code>calc_pg_retry_initial_s</code>/<code>calc_pg_retry_max_s</code>, <code>live_config.yaml</code>) и
@@ -3250,8 +3283,8 @@ ERROR + <code>trading_checkpoint_pg_failures_total</code>. Публикация 
 идут дальше из RAM. Книга, <code>u</code> и курсоры сериализуются синхронно в неизменяемый
 снимок на границе бара ДО первого <code>await</code>; writer получает снимок только после
 публикации баров. Ретраи не читают live-состояние, новая опубликованная граница
-заменяет ожидающий снимок. Книга и курсоры символа коммитятся ОДНОЙ транзакцией
-(<code>write_boundary</code> с <code>cursor_writer</code>), prune — отдельно после. Рестарт воспроизводит окно из <code>md.*</code>. Сбой
+заменяет ожидающий снимок. Книги шарда и скалярный published-watermark коммитятся ОДНОЙ транзакцией
+(<code>calc/checkpoints.py:checkpoint_on_bar</code> + <code>trader/book_store.py:write_boundary</code>), prune — отдельно после. Рестарт воспроизводит окно из <code>md.*</code>. Сбой
 между ack и COMMIT может дать дубль бара; трейдер обязан дедуплицировать
 <code>(symbol, bar_ts)</code> — и дедуп обязан переживать рестарт: трейдер
 захватывает окно в PG (<code>trading_windows</code>, UNIQUE <code>(account, window_ts)</code>,
@@ -3286,7 +3319,7 @@ remote-путь <code>NatsTickBus._publish_remote</code> не имел ни од
     C-&gt;&gt;C: apply diff (u-check), ring, close bar + quality stamp
     C-&gt;&gt;J: publish 1 msg = 1 closed bar (пустое = NULL, всегда эмитим)
     J--&gt;&gt;C: broker ack
-    C-&gt;&gt;G: COMMIT checkpoint (A3) и calc_cursor
+    C-&gt;&gt;G: COMMIT checkpoint (A3) и calc_stream_cursor
   end</code></pre>
 <pre class="mermaid"><code>sequenceDiagram
   participant J as JetStream bars.*
@@ -3329,22 +3362,22 @@ remote-путь <code>NatsTickBus._publish_remote</code> не имел ни од
     P-&gt;&gt;P: дроп со счётчиком + громкий алерт
     J-&gt;&gt;T: дырка → бары неполные (штамп, не молча)
   end</code></pre>
-<p>State machine сущности <code>bar</code> + boot/replay lifecycle calc per символ (подвешенных состояний нет):</p>
+<p>State machine сущности <code>bar</code> + boot/drain lifecycle calc per символ (подвешенных состояний нет):</p>
 <pre class="mermaid"><code>stateDiagram-v2
   [*] --&gt; ColdStart: no checkpoint / PG empty / codec unknown
-  [*] --&gt; Replay: checkpoint found
-  ColdStart --&gt; Live: REST sewn, first bar incomplete
-  Replay --&gt; Live: lag &lt; 1 slot на всех стримах (gate: ReplayLagError -&gt; skip)
-  Replay --&gt; ColdStart: codec unknown
-  Replay --&gt; Hole: retention hole (неполные метрики; разрыв depth инвалидирует книгу)
-  Live --&gt; Replay: restart (replay от границы бара)
+  [*] --&gt; Drain: checkpoint found
+  ColdStart --&gt; Drain: bounded backfill + pending buffer
+  Drain --&gt; Live: bus consumed + settled completion published
+  Drain --&gt; ColdStart: codec unknown
+  Drain --&gt; Hole: retention hole (неполные метрики; разрыв depth инвалидирует книгу)
+  Live --&gt; Drain: restart от published-watermark+1
   Live --&gt; BookDegraded: gap (pu/U mismatch) / PG down / NATS down (транзиент)
   BookDegraded --&gt; Live: поток возобновлён / PG up
   Hole --&gt; Live: догнали вперёд (потерянное окно остаётся неполным, не восстанавливается)
   state Bar {
     [*] --&gt; Incomplete: gap / cold start / missing slot
     Incomplete --&gt; Complete: слот на каждую секунду бара
-    Complete --&gt; Closed: граница бара (checkpoint COMMIT + publish)
+    Complete --&gt; Closed: settled publish, затем checkpoint COMMIT
     Closed --&gt; [*]
   }</code></pre>
 <p>3-state gate трейдера (D6, <code>trader/gate.py</code>): norm торгует, degraded только
@@ -3371,51 +3404,31 @@ remote-путь <code>NatsTickBus._publish_remote</code> не имел ни од
 блокировку. Он ждёт первую свежую проверенную границу, прежде чем рассчитывать
 сигналы или менять целевые веса. Повторное использование сохранённого статуса
 разрешено для диагностики, но он не заменяет оценку нового окна.</p>
-<p>Протокол старта calc (норматив; детали — research-notes.md §S-offset/§S-bar):</p>
+<p>Протокол старта calc (текущий норматив — ADR-0003):</p>
 <ol>
-<li>Читает PG: для каждого символа свой курсор per-(symbol|type) (stream seq + U/u)</li>
-<li>блоб книги на новейшую завершённую границу именно этого символа.</li>
-<li>Диффы per-symbol от <code>seq+1</code> (exact-subject ephemeral consumer — X-001
-   воспроизведён на nats-server 2.10.29: первое доставленное = первое совпавшее
-   на/после start seq; expired/future start → пустой fetch без ошибки брокера,
-   дыра детектится кодом <code>retention_hole</code> + <code>stream_first_seqs</code> probe).</li>
-<li>Фильтр <code>u &gt; u_snapshot</code>; сделки и события — идемпотентность по <code>MsgId</code> обязательна.</li>
-<li>Engine в replay (live-эмит баров подавлен,
-   <code>metrics/metrics_engine/engine.py:316-319,346-347</code>) — цель дойти до
-   «сейчас». Дальше действует различие не «replay vs live», а «sent vs
-   unsent»: после реплея отдельный проход <code>_publish_replay_rows</code>
-   (<code>calc/service.py:105-308</code>, вызов <code>:701-716</code>) читает retained-хвост BARS
-   (<code>fetch_published_bar_status</code>, <code>calc/bars_publisher.py:53-116</code>, вызов
-   <code>calc/service.py:199-201</code>) и публикует ТОЛЬКО по границам окна без
-   retained-бара (<code>calc/service.py:215-293</code>): retained-бар авторитетен и
-   реконструированной строкой не перезаписывается (<code>calc/service.py:255-261</code>,
-   <code>calc/bars_publisher.py:97-103</code>), retained gap-marker предварителен и
-   апгрейдится поздним доказанным баром (<code>calc/service.py:255,272-293</code>), а
-   невосстановимое окно уходит identity-only gap-маркером
-   (<code>{"type":"gap","exchange","symbol","bar_ts"}</code>,
-   <code>metrics/metrics_engine/bars_wire.py:90-123</code>), никогда баром
-   (<code>calc/service.py:263-270,282-289</code>). Проход — at-least-once: гонка
-   tail-check→publish (<code>calc/service.py:199-201</code> → <code>:272-293</code>) и ретрай
-   старше <code>Nats-Msg-Id</code>-окна (300s, §7; <code>calc/bars_publisher.py:47-50,204-313</code>)
-   могут дать дубль — его поглощает трейдер по <code>(symbol, bar_ts)</code>;
-   receiver-ключ уже обязателен (§7 выше + таблица транзакций; §8 «Бар v1»;
-   приёмник <code>trader/bars_reader.py:43-82</code>), здесь не переопределяется.</li>
-<li>Лаг &lt; слота по всем стримам → live — гейт, а не предупреждение:
-   <code>lag &gt;= 1</code> → <code>ReplayLagError</code> до смены состояния (<code>engine.py</code>),
-   переход удержан, символ получает вердикт <code>skip</code> по посимвольной
-   изоляции (§11). Движок, не открывший ни одного слота (пустой реплей),
-   отставания не имеет — лаг считается 0. Бар в трейдер — только с полным
-   штампом; тихое окно = бар из NULL: <code>blind_sec=1800</code> (ни одного
-   сообщения) → <code>bar_complete=false</code>, <code>blind_sec=0</code> (каждую секунду нёс
-   heartbeat, реальных событий не было) → <code>bar_complete=true</code>,
-   <code>first_ts</code>/<code>last_ts</code> = <code>null</code>.</li>
-<li>Битый новейший чекпойнт → попытка предыдущего пригодного. Нет пригодного
-   чекпойнта → replay доступных trade/kline/mark событий без исторической книги;
-   книжные метрики отсутствуют (NULL), качество окна неполное.</li>
-<li>Replay проверяет цепочку <code>pu == prev.u</code> (USD-M) / <code>U == prev.u+1</code> (spot).
-   Разрыв инвалидирует книгу, но не прекращает обработку независимых событий.
-   Свежий REST snapshot допускается только для будущего live после replay,
-   никогда для подстановки исторических книжных метрик.</li>
+<li>Создаёт необходимые PG-таблицы до первого чтения, читает скалярный курсор
+   шарда, epoch стрима и пригодные чекпойнты книг; проверяет retention/reset.</li>
+<li>Открывает один AckNone push-consumer <code>md.{market}.&gt;</code> с <code>cursor+1</code>.
+   История и новые события идут через один pump; движок всегда привязан к
+   времени тиков. Смена отдельного replay-режима на live больше не нужна.</li>
+<li>Книги восстанавливаются из PG до диффов, фильтр <code>u &gt; u_snapshot</code> и проверка
+   цепочки сохраняются. Разрыв инвалидирует книгу, независимые события
+   продолжают обрабатываться. REST snapshot не доказывает историческую книгу.</li>
+<li>Cold/pending-символы догоняются через bounded backfill и буфер общего
+   consumer. Перед завершением нужен барьер фактического потребления bus,
+   а не только завершение записи в очередь. Funding проходит через тот же
+   bus; ставка без рыночных событий не запускает шкалу баров.</li>
+<li>Completion pass закрывает только окна за settlement-cutoff. При переходе
+   следующей границы во время прохода заново закрывает готовые окна. Читает
+   retained BARS: существующий бар авторитетен, gap-marker можно заменить
+   доказанным баром; недоказуемое окно получает identity-only gap-marker.
+   Захваченные, но ещё не settled строки сохраняются для следующего прохода.</li>
+<li>До завершения публикации восстановления live boundary-публикация
+   заблокирована. Каждый символ получает <code>replayed</code> / <code>hole</code> / <code>cold</code> / <code>skip</code>.
+   Публикация at-least-once, trader дедуплицирует <code>(symbol, bar_ts)</code>.</li>
+<li>После публикации сохраняется published-watermark: позиция не проходит
+   ранние тики ещё открытого окна; снимки книг и курсор пишутся атомарно.
+   AckNone доставка сама по себе не является подтверждением durability.</li>
 </ol>
 <p>Транзакционные границы (подробно — research-notes.md §transactions):</p>
 <table>
@@ -3429,7 +3442,7 @@ remote-путь <code>NatsTickBus._publish_remote</code> не имел ни од
 <tbody>
 <tr>
 <td>PG cursor commit (calc)</td>
-<td>один commit курсора per-(symbol|type)</td>
+<td>один commit книг шарда + published-watermark per-(market|shard_index)</td>
 <td>at-least-once + идемпотентный приёмник по (symbol, bar_ts)</td>
 </tr>
 <tr>
@@ -3471,7 +3484,7 @@ remote-путь <code>NatsTickBus._publish_remote</code> не имел ни од
 </table>
 <h3 id="phase-2-summary">Phase 2 Summary<a class="headerlink" href="#phase-2-summary" title="Permanent link">&para;</a></h3>
 <p>Инварианты Phase 2 (constraint для Phase 3): сырьё 1:1 + MsgId + ingress time;
-resume строго exact-subject от per-subject seq+1 (X-001), дыра детектится кодом;
+resume calc одним market-consumer от published-watermark+1; дыра детектится кодом;
 бары — производное с полным контрактом (все ключи + штамп + NULL вместо forward fill);
 PG-чекпойнты + курсоры — восстановление книги; ордера идемпотентны (запрос по
 origClientOrderId перед отправкой) по
@@ -3581,17 +3594,10 @@ JetStream коротким окном; позиции — биржа (user data 
   Это производное сообщение, а не точная копия утраченного WS-фрейма.
   Если REST не вернул непрерывную историю, разрыв остаётся явно отмеченным.
   Depth backfill отсутствует: replay инвалидирует книгу при разрыве цепочки.</li>
-<li>Паритет funding в штампе — зафиксированная асимметрия: живые
-  funding-строки durable-консьюмера <code>run_calc_poller_consumer</code> уходят
-  только в in-process bus (<code>handle_poller_message_bus_only</code>,
-  <code>trader/poller_consumer.py:79-133</code>) и до <code>_apply_stamp</code> не доходят, а
-  бут-реплей funding через <code>gap_hook</code> прогоняет (events-ветка
-  <code>build_tick_stream</code>, <code>trader/replay_driver.py:244-245,539-551</code>), но
-  <code>_apply_stamp</code> сбрасывает строку на проверке int <code>E</code> — у плоской
-  funding-записи его нет, только <code>funding_time_ms</code>
-  (<code>calc/service.py:358-363</code>): в штамп funding не попадает ни с одного
-  пути. Практически пренебрежимо — покрытие окна доминирует
-  <code>@markPrice@1s</code> — записано для честности.</li>
+<li>Funding приходит через общий MD pump и bus, без отдельного durable.
+  Историческое <code>funding_time_ms</code> сохраняется как экономическая дата; поздняя
+  ставка применяется в текущем рыночном контексте. Funding не заменяет
+  heartbeat/рыночные события как доказательство покрытия окна.</li>
 <li>В баре сознательно НЕТ (это состояние/решение трейдера, не свойство бара):
   missing-список окна, norm/degraded/poor, order id.</li>
 <li>Ingress time пишется рядом с биржевым временем в каждом событии: без него
@@ -3772,8 +3778,9 @@ consumer. Пустые потоки не ждут fetch timeout для кажд�
 а не ложным успехом. Временные pull-подписки закрываются в любом исходе.</p>
 <p>Каталог обновляется каждые <code>market_symbol_refresh_seconds</code> (сейчас 300 секунд).
 Calc применяет новый снимок на следующей границе бара: для добавлений сначала
-выполняется отдельный cold replay в ещё не подключённых к live движках, затем
-они подключаются к живому потоку. Действующие движки повторно не проигрываются.
+новые символы переводятся в pending: общий consumer буферизует их события,
+backfill догоняет историю, затем после completion и bus-барьера буфер
+сливается с дедупликацией и символ допускается к boundary-публикации. Действующие движки повторно не проигрываются.
 Завершившие торги инструменты удаляются из текущего расчёта, их история сохраняется.
 При изменении множества collector заменяет только подключения и pollers затронутого
 рынка; очередь отправки и её буфер не перезапускаются. Полный список разбивается
@@ -3920,67 +3927,40 @@ server-side create-only для конкурирующих внешних writers
   контракт не меняется.</li>
 <li>Verification: kill-archiver soak S-2; X-004 file-side метод (per-stream du).</li>
 </ul>
-<h3 id="d4-calc-non-durable-pg-resume-exact-subject">D4. Calc non-durable + ОТДЕЛЬНЫЕ курсоры в PG; resume exact-subject<a class="headerlink" href="#d4-calc-non-durable-pg-resume-exact-subject" title="Permanent link">&para;</a></h3>
+<h3 id="d4-calc-acknone-published-watermark-pg">D4. Calc AckNone + скалярный published-watermark в PG<a class="headerlink" href="#d4-calc-acknone-published-watermark-pg" title="Permanent link">&para;</a></h3>
 <ul>
-<li>Status: accepted (Gate 0/4; X-001 reproduced на 2.10.29); реализация
-  полная: legacy dual-write/fallback удалены (см. ниже).</li>
-<li>Context: calc и trader — РАЗНЫЕ сервисы, общаются только через очередь
-  (<code>bars.*</code>). Курсор calc (откуда дочитано сырьё) принадлежит жизненному циклу
-  calc, а не трейдера: calc рестартится и догоняет независимо, трейдер на рестарт
-  calc НЕ рестартится. До этого решения курсор жил колонками
-  (<code>seq</code>, <code>trades_seq</code>, <code>events_seq</code>) таблицы <code>book_checkpoint</code>
-  (<code>9984dea:trader/book_store.py:28-35</code>; удалены, см. ниже) — это остаток монолита, где книга и курсор
-  писались одним процессом. При разделении это ломается: writer курсора и
-  writer чекпойнта — разные процессы с разными каденциями и разными отказами.</li>
-<li>Drivers: независимость жизненных циклов calc/trader; транзакционность
-  позиции+состояния ВНУТРИ calc; replay от границы бара, не с ack.</li>
-<li>Options: (a) durable + ack после коммита — держать бар un-acked стоит сотни МБ
-  RAM брокера + <code>ack_wait</code> длиннее бара — rejected; (b) без позиций вовсе
-  (<code>opt_start_time</code> + фильтр <code>u</code>) — рабочий fallback, менее точен — не выбран;
-  &copy; оставить курсор колонками <code>book_checkpoint</code> — rejected: таблица принадлежит
-  трейдеру/книге (writer — calc? trader? оба? — конфликт владельцев), курсор
-  calc дёргается каденцией чужого сервиса, отказ PG у трейдера роняет прогресс
-  calc и наоборот; (d) этот: ОТДЕЛЬНАЯ таблица курсоров calc per-(symbol|type)
-  (stream seq + U/u) в той же PG16 <code>trader</code> DB отдельной схемой, calc владеет
-  миграциями, bootstrap ensure создаёт до первого чтения — принят.</li>
-<li>Decision: Мы храним курсоры calc в ОТДЕЛЬНОЙ таблице (не колонки
-  <code>book_checkpoint</code>); resume — один ephemeral consumer на EXACT subject от
-  per-subject seq+1; дыра детектится кодом (<code>retention_hole</code> +
-  <code>stream_first_seqs</code> probe), не брокером. <code>book_checkpoint</code> остаётся владельцем
-  только книги (writer — calc, читатель при рестарте — calc; трейдер книгу
-  больше не трогает вовсе — он видит только бары).</li>
-<li>Legacy-колонки курсора в <code>book_checkpoint</code> (<code>seq</code>/<code>trades_seq</code>/<code>events_seq</code>)
-  удалены вместе с dual-write и fallback-чтением: система запускается с пустой
-  PG, миграции нет (решение человека 2026-09-23). Книга без строки <code>calc_cursor</code>
-  = холодный старт символа.</li>
-<li>Сброс стрима (курсор «в будущем»): курсор монотонен, а пересозданный или
-  потерявший хвост стрим начинает seq заново — без проверки calc молча
-  пропускал бы всё с <code>seq &lt;= старого курсора</code>. Поэтому рядом с курсором хранится
-  <code>created</code> стрима (<code>calc_stream_epoch</code>); на буте несовпадение <code>created</code> или
-  <code>cursor &gt; last_seq</code> = stream reset: ERROR + <code>trading_stream_reset_total{symbol,leg}</code>,
-  курсор сбрасывается (единственный путь в обход монотонного guard), символ
-  стартует холодно (<code>detect_stream_reset</code>, <code>trader/replay_boot.py</code>).
-  Потеря/ручная очистка NATS-хранилища исключена из гарантии восстановления:
-  детектор сохраняется, но не обещает восстановить уничтоженную историю.</li>
-<li>Funding-курсор — единственный broker-side durable у calc:
-  <code>calc-poller-md-any-funding-any</code> на <code>md.*.funding.*</code>
-  (<code>trader/replay_boot.py:_calc_durable_name</code>); в <code>calc_cursor</code> funding
-  сознательно не попадает (F5e — continuity держит сам курсор брокера).
-  При <code>calc_shard_count &gt; 1</code> имя суффиксируется <code>-shard-{i}</code>: общий
-  durable queue-балансировал бы доставку между шардами, и чужая
-  funding-строка ack'алась бы процессом без engine — тихая потеря.
-  При <code>shard_count = 1</code> имя прежнее, существующий курсор переиспользуется.</li>
-<li>Consequences: +жизненные циклы разделены; +миграции курсора не трогают книгу;
-  −планировщику писать DDL + ensure/bootstrap с нуля (образец —
-  <code>tests/test_book_store_schema_bootstrap.py</code>); −три владельца стейта в одном
-  PG-инстансе (calc: книга + курсоры; trader: intake-чекпойнт) — разные
-  таблицы/схемы, конфликта записи нет, но инстанс общий: его отказ бьёт по calc
-  и trader сразу (§11); почему один инстанс — один VM, понодовый шардинг PG отложен.</li>
-<li>Re-evaluation Trigger: PG становится связывающей ценой → отдельный ADR с миграцией.</li>
-<li>Verification: fresh-infra тест (пустая PG → ensure создаёт таблицу до первого
-  чтения); X-001 (first match at/after start; expired/future → empty fetch);
-  kill-calc среди бара → кольцо полное, бар равен эталону; kill-trader НЕ
-  трогает курсоры calc (проверяется раздельно).</li>
+<li>Status: accepted; read-path заменён ADR-0003, 2026-09-28.</li>
+<li>Context: calc и trader — разные сервисы. Восстановление сырья принадлежит
+  calc; рестарт calc не требует рестарта trader. Broker AckNone не хранит
+  долговременный прогресс расчёта.</li>
+<li>Decision: один стрим <code>MD</code> для всех семейств <code>md.*</code>, один ephemeral
+  push-consumer <code>md.{market}.&gt;</code> на шард. Позиция восстановления хранится в
+  <code>calc_stream_cursor</code>, ключ <code>(market, shard_index)</code>. Это published-watermark,
+  а не последняя прочитанная seq: открытые окна после рестарта переигрываются.</li>
+<li>Boundary: после подтверждённой публикации баров неизменяемые снимки книг
+  и scalar cursor пишутся одной PG-транзакцией. <code>book_checkpoint</code> хранит книгу,
+  без прежних <code>seq</code>/<code>trades_seq</code>/<code>events_seq</code>. Calc создаёт таблицы идемпотентно
+  в production boot до первого чтения. Trader хранит отдельный intake-state.</li>
+<li>Recovery: backlog и live идут через один pump. Cold/catalogue backfill
+  изолирует pending-символы; bounded buffer и Seq/MsgId dedup защищают handoff.
+  Completion сохраняет посимвольный verdict, уважает retained BARS и settlement.
+  Новая PG/MD-инфраструктура обязательна; миграция старого формата не реализована.</li>
+<li>Stream reset: <code>calc_stream_epoch</code> с тем же ключом хранит <code>created</code> стрима.
+  Несовпадение epoch или курсор за хвостом обнаруживается на boot; потеря
+  NATS-хранилища не входит в гарантию восстановления уничтоженной истории.</li>
+<li>Funding: отдельного durable и broker-side funding-курсора больше нет.
+  Funding проходит через общий поток; funding-only не открывает рыночное окно,
+  будущие ставки ждут рыночного времени в ограниченном буфере.</li>
+<li>Consequences: сохранены независимые жизненные циклы сервисов и AckNone;
+  удалены per-symbol cursor plumbing и отдельные replay/live modes. Один PG
+  остаётся общим SPOF для calc и trader (§11). Split-brain двух calc одного
+  шарда этим решением не устраняется.</li>
+<li>Re-evaluation Trigger: PG становится связывающей ценой или требуется второй
+  активный calc на шард — отдельный ADR с миграцией/fencing.</li>
+<li>Verification: production bootstrap пустой PG; stream resume/retention;
+  backfill-to-bus barrier; retained-bar authority; settlement и переход границы;
+  funding order; broker reconnect/soak. Продакшн-срез и длительный soak остаются
+  эксплуатационными проверками, локальная зелёная suite их не заменяет.</li>
 </ul>
 <h3 id="d5-v1-null">D5. Бар v1: всегда эмитим, тишина = NULL, штамп обязателен<a class="headerlink" href="#d5-v1-null" title="Permanent link">&para;</a></h3>
 <ul>
