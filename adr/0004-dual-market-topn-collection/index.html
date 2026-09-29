@@ -2230,6 +2230,27 @@ Parquet segment is closed and fsynced.
 The staged gate measures the live trade pending slope and archive close and
 readback after this change; a synthetic selected-load readback alone is not
 sufficient evidence of sustainable live operation.</p>
+<p>The first cursorless calc boot uses its single ordered <code>md.usdm.&gt;</code> consumer to
+replay the retained stream for cold selected symbols. It does not create a
+second per-symbol historical consumer after the drain. The completion pass
+still assigns a verdict before any boundary or live bar is released. A cold
+symbol added after a saved shard cursor, or a corrupt checkpoint diff leg,
+uses a bounded batch iterator and closes its temporary consumer when done.
+The scalar cursor continues to represent the consumed stream position; the
+selected-symbol filter applies before engine intake. Existing PG bars and raw
+source remain intact, including intervals the retained MD stream cannot
+cover. Those intervals require explicit gap evidence, not invented bars.</p>
+<p>The staged first boot consumed 7,517,687 USD-M messages and reached its drain
+barrier on 2026-09-29 at 15:30:26 UTC. Three seconds later NATS 2.10.29 was
+OOM-killed at its former 1 GiB container limit, with 1,034,760 KiB anonymous
+RSS in the kernel record. The redundant per-symbol replay and unbounded
+Python result list were removed before retry; the record does not prove which
+allocation inside NATS triggered the final spike. The broker remains pinned
+to 2.10.29 with <code>sync_always</code>. Its container limit is 1,536 MiB for the
+measured cold replay. All nine paper Compose service limits then total 13,184
+MiB; adding the operator's 2,048 MiB limit stays below the host's 15,949 MiB
+physical RAM. The new limit is a fault-driven budget, and the next live trial
+must demonstrate no OOM, bounded queue, and fresh bars before paper execution.</p>
 
 
 
