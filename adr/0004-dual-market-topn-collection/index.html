@@ -2299,6 +2299,29 @@ represent the current 1,536 MiB budget or top-100 selection as a proven
 stable production envelope. Isolate client load, fix the measured cause or
 set a justified bounded budget, then repeat the dual-market and 24-hour
 soak gates. The interrupted collection intervals are real gaps.</p>
+<p>The isolated archive replay showed why the 1.5 and 2.5 GiB NATS limits
+failed. A Go heap profile during the archive read attributed about 407 of
+472 MiB of live allocations to io.ReadAll while JetStream decompressed
+file-store blocks for consumer delivery. With the old Go runtime behavior,
+anonymous RSS reached the container limit. The paper broker now uses
+GOMEMLIMIT=1GiB and a 6 GiB cgroup ceiling for the retained backlog phase.
+Under simultaneous archive, dual-market collection and calc drain, measured
+anonymous memory was about 0.3-1.0 GiB; roughly 4.6 GiB of the cgroup
+accounting was inactive, reclaimable file cache. The independent guard uses
+anonymous memory and host MemAvailable, not total cgroup bytes, so it
+responds to non-reclaimable pressure. This is a measured cold-backlog budget;
+the 24-hour soak must establish its steady-state envelope before it can be
+reduced.</p>
+<p>One kline pull durable was absent from JetStream's recovered consumer list
+while its on-disk directory remained. The orphan directory and file hashes
+were preserved in the operator folder while NATS was stopped. On restart the
+archiver recreated the same durable from the drained legacy ACK floor; its
+pending count reached zero, without purging the MD stream or archive files.
+The subsequent archive replay cleared kline and mark backlogs. Diff pending
+continued to rise under concurrent calc drain because single-message pulls
+could not sustain selected-market ingress. Diff pulls now request 16 messages
+per batch, within their existing 64-message local pending bound. The
+archive readback and falling diff/trade backlog remain deployment gates.</p>
 
 
 
