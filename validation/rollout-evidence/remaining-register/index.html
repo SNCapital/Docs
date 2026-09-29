@@ -2268,6 +2268,10 @@ same pinned 2.10.29 image with a measured 1,536 MiB limit. The one new
 collector resumed both markets after an approximately five-minute fault gap.
 A later calc retry was stopped at 16:12:55 UTC after memory rose to 1.86 GiB
 during cold drain; compact per-window presence seconds passed focused tests.
+The bitmap retry was also stopped cleanly when RSS reached about 1.94 GiB
+with over 10 million MD messages pending. Client pending-byte accounting
+excludes Python message overhead; low-rate drain diagnostics must identify
+the remaining measured allocation before calc acceptance.
 Calc, trader, dashboard and soak remain pending until measured bounded cold
 recovery, fresh PG+BARS, paper reconciliation, API and observer gates pass.
 The historical source-gap

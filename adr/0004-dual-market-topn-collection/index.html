@@ -2261,6 +2261,17 @@ distinct-second counts, including out-of-order arrivals and accumulator
 merges. Cold pre-tip messages do not retain per-message stamp IDs; the
 separate live deduplicator remains bounded. The next staged replay must
 measure calc memory and complete all verdict, bar, queue and archive gates.</p>
+<p>The bitmap reduced the early slope but the 16:31:50 UTC retry still reached
+about 1.94 GiB RSS with more than 10 million MD messages pending, so calc was
+again stopped cleanly before its limit. The retained stream covers about 18
+hours: at most about 3,600 dense 791-key rows for 100 symbols, which cannot
+alone explain that RSS. The NATS Python client's 512 MiB pending-byte limit
+counts payload bytes without Python message and header objects; its actual
+resident queue can be materially larger. The exact contribution from that
+queue, bounded engine windows, message-ID deduplication and captured rows is
+not yet measured. Low-rate drain diagnostics now report each retained count
+and current RSS. The next guarded replay is a measurement gate, not acceptance
+of the current memory trend.</p>
 
 
 
