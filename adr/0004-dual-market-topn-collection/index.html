@@ -2251,6 +2251,16 @@ measured cold replay. All nine paper Compose service limits then total 13,184
 MiB; adding the operator's 2,048 MiB limit stays below the host's 15,949 MiB
 physical RAM. The new limit is a fault-driven budget, and the next live trial
 must demonstrate no OOM, bounded queue, and fresh bars before paper execution.</p>
+<p>The next cold calc retry was stopped safely on 2026-09-29 at 16:12:55 UTC
+after its memory rose from about 400 MiB to 1.86 GiB while the retained
+USD-M stream still had 9.49 million messages pending. It had not produced a
+recovery verdict or fresh bar. Presence stamps retained distinct event
+seconds in up to three Python sets per symbol and 30-minute window until
+the drain barrier. An anchored integer bitmap per window now retains exact
+distinct-second counts, including out-of-order arrivals and accumulator
+merges. Cold pre-tip messages do not retain per-message stamp IDs; the
+separate live deduplicator remains bounded. The next staged replay must
+measure calc memory and complete all verdict, bar, queue and archive gates.</p>
 
 
 

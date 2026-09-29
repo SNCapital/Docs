@@ -2264,17 +2264,21 @@ trade backlog. Legacy Spot was stopped and disabled at 14:41:16 UTC; its data
 and config remain intact. The next calc cold boot reached the 7.5-million-
 message drain barrier but exposed a NATS 1 GiB memcg OOM before any recovery
 verdict or fresh bar. The broker and durable MD source recovered intact on the
-same pinned 2.10.29 image with a measured 1,536 MiB limit. Both new market
-collectors resumed after an approximately five-minute fault gap. Calc, trader,
-dashboard and soak remain pending until bounded cold recovery, fresh PG+BARS,
-paper reconciliation, API and observer gates pass. The historical source-gap
+same pinned 2.10.29 image with a measured 1,536 MiB limit. The one new
+collector resumed both markets after an approximately five-minute fault gap.
+A later calc retry was stopped at 16:12:55 UTC after memory rose to 1.86 GiB
+during cold drain; compact per-window presence seconds passed focused tests.
+Calc, trader, dashboard and soak remain pending until measured bounded cold
+recovery, fresh PG+BARS, paper reconciliation, API and observer gates pass.
+The historical source-gap
 inventory and larger P2/P3 work below remain open; their old full-catalogue
 load thresholds are superseded for this paper rollout.</p>
 <p>The source is published and earlier focused tests, strict docs, integration,
 and selected-load proof passed. The live two-market collector and archiver are
-running; calc remains off after the broker fault pending the bounded-recovery
-release and its runtime gates. The sole paper trader and 24-hour observer must
-start only after per-symbol calc outcomes, fresh bars and paper reconciliation.
+running; calc remains off after the memory-growth finding pending the
+presence-stamp release and its runtime gates. The sole paper trader and
+24-hour observer must start only after per-symbol calc outcomes, fresh bars
+and paper reconciliation.
 Historical source recovery, original snapshot uncertainty and P2/P3 research
 remain open unless they cause a direct paper safety fault.</p>
 <p>The older register below was written after the 00:16–00:17 UTC collector trial
