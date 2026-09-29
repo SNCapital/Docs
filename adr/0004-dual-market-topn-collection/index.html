@@ -2209,10 +2209,12 @@ exact cutover and gap record. A 24-hour soak is started only after those gates.<
 <p>Live top-100-per-market ingress exposed a trade archive throughput limit from
 one-message JetStream pulls. The trade durable therefore fetches up to 32
 messages per request, below its existing 64-message client pending bound so
-the subscription queue retains delivery and protocol headroom, and processes
-any nonempty partial batch. Low-rate archive subjects retain their
-single-message pull. Fetch batching does not advance acknowledgement: every
-row remains unacknowledged until its Parquet segment is closed and fsynced.
+the subscription queue retains delivery and protocol headroom. nats-py may
+return a prefilled queue of up to 64 messages even when 32 were requested;
+the archiver processes every bounded nonempty result. Low-rate archive
+subjects retain their single-message pull. Fetch batching does not advance
+acknowledgement: every row remains unacknowledged until its Parquet segment is
+closed and fsynced.
 The staged gate measures the live trade pending slope and archive close and
 readback after this change; a synthetic selected-load readback alone is not
 sufficient evidence of sustainable live operation.</p>
