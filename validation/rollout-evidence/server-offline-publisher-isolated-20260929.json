@@ -1,0 +1,366 @@
+{
+  "sample_sha256": "bfff4a9abe984291c89c6dda263261df36794286e7ff7678ecf591af90c80777",
+  "profile_sha256": "573d7c42132ad01c49f1f49d1a1a5d94232233611d2c84c46c650f15a2ce9681",
+  "phase_utc": {
+    "warmup_start": "2026-09-29T01:06:47.193691+00:00",
+    "warmup_end": "2026-09-29T01:06:47.690130+00:00",
+    "offering_start": "2026-09-29T01:06:47.690180+00:00",
+    "offering_end": "2026-09-29T01:07:17.690891+00:00",
+    "drain_end": "2026-09-29T01:07:28.127428+00:00",
+    "readback_start": "2026-09-29T01:07:28.190360+00:00",
+    "readback_end": "2026-09-29T01:07:41.943501+00:00"
+  },
+  "profile": {
+    "mode": "nats",
+    "storage": "file",
+    "symbols": 780,
+    "duration": 30.0,
+    "offered_rate": 2700.0,
+    "burst_start": 15.0,
+    "burst_duration": 5.0,
+    "burst_rate": 5400.0,
+    "max_events": 120000,
+    "capacity_bytes": 256000000,
+    "warmup": true
+  },
+  "sample_rows": 6000,
+  "warmup_acked": 975,
+  "warmup_seconds": 0.496,
+  "measured_first_seq": 976,
+  "sample_kinds": {
+    "diff": 2453,
+    "trade": 1388,
+    "hb": 1380,
+    "mark": 779
+  },
+  "offered": 94493,
+  "admitted": 94493,
+  "acked": 94493,
+  "rejected": 0,
+  "drain_timed_out": false,
+  "evicted": 0,
+  "queued_end": 0,
+  "charged_bytes_end": 0,
+  "offer_seconds": 30.001,
+  "drain_seconds": 40.437,
+  "offered_rate_actual": 3149.7,
+  "acked_rate_to_drain": 2336.8,
+  "ack_latency_ms": {
+    "p50": 888.095,
+    "p95": 19628.36,
+    "p99": 28234.841
+  },
+  "samples": [
+    {
+      "second": 0,
+      "offered": 1,
+      "admitted": 1,
+      "acked": 0,
+      "queued": 1,
+      "charged_bytes": 2256,
+      "inflight_bytes": 0,
+      "evicted": 0
+    },
+    {
+      "second": 1,
+      "offered": 2700,
+      "admitted": 2700,
+      "acked": 2337,
+      "queued": 176,
+      "charged_bytes": 799008,
+      "inflight_bytes": 418016,
+      "evicted": 0
+    },
+    {
+      "second": 2,
+      "offered": 5394,
+      "admitted": 5394,
+      "acked": 5090,
+      "queued": 225,
+      "charged_bytes": 667120,
+      "inflight_bytes": 190752,
+      "evicted": 0
+    },
+    {
+      "second": 3,
+      "offered": 8101,
+      "admitted": 8101,
+      "acked": 7525,
+      "queued": 483,
+      "charged_bytes": 1199520,
+      "inflight_bytes": 197456,
+      "evicted": 0
+    },
+    {
+      "second": 4,
+      "offered": 10795,
+      "admitted": 10795,
+      "acked": 10240,
+      "queued": 423,
+      "charged_bytes": 1251648,
+      "inflight_bytes": 360432,
+      "evicted": 0
+    },
+    {
+      "second": 5,
+      "offered": 13500,
+      "admitted": 13500,
+      "acked": 12425,
+      "queued": 920,
+      "charged_bytes": 2277504,
+      "inflight_bytes": 348528,
+      "evicted": 0
+    },
+    {
+      "second": 6,
+      "offered": 16185,
+      "admitted": 16185,
+      "acked": 15129,
+      "queued": 1056,
+      "charged_bytes": 2710256,
+      "inflight_bytes": 450176,
+      "evicted": 0
+    },
+    {
+      "second": 7,
+      "offered": 18900,
+      "admitted": 18900,
+      "acked": 17346,
+      "queued": 1354,
+      "charged_bytes": 3407376,
+      "inflight_bytes": 507168,
+      "evicted": 0
+    },
+    {
+      "second": 8,
+      "offered": 21599,
+      "admitted": 21599,
+      "acked": 19746,
+      "queued": 1653,
+      "charged_bytes": 3931920,
+      "inflight_bytes": 436416,
+      "evicted": 0
+    },
+    {
+      "second": 9,
+      "offered": 24294,
+      "admitted": 24294,
+      "acked": 22346,
+      "queued": 1948,
+      "charged_bytes": 4666368,
+      "inflight_bytes": 473696,
+      "evicted": 0
+    },
+    {
+      "second": 10,
+      "offered": 26999,
+      "admitted": 26999,
+      "acked": 24746,
+      "queued": 2053,
+      "charged_bytes": 4864096,
+      "inflight_bytes": 458848,
+      "evicted": 0
+    },
+    {
+      "second": 11,
+      "offered": 29700,
+      "admitted": 29700,
+      "acked": 27346,
+      "queued": 2354,
+      "charged_bytes": 5542624,
+      "inflight_bytes": 451840,
+      "evicted": 0
+    },
+    {
+      "second": 12,
+      "offered": 32391,
+      "admitted": 32391,
+      "acked": 29921,
+      "queued": 2470,
+      "charged_bytes": 5687856,
+      "inflight_bytes": 446016,
+      "evicted": 0
+    },
+    {
+      "second": 13,
+      "offered": 35099,
+      "admitted": 35099,
+      "acked": 32326,
+      "queued": 2573,
+      "charged_bytes": 5908720,
+      "inflight_bytes": 460048,
+      "evicted": 0
+    },
+    {
+      "second": 14,
+      "offered": 37799,
+      "admitted": 37799,
+      "acked": 34126,
+      "queued": 3473,
+      "charged_bytes": 7793056,
+      "inflight_bytes": 449392,
+      "evicted": 0
+    },
+    {
+      "second": 15,
+      "offered": 40496,
+      "admitted": 40496,
+      "acked": 36126,
+      "queued": 4170,
+      "charged_bytes": 9341888,
+      "inflight_bytes": 461680,
+      "evicted": 0
+    },
+    {
+      "second": 16,
+      "offered": 45905,
+      "admitted": 45905,
+      "acked": 38326,
+      "queued": 7379,
+      "charged_bytes": 16603840,
+      "inflight_bytes": 429024,
+      "evicted": 0
+    },
+    {
+      "second": 17,
+      "offered": 51272,
+      "admitted": 51272,
+      "acked": 40926,
+      "queued": 10146,
+      "charged_bytes": 23054288,
+      "inflight_bytes": 425488,
+      "evicted": 0
+    },
+    {
+      "second": 18,
+      "offered": 56681,
+      "admitted": 56681,
+      "acked": 43526,
+      "queued": 12955,
+      "charged_bytes": 29530560,
+      "inflight_bytes": 446864,
+      "evicted": 0
+    },
+    {
+      "second": 19,
+      "offered": 62105,
+      "admitted": 62105,
+      "acked": 45849,
+      "queued": 16056,
+      "charged_bytes": 36619328,
+      "inflight_bytes": 453008,
+      "evicted": 0
+    },
+    {
+      "second": 20,
+      "offered": 67483,
+      "admitted": 67483,
+      "acked": 48249,
+      "queued": 19034,
+      "charged_bytes": 43546464,
+      "inflight_bytes": 425792,
+      "evicted": 0
+    },
+    {
+      "second": 21,
+      "offered": 70193,
+      "admitted": 70193,
+      "acked": 50649,
+      "queued": 19344,
+      "charged_bytes": 44328272,
+      "inflight_bytes": 447008,
+      "evicted": 0
+    },
+    {
+      "second": 22,
+      "offered": 72892,
+      "admitted": 72892,
+      "acked": 53049,
+      "queued": 19643,
+      "charged_bytes": 45313808,
+      "inflight_bytes": 435056,
+      "evicted": 0
+    },
+    {
+      "second": 23,
+      "offered": 75576,
+      "admitted": 75576,
+      "acked": 55449,
+      "queued": 19927,
+      "charged_bytes": 45904016,
+      "inflight_bytes": 430768,
+      "evicted": 0
+    },
+    {
+      "second": 24,
+      "offered": 78292,
+      "admitted": 78292,
+      "acked": 57863,
+      "queued": 20229,
+      "charged_bytes": 46802128,
+      "inflight_bytes": 433872,
+      "evicted": 0
+    },
+    {
+      "second": 25,
+      "offered": 80977,
+      "admitted": 80977,
+      "acked": 60466,
+      "queued": 20311,
+      "charged_bytes": 47065264,
+      "inflight_bytes": 438544,
+      "evicted": 0
+    },
+    {
+      "second": 26,
+      "offered": 83692,
+      "admitted": 83692,
+      "acked": 62866,
+      "queued": 20626,
+      "charged_bytes": 47899440,
+      "inflight_bytes": 437280,
+      "evicted": 0
+    },
+    {
+      "second": 27,
+      "offered": 86393,
+      "admitted": 86393,
+      "acked": 64666,
+      "queued": 21727,
+      "charged_bytes": 50360848,
+      "inflight_bytes": 460624,
+      "evicted": 0
+    },
+    {
+      "second": 28,
+      "offered": 89092,
+      "admitted": 89092,
+      "acked": 66666,
+      "queued": 22226,
+      "charged_bytes": 51543264,
+      "inflight_bytes": 464848,
+      "evicted": 0
+    },
+    {
+      "second": 29,
+      "offered": 91791,
+      "admitted": 91791,
+      "acked": 69266,
+      "queued": 22325,
+      "charged_bytes": 51885696,
+      "inflight_bytes": 452080,
+      "evicted": 0
+    }
+  ],
+  "health_duplicate_acks": 0,
+  "health_publish_failures": 0,
+  "stream_messages": 95468,
+  "readback": {
+    "missing": 0,
+    "duplicates": 0,
+    "mismatch": 0,
+    "reordered_subjects": 0,
+    "header_mismatch": 0,
+    "unexpected": 0
+  }
+}

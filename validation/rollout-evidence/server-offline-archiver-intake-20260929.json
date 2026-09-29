@@ -1,0 +1,173 @@
+{
+  "trace_allocations": false,
+  "sample_events": 6000,
+  "published_events": 120000,
+  "published_elapsed_s": 73.27751258504577,
+  "published_rate_per_s": 1637.610172162001,
+  "drained_after_publish_s": 79.68835374701302,
+  "merge_elapsed_s": 0.0,
+  "merge_object": null,
+  "sample_symbols": 780,
+  "sample_kinds": {
+    "diff": 2453,
+    "trade": 1388,
+    "hb": 1380,
+    "mark": 779
+  },
+  "broker": {
+    "missing": 0,
+    "mismatched": 0
+  },
+  "parquet_missing": 0,
+  "parquet_extra": 0,
+  "parquet_duplicates": 0,
+  "consumers": {
+    "md.*.diff.*": {
+      "ack_pending": 0,
+      "pending": 0,
+      "redelivered": 0
+    },
+    "md.*.trade.*": {
+      "ack_pending": 0,
+      "pending": 0,
+      "redelivered": 0
+    },
+    "md.*.kline.*": {
+      "ack_pending": 0,
+      "pending": 0,
+      "redelivered": 0
+    },
+    "md.*.mark.*": {
+      "ack_pending": 0,
+      "pending": 0,
+      "redelivered": 0
+    },
+    "md.*.liq.*": {
+      "ack_pending": 0,
+      "pending": 0,
+      "redelivered": 0
+    },
+    "md.*.hb.*": {
+      "ack_pending": 0,
+      "pending": 0,
+      "redelivered": 0
+    },
+    "md.*.info.*": {
+      "ack_pending": 0,
+      "pending": 0,
+      "redelivered": 0
+    },
+    "md.*.funding.*": {
+      "ack_pending": 0,
+      "pending": 0,
+      "redelivered": 0
+    },
+    "md.*.stats.*": {
+      "ack_pending": 0,
+      "pending": 0,
+      "redelivered": 0
+    }
+  },
+  "phases": [
+    {
+      "phase": "subscribed",
+      "monotonic_s": 886620.320119326,
+      "rss_bytes": 133033984,
+      "cgroup_current_bytes": 78508032,
+      "cgroup_peak_bytes": 78729216,
+      "cgroup_events": {
+        "low": "0",
+        "high": "0",
+        "max": "0",
+        "oom": "0",
+        "oom_kill": "0",
+        "oom_group_kill": "0"
+      },
+      "tracemalloc_current_bytes": 0,
+      "tracemalloc_peak_bytes": 0,
+      "arrow_current_bytes": 0,
+      "arrow_peak_bytes": 0,
+      "open_writers": 0,
+      "pending_rows": 0,
+      "pending_ack_messages": 0,
+      "pending_ack_payload_bytes": 0,
+      "subscription_queued_messages": 0,
+      "subscription_queued_bytes": 0
+    },
+    {
+      "phase": "published",
+      "monotonic_s": 886693.59797369,
+      "rss_bytes": 285618176,
+      "cgroup_current_bytes": 269221888,
+      "cgroup_peak_bytes": 269795328,
+      "cgroup_events": {
+        "low": "0",
+        "high": "0",
+        "max": "0",
+        "oom": "0",
+        "oom_kill": "0",
+        "oom_group_kill": "0"
+      },
+      "tracemalloc_current_bytes": 0,
+      "tracemalloc_peak_bytes": 0,
+      "arrow_current_bytes": 5716352,
+      "arrow_peak_bytes": 8418304,
+      "open_writers": 8,
+      "pending_rows": 19900,
+      "pending_ack_messages": 119900,
+      "pending_ack_payload_bytes": 0,
+      "subscription_queued_messages": 98,
+      "subscription_queued_bytes": 36188
+    },
+    {
+      "phase": "durable_drained",
+      "monotonic_s": 886773.304045388,
+      "rss_bytes": 283463680,
+      "cgroup_current_bytes": 273289216,
+      "cgroup_peak_bytes": 278630400,
+      "cgroup_events": {
+        "low": "0",
+        "high": "0",
+        "max": "0",
+        "oom": "0",
+        "oom_kill": "0",
+        "oom_group_kill": "0"
+      },
+      "tracemalloc_current_bytes": 0,
+      "tracemalloc_peak_bytes": 0,
+      "arrow_current_bytes": 0,
+      "arrow_peak_bytes": 8418304,
+      "open_writers": 0,
+      "pending_rows": 0,
+      "pending_ack_messages": 0,
+      "pending_ack_payload_bytes": 0,
+      "subscription_queued_messages": 0,
+      "subscription_queued_bytes": 0
+    },
+    {
+      "phase": "verified",
+      "monotonic_s": 886789.010378998,
+      "rss_bytes": 247582720,
+      "cgroup_current_bytes": 250351616,
+      "cgroup_peak_bytes": 278630400,
+      "cgroup_events": {
+        "low": "0",
+        "high": "0",
+        "max": "0",
+        "oom": "0",
+        "oom_kill": "0",
+        "oom_group_kill": "0"
+      },
+      "tracemalloc_current_bytes": 0,
+      "tracemalloc_peak_bytes": 0,
+      "arrow_current_bytes": 0,
+      "arrow_peak_bytes": 8418304,
+      "open_writers": 0,
+      "pending_rows": 0,
+      "pending_ack_messages": 0,
+      "pending_ack_payload_bytes": 0,
+      "subscription_queued_messages": 0,
+      "subscription_queued_bytes": 0
+    }
+  ]
+}

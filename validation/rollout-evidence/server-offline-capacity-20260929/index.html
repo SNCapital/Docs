@@ -11,7 +11,7 @@
       
       
       
-        <link rel="canonical" href="https://sncapital.github.io/Docs/validation/rollout-evidence/remaining-register/">
+        <link rel="canonical" href="https://sncapital.github.io/Docs/validation/rollout-evidence/server-offline-capacity-20260929/">
       
       
       
@@ -24,7 +24,7 @@
     
     
       
-        <title>Remaining work register for Codex Web - SN Capital — Backend</title>
+        <title>Server offline capacity continuation, 2026-09-29 - SN Capital — Backend</title>
       
     
     
@@ -77,7 +77,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#remaining-work-register-for-codex-web" class="md-skip">
+        <a href="#server-offline-capacity-continuation-2026-09-29" class="md-skip">
           Skip to content
         </a>
       
@@ -113,7 +113,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Remaining work register for Codex Web
+              Server offline capacity continuation, 2026-09-29
             
           </span>
         </div>
@@ -2087,10 +2087,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#server-continuation-2026-09-29" class="md-nav__link">
+  <a href="#baseline-and-boundaries" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Server continuation, 2026-09-29
+        Baseline and boundaries
       
     </span>
   </a>
@@ -2098,10 +2098,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#current-baseline-and-acceptance-limits" class="md-nav__link">
+  <a href="#isolated-experiments" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Current baseline and acceptance limits
+        Isolated experiments
       
     </span>
   </a>
@@ -2109,10 +2109,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#immediate-prerequisite-work-p0-nsc-116" class="md-nav__link">
+  <a href="#acceptance-status" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Immediate prerequisite work — P0 / NSC-116
+        Acceptance status
       
     </span>
   </a>
@@ -2120,10 +2120,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#p1-live-paper-and-operational-acceptance" class="md-nav__link">
+  <a href="#archiver-retention-diagnosis" class="md-nav__link">
     <span class="md-ellipsis">
       
-        P1 — live paper and operational acceptance
+        Archiver retention diagnosis
       
     </span>
   </a>
@@ -2131,10 +2131,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#p2-functional-and-research-acceptance" class="md-nav__link">
+  <a href="#exclusive-warmed-publisher-result" class="md-nav__link">
     <span class="md-ellipsis">
       
-        P2 — functional and research acceptance
+        Exclusive warmed publisher result
       
     </span>
   </a>
@@ -2142,10 +2142,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#p3-hygiene-after-stabilization" class="md-nav__link">
+  <a href="#exclusive-archiver-intake-result" class="md-nav__link">
     <span class="md-ellipsis">
       
-        P3 — hygiene after stabilization
+        Exclusive archiver intake result
       
     </span>
   </a>
@@ -2153,10 +2153,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#closed-original-work-do-not-repeat" class="md-nav__link">
+  <a href="#file-sync-wait-observation" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Closed original work — do not repeat
+        File-sync wait observation
       
     </span>
   </a>
@@ -2164,10 +2164,43 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#evidence-to-carry-with-the-handoff" class="md-nav__link">
+  <a href="#combined-archiver-safety-failure-and-follow-up-fixes" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Evidence to carry with the handoff
+        Combined archiver safety failure and follow-up fixes
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#external-resource-supervisor" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        External resource supervisor
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#guarded-combined-archiver-repeat" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Guarded combined archiver repeat
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#delivery-backpressure-constraint" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Delivery backpressure constraint
       
     </span>
   </a>
@@ -2194,201 +2227,244 @@
   
 
 
-<h1 id="remaining-work-register-for-codex-web">Remaining work register for Codex Web<a class="headerlink" href="#remaining-work-register-for-codex-web" title="Permanent link">&para;</a></h1>
-<p>As of 2026-09-29, after the 00:16–00:17 UTC collector trial and 00:23 UTC archiver stop. This register condenses the original 28-task plan; it does not authorize another live trial, a NATS upgrade, paid resources, risk changes, deletion or real-money trading. The main handoff supplies the Git branch and access constraints. Treat old execution commands and historical status sections as evidence, not current instructions.</p>
-<h2 id="server-continuation-2026-09-29">Server continuation, 2026-09-29<a class="headerlink" href="#server-continuation-2026-09-29" title="Permanent link">&para;</a></h2>
-<p>The direct-server continuation started from clean published main
-<code>4ce261e84f3d62271b69aecebb81ffb60d359f7c</code>. Current user instructions authorize
-tested commits and normal pushes to main, while retaining the clean/freshly
-fetched origin/main release requirement. Historical branch-only wording below
-describes the earlier handoff, not the current authorization.</p>
-<p><a href="../server-offline-capacity-20260929/">Server offline evidence</a> records the fresh
-read-only baseline, archiver retention regressions, actual subscription/readback
-probes and the failed isolated warmed durable publisher capacity test. Live
-services remain stopped; no P0/P1 gate is closed by this work. The original
-snapshot remains unaccepted. An <a href="../offline-atomic-prototype-20260929/">isolated atomic-batch prototype</a>
-committed and exactly read back 60,000 events at 9,753/s and exercised crash
-reconciliation on separate new storage. This is not D9 integration acceptance.
-The combined archiver trial still fails its memory gate; bounded consumer
-migration is being tested. Production NATS remains pinned and unchanged.</p>
-<h2 id="current-baseline-and-acceptance-limits">Current baseline and acceptance limits<a class="headerlink" href="#current-baseline-and-acceptance-limits" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Original reviewed main: <code>04e45d37d7094b1423c0e305bf9193664f1f0627</code>. Current changes are being published on codex/remaining-plan-execution; server release tree hashes identify immutable source content, not Git commits.</li>
-<li>Selected server candidate: <code>630cc80784a4</code>, isolated WS release, 623 files, 2,318 unit passes / 9 skips / 1 xfail. It is <strong>not runtime accepted</strong>. Local raw funding source-coverage work is newer and not deployed: 2,351 unit passes / 9 skips / 1 xfail and 12 relevant slow/load passes. Genuine pre-publish attempt/admission counters are complete and included. Final combined unit gate: 2,355 passed / 9 skipped / 1 xfail. The 12 relevant slow/load tests passed; no new runtime capacity proof is implied.</li>
-<li>New collector and archiver stopped cleanly (exit 0); calc and new paper trader have never started. New NATS/PG and monitoring remain. Old futures collector/trader/Go parser and old NATS stay stopped; legacy spot remains active. Refresh this state before any subsequent operation.</li>
-<li>All available bar history was imported and fully read back: 488,604 bars / 120 symbols, immutable cutoff 2026-09-28 14:30 UTC. Production reader passed under 512 MiB. Full trader restore and three-strategy evaluation passed at 1.465 GiB peak under 2.25 GiB. These close those measured dataset/RAM gates only.</li>
-<li>Imported history is incomplete/full-blind; BarsReader drops quality metadata, so it can warm strategies but is <strong>not historical quality acceptance</strong>. Do not silently discard it or label it GOOD.</li>
-<li>Current application blocker: durable publication cannot keep up; the latest short trial accumulated about 31 MB queued charge and stopped before eight minutes or the first funding cycle. Zero drops/reconnects and clean drain do not establish sustained capacity. The prior ~2,450/s arrival estimate is withdrawn: <code>trading_ingress_messages_total</code> is post-PubAck, not admission. Measured queue growth proves a deficit; no precise arrival/headroom ratio is established.</li>
-<li>Archiver hit its exact 768 MiB ceiling (<code>memory.events:max=1193</code>, no OOM kill) and retained high anonymous memory after segment closures. Increasing its cap alone is not an accepted fix.</li>
-</ul>
-<h2 id="immediate-prerequisite-work-p0-nsc-116">Immediate prerequisite work — P0 / NSC-116<a class="headerlink" href="#immediate-prerequisite-work-p0-nsc-116" title="Permanent link">&para;</a></h2>
-<table>
-<thead>
-<tr>
-<th>Priority / original link</th>
-<th>Remaining work</th>
-<th>Acceptance required</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>P0.2 — D1 / NSC-116</td>
-<td>Independently count buffer admission, then isolate Python scheduling/client, NATS durable output, disk sync and concurrent archiver cost. Existing synthetic publisher tests are supporting evidence only.</td>
-<td>Offline replay of a representative mixed-kind 780-symbol workload; offered/admitted/ACKed/readback counts and timing, per-subject order, duplicate/loss census, stable bounded queue and measured burst/catch-up headroom. Explain profiles and tracing overhead. No more venue trial until stronger proof.</td>
-</tr>
-<tr>
-<td>P0.2 — D1 / NSC-116</td>
-<td>Bound archiver local subscription queues, retained unacknowledged Msg payloads, writer buffers/closed metadata, failed-flush redelivery and slow-upload retention. Identify actual memory owner before changing allocation policy.</td>
-<td>Isolated actual subscription → decode → segment fsync/ACK → merge/upload pipeline; trade/depth tails, 780 symbols, backlog/burst, failed flush and delayed sink. Stable concurrent peak with headroom, no limit events/OOM, all IDs read back once after drain. Include merge/upload; intake-only proof is insufficient.</td>
-</tr>
-<tr>
-<td>P0.1 — D1 / NSC-116, D11–D13</td>
-<td>Finish source coverage manifests and recovery of old raw/kline/staging/B2 gaps; account for reconnect gaps and earlier forced-stop volatile losses.</td>
-<td>Per market/kind/symbol/time manifests, verified copies and exact recoverable/unknown/missing intervals. Existing zero drop counter never proves no stop-time loss. Durable trade gap headers preserve ranges but do not recover them.</td>
-</tr>
-<tr>
-<td>P0.1 — D1 / NSC-116</td>
-<td>Resolve native MD_TRADE snapshot membership uncertainty without modifying originals.</td>
-<td>Match archived index/block membership to restored messages and validate payloads. Initial snapshot response excluded-prefix difference is 84,121 sequences plus five newer suffix messages; concurrency/retention is plausible, not per-event proof. Neither initial-state equality nor prefix recovery is accepted.</td>
-</tr>
-<tr>
-<td>P0.2/P0.4 — D1 / NSC-116; E3</td>
-<td>Prove full-catalogue calc cold boot and seeded restart, settlement rollover, resource/RTO and flow-control behavior. The MD I1–I18 matrix and focused tests exist.</td>
-<td>Timestamped actual <code>run_calc_service</code> probes for fresh PG bootstrap, scalar resume, retention holes/reset, publish/commit/crash, retained-bar authority, cold/add/remove, duplicate/floor, FC/reconnect/SlowConsumer, stall/watchdog. One terminal verdict per symbol; no partial boot bars; compare seeded restart against uninterrupted baseline.</td>
-</tr>
-<tr>
-<td>P0.3 — D1 / NSC-116; E2</td>
-<td>Refresh concrete paper cutover/rollback after measured capacity fixes, using immutable manifest/image identity and preserved old storage.</td>
-<td>Separate NATS instance/account for overlapping subjects, fresh PG/cursors/books, stop-first processes, exact UTC boundaries, image/config hashes, loopback ports, loss/duplicate accounting and rollback. Do not use deploy scripts that silently sync a newer main.</td>
-</tr>
-</tbody>
-</table>
-<p>Current summed service ceilings are 12.375 GiB on a roughly 15.6 GiB host: collector 2, calc 5, trader 2.25, NATS 1, PG 0.5, archiver 0.75, Prometheus 0.375, dashboard 0.25 and Grafana 0.25 GiB. This is not a measured simultaneous-stack envelope. NATS file store is 24 GB (raw 21 GB, bars 1 GB); internal memory store 256 MiB. Prove projected retention/storage occupancy rather than promising 24 hours. Preserve always-sync durability. NATS 2.10.29 is pinned; atomic publishing is a future protocol/version project, not an immediate approved remedy. Relevant R1 always-sync batching optimization is in 2.15, with changed dedup/lost-final-ACK and downgrade contracts.</p>
-<h2 id="p1-live-paper-and-operational-acceptance">P1 — live paper and operational acceptance<a class="headerlink" href="#p1-live-paper-and-operational-acceptance" title="Permanent link">&para;</a></h2>
-<table>
-<thead>
-<tr>
-<th>Priority / original link</th>
-<th>Remaining work</th>
-<th>Acceptance required</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>P1.1 — D1 / NSC-116; B2 / NSC-105/106</td>
-<td>After P0 proof, collector readiness then new calc then paper trader, preserving imported history and stop-first.</td>
-<td>Collector at least eight stable minutes <strong>and</strong> complete first funding cycle, every expected kind progressing/fresh, queue stable/draining, no ban/drop/OOM; then calc completion/verdicts and several fresh settled BARS/PG boundaries; then sole trader history → bars replay → live, current prices/stamps and selected/held set. Eight minutes alone is insufficient.</td>
-</tr>
-<tr>
-<td>P1.1 — D1 / NSC-116; D11–D13</td>
-<td>Actual archive recovery and B2 durability.</td>
-<td>Backlog demonstrably shrinking; full closed-segment payload/key readback, cloud upload/readback, matching/mismatching object collision behavior, multipart/retry and LateRow policy. Local sources survive until verification. Small sampled parquet/zero pending ACKs do not prove all-source coverage.</td>
-</tr>
-<tr>
-<td>P1.1 — A5 / NSC-122; A3 / NSC-33</td>
-<td>Runtime quality/restart/portfolio behavior and history quality propagation.</td>
-<td>POOR preserves positions and prevents signal/rebalance, reconciliation continues, fresh valid bar releases hold, kill independent; mature &gt;30 days, restart beyond transport retention, listing/delisting, causal top-N and held out-of-universe. Same inputs produce explainable warmup/weights; history is not silently GOOD.</td>
-</tr>
-<tr>
-<td>P1.1 — B2 / NSC-105/106</td>
-<td>Actual deployed strategy history and dashboard.</td>
-<td>New paper rows in PG and identical API/UI readback; local durable retry proof is already complete, do not reimplement it.</td>
-</tr>
-<tr>
-<td>P1.2 — B3 / NSC-109; C1</td>
-<td>Complete financial monitoring and notification wiring. Operational Trading dashboard, actual-label alerts and promtool CI are implemented; six Grafana dashboards/datasource were server-verified.</td>
-<td>Export actual account PnL and separate modeled strategy series, then verify every dashboard against real exporters. Add deployable Alertmanager/Prometheus wiring, loopback, secrets outside git; critical immediate Telegram and warning 30-minute grouping. Obtain recipient/credentials and explicit delivery authorization; prove firing, delivery and restoration. No inert template counts as delivery.</td>
-</tr>
-<tr>
-<td>P1.2 — D2 / NSC-120</td>
-<td>Stable 24–48h soak and measured alert thresholds.</td>
-<td>Exact source/config/catalogue/start/end; full-stack memory/CPU, backlog/age/gap/drop/dedup/REST/storage/archive graphs and readback. Golden kill-calc vs uninterrupted baseline, broker restart/reconnect, occupancy, kill-archiver and burst recovery. Replace all 10 placeholder expressions / 13 sentinel occurrences from healthy representative P99 + justified margin; record sample/formula/date and pass placeholder checker/promtool firing/restoration. Do not guess thresholds.</td>
-</tr>
-<tr>
-<td>P1.3 — D1 / NSC-116; C3</td>
-<td>Retire legacy only after new pipeline acceptance.</td>
-<td>Disable obsolete parser/prune/compact/archive/shadow units/timers and prove no restart; resolve dashboard/sidecar/symlink callers; then remove unused systemd/install code. Preserve old sources/volumes/rollback. Deletion requires its own decision.</td>
-</tr>
-</tbody>
-</table>
-<h2 id="p2-functional-and-research-acceptance">P2 — functional and research acceptance<a class="headerlink" href="#p2-functional-and-research-acceptance" title="Permanent link">&para;</a></h2>
-<table>
-<thead>
-<tr>
-<th>Priority / original link</th>
-<th>Already complete</th>
-<th>Remaining acceptance</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>P2.1 — A3 / NSC-33</td>
-<td><strong>Code task Done</strong>: shared quality/stamp filtering, unknown/POOR precedence, invalid metadata fail-loud, atomic winning-row provenance across roots; real CLI thresholds come from live config.</td>
-<td>Raw/parquet/PG/live input decision matrix over real full history and causal universe; route historical metadata through actual readers/callers or explicitly document irreversible unknowns. Custom library runs pass their explicit threshold object. Done code does not close broader P1 quality/runtime acceptance.</td>
-</tr>
-<tr>
-<td>P2.2 — B2 / NSC-105</td>
-<td><strong>Code task Done</strong>: durable pending ledger, PG retries, commit-before-ACK behavior, restart restores exactly one original row and API readback proved on disposable PG; platform-safe fsync and missing/corrupt ACK state fail-loud.</td>
-<td>Only deployment/API/UI runtime verification remains in P1.1. Do not reopen as a missing implementation. NSC-106 UI was already Done; verify current full issue state if updating Linear.</td>
-</tr>
-<tr>
-<td>P2.3 — D4 / NSC-29</td>
-<td>Event-identity funding aggregation, conflict rejection, unknown-held-exposure PnL guard, paginated downloader receipts and local raw receipt-backed source coverage implemented/tested. No universal eight-hour assumption or blanket fillna(0).</td>
-<td>Go realized-funding semantics/coverage remain open; distinguish event time, receive time, predicted rate, actual settlement and decision-time availability for live/drain/backtest. Verify real endpoint-reference receipts/data before certifying economic intervals; legacy data not retro-certified. Explicit Special acquisition unsupported. Paper funding ledger and actual realized cashflow acceptance remain. Historical receive-time cannot be invented. <strong>NSC-29 is the broader realism epic, still In Progress.</strong></td>
-</tr>
-<tr>
-<td>P2.4 — D3 / NSC-117</td>
-<td>Existing replay tool and sole PnL kernel available.</td>
-<td>Validate real B2/Hive coverage/timestamps/gaps; replay identical raw at book cadence 1,000/60,000 ms; compare aligned ob-bars/distributions/correlations/current book2026/depth_curve strategies. Honest train/evaluation old-fit/new-fit if material, otherwise numeric no-refit decision. No automatic weight rollout, crypto-lake or paid source.</td>
-</tr>
-</tbody>
-</table>
-<h2 id="p3-hygiene-after-stabilization">P3 — hygiene after stabilization<a class="headerlink" href="#p3-hygiene-after-stabilization" title="Permanent link">&para;</a></h2>
-<table>
-<thead>
-<tr>
-<th>Priority / original link</th>
-<th>Remaining work and acceptance</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>P3.1 — B1/E4 / NSC-121</td>
-<td>Current import graph plus function-level callers/Vulture audit; remove only proven dead reader/bus code. Preserve historical downloader and legacy aggregators still used by backtests. Unify maker timeout classification with ConnectTimeout/ReadTimeout/exchange/ordinary-failure regressions and reconciliation. Deduplicate requirements without losing install/build closure. Preserve unique CI release gates before removing obsolete workflow. STREAM_TYPES removal, top-level BookManagerLike and absent NSC-51 TODO are already done. Alert-rule additions belong to completed P1.2 code, not a duplicate task.</td>
-</tr>
-<tr>
-<td>P3.2 — C3/E2</td>
-<td>Retire agreed obsolete MkDocs/site/workflows/nav only after preserving unique normative content and checking callers/links. Preserve ADR, OBS-SPEC, soak runbooks and D11–D13; consolidate research links/protocols in docs/research/README.md; update README/collector/data-root/export references. Already absent audit/tmp files are not new cleanup work.</td>
-</tr>
-<tr>
-<td>P3.3 — E3</td>
-<td>Complete runtime matrix evidence before consolidating tests. Do not recreate removed replay/startup suites. Seven missing Go fixtures still skip parity: provide fixtures or explicitly justify replacement/removal after D1 acceptance. Promtool CI now exists; retain its mandatory config/rule/behavior gates. Disposable integration and serial slow/load only, never production stream resets.</td>
-</tr>
-<tr>
-<td>P3.4 — E1</td>
-<td>Last: actual caller graph for book/book_store/nats_live/bar_clock/consumer_lag/time_sync/pg/config and history links; calc-only ownership to calc, genuine shared ownership to common. Move/import only, no shim/behavior change; update AGENTS/entrypoints/tests/ADR links and run affected unit/integration/slow-load/runtime smoke. Removed replay_boot/replay_driver stay removed.</td>
-</tr>
-<tr>
-<td>P3.5 — E5</td>
-<td>Separate local-data inventory of alpha_engine/binance_parser/binance/binance.zip: tracked membership, real data, symlinks/callers, sizes, destination/free space/checksums and secret-safe session-log review. Specific transfer/deletion list and integrity proof before any destructive action; these local files may not exist in Codex Web.</td>
-</tr>
-</tbody>
-</table>
-<h2 id="closed-original-work-do-not-repeat">Closed original work — do not repeat<a class="headerlink" href="#closed-original-work-do-not-repeat" title="Permanent link">&para;</a></h2>
-<p>A1/NSC-102 VWAP empty-side guard; A2/NSC-121 tracked pyc removal; A5/NSC-122 hysteresis/dust/reconciliation code; A6 mining strategy registration; A7 shim removal; C0 archival/backlog migration; C2 absent tracked research datasets; C4–C9 original production prose cleanup; E4 STREAM_TYPES/top-level protocol/TODO items. Their runtime dependencies remain only where listed above. Original A4 did not exist. Funding D4 here is not ADR-0002's cursor decision D4.</p>
-<p>Current known Linear dispositions: NSC-33 and NSC-105 Done for local code acceptance; NSC-102/122/106 already Done; NSC-116 and NSC-29 In Progress; NSC-109/120/121/117 not closed by this work. Recheck actual issue descriptions/status before writing updates; a partial subtask cannot close a broad epic.</p>
-<h2 id="evidence-to-carry-with-the-handoff">Evidence to carry with the handoff<a class="headerlink" href="#evidence-to-carry-with-the-handoff" title="Permanent link">&para;</a></h2>
-<ul>
-<li><code>deployment-status.md</code>: latest safe state and trial chronology; later correction supersedes older numerical arrival/headroom claims.</li>
-<li><code>collector-ws-fairness-shorttrial-review.md</code> and machine JSON: failed last trial, exact stop/drain, rates and correction.</li>
-<li><code>archiver-resource-readiness-review.md</code>: ceiling observations, retained-work risks and proposed isolated proof.</li>
-<li><code>nats-atomic-batch-capacity-review.md</code>: version/ACK/dedup/rollback limits and offline discriminator; proposals were not executed.</li>
-<li><code>nats-snapshot-range-review.md</code>: preserved snapshot/restore evidence and exact unproven prefix.</li>
-<li><code>trader-history-startup-audit.md</code>, history import/readback reports: measured restore/evaluation proof and quality limits.</li>
-<li><code>funding-source-coverage-implementation.md</code>, <code>funding-acquisition-evidence.md</code>, validation docs/tests: local raw funding scope, provenance limitations and red/green/final results.</li>
-<li><code>docs/validation/md-runtime-coverage.md</code>: I1–I18 coverage and still-open actual runtime probes.</li>
-</ul>
-<p>Final completion requires full paper pipeline/soak/resource/quality/archive/alerts/retire evidence plus P2 reports and P3 work, or explicit owner cancellation of named remnants. Commit/push of the current handoff was explicitly authorized; server rollback/data preservation and real-money exclusion remain mandatory.</p>
+<h1 id="server-offline-capacity-continuation-2026-09-29">Server offline capacity continuation, 2026-09-29<a class="headerlink" href="#server-offline-capacity-continuation-2026-09-29" title="Permanent link">&para;</a></h1>
+<h2 id="baseline-and-boundaries">Baseline and boundaries<a class="headerlink" href="#baseline-and-boundaries" title="Permanent link">&para;</a></h2>
+<p>Server checkout <code>/opt/trading/codex-backend</code> started clean on <code>main</code>, SHA
+<code>4ce261e84f3d62271b69aecebb81ffb60d359f7c</code>, equal to freshly fetched
+<code>origin/main</code>. The user superseded historical branch-only/uncommitted-release
+instructions: tested commits and normal pushes are authorized; every release
+must use a clean committed tree equal to freshly fetched <code>origin/main</code>.
+No release or Binance-connected process has been started by this continuation.</p>
+<p>At 00:48 UTC collector and archiver were stopped (exit 0, no OOM kill),
+new calc/trader had no containers, old futures Go parser was inactive and old
+NATS was stopped. Legacy spot and unrelated services were left unchanged.
+Available RAM was 11,999 MiB of 15,948 MiB; disk had approximately 70 GiB free.
+The agent service has a 3 GiB cgroup ceiling; observed peak was 299,802,624 bytes
+with zero max/OOM events at the subsequent check.</p>
+<p>Read-only production checks found MD with 1,092,974 messages, 532,697,696 bytes,
+9 consumers and zero broker connections. BARS was empty. PostgreSQL retained
+488,604 rows in <code>completed_bar_history</code>. These are inventory checks, not
+full payload or quality acceptance. External deployment configuration remains
+unchanged; hashes were saved without printing configuration or credentials.</p>
+<h2 id="isolated-experiments">Isolated experiments<a class="headerlink" href="#isolated-experiments" title="Permanent link">&para;</a></h2>
+<p>Artifacts are preserved under
+<code>/opt/trading/codex-operations/offline-20260929-0050/</code>.
+The test network is Docker internal-only, with no published ports. Test brokers
+use the preserved NATS 2.10.29 image digest
+<code>sha256:5498ba57b9471840be3d15b033a4eec554d1c02fa6c2cc0ca2d888637f6c6e2f</code>,
+fresh independent storage, 512 MiB RAM and one CPU. FileStorage tests retain
+<code>sync_interval: always</code>. MemoryStorage is a diagnostic control only.
+All test data and stopped containers are retained.</p>
+<p>The old live image is used solely as an offline Python dependency environment
+with current source mounted read-only, never as a new application deployment.
+It contains Python 3.13.15, nats-py 2.16.0, PyArrow 25.0.1 and pytest 9.1.1.
+Tests receive no production credentials and cannot reach venue endpoints.</p>
+<h2 id="acceptance-status">Acceptance status<a class="headerlink" href="#acceptance-status" title="Permanent link">&para;</a></h2>
+<p>The first publisher smoke admitted and acknowledged all 29,488 offered events,
+with exact subject/payload/ID readback and no loss, duplicate or subject reorder.
+The 10.006-second workload took 14.204 seconds to drain; p99 offer-to-ACK latency
+was 10.61 seconds. This fails the capacity objective. The immediate-ACK control
+kept pace. Initial smoke did not verify all headers and is supporting evidence
+only; corrected discriminator runs are in progress.</p>
+<p>Archiver regression tests reproduced retained closed-segment metadata and full
+payload retention in pending ACK messages. Fixes and further lifecycle probes
+are in progress. A 64-retry failed-flush probe retained one pending row, so the
+specific unbounded failed-flush growth hypothesis was not reproduced. Lower
+client queue limits alone produced SlowConsumer errors and were not adopted.
+Neither small regression tests nor intake-only measurements close the required
+subscription/merge/upload memory gate or explain post-drain allocator retention.</p>
+<p>NSC-116 was read from Linear and remains In Progress. No issue has been closed.
+All staged live gates, 24-48h soak, archive/source coverage, quality and remaining
+P2/P3 acceptance remain open. Current resumable operator state is recorded in
+<code>/opt/trading/codex-operations/progress.md</code>; that file does not imply monitoring
+continues after the operator exits.</p>
+<h2 id="archiver-retention-diagnosis">Archiver retention diagnosis<a class="headerlink" href="#archiver-retention-diagnosis" title="Permanent link">&para;</a></h2>
+<p>The new <code>test_r1_closed_segments_release_writer_metadata</code> reproduces 64 retained
+empty <code>_pending</code> entries after 64 finalized segments; the baseline also retained
+64 <code>_closed</code> keys. Finalized metadata is now released, and every reopened existing
+base filename receives a fresh part UUID. The late-reopen regression preserves
+all three finalized parts. This small metadata leak does not explain hundreds
+of megabytes of anonymous memory.</p>
+<p><code>test_r2_pending_ack_keeps_control_handle_without_payload</code> uses actual nats-py
+<code>Msg</code> instances: the baseline retains 16,777,216 payload bytes across 16 pending
+messages; the fix retains zero payload bytes. <code>Msg.data</code> and headers are released
+after successful row handling. The control handle still supports <code>in_progress</code>
+and ACK; ACK remains after segment close/fsync. No durability window changed.
+The persistent post-ACK anonymous-memory owner remains unresolved.</p>
+<p>The full cached sample smoke ran 01:03:50.111-01:04:09.999 UTC: 6,000 events,
+780 symbols, diff 2,453 / trade 1,388 / hb 1,380 / mark 779. All broker payload
+hashes and finalized parquet MsgIds matched, with no missing/extra/duplicate IDs;
+all nine consumers drained without redelivery. Client cgroup peak was
+138,444,800 bytes with zero max/OOM events. Publishing took 6.25 seconds despite
+the requested 2,700/s pace. This did not demonstrate the target input rate and
+overlap with the publisher experiment confounds throughput. Five other kinds
+are absent from this sample. Diff payload maximum is 12,557 bytes / 591 levels;
+unrepresented larger tails remain unproved.</p>
+<p>Current process RSS and cgroup charge are distinct measurements: RSS includes
+shared resident image/library pages that may be charged to another cgroup.
+Neither is substituted for the other. Fullsample outputs are in
+<code>archiver-client-2/fullsample-1/</code>, with cgroup evidence in
+<code>archiver-nats-2/fullsample-cgroup.json</code> under the artifact root above.</p>
+<h2 id="exclusive-warmed-publisher-result">Exclusive warmed publisher result<a class="headerlink" href="#exclusive-warmed-publisher-result" title="Permanent link">&para;</a></h2>
+<p><a href="../server-offline-publisher-isolated-20260929.json">Machine result</a>.
+Warmup: 01:06:47.193691-01:06:47.690130 UTC, 975 tracked subject messages ACKed.
+Timed offer: 01:06:47.690180-01:07:17.690891; drain completed 01:07:28.127428;
+readback completed 01:07:41.943501. No other offline IO experiment overlapped.
+The client had 1 GiB / two CPUs; the broker had 512 MiB / one CPU. The configured
+profile was 2,700/s baseline with a 5,400/s burst at seconds 15-20.</p>
+<p>All 94,493 timed events were offered/admitted/ACKed, with no rejection, eviction
+or timeout. Including warmup, 95,468 messages passed exact subject/payload/ID
+and ingress/gap-header checks, with no loss, duplicate or subject reorder.
+However 30.001 seconds of offering required 40.437 seconds to drain.
+Baseline backlog grew from 1,075 events at second 5 to 3,673 at second 14,
+after warmup and before the burst. p99 offer-to-ACK latency was 28.23 seconds.
+This fails the configured workload's throughput/headroom objective. Actual
+production admission rate remains unknown; no precise production headroom ratio
+is inferred. Broker CPU throttling was zero; client had one throttled period.
+Sync syscall latency remains unmeasured.</p>
+<h2 id="exclusive-archiver-intake-result">Exclusive archiver intake result<a class="headerlink" href="#exclusive-archiver-intake-result" title="Permanent link">&para;</a></h2>
+<p><a href="../server-offline-archiver-intake-20260929.json">Machine result</a>.
+The run covered 01:09:21.805-01:12:12.388 UTC with production segment/grace/sweep
+settings 60/30/30 seconds and row groups of 5,000. Client was 768 MiB / one CPU,
+broker 512 MiB / one CPU; tracemalloc and merge were disabled.</p>
+<p>All 120,000 broker messages passed subject/MsgId/payload SHA256 readback.
+Finalized parquet had exactly the expected IDs, no missing/extra/duplicate IDs;
+all nine consumers ended with zero pending, ack-pending and redelivery.
+Parquet ID equality alone does not establish full decoded-row value equality.
+Publishing took 73.28 seconds (1,637.6/s), below the requested 2,700/s.
+Durable drain took another 79.69 seconds, including the configured close cadence.
+Client cgroup peak was 278,630,400 bytes with zero max/OOM events. At publication
+completion it held 119,900 ACK control handles with zero payload bytes, eight
+open writers and 19,900 buffered rows. After verification there were no pending
+ACKs, Arrow live allocation was zero, current RSS approximately 247.6 MB and
+cgroup charge approximately 250.4 MB. These measurements support the retention
+fixes but do not close the sustained-rate, larger-tail, slow-sink or concurrent
+merge/upload gate. All test artifacts and stopped brokers remain preserved.</p>
+<h2 id="file-sync-wait-observation">File-sync wait observation<a class="headerlink" href="#file-sync-wait-observation" title="Permanent link">&para;</a></h2>
+<p>A separate profiled diagnostic offered 40,492 timed messages over 15.006 seconds
+and drained in 18.780 seconds; all 41,467 rows including warmup read back exactly.
+Offer UTC was 01:13:48.914247-01:14:03.920279; drain ended 01:14:07.694059,
+readback ended 01:14:13.823759. The broker was then stopped.</p>
+<p>The preserved 535 timestamped kernel samples and 27 Go goroutine snapshots show
+threads in <code>fsync</code> (syscall 74), <code>jbd2_log_wait_commit</code> and
+<code>folio_wait_bit_common</code> during publication. Go stacks identify
+<code>msgBlock.flushPendingMsgsLocked -&gt; os.File.Sync -&gt; syscall.Fsync</code>.
+The approximate startup/offer phase included fsync in 181/320 kernel snapshots
+and 12/16 Go snapshots; drain 42/80 and &frac34;; readback 6/135 and 0/7.
+These are sampled observations, not syscall counts, durations or an unbiased
+fraction of time. They identify sync waiting in the active path; per-call
+latency and its exact contribution remain unmeasured. Profiling overhead makes
+this a diagnostic rather than another capacity result.</p>
+<p>Raw evidence: <code>/opt/trading/codex-operations/offline-20260929-0050/publisher-results/publisher-wait-observation.json</code>, SHA256 <code>a2e58dc97289b3f1a8d61a017bc7c61784c14ca64f7eb102e4cf9df7c3234cdd</code>.</p>
+<p>The next offline feasibility work follows the existing handoff protocol:
+<a href="https://github.com/nats-io/nats-server/releases/tag/v2.15.0">NATS 2.15 release notes</a>
+document R1 atomic-batch group syncing with always-sync. The
+<a href="https://github.com/nats-io/nats-architecture-and-design/blob/main/adr/ADR-50.md">batch protocol</a>
+changes staging/final ACK and duplicate handling. A fresh isolated prototype is
+being prepared; there is no production broker upgrade or protocol change.
+Lost-final-ACK, partial-batch, duplicate and exact-readback proof must precede
+any claim of readiness. Original 2.10.29 storage cannot be reused or downgraded
+from a newer broker's mutated volume.</p>
+<h2 id="combined-archiver-safety-failure-and-follow-up-fixes">Combined archiver safety failure and follow-up fixes<a class="headerlink" href="#combined-archiver-safety-failure-and-follow-up-fixes" title="Permanent link">&para;</a></h2>
+<p>A 120,000-event prepublished backlog, 900,000-row previous-day depth fixture
+and 120-second delayed local upload exceeded the isolated 768 MiB budget.
+The client reached exactly 805,306,368 bytes; <code>memory.events:max</code> reached at
+least 78, with no OOM kill. It was stopped at 01:29:08.840 UTC; Docker stop
+expired and exit was 137, OOMKilled=false. The broker then shut down on TERM;
+raw stream data, unacknowledged messages, preserved fixture, remaining staging,
+partial merge and sink artifacts remain. No production process participated.</p>
+<p>The first 90% crossing preceded the first max event by about 5.37 seconds.
+The in-process guard set its abort flag but the workload still awaited the
+slow upload. It was insufficient as an independent resource supervisor.
+Heavy tests were paused pending a host-side guard. At the peak, RSS was about
+594.6 MB, Arrow live allocation 77.3 MB, buffered rows 16,421, pending ACK
+handles 76,419 with zero payload bytes, and queued messages 43,578 with 18.4 MB
+payload. The run did not capture memory.stat; anonymous versus file-cache
+ownership cannot be inferred by subtraction alone. Preserved fixture copies
+also contribute test-only file-cache work. No cap increase or forced GC was
+adopted. Raw samples are in <code>archiver-client-7/combined-1/resource.jsonl</code> under
+the artifact root; the original cached source and all production data are intact.</p>
+<p>Commit <code>8d0028b</code> was normally pushed to main: metadata/pending-payload fixes
+and the existing integration-test httpx dependency. Red/green regressions and
+the corrected full unit gate passed: 2,352 passed, 9 skipped, 1 xfailed.
+Two evolving tool-test modules were excluded from that gate and have separate
+focused validation. Seven skips are absent Go golden fixtures; two are optional
+research modules lacking openai in the test environment. Promtool checks ran.
+The initial environment attempt had 2,349 passes, one missing-git failure and
+one missing-httpx collection error; those environment problems were corrected.</p>
+<p>Commit <code>7d28991</code> was normally pushed to main: pending uploads now run in a
+mandatory separate periodic task at the existing interval. A stalled upload
+cannot block the segment-close/ACK/renewal loop; unexpected retry errors
+propagate through TaskGroup. Both new behaviors were verified red/green,
+then 168 focused tests passed. ACK still follows segment fsync. Evidence logs:
+<code>archiver-r3-red.log</code>, <code>archiver-r4-red.log</code>, <code>archiver-retry-final.log</code>.
+Neither commit was deployed, and neither closes the combined memory gate.</p>
+<h2 id="external-resource-supervisor">External resource supervisor<a class="headerlink" href="#external-resource-supervisor" title="Permanent link">&para;</a></h2>
+<p>The offline container guard passed 13 fake-only tests, then two independent
+64 MiB internal-network container checks. At 01:50:59 UTC its 2-second timeout
+triggered at 2.012 seconds; Docker finished stopping the Python PID 1 at
+01:51:00.068. At 01:51:17.491 its 35% test threshold triggered after a deliberate
+20 MiB allocation, at 25,387,008 bytes of charge (37.83%); Docker finished at
+01:51:18.533. Both exited 137 after the one-second TERM grace, with
+<code>OOMKilled=false</code> and zero max/OOM events at the stop trigger. Both are explicitly
+incomplete-drain stops, not successful workload completion. Containers and
+JSONL evidence <code>guard-timeout-1.jsonl</code> / <code>guard-memory-1.jsonl</code> remain preserved
+under the artifact root. No production target was inspected for mutation.</p>
+<p>The guard verifies an offline-prefixed exact container identity, no Compose
+management or published ports, and internal-only attached networks before it
+can stop anything. It pins the full container ID, records memory current/peak,
+events and anon/file/kernel/sock/slab/dirty/writeback accounting, and has a
+bounded Docker stop. The operational default threshold is 80%, leaving margin
+for growth during sampling and termination; this is a safety threshold, not
+an archiver acceptance budget. New combined trials use this external guard on
+both client and broker. A guard stop preserves all evidence and fails the trial.</p>
+<h2 id="guarded-combined-archiver-repeat">Guarded combined archiver repeat<a class="headerlink" href="#guarded-combined-archiver-repeat" title="Permanent link">&para;</a></h2>
+<p>The external-guard repeat used the same 768 MiB client budget, 120,000-message
+prepublished backlog, 900,000-row preserved prior-day fixture and delayed local
+sink. It stopped at 644,653,056 bytes (80.05%) after 96.17 seconds, with zero
+memory max/OOM events and <code>OOMKilled=false</code>. Drain is incomplete and the gate
+fails. Both client and broker were stopped and retained before the next offline
+IO experiment. At the stop trigger <code>memory.stat</code> reported 350,584,832 anonymous
+bytes and 274,251,776 file bytes, approximately 54% and 43% of charge. Both are
+material; this does not justify assigning the whole failure to either Python
+queues or file cache. Fixture construction and its preserved copy also charge
+this test cgroup and must be distinguished from production workload ownership.
+The final in-process sample during termination reached 690,212,864 bytes,
+still below the hard cap; it retained 105,061 queued messages / 34,627,986 payload
+bytes, 14,937 pending ACK handles / zero retained payload bytes, and 14,939
+buffered rows. Arrow live allocation was 69,073,856 bytes. This is supporting
+owner accounting, not post-drain steady-state evidence. Broker peak was
+270,651,392 bytes with zero max events. Evidence is in
+<code>archiver-client-8/guard.jsonl</code>, <code>archiver-client-8/combined-2/resource.jsonl</code>
+and <code>archiver-nats-8/guard.jsonl</code> under the artifact root.</p>
+<p>External guard source and tests were published as <code>628841a</code>. No runtime release
+or external deployment configuration changed.</p>
+<p>Phase correlation further limits the memory inference: before subscriptions,
+charge was already 402.3 MB, including 109.7 MB anonymous and 274.1 MB file.
+The working fixture and preserved copy were about 123.56 MB each, and the
+manifest SQLite file about 26.19 MB. During intake file charge stayed near
+274.3 MB while anonymous memory grew to roughly 370 MB alongside queue/row
+occupancy. Thus the test-only preserved copy inflates the combined cgroup
+baseline, but real intake/merge also produces a substantial anonymous rise.
+Lowering a local push subscription queue limit without delivery backpressure
+would cause nats-py SlowConsumer loss and was not adopted.</p>
+<p>Final focused verification of the four offline tools passed 33 tests in 3.33s
+in a network-disabled, 768 MiB, one-CPU container. Capacity/protocol tools and
+their README entries were committed and pushed as <code>7c48ff6</code>.</p>
+<h2 id="delivery-backpressure-constraint">Delivery backpressure constraint<a class="headerlink" href="#delivery-backpressure-constraint" title="Permanent link">&para;</a></h2>
+<p>Inspection of the installed nats-py 2.16 code and pinned NATS 2.10.29 consumer
+implementation rules out simply setting a smaller local push queue. The client
+reports SlowConsumer and drops local delivery when that queue fills. Existing
+push durables cannot change flow-control/heartbeat or become pull consumers in
+place. Moreover, the current async message iterator does not send the deferred
+flow-control reply used by <code>PushSubscription.next_msg()</code>. The ordered-consumer
+helper changes ACK semantics and is unsuitable for segment-fsync durability.
+A new bounded consumer therefore needs explicit durable migration and restart
+proof, preserving old consumers and starting at the ACK floor rather than the
+last delivered sequence. No such migration has been deployed or accepted.
+The pinned source is
+<a href="https://github.com/nats-io/nats-server/blob/v2.10.29/server/consumer.go">NATS 2.10.29 consumer.go</a>;
+installed client source copies are retained in <code>archiver-client-8/</code>.</p>
 
 
 

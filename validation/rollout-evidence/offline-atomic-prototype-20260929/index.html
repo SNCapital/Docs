@@ -11,7 +11,7 @@
       
       
       
-        <link rel="canonical" href="https://sncapital.github.io/Docs/validation/rollout-evidence/remaining-register/">
+        <link rel="canonical" href="https://sncapital.github.io/Docs/validation/rollout-evidence/offline-atomic-prototype-20260929/">
       
       
       
@@ -24,7 +24,7 @@
     
     
       
-        <title>Remaining work register for Codex Web - SN Capital — Backend</title>
+        <title>Isolated atomic publish prototype, 2026-09-29 - SN Capital — Backend</title>
       
     
     
@@ -77,7 +77,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#remaining-work-register-for-codex-web" class="md-skip">
+        <a href="#isolated-atomic-publish-prototype-2026-09-29" class="md-skip">
           Skip to content
         </a>
       
@@ -113,7 +113,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Remaining work register for Codex Web
+              Isolated atomic publish prototype, 2026-09-29
             
           </span>
         </div>
@@ -2080,102 +2080,6 @@
     
   
   
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#server-continuation-2026-09-29" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Server continuation, 2026-09-29
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#current-baseline-and-acceptance-limits" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Current baseline and acceptance limits
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#immediate-prerequisite-work-p0-nsc-116" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Immediate prerequisite work — P0 / NSC-116
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#p1-live-paper-and-operational-acceptance" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        P1 — live paper and operational acceptance
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#p2-functional-and-research-acceptance" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        P2 — functional and research acceptance
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#p3-hygiene-after-stabilization" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        P3 — hygiene after stabilization
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#closed-original-work-do-not-repeat" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Closed original work — do not repeat
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#evidence-to-carry-with-the-handoff" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Evidence to carry with the handoff
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
 </nav>
                   </div>
                 </div>
@@ -2194,201 +2098,88 @@
   
 
 
-<h1 id="remaining-work-register-for-codex-web">Remaining work register for Codex Web<a class="headerlink" href="#remaining-work-register-for-codex-web" title="Permanent link">&para;</a></h1>
-<p>As of 2026-09-29, after the 00:16–00:17 UTC collector trial and 00:23 UTC archiver stop. This register condenses the original 28-task plan; it does not authorize another live trial, a NATS upgrade, paid resources, risk changes, deletion or real-money trading. The main handoff supplies the Git branch and access constraints. Treat old execution commands and historical status sections as evidence, not current instructions.</p>
-<h2 id="server-continuation-2026-09-29">Server continuation, 2026-09-29<a class="headerlink" href="#server-continuation-2026-09-29" title="Permanent link">&para;</a></h2>
-<p>The direct-server continuation started from clean published main
-<code>4ce261e84f3d62271b69aecebb81ffb60d359f7c</code>. Current user instructions authorize
-tested commits and normal pushes to main, while retaining the clean/freshly
-fetched origin/main release requirement. Historical branch-only wording below
-describes the earlier handoff, not the current authorization.</p>
-<p><a href="../server-offline-capacity-20260929/">Server offline evidence</a> records the fresh
-read-only baseline, archiver retention regressions, actual subscription/readback
-probes and the failed isolated warmed durable publisher capacity test. Live
-services remain stopped; no P0/P1 gate is closed by this work. The original
-snapshot remains unaccepted. An <a href="../offline-atomic-prototype-20260929/">isolated atomic-batch prototype</a>
-committed and exactly read back 60,000 events at 9,753/s and exercised crash
-reconciliation on separate new storage. This is not D9 integration acceptance.
-The combined archiver trial still fails its memory gate; bounded consumer
-migration is being tested. Production NATS remains pinned and unchanged.</p>
-<h2 id="current-baseline-and-acceptance-limits">Current baseline and acceptance limits<a class="headerlink" href="#current-baseline-and-acceptance-limits" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Original reviewed main: <code>04e45d37d7094b1423c0e305bf9193664f1f0627</code>. Current changes are being published on codex/remaining-plan-execution; server release tree hashes identify immutable source content, not Git commits.</li>
-<li>Selected server candidate: <code>630cc80784a4</code>, isolated WS release, 623 files, 2,318 unit passes / 9 skips / 1 xfail. It is <strong>not runtime accepted</strong>. Local raw funding source-coverage work is newer and not deployed: 2,351 unit passes / 9 skips / 1 xfail and 12 relevant slow/load passes. Genuine pre-publish attempt/admission counters are complete and included. Final combined unit gate: 2,355 passed / 9 skipped / 1 xfail. The 12 relevant slow/load tests passed; no new runtime capacity proof is implied.</li>
-<li>New collector and archiver stopped cleanly (exit 0); calc and new paper trader have never started. New NATS/PG and monitoring remain. Old futures collector/trader/Go parser and old NATS stay stopped; legacy spot remains active. Refresh this state before any subsequent operation.</li>
-<li>All available bar history was imported and fully read back: 488,604 bars / 120 symbols, immutable cutoff 2026-09-28 14:30 UTC. Production reader passed under 512 MiB. Full trader restore and three-strategy evaluation passed at 1.465 GiB peak under 2.25 GiB. These close those measured dataset/RAM gates only.</li>
-<li>Imported history is incomplete/full-blind; BarsReader drops quality metadata, so it can warm strategies but is <strong>not historical quality acceptance</strong>. Do not silently discard it or label it GOOD.</li>
-<li>Current application blocker: durable publication cannot keep up; the latest short trial accumulated about 31 MB queued charge and stopped before eight minutes or the first funding cycle. Zero drops/reconnects and clean drain do not establish sustained capacity. The prior ~2,450/s arrival estimate is withdrawn: <code>trading_ingress_messages_total</code> is post-PubAck, not admission. Measured queue growth proves a deficit; no precise arrival/headroom ratio is established.</li>
-<li>Archiver hit its exact 768 MiB ceiling (<code>memory.events:max=1193</code>, no OOM kill) and retained high anonymous memory after segment closures. Increasing its cap alone is not an accepted fix.</li>
-</ul>
-<h2 id="immediate-prerequisite-work-p0-nsc-116">Immediate prerequisite work — P0 / NSC-116<a class="headerlink" href="#immediate-prerequisite-work-p0-nsc-116" title="Permanent link">&para;</a></h2>
+<h1 id="isolated-atomic-publish-prototype-2026-09-29">Isolated atomic publish prototype, 2026-09-29<a class="headerlink" href="#isolated-atomic-publish-prototype-2026-09-29" title="Permanent link">&para;</a></h1>
+<p>This is an offline protocol probe, not a collector change or a deployment decision. The deployed NATS 2.10.29 image and its volume were untouched. The test broker used a fresh, preserved file volume, <code>sync_interval: always</code>, a 512 MiB memory limit, one CPU, and no published ports. The client was limited to 1 GiB and two CPUs. The pulled image was verified as <code>nats-server v2.15.0</code> and pinned by <code>nats@sha256:cd3fcd4ecdda44e3a66728a5334af0a959bc3979b32810e033d1c547241cd0f4</code>. The broker was stopped after the contract run.</p>
+<p><a href="https://github.com/nats-io/nats-architecture-and-design/blob/main/adr/ADR-50.md">ADR-50</a> defines the initial zero-byte staging ACK, final commit PubAck with batch ID/count/final sequence, 1,000-message and 10-second idle limits, and rejection of a batch containing a stored duplicate MsgId. The <a href="https://github.com/nats-io/nats-server/releases/tag/v2.15.0">2.15.0 release notes</a> identify grouped synchronization for atomic batches on a single-replica stream with always-sync. The <a href="https://github.com/nats-io/nats-server/blob/v2.15.0/server/stream.go">server stream configuration</a> uses <code>allow_atomic</code>. The prototype explicitly sets <code>discard: new</code> and <code>max_age: 0</code> so an exhausted test stream cannot evict acknowledged rows.</p>
+<p>Four fresh file-backed streams tested the protocol through the installed Python client's core NATS <code>request</code>/<code>publish</code> calls:</p>
 <table>
 <thead>
 <tr>
-<th>Priority / original link</th>
-<th>Remaining work</th>
-<th>Acceptance required</th>
+<th>Scenario</th>
+<th>Observed result</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>P0.2 — D1 / NSC-116</td>
-<td>Independently count buffer admission, then isolate Python scheduling/client, NATS durable output, disk sync and concurrent archiver cost. Existing synthetic publisher tests are supporting evidence only.</td>
-<td>Offline replay of a representative mixed-kind 780-symbol workload; offered/admitted/ACKed/readback counts and timing, per-subject order, duplicate/loss census, stable bounded queue and measured burst/catch-up headroom. Explain profiles and tracing overhead. No more venue trial until stronger proof.</td>
+<td>Three-event commit</td>
+<td>First reply was empty; final PubAck identified batch, count 3 and final sequence 3; all three events read back in sequence with expected subject, payload, MsgId and batch headers.</td>
 </tr>
 <tr>
-<td>P0.2 — D1 / NSC-116</td>
-<td>Bound archiver local subscription queues, retained unacknowledged Msg payloads, writer buffers/closed metadata, failed-flush redelivery and slow-upload retention. Identify actual memory owner before changing allocation policy.</td>
-<td>Isolated actual subscription → decode → segment fsync/ACK → merge/upload pipeline; trade/depth tails, 780 symbols, backlog/burst, failed flush and delayed sink. Stable concurrent peak with headroom, no limit events/OOM, all IDs read back once after drain. Include merge/upload; intake-only proof is insufficient.</td>
+<td>Missing batch sequence</td>
+<td>Server returned error 10176; stream retained zero events.</td>
 </tr>
 <tr>
-<td>P0.1 — D1 / NSC-116, D11–D13</td>
-<td>Finish source coverage manifests and recovery of old raw/kline/staging/B2 gaps; account for reconnect gaps and earlier forced-stop volatile losses.</td>
-<td>Per market/kind/symbol/time manifests, verified copies and exact recoverable/unknown/missing intervals. Existing zero drop counter never proves no stop-time loss. Durable trade gap headers preserve ranges but do not recover them.</td>
+<td>Preexisting duplicate MsgId</td>
+<td>Server returned error 10201; the original singleton remained the only stored event.</td>
 </tr>
 <tr>
-<td>P0.1 — D1 / NSC-116</td>
-<td>Resolve native MD_TRADE snapshot membership uncertainty without modifying originals.</td>
-<td>Match archived index/block membership to restored messages and validate payloads. Initial snapshot response excluded-prefix difference is 84,121 sequences plus five newer suffix messages; concurrency/retention is plausible, not per-event proof. Neither initial-state equality nor prefix recovery is accepted.</td>
-</tr>
-<tr>
-<td>P0.2/P0.4 — D1 / NSC-116; E3</td>
-<td>Prove full-catalogue calc cold boot and seeded restart, settlement rollover, resource/RTO and flow-control behavior. The MD I1–I18 matrix and focused tests exist.</td>
-<td>Timestamped actual <code>run_calc_service</code> probes for fresh PG bootstrap, scalar resume, retention holes/reset, publish/commit/crash, retained-bar authority, cold/add/remove, duplicate/floor, FC/reconnect/SlowConsumer, stall/watchdog. One terminal verdict per symbol; no partial boot bars; compare seeded restart against uninterrupted baseline.</td>
-</tr>
-<tr>
-<td>P0.3 — D1 / NSC-116; E2</td>
-<td>Refresh concrete paper cutover/rollback after measured capacity fixes, using immutable manifest/image identity and preserved old storage.</td>
-<td>Separate NATS instance/account for overlapping subjects, fresh PG/cursors/books, stop-first processes, exact UTC boundaries, image/config hashes, loopback ports, loss/duplicate accounting and rollback. Do not use deploy scripts that silently sync a newer main.</td>
+<td>Final commit without a reply inbox</td>
+<td>Two events committed; exact readback reconciled their IDs, payloads and expected headers without a final PubAck.</td>
 </tr>
 </tbody>
 </table>
-<p>Current summed service ceilings are 12.375 GiB on a roughly 15.6 GiB host: collector 2, calc 5, trader 2.25, NATS 1, PG 0.5, archiver 0.75, Prometheus 0.375, dashboard 0.25 and Grafana 0.25 GiB. This is not a measured simultaneous-stack envelope. NATS file store is 24 GB (raw 21 GB, bars 1 GB); internal memory store 256 MiB. Prove projected retention/storage occupancy rather than promising 24 hours. Preserve always-sync durability. NATS 2.10.29 is pinned; atomic publishing is a future protocol/version project, not an immediate approved remedy. Relevant R1 always-sync batching optimization is in 2.15, with changed dedup/lost-final-ACK and downgrade contracts.</p>
-<h2 id="p1-live-paper-and-operational-acceptance">P1 — live paper and operational acceptance<a class="headerlink" href="#p1-live-paper-and-operational-acceptance" title="Permanent link">&para;</a></h2>
+<p>Raw replies and counts are preserved at <code>/opt/trading/codex-operations/offline-20260929-0050/publisher-results/atomic-contracts.json</code> (SHA-256 <code>046eb1ca2a5e9e09aa4ff71680e4cd6252164947540d884f47a2a2843ccd04fa</code>), with the broker cgroup snapshot beside it. The broker config SHA-256 was <code>5ab37bbb5d181845d45473f21276a9d6a8b026a0902cbf10603c68d65e1f2cee</code>. The initial contract run used an earlier verifier that checked every expected header value but did not reject an extra header. The later guarded capacity and crash runs used the corrected complete-header-map verifier against the broker. Its injected-extra-header regression was observed red then green, and 17 focused unit tests passed across the crash, atomic and prior capacity tools.</p>
+<p>The no-reply final commit simulates an unknown final-ACK outcome; it does not inject a network ACK loss or kill a client. A crash/restart proof should use separate fresh streams and one disposable 2.15 volume per case:</p>
+<ol>
+<li>Stage the first and middle events, receive the initial zero-byte ACK, flush the connection, then kill the broker before sending commit. Restart the same pinned binary on that disposable volume and require zero stored events and no matching MsgIds.</li>
+<li>Commit a batch, durably record its final PubAck, kill the broker after the phase marker, restart the same pinned binary and require exact contiguous readback of every subject, payload, MsgId and header.</li>
+<li>Persist and fsync a pending batch manifest before sending the final event with a reply inbox. Terminate the client after flushing the final send but before consuming the final reply. On client restart, reconcile the manifest by stream readback and accept only an all-or-none result. If all rows exist, map them by the final stream sequence and batch count; do not blindly resend a batch whose MsgIds may already be stored. Repeat the termination at both sides of the server commit boundary to cover the ambiguous outcome.</li>
+</ol>
+<p>The tool has <code>crash-prepare</code> and <code>crash-reconcile</code> commands, checked by focused fake-client tests and later run against the pinned broker. Each case needs its own fresh file-backed stream on a fresh disposable v2.15 broker volume. <code>crash-prepare</code> creates and fsyncs a manifest containing the exact three payloads, subjects, MsgIds and headers before publishing. It fsyncs the containing directory after the atomic rename. It then fsyncs a <code>*.ready.json</code> marker only after reaching the named phase and waits for an external kill. The after-ACK case also fsyncs a separate <code>*.ack.json</code> before its marker. The marker is the kill trigger; killing earlier does not establish that phase. The lost-ACK client subscribes to a unique reply inbox, sends the final commit with that reply address, flushes, and intentionally does not consume the PubAck. A NATS reader may already have buffered the reply, so this tests client process loss before application reconciliation, not packet loss at a precisely observed server instant.</p>
+<p>Use these exact client commands on a fresh internal-only broker aliased <code>offline-atomic:4222</code>, with a unique manifest basename and preserved results directory for each case:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>python<span class="w"> </span>tools/offline_atomic_publish_probe.py<span class="w"> </span>--mode<span class="w"> </span>crash-prepare<span class="w"> </span>--case<span class="w"> </span>before_commit<span class="w"> </span>--manifest<span class="w"> </span>/results/before.json
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>python<span class="w"> </span>tools/offline_atomic_publish_probe.py<span class="w"> </span>--mode<span class="w"> </span>crash-prepare<span class="w"> </span>--case<span class="w"> </span>after_ack<span class="w"> </span>--manifest<span class="w"> </span>/results/after.json
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>python<span class="w"> </span>tools/offline_atomic_publish_probe.py<span class="w"> </span>--mode<span class="w"> </span>crash-prepare<span class="w"> </span>--case<span class="w"> </span>lost_ack<span class="w"> </span>--manifest<span class="w"> </span>/results/loss.json
+</span></code></pre></div>
+<p>Run only one case per fresh stream and volume. After its <code>*.ready.json</code> appears, externally kill the broker with SIGKILL for <code>before_commit</code> or <code>after_ack</code>, or the client with SIGKILL for <code>lost_ack</code>. Preserve every container and volume, restart the same pinned broker on its same isolated volume, and run the matching reconciliation command from a new capped client:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>python<span class="w"> </span>tools/offline_atomic_publish_probe.py<span class="w"> </span>--mode<span class="w"> </span>crash-reconcile<span class="w"> </span>--manifest<span class="w"> </span>/results/before.json<span class="w"> </span>--output<span class="w"> </span>/results/before-reconcile.json
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>python<span class="w"> </span>tools/offline_atomic_publish_probe.py<span class="w"> </span>--mode<span class="w"> </span>crash-reconcile<span class="w"> </span>--manifest<span class="w"> </span>/results/after.json<span class="w"> </span>--output<span class="w"> </span>/results/after-reconcile.json
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>python<span class="w"> </span>tools/offline_atomic_publish_probe.py<span class="w"> </span>--mode<span class="w"> </span>crash-reconcile<span class="w"> </span>--manifest<span class="w"> </span>/results/loss.json<span class="w"> </span>--output<span class="w"> </span>/results/loss-reconcile.json
+</span></code></pre></div>
+<p>Reconciliation sends no messages. It requires zero stored rows for the uncommitted prefix, exact three-row subject/payload/header/MsgId readback plus the persisted PubAck for the post-ACK case, and an exact all-or-none result for the lost-ACK case. Partial rows, extra headers, duplicates, reordered per-subject rows, missing post-ACK data, or stored precommit rows fail. A lost-ACK <code>none</code> verdict does not authorize a blind resend; a production client would need a persisted batch reservation and explicit retry policy. The external coordinator must record source and broker config hashes, cgroup samples, ready-marker timestamp, kill/restart times, preserved Docker identities, and exit status; this tool alone does not observe disk flush latency or prove survival after power loss.</p>
+<p>The guarded follow-up used the same pinned image and configuration SHA-256 <code>5ab37bbb5d181845d45473f21276a9d6a8b026a0902cbf10603c68d65e1f2cee</code>. The atomic tool SHA-256 was <code>8fdb34311bb0b5bb1afe978a39d786cea919c009b93bf06884ad52bb8fdd9b73</code>. Each case had a fresh volume and a 512 MiB/one-CPU broker; each client had a 1 GiB/two-CPU cap. Both containers had persistent external guards, and a host start gate was written only after each guard recorded <code>verified</code> and an initial cgroup sample. Every result, manifest, cgroup JSONL, marker, container and volume remains under <code>/opt/trading/codex-operations/offline-20260929-0050/</code>. No offline container remains running.</p>
 <table>
 <thead>
 <tr>
-<th>Priority / original link</th>
-<th>Remaining work</th>
-<th>Acceptance required</th>
+<th>Fresh run directory</th>
+<th>Observed result</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>P1.1 — D1 / NSC-116; B2 / NSC-105/106</td>
-<td>After P0 proof, collector readiness then new calc then paper trader, preserving imported history and stop-first.</td>
-<td>Collector at least eight stable minutes <strong>and</strong> complete first funding cycle, every expected kind progressing/fresh, queue stable/draining, no ban/drop/OOM; then calc completion/verdicts and several fresh settled BARS/PG boundaries; then sole trader history → bars replay → live, current prices/stamps and selected/held set. Eight minutes alone is insufficient.</td>
+<td><code>atomic-capacity-final-2</code></td>
+<td>60,000 offered, committed and stored in 600 batches of 100; exact readback found zero missing, duplicates, payload/header mismatches or per-subject order errors. Publish was 6.152 s, 9,753 events/s; batch ACK p50/p95/p99 was 8.394/15.103/24.092 ms. Publish UTC 01:59:02.574-01:59:08.726; readback ended 01:59:16.062. Client/broker cgroup peaks were 152,109,056/109,699,072 bytes; no memory max or OOM events. Result SHA-256 <code>77c22cf1649d956895137e91f29939c14d966b2ba1a9be2da64b2e9e1dd39bb7</code>.</td>
 </tr>
 <tr>
-<td>P1.1 — D1 / NSC-116; D11–D13</td>
-<td>Actual archive recovery and B2 durability.</td>
-<td>Backlog demonstrably shrinking; full closed-segment payload/key readback, cloud upload/readback, matching/mismatching object collision behavior, multipart/retry and LateRow policy. Local sources survive until verification. Small sampled parquet/zero pending ACKs do not prove all-source coverage.</td>
+<td><code>atomic-crash-before-final1</code></td>
+<td>Fsynced <code>prefix_staged_no_commit</code> marker 02:00:42.186 UTC; broker SIGKILL requested 02:00:52.056, restarted on the same volume 02:01:00.760. Read-only reconciliation found zero stored rows.</td>
 </tr>
 <tr>
-<td>P1.1 — A5 / NSC-122; A3 / NSC-33</td>
-<td>Runtime quality/restart/portfolio behavior and history quality propagation.</td>
-<td>POOR preserves positions and prevents signal/rebalance, reconciliation continues, fresh valid bar releases hold, kill independent; mature &gt;30 days, restart beyond transport retention, listing/delisting, causal top-N and held out-of-universe. Same inputs produce explainable warmup/weights; history is not silently GOOD.</td>
+<td><code>atomic-crash-before-fast-final1</code></td>
+<td>A prearmed Docker-log watcher observed the tool's post-fsync marker at 02:09:22.194 UTC and requested broker SIGKILL at 02:09:22.196, 1.910 ms later; Docker returned at 02:09:22.301. After restart on the same pinned broker container and volume, read-only reconciliation found zero stored rows. This run resolves the idle-expiry timing confound of the earlier precommit result.</td>
 </tr>
 <tr>
-<td>P1.1 — B2 / NSC-105/106</td>
-<td>Actual deployed strategy history and dashboard.</td>
-<td>New paper rows in PG and identical API/UI readback; local durable retry proof is already complete, do not reimplement it.</td>
+<td><code>atomic-crash-after-final1</code></td>
+<td>Fsynced <code>final_ack_persisted</code> marker 02:02:36.396 UTC; broker SIGKILL requested 02:02:41.558, restarted on the same volume 02:03:08.991. Read-only reconciliation found all three rows exactly, including headers, with zero errors.</td>
 </tr>
 <tr>
-<td>P1.2 — B3 / NSC-109; C1</td>
-<td>Complete financial monitoring and notification wiring. Operational Trading dashboard, actual-label alerts and promtool CI are implemented; six Grafana dashboards/datasource were server-verified.</td>
-<td>Export actual account PnL and separate modeled strategy series, then verify every dashboard against real exporters. Add deployable Alertmanager/Prometheus wiring, loopback, secrets outside git; critical immediate Telegram and warning 30-minute grouping. Obtain recipient/credentials and explicit delivery authorization; prove firing, delivery and restoration. No inert template counts as delivery.</td>
-</tr>
-<tr>
-<td>P1.2 — D2 / NSC-120</td>
-<td>Stable 24–48h soak and measured alert thresholds.</td>
-<td>Exact source/config/catalogue/start/end; full-stack memory/CPU, backlog/age/gap/drop/dedup/REST/storage/archive graphs and readback. Golden kill-calc vs uninterrupted baseline, broker restart/reconnect, occupancy, kill-archiver and burst recovery. Replace all 10 placeholder expressions / 13 sentinel occurrences from healthy representative P99 + justified margin; record sample/formula/date and pass placeholder checker/promtool firing/restoration. Do not guess thresholds.</td>
-</tr>
-<tr>
-<td>P1.3 — D1 / NSC-116; C3</td>
-<td>Retire legacy only after new pipeline acceptance.</td>
-<td>Disable obsolete parser/prune/compact/archive/shadow units/timers and prove no restart; resolve dashboard/sidecar/symlink callers; then remove unused systemd/install code. Preserve old sources/volumes/rollback. Deletion requires its own decision.</td>
+<td><code>atomic-crash-loss-final1</code></td>
+<td>Fsynced <code>final_sent_reply_unconsumed</code> marker 02:04:40.781 UTC; client SIGKILL requested 02:04:48.601, broker SIGKILL requested 02:04:48.731, and broker restarted on the same volume 02:04:57.442. A new client found all three committed rows exactly, with zero errors and no resend.</td>
 </tr>
 </tbody>
 </table>
-<h2 id="p2-functional-and-research-acceptance">P2 — functional and research acceptance<a class="headerlink" href="#p2-functional-and-research-acceptance" title="Permanent link">&para;</a></h2>
-<table>
-<thead>
-<tr>
-<th>Priority / original link</th>
-<th>Already complete</th>
-<th>Remaining acceptance</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>P2.1 — A3 / NSC-33</td>
-<td><strong>Code task Done</strong>: shared quality/stamp filtering, unknown/POOR precedence, invalid metadata fail-loud, atomic winning-row provenance across roots; real CLI thresholds come from live config.</td>
-<td>Raw/parquet/PG/live input decision matrix over real full history and causal universe; route historical metadata through actual readers/callers or explicitly document irreversible unknowns. Custom library runs pass their explicit threshold object. Done code does not close broader P1 quality/runtime acceptance.</td>
-</tr>
-<tr>
-<td>P2.2 — B2 / NSC-105</td>
-<td><strong>Code task Done</strong>: durable pending ledger, PG retries, commit-before-ACK behavior, restart restores exactly one original row and API readback proved on disposable PG; platform-safe fsync and missing/corrupt ACK state fail-loud.</td>
-<td>Only deployment/API/UI runtime verification remains in P1.1. Do not reopen as a missing implementation. NSC-106 UI was already Done; verify current full issue state if updating Linear.</td>
-</tr>
-<tr>
-<td>P2.3 — D4 / NSC-29</td>
-<td>Event-identity funding aggregation, conflict rejection, unknown-held-exposure PnL guard, paginated downloader receipts and local raw receipt-backed source coverage implemented/tested. No universal eight-hour assumption or blanket fillna(0).</td>
-<td>Go realized-funding semantics/coverage remain open; distinguish event time, receive time, predicted rate, actual settlement and decision-time availability for live/drain/backtest. Verify real endpoint-reference receipts/data before certifying economic intervals; legacy data not retro-certified. Explicit Special acquisition unsupported. Paper funding ledger and actual realized cashflow acceptance remain. Historical receive-time cannot be invented. <strong>NSC-29 is the broader realism epic, still In Progress.</strong></td>
-</tr>
-<tr>
-<td>P2.4 — D3 / NSC-117</td>
-<td>Existing replay tool and sole PnL kernel available.</td>
-<td>Validate real B2/Hive coverage/timestamps/gaps; replay identical raw at book cadence 1,000/60,000 ms; compare aligned ob-bars/distributions/correlations/current book2026/depth_curve strategies. Honest train/evaluation old-fit/new-fit if material, otherwise numeric no-refit decision. No automatic weight rollout, crypto-lake or paid source.</td>
-</tr>
-</tbody>
-</table>
-<h2 id="p3-hygiene-after-stabilization">P3 — hygiene after stabilization<a class="headerlink" href="#p3-hygiene-after-stabilization" title="Permanent link">&para;</a></h2>
-<table>
-<thead>
-<tr>
-<th>Priority / original link</th>
-<th>Remaining work and acceptance</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>P3.1 — B1/E4 / NSC-121</td>
-<td>Current import graph plus function-level callers/Vulture audit; remove only proven dead reader/bus code. Preserve historical downloader and legacy aggregators still used by backtests. Unify maker timeout classification with ConnectTimeout/ReadTimeout/exchange/ordinary-failure regressions and reconciliation. Deduplicate requirements without losing install/build closure. Preserve unique CI release gates before removing obsolete workflow. STREAM_TYPES removal, top-level BookManagerLike and absent NSC-51 TODO are already done. Alert-rule additions belong to completed P1.2 code, not a duplicate task.</td>
-</tr>
-<tr>
-<td>P3.2 — C3/E2</td>
-<td>Retire agreed obsolete MkDocs/site/workflows/nav only after preserving unique normative content and checking callers/links. Preserve ADR, OBS-SPEC, soak runbooks and D11–D13; consolidate research links/protocols in docs/research/README.md; update README/collector/data-root/export references. Already absent audit/tmp files are not new cleanup work.</td>
-</tr>
-<tr>
-<td>P3.3 — E3</td>
-<td>Complete runtime matrix evidence before consolidating tests. Do not recreate removed replay/startup suites. Seven missing Go fixtures still skip parity: provide fixtures or explicitly justify replacement/removal after D1 acceptance. Promtool CI now exists; retain its mandatory config/rule/behavior gates. Disposable integration and serial slow/load only, never production stream resets.</td>
-</tr>
-<tr>
-<td>P3.4 — E1</td>
-<td>Last: actual caller graph for book/book_store/nats_live/bar_clock/consumer_lag/time_sync/pg/config and history links; calc-only ownership to calc, genuine shared ownership to common. Move/import only, no shim/behavior change; update AGENTS/entrypoints/tests/ADR links and run affected unit/integration/slow-load/runtime smoke. Removed replay_boot/replay_driver stay removed.</td>
-</tr>
-<tr>
-<td>P3.5 — E5</td>
-<td>Separate local-data inventory of alpha_engine/binance_parser/binance/binance.zip: tracked membership, real data, symlinks/callers, sizes, destination/free space/checksums and secret-safe session-log review. Specific transfer/deletion list and integrity proof before any destructive action; these local files may not exist in Codex Web.</td>
-</tr>
-</tbody>
-</table>
-<h2 id="closed-original-work-do-not-repeat">Closed original work — do not repeat<a class="headerlink" href="#closed-original-work-do-not-repeat" title="Permanent link">&para;</a></h2>
-<p>A1/NSC-102 VWAP empty-side guard; A2/NSC-121 tracked pyc removal; A5/NSC-122 hysteresis/dust/reconciliation code; A6 mining strategy registration; A7 shim removal; C0 archival/backlog migration; C2 absent tracked research datasets; C4–C9 original production prose cleanup; E4 STREAM_TYPES/top-level protocol/TODO items. Their runtime dependencies remain only where listed above. Original A4 did not exist. Funding D4 here is not ADR-0002's cursor decision D4.</p>
-<p>Current known Linear dispositions: NSC-33 and NSC-105 Done for local code acceptance; NSC-102/122/106 already Done; NSC-116 and NSC-29 In Progress; NSC-109/120/121/117 not closed by this work. Recheck actual issue descriptions/status before writing updates; a partial subtask cannot close a broad epic.</p>
-<h2 id="evidence-to-carry-with-the-handoff">Evidence to carry with the handoff<a class="headerlink" href="#evidence-to-carry-with-the-handoff" title="Permanent link">&para;</a></h2>
-<ul>
-<li><code>deployment-status.md</code>: latest safe state and trial chronology; later correction supersedes older numerical arrival/headroom claims.</li>
-<li><code>collector-ws-fairness-shorttrial-review.md</code> and machine JSON: failed last trial, exact stop/drain, rates and correction.</li>
-<li><code>archiver-resource-readiness-review.md</code>: ceiling observations, retained-work risks and proposed isolated proof.</li>
-<li><code>nats-atomic-batch-capacity-review.md</code>: version/ACK/dedup/rollback limits and offline discriminator; proposals were not executed.</li>
-<li><code>nats-snapshot-range-review.md</code>: preserved snapshot/restore evidence and exact unproven prefix.</li>
-<li><code>trader-history-startup-audit.md</code>, history import/readback reports: measured restore/evaluation proof and quality limits.</li>
-<li><code>funding-source-coverage-implementation.md</code>, <code>funding-acquisition-evidence.md</code>, validation docs/tests: local raw funding scope, provenance limitations and red/green/final results.</li>
-<li><code>docs/validation/md-runtime-coverage.md</code>: I1–I18 coverage and still-open actual runtime probes.</li>
-</ul>
-<p>Final completion requires full paper pipeline/soak/resource/quality/archive/alerts/retire evidence plus P2 reports and P3 work, or explicit owner cancellation of named remnants. Commit/push of the current handoff was explicitly authorized; server rollback/data preservation and real-money exclusion remain mandatory.</p>
+<p>All crash-run guard logs ended with the intended SIGKILL exit 137 or normal exit 0, and recorded no memory max/OOM events. The result JSON and exact UTC kill/restart files are in each run's <code>results/</code> directory. The first precommit kill was requested 9.870 seconds after the marker, near the protocol's 10-second idle timeout, so it is confounded by possible expiry. The prearmed <code>before-fast-final1</code> repeat requested kill 1.910 ms after the post-fsync marker; its manifest, watcher record, and result SHA-256 values are <code>3ffb68626ac16ba69154da5ef459e543267e3f8b30fb3a4fbcf89c130adb9d49</code>, <code>84db8834c75c01c1e691210e479cecfe0f53a31182718cc15b116ed3bf9a1de1</code>, and <code>cc9b4850a346a194a73824c025942714516b2cb62e5bb3c3932ab94896cde7a6</code>. The post-ACK kill was requested 5.162 seconds after its marker, not immediately. The first capacity attempt, <code>atomic-capacity-final-1</code>, is preserved but excluded: its app user could not write the root-owned result directory, and detached guards did not persist. The fresh <code>final-2</code> run corrected both conditions and was isolated from later crash cases.</p>
+<p>The cached trace SHA-256 is <code>bfff4a9abe984291c89c6dda263261df36794286e7ff7678ecf591af90c80777</code>. It contains 6,000 original events across 780 symbols with original subject and payload bytes but no original MsgIds or transport headers. The capacity run repeated those rows ten times with explicitly synthetic unique MsgIds, ingress timestamps and computed gap headers; it cannot prove original header parity. It is an unpaced primitive throughput result, not a timed 2,700/s steady plus 5,400/s burst admission and freshness proof. The lost-ACK case establishes reconciliation after application process loss before consuming a reply; it does not establish a network ACK drop exactly at the commit boundary, nor retry after a <code>none</code> result. Batch memory reservations, concurrent-batch per-subject order, lost-ACK reconciliation and retry behavior in the production D9 publisher remain unimplemented and unaccepted. The v2.15 test volume must never be opened by the deployed 2.10 binary.</p>
 
 
 
