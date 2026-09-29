@@ -2208,12 +2208,22 @@ writer stays live until new spot readiness is proven, then is stopped with an
 exact cutover and gap record. A 24-hour soak is started only after those gates.</p>
 <p>Live top-100-per-market ingress exposed a trade archive throughput limit from
 one-message JetStream pulls. The trade durable therefore requests up to 16
-messages per request, below its existing 64-message client pending bound so
-the subscription queue retains delivery and protocol headroom. nats-py may
-return a prefilled queue of up to 64 messages even when 16 were requested;
-the archiver processes every bounded nonempty result. After an empty or
+messages per request, below the client pending bound so the subscription
+queue retains delivery and protocol headroom. nats-py may return a prefilled
+queue with more than 16 messages; the archiver processes every result within
+the applicable bounded pending count. After an empty or
 partial fetch, it waits for the server to report no outstanding pull request
 before requesting another batch. Full batches avoid that extra server query.
+Live retained-backlog trials showed that this wait alone does not prevent
+slow-consumer overflow during a segment close. The trade subscription uses a
+4,096-message and 8 MiB local pending bound; other archive kinds keep the
+64-message bound. At the observed roughly 1,004 trade messages per second,
+the count provides about four seconds of receive headroom. The payload byte
+bound and the 768 MiB archiver container limit remain enforced. The existing
+trade durable keeps its <code>max_waiting=512</code>: NATS 2.10.29 rejects changing that
+setting in place, so the archiver validates it rather than recreating the
+durable or discarding its ACK position. The staged live queue and memory gate
+must confirm that this bounded receive budget is sufficient.
 Low-rate archive subjects retain their single-message pull. Fetch batching
 does not advance acknowledgement: every row remains unacknowledged until its
 Parquet segment is closed and fsynced.
