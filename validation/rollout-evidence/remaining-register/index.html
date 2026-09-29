@@ -1830,6 +1830,8 @@
       
         
       
+        
+      
     
     
     
@@ -1920,6 +1922,34 @@
     
   
     ADR-0002 Split services + JetStream
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../adr/0004-dual-market-topn-collection/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ADR-0004 Dual-market top-N collection
   
 
     
@@ -2087,6 +2117,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#superseding-paper-decision-2026-09-29" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Superseding paper decision, 2026-09-29
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#server-continuation-2026-09-29" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2195,7 +2236,42 @@
 
 
 <h1 id="remaining-work-register-for-codex-web">Remaining work register for Codex Web<a class="headerlink" href="#remaining-work-register-for-codex-web" title="Permanent link">&para;</a></h1>
-<p>As of 2026-09-29, after the 00:16–00:17 UTC collector trial and 00:23 UTC archiver stop. This register condenses the original 28-task plan; it does not authorize another live trial, a NATS upgrade, paid resources, risk changes, deletion or real-money trading. The main handoff supplies the Git branch and access constraints. Treat old execution commands and historical status sections as evidence, not current instructions.</p>
+<h2 id="superseding-paper-decision-2026-09-29">Superseding paper decision, 2026-09-29<a class="headerlink" href="#superseding-paper-decision-2026-09-29" title="Permanent link">&para;</a></h2>
+<p>The current operator instruction replaces the full-catalogue requirement with
+<a href="../../../adr/0004-dual-market-topn-collection/">ADR-0004</a>: top 100 eligible
+USDT symbols independently for spot and USD-M, with an explicit positive N
+config key and bounded held/benchmark exceptions. The new collector must run
+both markets; calc and paper execution remain USD-M. Historical 780-symbol
+capacity figures and full-catalogue gates below are evidence from the old
+scope, not acceptance thresholds for this rollout. The current capacity gate
+is a representative selected 100-per-market publisher plus concurrent
+archiver, with burst, slow sink, bounded queues and exact readback. Keep the
+NATS 2.10.29 pin unless this measured load proves an essential protocol
+blocker. The previous unanswered atomic-upgrade decision is superseded for
+this stage.</p>
+<p><a href="../topn-capacity-20260929/">Selected-load evidence</a> now verifies 80,988 exact
+publisher, broker, Parquet and merged-local rows for 100 spot plus 100 USD-M
+pairs. The archiver peaked at 533,950,464 bytes under its 768 MiB cap with
+no OOM. The synthetic 2,700/s sustained offer still grew the publisher queue
+by 740.4/s; it is a stress profile, not a measured normal selected-universe
+rate. Real two-market ingress and queue slope remain a mandatory staged
+readiness gate. Spot diff depth uses the venue-supported default 1000 ms
+stream; USD-M keeps 500 ms.</p>
+<p>The paper release remains pending until clean published source, strict docs,
+relevant tests, isolated changed-load capacity proof and controlled runtime
+gates pass. The new ranking cache volume, selected-list hashes, external paper
+config changes and held-symbol exceptions must be recorded before deployment.
+Legacy spot stays on until new spot readiness, then only its writer is stopped
+with a recorded time/gap. Both markets, archiver, calc and sole paper trader
+must be verified before starting the real 24-hour observer. Historical source
+recovery, original snapshot uncertainty and P2/P3 research remain open unless
+they cause a direct paper safety fault.</p>
+<p>The older register below was written after the 00:16–00:17 UTC collector trial
+and 00:23 UTC archiver stop. Its old authorization and full-catalogue language
+is historical; the current direct-server paper instruction authorizes this
+staged rollout, tested normal pushes and necessary reversible repairs. It
+does not authorize paid resources, data deletion, risk changes or real-money
+trading. Treat old execution commands and status sections as evidence.</p>
 <h2 id="server-continuation-2026-09-29">Server continuation, 2026-09-29<a class="headerlink" href="#server-continuation-2026-09-29" title="Permanent link">&para;</a></h2>
 <p>The direct-server continuation started from clean published main
 <code>4ce261e84f3d62271b69aecebb81ffb60d359f7c</code>. Current user instructions authorize
@@ -2209,8 +2285,24 @@ services remain stopped; no P0/P1 gate is closed by this work. The original
 snapshot remains unaccepted. An <a href="../offline-atomic-prototype-20260929/">isolated atomic-batch prototype</a>
 committed and exactly read back 60,000 events at 9,753/s and exercised crash
 reconciliation on separate new storage. This is not D9 integration acceptance.
-The combined archiver trial still fails its memory gate; bounded consumer
-migration is being tested. Production NATS remains pinned and unchanged.</p>
+The combined archiver trial still fails its memory gate after bounded pull
+consumer migration, no-copy unique batches, configured merge read batches,
+disabled measured Parquet prefetch and a harness-only hard-link preservation fix. Migration has passed an isolated
+real-broker cursor/fsync/ACK proof, but merge/upload capacity remains open.
+Unchanged single-event D9 also fails the matched NATS 2.15 paced control;
+atomic integration is pending a separate scope decision and has not begun.
+Production NATS remains pinned to 2.10.29. Its brief idle cold-backup restart
+and exact restored state/cursor proof are recorded in
+<a href="../new-nats-cold-backup-20260929/">new NATS cold backup</a>; original storage and
+all old rollback material remain intact.</p>
+<p>The <a href="../nats-md-trade-snapshot-verification-plan-20260929/">native snapshot verifier</a>
+has passed tiny independent native/API restore comparisons, including a
+concurrent suffix and expired-age metadata. The original archive has not been
+scanned or restored; full indexed membership, raw-block/index consistency and
+the excluded 84,121-sequence prefix remain open. At 04:06 UTC all offline
+containers and new application services were stopped, external deployment
+configuration hashes matched baseline, and the new MD state/cursors were
+unchanged. No release or 24-48h soak has begun.</p>
 <h2 id="current-baseline-and-acceptance-limits">Current baseline and acceptance limits<a class="headerlink" href="#current-baseline-and-acceptance-limits" title="Permanent link">&para;</a></h2>
 <ul>
 <li>Original reviewed main: <code>04e45d37d7094b1423c0e305bf9193664f1f0627</code>. Current changes are being published on codex/remaining-plan-execution; server release tree hashes identify immutable source content, not Git commits.</li>

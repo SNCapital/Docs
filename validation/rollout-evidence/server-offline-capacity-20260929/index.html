@@ -1830,6 +1830,8 @@
       
         
       
+        
+      
     
     
     
@@ -1920,6 +1922,34 @@
     
   
     ADR-0002 Split services + JetStream
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../adr/0004-dual-market-topn-collection/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ADR-0004 Dual-market top-N collection
   
 
     
@@ -2207,6 +2237,83 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#bounded-pull-delivery-and-remaining-merge-pressure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Bounded pull delivery and remaining merge pressure
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#server-version-only-publisher-control" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Server-version-only publisher control
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#preservation-during-the-pause" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Preservation during the pause
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#configured-merge-bound-and-harness-cache-accounting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configured merge bound and harness cache accounting
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#reader-prefetch-owner-and-nine-kind-trial" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Reader prefetch owner and nine-kind trial
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#preserved-native-snapshot-verifier-tiny-proof-only" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Preserved native snapshot verifier: tiny proof only
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#final-read-only-checkpoint-0406-utc" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Final read-only checkpoint, 04:06 UTC
+      
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -2465,6 +2572,156 @@ last delivered sequence. No such migration has been deployed or accepted.
 The pinned source is
 <a href="https://github.com/nats-io/nats-server/blob/v2.10.29/server/consumer.go">NATS 2.10.29 consumer.go</a>;
 installed client source copies are retained in <code>archiver-client-8/</code>.</p>
+<h2 id="bounded-pull-delivery-and-remaining-merge-pressure">Bounded pull delivery and remaining merge pressure<a class="headerlink" href="#bounded-pull-delivery-and-remaining-merge-pressure" title="Permanent link">&para;</a></h2>
+<p>Commit <code>8bb25bd</code> replaces push delivery with one fetched message per subject,
+creates a versioned durable from the drained old ACK floor, and preserves old
+consumers. The full unit gate passed 2,394 / 9 skips / 1 xfail in 46.31 seconds.
+The guarded real NATS 2.10 migration proof, published in <code>a48d1cc</code>, verified
+old floor 1 plus undelivered backlog, new start 2, reconnect to new floor 3,
+and the unchanged old floor 1. Exact broker bytes/headers and decoded parquet
+row values matched all three IDs. See <a href="../archiver-pull-migration-20260929/">migration evidence</a>.</p>
+<p>The subsequent combined pull trial retained the prior 120k backlog, 900k-row
+fixture, 120-second delayed local sink and 768 MiB cap. Both guards were sampled
+before a host start gate released the client. At 02:25:17.382 UTC the guard
+triggered at 648,515,584 bytes (80.53%); the client stopped at 02:25:19.452.
+It recorded zero max/OOM events. Final in-process charge was approximately
+669.7 MB, with 354.7 MB anonymous and 283.2 MB file cache, RSS 419.1 MB,
+Arrow 74.4 MB live / 108.2 MB peak, and about 11.8k rows/ACK handles.
+Pending ACK payload bytes remained zero. The pull subscription queue held
+only 0-2 messages, around 0.4 KB, instead of the prior 105k-message backlog.
+This validates the delivery-count bound for this workload, not the overall
+memory gate. The merge had written only about 5.5 MB before the stop;
+upload and exact final readback did not run. Drain is incomplete and no result
+JSON exists. Both containers were stopped; all files and broker storage remain
+in <code>archiver-pull-capacity-1/</code> under the artifact root.</p>
+<p>Commit <code>0af4276</code> removes an unnecessary nested Arrow batch copy when every
+MsgId is unique. The duplicate-selection operation still filters preexisting
+and within-batch IDs in order and keeps null IDs. Its memory regression failed
+with the helper present but the identity fast path removed, then passed with
+the fix; 34 focused archive/merge tests passed. The temporary red overlay is
+preserved in <code>archiver-pull-capacity-1/merge-no-fastpath.py</code>. This is an
+allocation fix, not yet a successful combined capacity result. No config,
+container cap, archive rows or retention was changed.</p>
+<h2 id="server-version-only-publisher-control">Server-version-only publisher control<a class="headerlink" href="#server-version-only-publisher-control" title="Permanent link">&para;</a></h2>
+<p>The unchanged single-event D9 publisher also ran on fresh pinned NATS 2.15
+FileStorage with always-sync, the same 1 GiB/two-CPU client and 512 MiB/one-CPU
+broker, and the same warmed 30-second 2,700/s plus five-second 5,400/s profile.
+<a href="../server-offline-publisher-single-215-20260929.json">Machine result</a>.
+All 94,499 timed events were offered/admitted/ACKed, with no rejection,
+eviction or timeout. Including 975 warmup events, exact 95,474-row readback
+found no missing, duplicate, payload/header mismatch or subject-order error.
+Offering took 30.001 seconds; drain took 38.586 seconds. This is modestly
+better than the 2.10 control's 40.437 seconds but still fails headroom.
+p99 admission-to-ACK latency was 24,214.122 ms. Client/broker peak charges were
+207,585,280 / 120,619,008 bytes, with zero max/OOM events. Both guards verified
+and sampled before the start gate; both containers stopped afterward. Raw
+evidence is in <code>publisher-single-215-final1/</code> under the artifact root; result
+SHA-256 is <code>cb378d61a06328c6454de8df16a1d973d353bfb08fc5ca93f50f54d9c991ed30</code>.
+A version upgrade alone does not remove the measured publisher blocker.</p>
+<h2 id="preservation-during-the-pause">Preservation during the pause<a class="headerlink" href="#preservation-during-the-pause" title="Permanent link">&para;</a></h2>
+<p>A <a href="../new-nats-cold-backup-20260929/">byte-verified cold backup and isolated restore</a>
+preserved the new paper broker's full paused interval. The same production
+NATS 2.10 broker briefly stopped and restarted; all stream counts/ranges and
+consumer cursors matched, with no application or venue restart. Original data,
+config and old rollback material remain intact.</p>
+<h2 id="configured-merge-bound-and-harness-cache-accounting">Configured merge bound and harness cache accounting<a class="headerlink" href="#configured-merge-bound-and-harness-cache-accounting" title="Permanent link">&para;</a></h2>
+<p>The no-copy combined trial (<code>archiver-pull-capacity-2</code>) still hit the 80% guard
+at 02:38:13.796 UTC, with no max/OOM events and incomplete drain. Observed peak
+Arrow and anonymous memory were lower than the prior run, but this was not a
+completed capacity proof. Commit <code>d46252f</code> then made merge read batches use the
+existing configured row budget (5,000) instead of a fixed 65,536 rows. Semantic
+red with the required argument present but hardcoded 65,536 and 164 focused
+green tests verified the change; see <a href="../archiver-merge-row-budget-20260929/">row-budget evidence</a>.</p>
+<p>The configured-budget combined trial (<code>archiver-pull-capacity-3</code>) also stopped,
+at 02:50:14.851 UTC / 644.54 MB (80.04%), without max/OOM events. It reached
+about 37k buffered intake rows and a 51.4 MB merge temporary output plus
+20.7 MB dedup SQLite file. Anonymous memory was about 280.2 MiB, file cache
+328.1 MiB and Arrow peak 72.3 MiB; pull queue remained one message. Different
+progress points prevent interpreting peak differences as an exact isolated
+allocation saving. Upload and full readback still did not complete.</p>
+<p>The test-only preserved fixture copy duplicated about 123.56 MB of page-cache
+charge. Commit <code>2f2fb8c</code> changes only the offline harness to preserve each fully
+closed fixture through a read-only hard link on the same filesystem, with
+inode/link-count/hash evidence and no copy fallback. Tests prove that late
+reopen uses a new part and working-name removal leaves the original bytes
+readable. All prior independent fixture copies and the original cached sample
+remain untouched. This removes duplicate test-only cache, not production
+history or the working-file cache; it is not an independent corruption backup.
+See <a href="../archiver-hardlink-fixture-20260929/">fixture preservation limits</a>.</p>
+<p>The hard-link combined trial (<code>archiver-pull-capacity-4</code>) also failed the
+80% guard at 02:58:18.793 UTC: 644.57 MB of 805.31 MB, without max/OOM
+events. Both isolated containers are stopped; all artifacts remain. The
+manifest confirms the two fixture names share one read-only inode. At the
+latest internal sample, anonymous memory was 350.3 MiB, file cache 248.2 MiB,
+Arrow live/peak 105.5/108.0 MiB, with 8,585 buffered rows, 48,585 ACK handles
+retaining zero payload bytes, and one queued message. Merge temporary output
+reached 76.7 MB plus 31.8 MB dedup SQLite. Upload, complete drain and exact
+readback were not reached; no acceptance is inferred from partial progress.
+Remaining anonymous allocations are under targeted diagnosis before any
+further capacity run.</p>
+<h2 id="reader-prefetch-owner-and-nine-kind-trial">Reader prefetch owner and nine-kind trial<a class="headerlink" href="#reader-prefetch-owner-and-nine-kind-trial" title="Permanent link">&para;</a></h2>
+<p>Commit <code>5e7b612</code> disables Parquet input prefetch after an isolated controlled
+read/dedup/write probe located live Arrow allocation growth in read calls.
+The two 300,000-row outputs were byte-identical. Live Arrow maximum fell from
+71.4 MB to 5.0 MB; anonymous cgroup peak fell from 233.8 MB to 196.3 MB.
+The constructor-contract regression failed before the fix and 165 focused
+archiver tests passed. See <a href="../archiver-anon-diagnosis-20260929/">allocation diagnosis</a>.
+The same commit adds a tested <a href="../offline-mixed-corpus-20260929/">nine-kind synthetic corpus</a>,
+retaining 780 symbols and larger captured depth shapes with explicit weighting
+and provenance limits. Neither result alone closes a capacity gate.</p>
+<p>Fresh combined <code>archiver-pull-capacity-5</code> used this corpus from committed
+source <code>5e7b612</code>, retaining the 120k intake / 900k previous-day depth / 120-second
+local sink profile and 768 MiB client / 512 MiB broker caps. Both external
+guards sampled before workload start at about 03:17:01 UTC. The client guard
+stopped it at 03:19:18 UTC / 645,926,912 bytes (80.21%); stop/sampling lag allowed
+a later internal sample of 668,258,304 bytes. Exit 137 was the guard stop,
+<code>OOMKilled=false</code>, and max/oom/oom_kill counters stayed zero. Both client and
+broker are stopped and preserved.</p>
+<p>Latest internal sample: anonymous 353,337,344 bytes, file cache 282,783,744,
+Arrow live/peak 8,982,592 / 12,246,080, pending ACK handles 41,779 with zero
+payload bytes, buffered rows 21,779, pull queue zero and 13 open writers.
+The new depth fixture was 152,991,226 bytes with preserved hard link; merge
+temporary output reached 74,705,219 bytes and its ID index 24,633,344 bytes.
+Merge, upload, complete drain and exact readback were not reached. The
+prefetch fix reduced its measured allocation owner, but total combined
+capacity still fails. Remaining decoded-row/allocator ownership is under
+diagnosis; caps, ACK durability, catalogue and history remain unchanged.</p>
+<h2 id="preserved-native-snapshot-verifier-tiny-proof-only">Preserved native snapshot verifier: tiny proof only<a class="headerlink" href="#preserved-native-snapshot-verifier-tiny-proof-only" title="Permanent link">&para;</a></h2>
+<p>The <a href="../nats-md-trade-snapshot-verification-plan-20260929/">MD_TRADE verifier record</a>
+now includes tested pinned native-file extraction/index reading and independent
+raw-API restore comparison. Three generated tiny snapshots passed exact
+binary manifest equality: baseline, concurrent suffix, and expired nonzero
+MaxAge with an explicit zero-age restore/read override. Raw header bytes,
+case/order/repeated keys, empty payloads and nanosecond timestamps are covered.
+Missing/corrupt index, copied-file mutation and incomplete manifests fail
+closed. Targeted Go tests and nine Python tests passed. Two oversized upstream
+test-package builds stopped safely at the memory guard; the narrowed build
+passed under the same cap. All containers and evidence remain preserved.</p>
+<p>The original 33-million-message snapshot was neither extracted nor restored
+in this continuation. A bounded first-N API diagnostic and safe large-copy
+resource envelope remain prerequisites for the original-data pilot. No
+84,121-sequence prefix recovery, archive/index-wide parity or source-coverage
+gate is closed by tiny-fixture success.</p>
+<h2 id="final-read-only-checkpoint-0406-utc">Final read-only checkpoint, 04:06 UTC<a class="headerlink" href="#final-read-only-checkpoint-0406-utc" title="Permanent link">&para;</a></h2>
+<p>All offline containers are stopped. New collector/archiver remain stopped;
+new calc/trader have not started. Old futures systemd is inactive and legacy
+spot remains active. Old NATS stays stopped. New NATS/PG and existing monitoring
+remain running. No application release, venue request or real-money execution
+was performed. Snapshot <code>630cc80784a4</code> is still unaccepted.</p>
+<p>New MD remains 1,092,974 messages / 532,697,696 bytes / sequences 1..1,092,974;
+BARS remains empty. All nine old archiver durables have zero pending, ACK-pending
+and redelivered messages, with delivered/ACK-floor equality. External
+<code>deployment.env</code>, compose override, live paper config and NATS config hashes
+match the initial saved values. Artifact:
+<code>/opt/trading/codex-operations/offline-20260929-0050/final-readonly-state-20260929-0406.json</code>.
+Host available RAM was 13,210 MiB, disk 67 GiB free, no swap. Operator cgroup
+current/peak was 601,702,400 / 643,219,456 bytes with zero max/OOM events.</p>
+<p>The rollout remains blocked at the publisher and archiver offline gates.
+The separately reviewed atomic protocol scope decision is still unanswered;
+no integration implementation has begun. The archiver's measured prefetch
+allocation is fixed, but combined capacity remains unaccepted. All source
+coverage, calc/live/quality/archive/alerts and soak gates in the register
+remain open. No Linear issue is closed by these results.</p>
 
 
 

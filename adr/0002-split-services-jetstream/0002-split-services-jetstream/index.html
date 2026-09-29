@@ -17,7 +17,7 @@
         <link rel="prev" href="../../0001-collector-trader-split/0001-collector-trader-split/">
       
       
-        <link rel="next" href="../../../research-log/">
+        <link rel="next" href="../../0004-dual-market-topn-collection/">
       
       
         
@@ -1838,6 +1838,8 @@
       
         
       
+        
+      
     
     
     
@@ -2371,6 +2373,34 @@
   
 </nav>
       
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../0004-dual-market-topn-collection/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ADR-0004 Dual-market top-N collection
+  
+
+    
+  </span>
+  
+  
+
+      </a>
     </li>
   
 
@@ -3770,7 +3800,10 @@ Grace измеряется от первого доступного валидн
 исторические метрики стакана. При недостатке истории сервис сообщает состояние прогрева;
 отсутствие сигналов не объявляется успешным торговым запуском. Приёмка включает сравнение
 весов прежнего и нового пути на одной истории, включая перезапуск за пределами retention.</p>
-<p><strong>INV-UNIVERSE-1.</strong> Множество сбора и торговый universe различны. Collector получает
+<p>Начиная с 2026-09-29 этот абзац о полном каталоге заменён
+<a href="../../0004-dual-market-topn-collection/">ADR-0004</a>. Остальной текст ниже
+сохраняется как история исходного решения.</p>
+<p><strong>Historical INV-UNIVERSE-1.</strong> Множество сбора и торговый universe различны. Collector получает
 все поддерживаемые активные инструменты выбранного рынка из каталога биржи, без
 зашитого списка монет и без фильтра top-N по объёму. Calc считает бары этого множества,
 archiver сохраняет его данные. Листинги и прекращение торгов обрабатываются автоматически
@@ -4482,13 +4515,13 @@ Decision; ASSUMPTION A1–A3 имеют цену ошибки; пустышек 
         
         
           
-          <a href="../../../research-log/" class="md-footer__link md-footer__link--next" aria-label="Next: Research log">
+          <a href="../../0004-dual-market-topn-collection/" class="md-footer__link md-footer__link--next" aria-label="Next: ADR-0004 Dual-market top-N collection">
             <div class="md-footer__title">
               <span class="md-footer__direction">
                 Next
               </span>
               <div class="md-ellipsis">
-                Research log
+                ADR-0004 Dual-market top-N collection
               </div>
             </div>
             <div class="md-footer__button md-icon">
