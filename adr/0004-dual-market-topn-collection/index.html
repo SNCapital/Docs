@@ -2272,6 +2272,33 @@ queue, bounded engine windows, message-ID deduplication and captured rows is
 not yet measured. Low-rate drain diagnostics now report each retained count
 and current RSS. The next guarded replay is a measurement gate, not acceptance
 of the current memory trend.</p>
+<p>The 17:04 UTC guarded retry isolated another cold-replay retention path:
+while the NATS client queue was nearly empty and engine slots had reached
+their fixed plateau, bootstrapping books held 62,635 depth diffs and kept
+growing. A book with a known snapshot update ID now rejects incoming stale
+diffs before buffering. After a failed snapshot bridge it discards already
+buffered stale diffs while preserving the future bridge chain, including
+the USD-M equal-ID bridge. Focused red/green tests cover these cases. The
+next replay must still prove memory plateaus and every selected symbol gets
+a recovery verdict; code-level regression coverage alone is insufficient.</p>
+<p>The live archiver stopped at 17:39 UTC because nats-py surfaced an idle pull
+as asyncio.TimeoutError, while the service only handled the library-specific
+NatsTimeoutError. Both specific timeout forms now enter the existing
+server-quiescence wait before retry. Unexpected fetch errors still propagate.
+A focused red/green regression covers the actual asyncio exception. The
+archiver must be rebuilt and observed catching up from its durable ACK state
+before paper readiness is claimed.</p>
+<p>The broker was OOM-killed again at 18:21 UTC with 1,560,212 KiB anonymous RSS
+at its 1,536 MiB cgroup limit while calc was stopped. After preserving the
+same JetStream volume, a restart with collector and archiver attached was
+OOM-killed again at 18:28 UTC with 1,568,168 KiB anonymous RSS. The two
+clients were then stopped and the broker recovered its 22,626,713 retained MD
+messages; with zero client connections its RSS was about 436 MiB. This
+separates the recurring broker fault from calc's cold replay. Do not
+represent the current 1,536 MiB budget or top-100 selection as a proven
+stable production envelope. Isolate client load, fix the measured cause or
+set a justified bounded budget, then repeat the dual-market and 24-hour
+soak gates. The interrupted collection intervals are real gaps.</p>
 
 
 
