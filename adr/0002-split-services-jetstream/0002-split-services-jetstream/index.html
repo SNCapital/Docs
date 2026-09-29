@@ -3587,12 +3587,24 @@ JetStream коротким окном; позиции — биржа (user data 
 <li>Watermark коллектора инициализируется последним сохранённым сообщением
   exact subject из JetStream перед первой публикацией. Номер продвигается
   только после PubAck; ошибка NATS не превращает неотправленное событие в
-  обработанное. Для aggTrade разрыв восстанавливается REST <code>fromId</code> страницами
-  до номера следующего live-события, с общим REST limiter и тем же MsgId.
-  REST не содержит WS-время <code>E</code>: восстановленный envelope явно помечается
-  <code>reconstructed_from_rest=true</code>, <code>E=T</code>, а <code>received_ms</code> соответствует HTTP-ответу.
-  Это производное сообщение, а не точная копия утраченного WS-фрейма.
-  Если REST не вернул непрерывную историю, разрыв остаётся явно отмеченным.
+  обработанное. Только JetStream message-not-found (<code>err_code=10037</code>) означает
+  пустой exact subject; остальные ошибки чтения и повреждённый retained payload
+  не разрешают считать поток свежим. Пустой subject проверяется один раз до
+  первой публикации. Live publisher не выполняет REST backfill: многочасовой
+  разрыв не должен занимать все D9 publication slots и блокировать свежие
+  diff/mark/heartbeat. Следующий aggTrade публикуется с <code>X-Gap-Count</code> и
+  <code>X-Gap-Lost</code>; для его <code>a</code> точный отсутствующий диапазон равен
+  <code>[a - X-Gap-Lost, a - 1]</code>. Заголовки сохраняются вместе с событием в MD и
+  при replay дают тот же quality stamp; это запись разрыва, не восстановление.
+  Сохранение диапазонов за пределами MD retention и проверенное offline
+  восстановление остаются обязательным отдельным приёмочным шагом D13.
+  Standalone <code>collector/live/trade_backfill.py::fetch_agg_trade_gap</code> сохраняет
+  REST <code>fromId</code> pagination и валидацию непрерывности для отдельного recovery
+  workflow, но live collector его не вызывает. Offline REST envelope имеет
+  <code>reconstructed_from_rest=true</code>, <code>E=T</code>, <code>received_ms</code> HTTP-ответа; это
+  производное сообщение, а не копия исходного WS-фрейма. Offline history нельзя
+  подавать в live engine как текущий tick или считать исторический gap закрытым
+  без отдельного replay/readback доказательства.
   Depth backfill отсутствует: replay инвалидирует книгу при разрыве цепочки.</li>
 <li>Funding приходит через общий MD pump и bus, без отдельного durable.
   Историческое <code>funding_time_ms</code> сохраняется как экономическая дата; поздняя
