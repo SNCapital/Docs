@@ -2117,6 +2117,34 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#coherent-implementation-continuation-2026-09-30" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Coherent implementation continuation, 2026-09-30
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Coherent implementation continuation, 2026-09-30">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#candidate-configuration-contracts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Candidate configuration contracts
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#collector-return-correction-2026-09-30-continuation" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2385,7 +2413,55 @@
 
 
 <h1 id="paper-finish-design-and-simplification-gate">Paper-finish design and simplification gate<a class="headerlink" href="#paper-finish-design-and-simplification-gate" title="Permanent link">&para;</a></h1>
-<p>Status: F1 OPEN, DIAGNOSTIC_NOT_ACCEPTED. This design precedes runtime edits. The <a href="../../../plans/2026-09-30-paper-finish-execution/">accepted revision4 plan</a> controls the sequence and requirements; <a href="../paper-finish-baseline/">F0 baseline</a> records current deployed state. No F2 production patch or restart is authorized by a partial F1 result.</p>
+<p>Status: coherent F2-F5 candidate implemented and source suites passed; F6 resource/calibration and the provenance acceptance question remain open. The human continuation below supersedes the historical F1 prerequisite statements.</p>
+<h2 id="coherent-implementation-continuation-2026-09-30">Coherent implementation continuation, 2026-09-30<a class="headerlink" href="#coherent-implementation-continuation-2026-09-30" title="Permanent link">&para;</a></h2>
+<p>The human continuation explicitly authorizes the entire F2-F5 candidate before final verification and supersedes older statements below that require renewed F1 studies before edits. Completed F0/F1/F3 evidence is reused within its recorded scope. Resource and readiness gaps remain final acceptance gates; no passive sizing wait blocks coding. The base is the tested semantic merge <code>b99842050ffa0b8d7aafd3b802473916cf60d744</code>.</p>
+<p>The candidate uses the released pinned nats-py 2.16.0 public pull API, one request, bounded 64-message batches and 128-message/4 MiB SDK pending limits. It retires an ephemeral consumer with a delivered tail beyond applied and resumes at applied+1. Calc uses synchronous shared engine application, one owner lock for REST result application, completion, catalogue changes and boundary publication/checkpoints. The boot verdict and delivered/pending drain contract remain mandatory; removal of the bus sentinel follows removal of the actual asynchronous bus path. External bridge callers retain their bus API. Collector uses one atomic cohort owner and charged reservations until a verified final PubACK. Archive batches rows under the same per-kind lock as close/fsync/ACK; legacy cursor migration is a one-shot tool.</p>
+<p>History now retains completeness, stamp counters and provenance alongside projected metrics; the shared backtest validator recognizes the live history view. This preserves unknown/degraded/poor metadata without retroactively certifying imported history or changing strategy formulas. POOR does not submit close orders, including a latched risk kill, and reconciliation continues. The kill remains latched and applies when quality permits execution.</p>
+<p>Final verification will record separate-tree baseline red, final suites, native broker/PG integration, measured simultaneous resources and capacity/calibration. Production collection and archiving remain live; calc/trader and the acceptance observer remain off until gates pass. No deployment, retention or risk change is implied by this candidate.</p>
+<h3 id="candidate-configuration-contracts">Candidate configuration contracts<a class="headerlink" href="#candidate-configuration-contracts" title="Permanent link">&para;</a></h3>
+<p>All listed values are required in <code>live_config.yaml</code>; collector and trader use the same cohort validator. The production loader still requires <code>symbols: null</code>; offline tools derive their isolated copied universe from immutable fixture seeds.</p>
+<table>
+<thead>
+<tr>
+<th>Fields</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>calc_pull_batch_messages</code>, <code>calc_pull_pending_messages</code>, <code>calc_pull_pending_bytes</code>, <code>calc_pull_timeout_seconds</code></td>
+<td>Public fetch batch, SDK message/byte bounds and request timeout; next pull waits for application and public request closure.</td>
+</tr>
+<tr>
+<td><code>calc_dedup_max_ids</code></td>
+<td>Existing bounded MsgId FIFO capacity, with constant-time oldest eviction preserving duplicate order.</td>
+</tr>
+<tr>
+<td><code>calc_checkpoint_retry_max_attempts</code></td>
+<td>Bound on serial paired checkpoint retries after successful bar publication.</td>
+</tr>
+<tr>
+<td><code>calc_watermark_skew_s</code></td>
+<td>Recovery overlap added to liquidation settlement overlap when selecting an older proven book/cursor generation.</td>
+</tr>
+<tr>
+<td><code>collector_cohort_max_events</code>, <code>collector_cohort_max_payload_bytes</code>, <code>collector_cohort_linger_s</code></td>
+<td>Charged cohort bounds and bounded collection interval; measured released SDK envelope is at most 100 events and 4 MiB.</td>
+</tr>
+<tr>
+<td><code>collector_stage_timeout_s</code>, <code>collector_commit_timeout_s</code>, <code>collector_cohort_timeout_s</code></td>
+<td>Atomic stage, final PubACK and entire cohort deadlines. An uncertain outcome stops delivery with reservations retained.</td>
+</tr>
+<tr>
+<td><code>observer_stack_steady_bytes</code>, <code>observer_stack_peak_bytes</code>, <code>observer_host_min_available_bytes</code>, <code>observer_disk_reserve_ratio</code></td>
+<td>Decimal byte budgets and physical filesystem reserve. Ten GB steady and twelve GB peak are acceptance targets; the allowed return time still requires calibration.</td>
+</tr>
+</tbody>
+</table>
+<p>Final source verification: 2,685 unit tests passed, eleven existing environment skips and one existing expected failure; twenty serial slow/load tests passed, ten isolated integration tests passed and the isolated 5,000-message NATS soak passed. Promtool config/rules/behavior and strict documentation build passed. Two additional environment skips reflect missing optional OpenAI research dependencies; no new skip was added.</p>
+<p>Actual one-minute-window service golden comparison selected a nonzero paired recovery seed and verdict <code>replayed</code>. Every numerical key, book digest, checkpoint, cursor and epoch matched. The third bar's <code>live_liq</code> stamp retained the existing live-versus-replay distinction (true versus false); the human contract question remains open. This is a one-symbol synthetic smoke, not default thirty-minute or historical coverage acceptance.</p>
+<p>The two-hour capacity/calibration process is persistent under <code>paper-finish-capacity-calibration-20260930.service</code>, with 1,908/s pre-admission offer, a five-minute double burst, immutable full-depth synthetic input, real collector/calc/archive paths, verified delayed local sink and resource/disk guards. Shared fixture process ownership, synthetic heartbeat mix, mature trader allocation and full stack acceptance remain explicitly unproven. The production acceptance observer has not started.</p>
 <h2 id="collector-return-correction-2026-09-30-continuation">Collector return correction, 2026-09-30 continuation<a class="headerlink" href="#collector-return-correction-2026-09-30-continuation" title="Permanent link">&para;</a></h2>
 <p>The previous 9.85 GB normal table is not accepted: its 0.9 GB collector term is falsified. The full-import, seven-owner fixture at the unchanged 1.3 GB D9 accounting capacity peaks at 1,309,970,432 charged bytes. After every retained entry and the named decoded/SDK/protocol overlap is released, charge remains 1,271,795,712 bytes through 120 seconds idle. Buffer entries, charged bytes and inflight bytes are zero; no drops, limit events or OOM occur. This is an offline largest-observed-payload case, with live WS/REST tasks explicitly unmeasured.</p>
 <p>One same-image standard allocator comparison peaks at 1,334,382,592 bytes and remains at 1,235,628,032 through 120 seconds idle. It does not restore the proposed steady allowance and is not adopted. No production allocator/environment change, native trim hook, buffer reduction or extra healing path follows. Reference retention in the diagnostic is being traced before attributing all residence to the allocator. A revised measured allocation and the concurrent cache result remain F1 gates. Evidence is retained under operations <code>f1-probes/collector-owner-idle-r2</code> and <code>collector-owner-mimalloc-r1</code>.</p>
