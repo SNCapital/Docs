@@ -2298,12 +2298,12 @@
 <tr>
 <td>F5</td>
 <td>Candidate implemented; calibration open</td>
-<td>Full limits-retention occupancy is normal. Physical charge, disk reserve, host headroom, durable PG bar freshness and mandatory quality probes are observed. Calc pressure stops calc/trader while healthy collection continues. Peak-to-steady duration and alert thresholds require measured calibration; placeholder checker still fails honestly.</td>
+<td>Full limits-retention occupancy is normal. Physical charge, disk reserve, host headroom, durable PG bar freshness and mandatory quality probes are observed. Calc pressure stops calc/trader while healthy collection continues. Independent review corrections reject present-zero trader progress, observed retention holes and unproven/exhausted actual paired-recovery margin. Peak-to-steady duration and alert thresholds require measured calibration; placeholder checker still fails honestly.</td>
 </tr>
 <tr>
 <td>F6</td>
 <td>Final verification running</td>
-<td>2,685 unit tests pass, 11 existing environment skips and one existing expected failure; ten isolated NATS/PostgreSQL integration tests, strict MkDocs and promtool config/rules/behavior pass. Twenty serial slow/load tests and the 5,000-message NATS soak passed. Actual-service numerical golden matched, with one existing live_liq provenance distinction awaiting the human contract decision. Two-hour integrated capacity/calibration is running; full resource/retention gates remain open. This is source verification, not rollout acceptance.</td>
+<td>2,701 unit tests pass, 11 existing environment skips and one existing expected failure; ten isolated NATS/PostgreSQL integration tests, strict MkDocs and promtool config/rules/behavior pass. Twenty serial slow/load tests and the 5,000-message NATS soak passed. Actual-service numerical golden matched, with one existing live_liq provenance distinction awaiting the human contract decision. The first capacity attempt confirmed its 3,434,400-message preload, then stopped on a diagnostic SDK-wrapper positional-argument failure before concurrent calibration. Separate-tree regression red and eight focused tests green cover the wrapper correction. Preserved-prefix continuation and full resource/retention gates remain open. This is source verification, not rollout acceptance.</td>
 </tr>
 <tr>
 <td>F7/F8</td>
@@ -2317,6 +2317,7 @@
 </tr>
 </tbody>
 </table>
+<p>The implementation was committed and normally pushed as <code>ced0e8797a4949cf2751d991193406c67564c34d</code>, equal to freshly fetched main after the push. The subsequent SDK-wrapper correction is diagnostic-tool work; no release has occurred. Root config SHA-256 is <code>68db5f1d9ad444dda478952f01df4d58362c415cb8576cf202739c11394a4ca2</code>.</p>
 <p>Final evidence lives in <code>/opt/trading/codex-operations/paper-finish-final-verification/</code> and the append-only progress journal. Physical mount verification confirms NATS, PostgreSQL, staging and config on the same filesystem: 167,933,390,848 bytes total, 45,447,667,712 bytes available at measurement, 20% reserve. The rejected 512 GiB purchase is not required by this measurement; full-day retention and the staged backup lifecycle still need acceptance. No simultaneous expanded-copy scenario is assumed.</p>
 <h2 id="accepted-revision4-server-execution-2026-09-30">Accepted revision4 server execution, 2026-09-30<a class="headerlink" href="#accepted-revision4-server-execution-2026-09-30" title="Permanent link">&para;</a></h2>
 <p>This section supersedes older execution/routing/architecture proposals below, while preserving every original task ID and its evidence. The authoritative revision4 plan was imported byte-identically as <a href="../../../plans/2026-09-30-paper-finish-execution/">paper-finish execution</a>, committed at <code>ccfb86826ccba45cd6e615318e86a2dd17b46e61</code>, equal to freshly fetched main on continuation. Runtime baseline remains <code>91f5d1d</code>; remaining documentation/diagnostic tools are uncommitted. Model routing is the accepted Sol6.1medium orchestrator/Sol6.1low complex coder/Luna max simple coder, maximumtwo total children.</p>
