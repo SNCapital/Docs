@@ -1,0 +1,2939 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Quantitative research and live-trading stack on top of Binance market data. Strategy engine + WebSocket data pipeline + local L2 order book.
+">
+      
+      
+      
+        <link rel="canonical" href="https://sncapital.github.io/Docs/validation/rollout-evidence/paper-finish-design/">
+      
+      
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>Paper-finish design and simplification gate - SN Capital — Backend</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="https://unpkg.com/katex@0/dist/katex.min.css">
+    
+    <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#paper-finish-design-and-simplification-gate" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../../.." title="SN Capital — Backend" class="md-header__button md-logo" aria-label="SN Capital — Backend" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            SN Capital — Backend
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Paper-finish design and simplification gate
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m14.3 16-.7-2h-3.2l-.7 2H7.8L11 7h2l3.2 9zM20 8.69V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12zm-9.15 3.96h2.3L12 9z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_2" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to system preference"  type="radio" name="__palette" id="__palette_2">
+    
+      <label class="md-header__button md-icon" title="Switch to system preference" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+          <a href="javascript:void(0)" class="md-search__icon md-icon" title="Share" aria-label="Share" data-clipboard data-clipboard-text="" data-md-component="search-share" tabindex="-1">
+            
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9a3 3 0 0 0-3 3 3 3 0 0 0 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.15c-.05.21-.08.43-.08.66 0 1.61 1.31 2.91 2.92 2.91s2.92-1.3 2.92-2.91A2.92 2.92 0 0 0 18 16.08"/></svg>
+          </a>
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/SNCapital/Backend" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    SNCapital/Backend
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+    
+      
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../getting-started/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Getting started
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../alpha-engine/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Alpha engine
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../binance-parser/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Binance parser
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../strategies/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Strategies
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../reference/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Reference
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../development/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Development
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../adr/0001-collector-trader-split/0001-collector-trader-split/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Architecture decisions
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../../research-log/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Research log
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../research/nsc-14-aggtrade-vs-trade/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Research notes
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+    
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../.." title="SN Capital — Backend" class="md-nav__button md-logo" aria-label="SN Capital — Backend" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    SN Capital — Backend
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/SNCapital/Backend" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    SNCapital/Backend
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../../getting-started/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Getting started
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_2" id="__nav_2_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Getting started
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../getting-started/installation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Installation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../getting-started/quickstart/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Quick start
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../getting-started/architecture/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../../alpha-engine/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Alpha engine
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_3" id="__nav_3_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Alpha engine
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../alpha-engine/pipeline/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Pipeline overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../alpha-engine/data-layer/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Data layer
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../alpha-engine/writing-a-strategy/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Writing a strategy
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../alpha-engine/markowitz/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Markowitz combination
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../alpha-engine/backtesting/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Backtesting & PnL
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../alpha-engine/live-trading/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Live trading
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../../binance-parser/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Binance parser
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_4" id="__nav_4_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Binance parser
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../binance-parser/live/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Live WebSocket
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../binance-parser/historical/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Historical download
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../binance-parser/storage/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Storage layout
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../binance-parser/order-book/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Local order book
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../binance-parser/extending/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Extending the parser
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../../strategies/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Strategies
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_5" id="__nav_5_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Strategies
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../methodology/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Methodology
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../strategies/funding_reversion/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Funding mean reversion
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../strategies/trade_imbalance/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Trade imbalance
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../strategies/ob_mispricing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Orderbook mispricing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../strategies/book_depth_imbalance/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Book depth imbalance
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../strategies/vol_mean_reversion/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Volatility mean reversion
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../strategies/vol_ob_entropy/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Volume / OB entropy
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_6" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../../reference/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Reference
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_6" id="__nav_6_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Reference
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../reference/cli/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    CLI
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../reference/operators/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Operators
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../reference/metrics/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Metrics catalogue
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../reference/glossary/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Glossary
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_7" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../../development/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Development
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_7" id="__nav_7_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Development
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../development/setup/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Setup
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../development/testing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Testing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../development/contributing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Contributing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_8" >
+        
+          
+          <label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Architecture decisions
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Architecture decisions
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../adr/0001-collector-trader-split/0001-collector-trader-split/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ADR-0001 Collector / trader split
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../adr/0002-split-services-jetstream/0002-split-services-jetstream/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ADR-0002 Split services + JetStream
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../adr/0004-dual-market-topn-collection/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ADR-0004 Dual-market top-N collection
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../research-log/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Research log
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_10" >
+        
+          
+          <label class="md-nav__link" for="__nav_10" id="__nav_10_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Research notes
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_10_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_10">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Research notes
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../research/nsc-14-aggtrade-vs-trade/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    NSC-14 aggTrade vs trade
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#collector-return-correction-2026-09-30-continuation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Collector return correction, 2026-09-30 continuation
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#accepted-scoped-choices-and-remaining-resource-proof-2026-09-30-1548-utc" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Accepted scoped choices and remaining resource proof, 2026-09-30 15:48 UTC
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ordered-owner-and-recovery-decision-2026-09-30-continuation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Ordered owner and recovery decision, 2026-09-30 continuation
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#latest-resumed-publication-diagnostic-2026-09-30-1534-utc" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Latest resumed publication diagnostic, 2026-09-30 15:34 UTC
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#resumed-decisions-2026-09-30-1445-utc" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Resumed decisions, 2026-09-30 14:45 UTC
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#orchestrator-decisions-and-open-measurements" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Orchestrator decisions and open measurements
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#coherent-recovery-cut" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Coherent recovery cut
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#resource-measurements-before-candidate-admission" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Resource measurements before candidate admission
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#current-graph-removal-decisions-and-transition-contracts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Current graph, removal decisions and transition contracts
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#current-executable-graph" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Current executable graph
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#remove-replace-keep" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Remove / replace / keep
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#queuecache-accounting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Queue/cache accounting
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#recovery-counterexample-and-concrete-proposed-cut" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Recovery counterexample and concrete proposed cut
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#minimal-target-transitions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Minimal target transitions
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#released-public-sdk-contract" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Released public SDK contract
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bounded-diagnostics-proposed-to-orchestrator" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Bounded diagnostics proposed to orchestrator
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#schema-and-monotone-cursor-correction-after-joint-review" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Schema and monotone-cursor correction after joint review
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#diagnostic-implementation-and-review-correction" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Diagnostic implementation and review correction
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Diagnostic implementation and review correction">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#public-pull-r3-correction-sole-continuation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Public-pull r3 correction (sole continuation)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#fresh-f1f3-evidence-2026-09-30t1310z" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Fresh F1/F3 evidence, 2026-09-30T13:10Z
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#full-depth-archive-diagnostic-outcome" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Full-depth archive diagnostic outcome
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#retained-dedup-lifetime-decision-evidence" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Retained dedup lifetime decision evidence
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="paper-finish-design-and-simplification-gate">Paper-finish design and simplification gate<a class="headerlink" href="#paper-finish-design-and-simplification-gate" title="Permanent link">&para;</a></h1>
+<p>Status: F1 OPEN, DIAGNOSTIC_NOT_ACCEPTED. This design precedes runtime edits. The <a href="../../../plans/2026-09-30-paper-finish-execution/">accepted revision4 plan</a> controls the sequence and requirements; <a href="../paper-finish-baseline/">F0 baseline</a> records current deployed state. No F2 production patch or restart is authorized by a partial F1 result.</p>
+<h2 id="collector-return-correction-2026-09-30-continuation">Collector return correction, 2026-09-30 continuation<a class="headerlink" href="#collector-return-correction-2026-09-30-continuation" title="Permanent link">&para;</a></h2>
+<p>The previous 9.85 GB normal table is not accepted: its 0.9 GB collector term is falsified. The full-import, seven-owner fixture at the unchanged 1.3 GB D9 accounting capacity peaks at 1,309,970,432 charged bytes. After every retained entry and the named decoded/SDK/protocol overlap is released, charge remains 1,271,795,712 bytes through 120 seconds idle. Buffer entries, charged bytes and inflight bytes are zero; no drops, limit events or OOM occur. This is an offline largest-observed-payload case, with live WS/REST tasks explicitly unmeasured.</p>
+<p>One same-image standard allocator comparison peaks at 1,334,382,592 bytes and remains at 1,235,628,032 through 120 seconds idle. It does not restore the proposed steady allowance and is not adopted. No production allocator/environment change, native trim hook, buffer reduction or extra healing path follows. Reference retention in the diagnostic is being traced before attributing all residence to the allocator. A revised measured allocation and the concurrent cache result remain F1 gates. Evidence is retained under operations <code>f1-probes/collector-owner-idle-r2</code> and <code>collector-owner-mimalloc-r1</code>.</p>
+<h2 id="accepted-scoped-choices-and-remaining-resource-proof-2026-09-30-1548-utc">Accepted scoped choices and remaining resource proof, 2026-09-30 15:48 UTC<a class="headerlink" href="#accepted-scoped-choices-and-remaining-resource-proof-2026-09-30-1548-utc" title="Permanent link">&para;</a></h2>
+<p>Choose the atomic cohort candidate under the existing RAM-admission and durable-PubACK contracts: one collector cohort owner, at most 100 events/4 MiB, short formation deadline, existing D9 reservations charged until confirmed final ACK. Reuse the existing gap formulas in ordered uncommitted previews; commit only after a matching final ACK. A staged ACK is not durability. An uncertain final outcome or stored-duplicate rejection stops the owner and preserves original identities for diagnosis; no blind retry, new journal, or automatic healing framework. This follows the accepted fail-closed/source-gap policy and does not require a new owner promise to persist unconfirmed WebSocket admission. Actual acknowledged bytes remain durable. Runtime implementation has not begun. The scoped choice is recorded in <code>f1-atomic-lifecycle.md</code>; candidate regression tests are prepared before behavior changes.</p>
+<p>Reuse the original full trader restore/evaluation instead of repeating its 20-minute run. The original completed container still exists with exit 0. Fresh readback of its logs independently confirms 488,604 rows, 6,351,852 retained metric values, 782 catalogue/history symbols, three strategies, 1,573,535,744-byte cgroup peak and zero limit/OOM events. Current PG has the same row count and cutoff. Image/source comparison finds 95 unchanged runtime files, including reader, strategy, allocator and PnL code; <code>restore_bar_history</code> AST is identical. Other changed modules are explicitly listed in <code>trader-history-reuse-r1/comparison.json</code>. This accepts only the current snapshot allocation; later quality stamps, accumulating history, changed held universe and simultaneous service overlap remain separate checks.</p>
+<p>The latest corrected resource table in <code>f1-resource-decision.md</code> totals 9.85 GB normal plus 0.15 GB reserve and 12 GB peak. Candidate peak shares are calc 4.2 GB, NATS 2.2 GB, archive 1.1 GB, trader 1.9 GB, collector 1.5 GB, PG 0.5 GB and dashboard/monitoring/observer 0.6 GB. These remain allowances pending cache-pressure and integrated measurements, not configured limits or F1 PASS. The original collector buffer accounting capacity stays 1.3 GB. A natural-template full-buffer diagnostic peaks at 713,953,280 bytes; distinct copies of the largest observed 28,207-byte template peak at 1,284,997,120 bytes. This falsifies both the older 300 MB and 1.1 GB collector proposals. Neither graph-only proof includes the whole collector; its remaining allowance is unproved. No charged cache is subtracted. Gross combined-market arrivals cannot certify the filtered USD-M calc ETA. One bounded cache working-set probe is being prepared; it retains original full-depth payloads and does not require a 225-million-message or expanded 24h fill. All completed proofs remain valid within their scopes. F1 remains OPEN and no F2 runtime patch is yet integrated.</p>
+<h2 id="ordered-owner-and-recovery-decision-2026-09-30-continuation">Ordered owner and recovery decision, 2026-09-30 continuation<a class="headerlink" href="#ordered-owner-and-recovery-decision-2026-09-30-continuation" title="Permanent link">&para;</a></h2>
+<p>Choose one ordered USD-M owner and retain full-horizon completion for the integrated candidate. The full 100-book, 180,000-slot, 4,800-row state plus 10 million dedup identities and 2 million stamp identities is measured; the exact component budget is preserved in <code>f1-resource-decision.md</code>. Plain and delayed full-depth batch64 runs apply 369,500 USD-M events at 2,332.063/s and 2,232.304/s respectively with matching complete metrics and stamps. These kernel measurements do not certify service IO or simultaneous stack fit.</p>
+<p>Use actual filtered USD-M confirmed ingress for recovery: the read-only 24h exporter series has a maximum valid full-hour rate of 1,078.694/s and a five-minute burst of 1,205.66/s, excluding three resets and three gaps. Recovery safety compares the scheduled first unread prefix against the moving retention floor, with the required 2x margin. It does not freeze an already-read starting floor for the entire catchup ETA. A cold start at an expiring floor remains an explicitly diagnosed hole when source coverage cannot be proved. Actual owner IO pauses, applied frontier, retained floor, completion and post-pass lag remain F6 evidence gates. No extra sharding, heap serialization or automatic hole repair is introduced.</p>
+<p>The cache probe is bounded to one newly created isolated FILE/S2 store, a 1.1 GB physical old-log working set and a 1.5 GB physical hard ceiling. It measures one concurrent bounded reader and atomic writer under the candidate NATS share. Archive-consumer delivery and full-day indexed state remain explicitly outside that probe; they must be represented in integrated acceptance rather than silently claimed by the component result.</p>
+<h2 id="latest-resumed-publication-diagnostic-2026-09-30-1534-utc">Latest resumed publication diagnostic, 2026-09-30 15:34 UTC<a class="headerlink" href="#latest-resumed-publication-diagnostic-2026-09-30-1534-utc" title="Permanent link">&para;</a></h2>
+<p>The direct public singleton probe uses the same 4,235 full-depth templates and 60,000 synthetic identities on pinned 2.15 FILE/S2/R1 always-sync. Exact readback has zero missing/duplicate/payload/header/order errors. It ACKs 2,258.8/s over 26.563s including drain, below the required 2,384.85/s; offering queue slope is +667.1/s. The client and broker use 0.275 and 0.187 CPU cores over 25.10s, respectively. This rules out CPU saturation in that interval but is not an exact fsync latency measurement. Resource capture is partial because the client cgroup disappears after normal exit; 37 valid samples remain, combined peak 228,343,808 bytes. Initial r1/r2 fail before messages because the tool reserves a 1.5 GB stream while broker caps were smaller; a corrected 1.6 GB reservation does not allocate that size or alter production. A further client-name collision fails before execution and is also recorded.</p>
+<p>A single representative full-depth atomic primitive diagnostic, using the unchanged existing 100-message sender and an operations-only loader for both markets, commits/readbacks all 60,000 identities exactly in 5.733s at 10,466.5/s. Batch ACK p50/p95/p99 is 7.456/10.931/37.895ms; final readback checks zero mismatches. The existing primitive is used with synthetic IDs and gap previews, not a production D9 adapter. Its gap state is advanced during cohort construction, so it cannot certify commit-after-ACK behavior. This establishes measured reason to consider grouped durable synchronization without reducing sync or coverage. Adoption still requires an explicit minimal reservation, same-subject gap and lost-final-ACK/retry contract; no runtime protocol change or new journal has been made. Evidence: operations <code>f1-probes/direct-full-depth-r3/{cause-summary.json,shared/publisher-result.json}</code> and <code>atomic-full-depth-r1/{scope.json,shared/result.json,cpu-resources.jsonl}</code>.</p>
+<h2 id="resumed-decisions-2026-09-30-1445-utc">Resumed decisions, 2026-09-30 14:45 UTC<a class="headerlink" href="#resumed-decisions-2026-09-30-1445-utc" title="Permanent link">&para;</a></h2>
+<p>The additional 512 GiB proposal is rejected. There is no established owner storage blocker. The 144.864 GB logical projection and three expanded copies are historical assumptions, not prerequisites for independent diagnostics or implementation. Current source is <code>ccfb86826ccba45cd6e615318e86a2dd17b46e61</code>, the byte-identical accepted-plan import, equal to freshly fetched main. Production remains unchanged and collection continues.</p>
+<p>Select pinned NATS 2.15.0 for the offline candidate, with nats-py 2.16.0 public pull. Full native compatibility now passed: 1,092,974 raw messages and nine consumer configurations/positions survive the supported baseline restore and same-copy upgrade, with digest <code>c5d7282cb86205ac940dfc5f22b433b28c56a81082038985ef7c9c3158b7c701</code>. Corrected pull and retention fixtures also pass both versions. The matched always-sync publisher runs both read back 78,143 messages without mismatch; both drain at 1,301.9/s. Latency is mixed, so this is compatibility evidence, not a proven throughput improvement. The full-horizon resource gate and production migration remain open.</p>
+<p>The independent backlog archive fixture reads back all 120,000 broker/Parquet rows and concurrent merge rows exactly, with zero pending/redelivery at completion. Subscribe-to-durable-drain is 182.99s, about 656/s including closure waits. Lifecycle charge peaks at 599,654,400 bytes, verification at 637,988,864 bytes. This does not prove 2,385/s. Profile and source identify one decode executor submission and one writer submission per row despite fetched cohorts. Existing PyArrow/SQLite merge and durability contracts remain.</p>
+<p>The operations-only fetched-cohort prototype now passes the matching 120,000-row full-depth backlog plus 120,000-row concurrent merge and 10s sink delay. Exact broker, Parquet and merged identities have no mismatches, duplicates or omissions; all nine consumers finish with zero pending/ACK-pending/redelivery. Sampled writer admission takes 34.30s at 3,498.08 rows/s; durable closure takes 122.66s including grace/sweep. Peak charge including verification is 570,626,048 bytes, with zero memory-limit/OOM events. Simultaneous existing paper services plus the diagnostic/operator peak at 8,981,405,696 bytes; minimum host available is 12,621,160,448 bytes. This is a bounded design diagnostic, not a sustained-capacity or full-stack acceptance. Select cohort decode and existing writer batching as the minimal archive candidate; retain exact fsync-before-ACK and per-kind closure ownership, then require behavior regressions and the integrated gate before adoption.</p>
+<p>Across all 4,235 preserved full-depth templates, largest raw message is 28,207 bytes, largest decoded object is 257,043 bytes, and largest SDK message graph with a synthetic 64-byte MsgId is 29,343 bytes, excluding the shared client. A worst-case observed 64-message cohort has 1,805,248 raw bytes, exceeding the provisional 1 MiB SDK byte cap. Select 4 MiB pending payload for the 128-message SDK cap: observed worst raw is 3,610,496 bytes. Decoded 64-message footprint is 16,450,752 bytes and SDK 128-message footprint is 3,755,904 bytes. These are measured template bounds, not an exchange-wide maximum; full state/IO admission still needs its resource guard. No runtime config has changed.</p>
+<p>Compressed cold-backup readback and streaming native extraction now pass. The previously verified 532,910,080-byte frozen baseline archive becomes 143,551,392 compressed bytes. All 94 restored file hashes match the independently verified pre-upgrade manifest, and the original archive is unchanged. Native restoration allocates 532,967,424 bytes; incremental physical peak is 676,524,032 bytes, with no intermediate expanded tar. This proves the bounded backup representation, not production backup freshness or post-backup suffix recovery. Native cold restore preserves stored block bytes; the earlier supported stream restore's logical expansion is a separate lifecycle. Neither path requires three fully expanded stores for an in-place upgrade.</p>
+<p>The previous two-hour sampler was interrupted at 490s and is not a two-hour result. A resumed one-hour read-only counter sampler runs separately from the accepted soak. Disk sizing must distinguish observed full-hour distributions, actual block compression, persistent data, compressed backup, and contingency restoration. Page cache is still charged and all proposed resource allocations remain unaccepted until measured. F1 stays OPEN; no F2 patch, production restart, retention reduction or fixture deletion has occurred.</p>
+<h2 id="orchestrator-decisions-and-open-measurements">Orchestrator decisions and open measurements<a class="headerlink" href="#orchestrator-decisions-and-open-measurements" title="Permanent link">&para;</a></h2>
+<p>The target remains direct ordered apply with one state owner per selected calc shard. SDK choice for the candidate is released <code>nats-py==2.16.0</code>, public pull API, AckNone, one outstanding request, batch64 and SDK pending128/4194304 payload bytes after representative worst-message measurement. The earlier 1 MiB proof remains scoped to its smaller fixture. The newer released beta <code>nats-jetstream0.3.0</code> did not supply the required public batch-completion reason and does not remove the specific wrapper; it is not added. No private SDK queue access is permitted in runtime code.</p>
+<p>The corrected real-broker fixture observed an actual outstanding request, early partial return, empty-request cancellation and mid-batch apply cancellation. On pinned2.10.29 and2.15.0 it applied137 identities with identical digest <code>eb4a39111149db5a99639cd1e7ab657116c19bae90a385fdb26f5546cd836eee</code>, max outstanding1 and both actual cancellation assertions true. Public consumer-info waiting-zero fencing closes requests; delivered tail beyond applied is replayed through a fresh ephemeral consumer from applied+1. This establishes the tiny lifecycle contract, not broker reconnect, sustained writes or full-store compatibility. r1's partial/cancel cases were invalid; r2's forced-expiry assertion incorrectly rejected legal early return. Their evidence is retained and is not accepted as coverage.</p>
+<p>NATS2.15.0 is the fixed offline candidate, digest <code>sha256:cd3fcd4ecdda44e3a66728a5334af0a959bc3979b32810e033d1c547241cd0f4</code>;2.10.29 is the matched baseline. Official stable/security/upgrade notes were rechecked. Version selection is OPEN pending native-store survival, payload readback, sustained writes and simultaneous resources. Production stays2.10.29. Atomic publish semantics are unchanged. The byte-verified9/29 cold store's24h age has expired; do not mistake natural expiry for upgrade loss or mutate original checksums. A genuine supported snapshot restore with explicit test-only age override or equivalent native proof is required before choosing2.15.</p>
+<p>Keep the existing PyArrow batch/SQLite archive merge until profile shows a concrete defect. Current five-minute live archiver charge reaches805306368B with102 additional memory-limit events; merely citing idle RSS or previous toy success is insufficient. Intake/writers/merge/upload must share the F1 allocation. Boto3 managed transfer is not selected: no proof that it preserves current create-only/conflict/B2 contracts. No dedicated merge process or transport framework is introduced by default.</p>
+<p>One shard and bounded all-history completion remain hypotheses under the F1 gate, not final choices. The full-depth natural-template diagnostic applied414700records at2617-2664/s (about2327USD-M/s) with100complete books and180000slots; delayed variants2083-2505/s retained exact row/stamp digests. The measured USD-M five-minute PubAck peak1208/s requires1510/s before concurrent service overhead. Full24h catchup and floor margin still require an explicit arrival envelope; combined-market rates cannot be substituted for USD-M calc ingress. A transformed synthetic fixture will test ordering/layout/CPU; genuine source coverage remains separate. Sharding is chosen only if sustained apply capacity cannot exceed measured ingress with25% surplus. Completed results remain in RAM only if the entire retained horizon plus all shared consumers passes the10/12GB budget. No incremental durable path is introduced merely because the kernel fixture exists.</p>
+<h2 id="coherent-recovery-cut">Coherent recovery cut<a class="headerlink" href="#coherent-recovery-cut" title="Permanent link">&para;</a></h2>
+<p>The kernel diagnostic reproduced297 differing keys with two apparently complete bars when a later book seed represented the state after the replay cursor. Exact paired older seed replay matched. This invalidates retaining the current watermark/latest-book combination without further proof.</p>
+<p>Freeze books at an exact owner-applied cut S, with no await between snapshots. Publication precedes one PG transaction pairing those snapshots with scalar S and stream epoch. The current DB discards Checkpoint.seq; implementation therefore requires an explicit idempotent schema/read migration, not a new independent cursor store. Existing rows with no proven sequence remain unproven.</p>
+<p>Keep the durable scalar monotone at the latest committed cut S. On process restart choose an older complete paired generation R below S for fresh-engine warmup, with exact sequence/epoch per seed; applied resumes transiently from R+1. The retained valid bar authority distinguishes already published warmup rows from missing rows. Do not roll back the durable cursor. A seed must precede the first missing window start by at least liquidation10s plus admitted skew; actual cut time includes settlement10s. A prior30m generation normally has room, but equality and the inequality must be tested explicitly. No Python heap serialization is introduced. Missing/corrupt pair, retention hole or epoch reset yields an honest cold/hole state and unproven book windows.</p>
+<p>Live reconnect uses applied+1. Fetched is transient instrumentation; applied advances only after a complete state transition or named terminal discard; persisted is existing PG authority. Unknown partial mutation terminates the dependent path and restores from PG+MD. Dedup must not consume an event whose transition failed. New runtime healing branches are not required for every failure fixture.</p>
+<h2 id="resource-measurements-before-candidate-admission">Resource measurements before candidate admission<a class="headerlink" href="#resource-measurements-before-candidate-admission" title="Permanent link">&para;</a></h2>
+<p>GB means1000000000 bytes. The full simultaneous operational stack must be steady&lt;=10000000000 and peak&lt;=12000000000, with host MemAvailable&gt;=2147483648. Charged file cache is included; outside operator/fixtures/legacy services are separately accounted.</p>
+<table>
+<thead>
+<tr>
+<th>Measured component</th>
+<th style="text-align: right;">Bytes</th>
+<th>Evidence/limit</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Paper stack with calc/trader off, simultaneous peak over300s</td>
+<td style="text-align: right;">7718637568</td>
+<td>61 read-only samples; not full stack</td>
+</tr>
+<tr>
+<td>Sum individual sampled peaks over300s</td>
+<td style="text-align: right;">7724208128</td>
+<td>Conservative comparison</td>
+</tr>
+<tr>
+<td>Minimum host MemAvailable over300s</td>
+<td style="text-align: right;">13593022464</td>
+<td>Not a heavy-load proof</td>
+</tr>
+<tr>
+<td>100 engines,180000 mature slots, object graph</td>
+<td style="text-align: right;">186108850</td>
+<td>Synthetic object accounting</td>
+</tr>
+<tr>
+<td>4800 completed full791-key rows, object graph</td>
+<td style="text-align: right;">482207707</td>
+<td>100symbols*48windows; independent key/value allocations</td>
+</tr>
+<tr>
+<td>48 gap stamps per symbol</td>
+<td style="text-align: right;">2682133</td>
+<td>No retained-drain MsgIds</td>
+</tr>
+<tr>
+<td>48 presence stamps per symbol</td>
+<td style="text-align: right;">4846671</td>
+<td>1800s bitmap span, no retained-drain MsgIds</td>
+</tr>
+<tr>
+<td>Actual10000000 dedup IDs,64ASCII bytes each</td>
+<td style="text-align: right;">1296066264</td>
+<td>Actual dictionary+strings, not a source maximum MsgId length</td>
+</tr>
+<tr>
+<td>Full retained100engine/4800row/100book/10mID/2mstamp allocation, sampled cgroup peak</td>
+<td style="text-align: right;">2671570944</td>
+<td>Synthetic graph; peakRSS2718851072; SDK/IO/liquidation burst separate</td>
+</tr>
+<tr>
+<td>State-size process maxRSS</td>
+<td style="text-align: right;">1495740416</td>
+<td>Includes construction/accounting temporaries; cgroup peak not accepted</td>
+</tr>
+</tbody>
+</table>
+<p>The full allocation includes100books1000levels/side,100encodedcopies,6400pendingfundingtuples andsamplemetadata, plus2mcurrent stampIDs shared withdedup inbothsets. Sustained1208/s for30m would exceed2mby174400IDs; this is not an admission cap. SDK overhead, checkpoint IO, liquidation burst, mature trader history and full-duration concurrent archive merge/upload remain separate. The full normal/peak/guard/hard allocation and runtime override remain OPEN. In particular NATS charged cache around6.1GB plus calc/trader cannot be silently squeezed into a10GB claim.</p>
+<p>MD has about11h of retained input. Filesystem available48417521664B, reserve floor33586678170B, leaves14830843494B above reserve before any future growth. The retained average around1.9GB logical/h suggests roughly57GB logical MD for24h with25% margin, but does not establish peak hourly R or physical demand. A read-only3600s NATS byte/admission sampler is running; exact closed-hour physical archive census is separate. Native inbound byte counters include client-request traffic and are explicitly an upper bound. No max_bytes or production limit is changed from this incomplete estimate.</p>
+<h2 id="current-graph-removal-decisions-and-transition-contracts">Current graph, removal decisions and transition contracts<a class="headerlink" href="#current-graph-removal-decisions-and-transition-contracts" title="Permanent link">&para;</a></h2>
+<p>The following bounded delegate diagnosis is integrated as evidence. Decisions above supersede any provisional recommendation below; unresolved measurements remain gates.</p>
+<h2 id="current-executable-graph">Current executable graph<a class="headerlink" href="#current-executable-graph" title="Permanent link">&para;</a></h2>
+<p><code>calc/__main__ -&gt; common.service_runner -&gt; calc.service.run_calc_service</code>:</p>
+<ol>
+<li>Construct OrderBookManager/books, stamps, NatsTickBus(memory=True), LiveMetricsBridge/engines, bus subscription, clock.</li>
+<li>PG schema/epoch/cursor/checkpoints; decode latest valid per-symbol checkpoint and <code>seed_levels</code> unless reset. Probe MD first/last. Classify cold/hole/replayed. Open ephemeral AckNone push wildcard.</li>
+<li>Concurrent TaskGroup: pump, bridge consumer, drain completion task, book manager REST bootstrap, watchdog, boundary clock, checkpoint writer, catalogue refresh, health/time sync.</li>
+<li>Pump <code>next_msg -&gt; _pump_one</code>: stream seq advances BEFORE decode/admission/apply; MsgId inserted BEFORE dispatch. Depth mutates OrderBookManager directly; heartbeat/trade/kline/mark/liquidation/funding go through awaited bus.write; stamp follows admission, not bridge application.</li>
+<li>Bridge <code>_consume_bus</code>: convert event to Tick; funding-only buffering (64/symbol); market-head/funding timestamp policy; sample currently shared mutable book once per book_tick bucket; <code>feed_book -&gt; push -&gt; emit_present_if_ready</code>. Calc path already uses <code>cache_history=False</code>; <code>_bars</code> is allocated but not populated here.</li>
+<li>Emitted rows collect in <code>PumpShared.drain_rows</code> across replay AND live. <code>consumer_info num_pending==0 AND pump last&gt;=delivered -&gt; DRAIN_BARRIER -&gt; bridge_drained</code>; completion then mutates engines, pops stamps/rows, observes retained BARS authority, publishes/retries, classifies outcomes; pump remains running during completion.</li>
+<li>Boundary takes CURRENT book blob paired with <code>pump.watermark_seq(boundary)</code>, yields to boundary publisher, then submits immutable checkpoints if publish succeeded. Writer retries asynchronously and can replace pending old checkpoint job with newest. Publication before checkpoint exists, but seq/book pair is not exact.</li>
+<li>Missing-symbol boot/dynamic add: <code>_catchup_symbol</code> historical subject scan, second tail scan, pending buffers, buffer flush and bus barrier; add completion and finalize can overlap main pump/boundary/book IO.</li>
+</ol>
+<p>Primary files traced: <code>calc/service.py</code>, <code>pump.py</code>, <code>completion.py</code>, <code>checkpoints.py</code>, <code>backfill.py</code>, <code>stamp.py</code>, <code>bars_publisher.py</code>; <code>trader/book.py</code>, <code>nats_live.py</code>, <code>nats_bus.py</code>; <code>metrics/metrics_engine/live_bridge.py</code>, <code>engine.py</code>, <code>window.py</code>, <code>aggregate.py</code>, <code>tick_adapter.py</code>, <code>book_scalars.py</code>, <code>groups/liquidations.py</code>; cross parity fixture loader.</p>
+<h2 id="remove-replace-keep">Remove / replace / keep<a class="headerlink" href="#remove-replace-keep" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Mechanism and actual caller</th>
+<th>Decision</th>
+<th>Replacement / reason / required check</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>calc service bus/subscription, bridge driver task; pump bus writes</td>
+<td>Remove from calc</td>
+<td>Owner applies decoded event, book sampling, engine push and stamps before next event; batch1/64 and delayed sink full keys/stamps equality</td>
+</tr>
+<tr>
+<td><code>DRAIN_BARRIER</code>, <code>bridge_drained</code>, <code>wait_for_bridge</code>, Event sentinels in calc bridge</td>
+<td>Remove together with calc bus section</td>
+<td>Completed synchronous apply and public pull request completion; retain verdict/completion/readiness contract</td>
+</tr>
+<tr>
+<td>LiveMetricsBridge bus consumer + on_tick/history/_bars_lock</td>
+<td>Keep for real shared callers; replace calc usage</td>
+<td>Extract one synchronous engine/event application helper with funding/sample state; no calc on_tick (it caches history). Noncalc <code>consume_bus</code>, on_tick, exchange_data tests/callers remain</td>
+</tr>
+<tr>
+<td>Push <code>open_live_consumer</code>/resubscribe and million-message SDK queue</td>
+<td>Replace only calc caller</td>
+<td>Official public ephemeral pull API; bounded batch, one outstanding request, public completion fence. Shared trader APIs remain</td>
+</tr>
+<tr>
+<td>last_stream_seq-before-dispatch, MsgId-before-admission</td>
+<td>Replace</td>
+<td>applied only after entire transition or named terminal discard; dedup commit only with successful apply; unknown partial mutation -&gt; stop/PG restore</td>
+</tr>
+<tr>
+<td>Global MsgId dedup + gap/presence per-window seen sets</td>
+<td>Keep semantics, reduce duplicate ownership only with proof</td>
+<td>Transport seq handles reconnect overlap, MsgId handles distinct-seq duplicates, stamp seen has separate accounting function today. Do not simply delete it; measure lifetime and adopt one apply admission decision for calc while preserving external stamp API</td>
+</tr>
+<tr>
+<td>Cold boot wildcard scan</td>
+<td>Keep</td>
+<td>One scan, no per-symbol rescans; modern REST cannot certify historical book</td>
+</tr>
+<tr>
+<td>Pending missing-symbol/dynamic-add historical scan + tail + raw buffer/finalize</td>
+<td>Replace</td>
+<td>Pause main pulling; bounded isolated symbol owner uses same apply; resume main at applied+1 and discard isolated covered seq using explicit symbol floor, with bounded retained-source check; add/remove generation protects late REST</td>
+</tr>
+<tr>
+<td>REST bootstrap writes book; watchdog <code>_force_resync</code> mutates book</td>
+<td>Replace calc wiring</td>
+<td>Async REST returns immutable result(symbol,generation); watchdog sends resync command. Owner alone applies snapshot + U/u/pu bridge. At most one request/symbol and bounded global concurrent results</td>
+</tr>
+<tr>
+<td>Completion, catalogue and boundary independently feed/mutate engines</td>
+<td>Replace orchestration</td>
+<td>Owner executes commands between whole apply operations, stops new pulls during IO. No general actor framework</td>
+</tr>
+<tr>
+<td>run_completion_pass verdict/retained bar/settlement/publish retry</td>
+<td>Keep contracts; adapt invocation</td>
+<td>Fail closed, no empty-fetch readiness, final post-pass lag check; all-history accumulation only if full-horizon budget passes</td>
+</tr>
+<tr>
+<td>Engine + AggregateWindow, metrics formulas, tick_adapter/scalars</td>
+<td>Keep</td>
+<td>Existing single metric implementation and bounded slots; Go parity preserved</td>
+</tr>
+<tr>
+<td>CheckpointJob newest-only replacement/retry loop</td>
+<td>Replace or narrow after recovery-cut proof</td>
+<td>Owner serial publication/checkpoint barrier; durable PG source on crash. No skipping required seed-generation pair</td>
+</tr>
+<tr>
+<td>bars publish MsgId, PG transactions/unique/upsert, retained valid-bar authority</td>
+<td>Keep</td>
+<td>No distributed atomicity claim; failure matrix before/after PubACK and PG commit</td>
+</tr>
+<tr>
+<td>time sync / health / TaskGroup / existing runner</td>
+<td>Keep</td>
+<td>SDK/std lifecycle; do not invent supervisor</td>
+</tr>
+</tbody>
+</table>
+<h2 id="queuecache-accounting">Queue/cache accounting<a class="headerlink" href="#queuecache-accounting" title="Permanent link">&para;</a></h2>
+<p>Counts are SOURCE bounds, not verified byte budgets. Global sums and object footprints remain F1 gates.</p>
+<table>
+<thead>
+<tr>
+<th>Queue/cache</th>
+<th>Producer -&gt; owner -&gt; consumer</th>
+<th>Current bound; worst burst / slow dependency</th>
+<th>Failure / durable retry source</th>
+<th>Target</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>SDK push pending</td>
+<td>NATS -&gt; SDK -&gt; pump</td>
+<td>1,000,000 messages / 512 MiB PAYLOAD, excludes Python/header/object overhead; completion pauses can continue ingress</td>
+<td>SlowConsumer/fatal -&gt; MD+PG</td>
+<td>one public pull batch64 initial, expires1s; global decoded+raw footprint &lt;=64*measured worst object + SDK overhead, pending byte cap sized above largest message</td>
+</tr>
+<tr>
+<td>calc bus</td>
+<td>pump -&gt; NatsTickBus subscription -&gt; bridge</td>
+<td>10,000 events; no byte cap; slow metrics blocks pump</td>
+<td>failed admission currently cursor/dedup already advanced</td>
+<td>remove</td>
+</tr>
+<tr>
+<td>LiveDedup</td>
+<td>pump -&gt; dict -&gt; pump</td>
+<td>max(10,000,2*max_ack_pending), shipped config 10,000,000 IDs; market ingress horizon</td>
+<td>eviction permits old distinct-seq duplicate; MD</td>
+<td>domain bound based on measured duplicate horizon, no AckNone ACK-pending fiction</td>
+</tr>
+<tr>
+<td>pending_bufs</td>
+<td>pump -&gt; PumpShared -&gt; catchup/finalize</td>
+<td>20,000/symbol; global N*20k, copied bytes+headers; historical scan slow</td>
+<td>overflow marks skip and drops state</td>
+<td>remove startup copies; bounded isolated add; main backlog stays MD</td>
+</tr>
+<tr>
+<td>book <code>_buffer</code></td>
+<td>depth -&gt; OrderBook -&gt; snapshot apply</td>
+<td>4096 dicts/symbol, global N*4096; slow REST</td>
+<td>clear chain on overflow, gap/resnapshot</td>
+<td>explicit global bytes+counts, owner only; preserve honest gap</td>
+</tr>
+<tr>
+<td>snapshot tasks/results</td>
+<td>manager -&gt; manager/REST task -&gt; book</td>
+<td>one task/symbol + snapshot semaphore; full REST JSON + book copies; retry loop unbounded time</td>
+<td>currently background mutates book</td>
+<td>one generation-tagged immutable result/symbol, global admission+finite IO retry budget</td>
+</tr>
+<tr>
+<td>Engine ring</td>
+<td>apply/bridge -&gt; Engine -&gt; metrics groups</td>
+<td>N*1800 Aggregate objects (30m/1s), eagerly allocated; snapshot copies another ring during emit</td>
+<td>source MD; full reconstruction</td>
+<td>keep; account actual object+float footprints and temporary snapshots</td>
+</tr>
+<tr>
+<td>liquidation list</td>
+<td>Engine push -&gt; Engine -&gt; shock compute</td>
+<td>time horizon W+10s, NO count/bytes bound; burst may be large</td>
+<td>MD; quality/stop decision required before patch</td>
+<td>measure burst count, global guard without silent dropping</td>
+</tr>
+<tr>
+<td>drain_rows</td>
+<td>bridge/completion -&gt; PumpShared -&gt; completion/boundary</td>
+<td>N<em>recovery_windows</em>PresentRow(dict keys); no global byte bound; all retained horizon before pass</td>
+<td>PG/BARS+MD</td>
+<td>keep only if complete 24h bound fits; otherwise incremental durable historical output requires crash matrix</td>
+</tr>
+<tr>
+<td>gap stamps + seen</td>
+<td>pump -&gt; accumulator -&gt; completion/boundary</td>
+<td>window count grows until pop; retained boot stamps get msg_id=None; live per-window ID sets grow with ingress, not just N*windows</td>
+<td>MD retry; invalid marks unproven</td>
+<td>sole owner apply; include all MsgId set bytes; bounded historical finalization if needed</td>
+</tr>
+<tr>
+<td>presence bitmaps + seen</td>
+<td>pump -&gt; accumulator -&gt; completion/boundary</td>
+<td>3 bitmaps/window AND live seen ID sets (retained boot msg_id=None); time-span/late timestamps can expand bitmap; pop only after pass</td>
+<td>MD, incomplete quality</td>
+<td>same global bound; preserve late policy</td>
+</tr>
+<tr>
+<td>watermark deque</td>
+<td>pump -&gt; pump -&gt; checkpoint clock</td>
+<td>time skew10s; NO count/bytes bound, funding timestamps differ</td>
+<td>fallback currently consumed-tip</td>
+<td>replace recovery cursor semantics with paired cut; preserve late policy independently</td>
+</tr>
+<tr>
+<td>bridge <code>_bars</code>, sample/funding/head maps</td>
+<td>bridge -&gt; bridge -&gt; bridge/readers</td>
+<td>calc history cache unused; funding64/symbol; scalar/head/sample O(N)</td>
+<td>funding overflow fatal</td>
+<td>calc helper owns small maps, no history cache/lock</td>
+</tr>
+<tr>
+<td>completion retained/jobs/pending</td>
+<td>completion -&gt; completion -&gt; publisher</td>
+<td>all historical windows; jobs list + retained status copies; publish retry IO</td>
+<td>BARS+MD, exhausted publish fatal</td>
+<td>budget full horizon; intake paused; one bounded retry budget</td>
+</tr>
+<tr>
+<td>checkpoint job</td>
+<td>boundary -&gt; CheckpointJob -&gt; writer</td>
+<td>one current tuple + writer previous tuple; immutable blobs/full book copies</td>
+<td>PG retries indefinitely and newest replacement</td>
+<td>serial owner barrier; explicit retry exhaustion; no silently skipped recovery generation</td>
+</tr>
+<tr>
+<td>catalogue updates</td>
+<td>refresh -&gt; queue -&gt; boundary/catalogue task</td>
+<td>unbounded Queue but refresh drains old entries, effectively latest target list; task overlap still possible</td>
+<td>ranking file/retained source</td>
+<td>one pending latest command, owner activates; held symbols remain</td>
+</tr>
+</tbody>
+</table>
+<p>Root's F0 simultaneous baseline: 7,942,979,584 B with calc/trader OFF; NATS charged cache 6,403,293,184 B, archiver802,430,976 B, PG366,989,312 B. RSS is not charge. Proposed plan allocations are not measured headroom; resource gate remains open.</p>
+<h2 id="recovery-counterexample-and-concrete-proposed-cut">Recovery counterexample and concrete proposed cut<a class="headerlink" href="#recovery-counterexample-and-concrete-proposed-cut" title="Permanent link">&para;</a></h2>
+<p>Current snapshot can be book AFTER sequence S while PG cursor is older watermark C&lt;S. A trade at C+1 observes future book S; intervening old diffs are skipped by <code>u&lt;=snapshot</code>. Golden counts/close may match while all <code>ob__*</code> keys differ. New empty Engine also lacks the earlier part of the bar and W+10s liquidation history. Ten-second watermark overlap does not warm an 1800-second window. This is structural diagnosis, not executed reproduction.</p>
+<p>Recommend exact paired recovery generation using existing checkpoint rows/cursor, NOT heap serialization:</p>
+<ul>
+<li>At an owner apply cut S, freeze ALL eligible symbol book snapshots and their u with identical <code>seq=S</code>; no await between symbol cuts, book/metrics stamp changes, or snapshot capture. Epoch ties the cut to MD identity. Never pair later book with older watermark.</li>
+<li>Persist the generation only after required boundary publications. Keep latest published boundary authority B distinct from the earlier recovery seed generation R. Select checkpoint rows whose paired seq equals transient restart seed R, not latest-valid individually; keep durable published cursor S monotone (see schema correction below). R must precede the first missing bar's start by liquidation10s + admitted event skew and must provide a FULL window of replay before any newly published complete bar. A prior boundary generation is normally enough for the first bar after B; verify actual snapshot capture time including settlement. Keep enough prior generations to prove this inequality rather than assuming keep_bars=2 is universally enough.</li>
+<li>Replay from R+1 once through wildcard with fresh engines and generation-R books. Suppress already-retained valid warmup outputs; reconstruct every missing output only after full warmup. All symbols share R; missing/corrupt snapshot or retained floor&gt;R+1 is hole/cold, never mix newer snapshot with older common cursor.</li>
+<li>Do not increase newest persisted resume point to applied tip merely because backlog drains. Live reconnect uses applied+1; process crash derives R from persisted S and paired checkpoint generations and uses R+1. The existing PG cursor remains sole persisted recovery authority; transient R selection beneath S must be explicitly recorded in ADR.</li>
+<li>Alternative if existing schema/retention cannot preserve paired generations: cold/hole unproven windows until full new warmup. This admits a hole; it is not equality acceptance and requires owner decision. Do not silently choose it.</li>
+</ul>
+<p>Counterexample fixture: one USD-M symbol, W60s for a small proof then W1800s acceptance; seeded book bid100/ask101; events trade at B-5s, depth shifting bid90/ask110 at B+1s, trade at B+2s. Capture current checkpoint at S after shift with watermark C before shift. Restart current path C+1 and compare uninterrupted vs restarted COMPLETE key maps (all ob keys/spread), stamps, completeness, cursor. Add liquidation at first missing start-5s to expose W+10s requirement. Target exact older paired seed replay must match; vary batch1/64, slow sink, late market timestamp/funding, crash during window and before/after publication/checkpoint. Fixture must carry proper diff U/u/pu and zero gap headers.</p>
+<h2 id="minimal-target-transitions">Minimal target transitions<a class="headerlink" href="#minimal-target-transitions" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>State/event</th>
+<th>Owner action</th>
+<th>Position/barrier</th>
+<th>Failure</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>boot empty PG/stream</td>
+<td>ensure PG/MD identity, classify cold; no synthetic GOOD rows</td>
+<td>no readiness; empty timeout only observation</td>
+<td>missing mandatory probe fails</td>
+</tr>
+<tr>
+<td>boot checkpoint/epoch/hole</td>
+<td>choose paired generation R; seed books before replay</td>
+<td>persisted=S; transient restart apply starts R; filter seq may skip Spot</td>
+<td>reset/hole -&gt; explicit cold/hole</td>
+</tr>
+<tr>
+<td>pull idle/partial/expired</td>
+<td>apply received complete events; close/request fence before next fetch</td>
+<td>fetched instrumentation only, applied after transition</td>
+<td>uncertain request/cancellation -&gt; recreate at applied+1</td>
+</tr>
+<tr>
+<td>apply diff/trade/funding/hb</td>
+<td>book transition -&gt; bucket sample -&gt; funding/tick push -&gt; row/stamp update without await</td>
+<td>applied=event seq AFTER all; terminal discard named</td>
+<td>poison stamps gap; unknown partial exception terminates/PG restore</td>
+</tr>
+<tr>
+<td>snapshot/resync</td>
+<td>accept result only matching generation; U/u/pu bridge; valid-from invalidates historical book claims</td>
+<td>ordered command between applies</td>
+<td>stale result discard; exhausted IO stop dependent state</td>
+</tr>
+<tr>
+<td>drain candidate</td>
+<td>public request complete + num_pending0 + owner applied&gt;=delivered</td>
+<td>pause fetching; completed apply replaces bus sentinel</td>
+<td>info failure/timeout never releases boot</td>
+</tr>
+<tr>
+<td>completion crossing boundary</td>
+<td>settled cutoff, retained authority, publish all outcomes; probe post-pass lag and catch up again</td>
+<td>readiness only after final verdict and settlement</td>
+<td>retry exhausted -&gt; no checkpoint/readiness</td>
+</tr>
+<tr>
+<td>live boundary</td>
+<td>owner freezes rows/stamps/books; publication then PG paired generation</td>
+<td>applied live may exceed persisted R; no intake while IO</td>
+<td>crash restarts R and retained authority prevents overwrite</td>
+</tr>
+<tr>
+<td>add/remove</td>
+<td>owner command, generation increment; remove cancels IO; add isolated same apply and proven activation</td>
+<td>bounded add catchup, main paused/source durable</td>
+<td>missing coverage skip remains failed selected/held gate</td>
+</tr>
+<tr>
+<td>reconnect mid-batch</td>
+<td>invalidate outstanding request/consumer, create ephemeral at applied+1</td>
+<td>same live owner, dedup committed events only</td>
+<td>inability to close/recreate -&gt; fail closed</td>
+</tr>
+<tr>
+<td>graceful stop</td>
+<td>cease pulls, finish whole current transition; cancel/close public SDK IO</td>
+<td>no fabricated persistence of incomplete window</td>
+<td>crash semantics from PG</td>
+</tr>
+<tr>
+<td>PG/BARS failure</td>
+<td>one bounded domain retry; no checkpoint before publish confirmed</td>
+<td>persisted unchanged</td>
+<td>stop dependent processing; derive warmup R from PG+MD</td>
+</tr>
+</tbody>
+</table>
+<h2 id="released-public-sdk-contract">Released public SDK contract<a class="headerlink" href="#released-public-sdk-contract" title="Permanent link">&para;</a></h2>
+<p>Installed interpreter <code>/opt/trading/venv/bin/python</code> is Python3.13; <code>nats-py==2.16.0</code> source <code>/opt/trading/venv/lib/python3.13/site-packages/nats/js/client.py</code>. requirements currently range <code>&gt;=2.10,&lt;3</code>, not pinned.</p>
+<p>Official <a href="https://github.com/nats-io/nats.py/releases">releases</a> list nats-py2.16.0 and new nats-jetstream0.3.0. <a href="https://pypi.org/project/nats-jetstream/0.3.0/">PyPI released metadata</a> confirms uploaded May10,2026, requires Python&gt;=3.11, dependency nats-core, Beta classification. Wheel SHA256 <code>5ff60b2674bdf7cb5ec01fcddc81b6ffe8c37310cc4130c6aee2aad208f68e54</code>. Released wheel extracted as text in <code>f1-sdk/</code>, not installed; global environment untouched. The main migration guide is not released-API evidence; attempted slash-tag raw guide URL returned404.</p>
+<p>Legacy <code>fetch(batch,timeout)</code> returns a LIST; <code>_fetch_n</code> internally drains its own pending queue, attempts no_wait, may issue lingering request, and returns partial on client timeout. It does not return a public terminal flag. SDK-internal private queues were read for diagnosis ONLY; proposed runtime may not access them. 2.15 release notes already mention orphan lingering request fix; installed2.16 still needs real-broker proof for our contract.</p>
+<p>New <code>PullConsumer.fetch(max_messages=64,max_wait=1)</code> returns batch iterator. Exhaustion may mean full count, 404/408, local wallclock timeout, or several409 limit errors with <code>batch.error is None</code>. Batch has no public close/completion-reason; <code>PullConsumer.close()</code> is NO-OP; only ordered override deletes. <code>messages()</code> has auto-prefetch background task, violating one outstanding fetch choice. <code>fetch_nowait</code> exhausted full-count/404 is simpler but does not satisfy the requested idle/expiry lifecycle automatically. New package alone does not remove our specific request-completion ambiguity. Do not adopt new SDK solely for iterator branding.</p>
+<p>Provisional choice: pin nats-py2.16.0 for calc, public <code>pull_subscribe</code>, ConsumerConfig AckNone/filter/max_waiting1; fetch64/timeout1s (legacy ConsumerConfig2.16 lacks max_batch/max_expires fields); one caller; after applying returned list, public consumer_info.num_waiting==0 fence before subsequent fetch. This bounds outstanding server requests but does NOT by itself prove no late-delivered SDK payload remains: fixture must reconcile stream delivered/applied and counts before declaring drain. If cancellation/reconnect or delivered&gt;applied exposes hidden tail, use public unsubscribe + delete_consumer and fresh ephemeral at applied+1 (same owner) rather than private queue drain or skipping delivered seq. If this remains unreliable, choose released fetch_nowait approach with measured idle pacing or SDK change after exact evidence; no protocol-layer rewrite.</p>
+<h2 id="bounded-diagnostics-proposed-to-orchestrator">Bounded diagnostics proposed to orchestrator<a class="headerlink" href="#bounded-diagnostics-proposed-to-orchestrator" title="Permanent link">&para;</a></h2>
+<p>Disposable server only, distinct OFFLINE_PAPER_F1 file stream; versions baseline2.10.29/candidate2.15.0. No production volumes/credentials. Existing Python3.13 environment or bounded isolated package environment. Two symbols plus interleaved Spot; stream seq gaps legal.</p>
+<p>Public-pull cases: initial3 of requested64; delayed message at0.9s; immediate next fetch; empty1s expiry; downstream delay beyond expires; cancel after partial apply; unsubscribe/delete/recreate applied+1; reconnect with unapplied tail; exact subject/payload/header digest identities. Sample public num_waiting/delivered/num_pending; assert outstanding&lt;=1, no drop/duplicate applied identities, no empty-fetch readiness. Compare legacy2.16 and optionally new0.3 iterator source-contract hypotheses without private attributes. Initial SDK case &lt;=200 events, &lt;30s, minimal memory.</p>
+<p>Ordered path proof: preserved/committed mixed fixture has trade/depth U/u/pu/mark/kline/liq/heartbeat/funding, market identity/gap/receive provenance and fixed epoch/seq. Feed direct existing event_to_tick/scalars/Engine at batch1/64, artificial delayed downstream; full keys/stamps hash and memory slot counts, offered vs applied rate. It is capacity DIAGNOSTIC, not full service acceptance. Root must set headroom/CPU/RAM and run actual run_calc_service in later gate.</p>
+<p>Remaining gates: actual SDK lifecycle proof; full-key recovery red/green; measured event object/stamp ID footprints over full24h; mixed representative CPU mu/lambda and shard decision; NATS version/store-copy migration; simultaneous charge &lt;=10/12GB and source retention margin; completion all-history vs incremental decision; PG/BARS crash matrix; dynamic ranking/held proof; independent review and required tests. Seven cross-parity tests cannot certify original output: <code>metrics/tests/fixtures/go_reference</code> is absent. Accessible Go engine/window originals at <code>/opt/trading/Backend-go</code>, read-only HEAD <code>c71f23d5aaf9546f38da3be1b8f7da6a0f90c569</code>; direct FeedBook-&gt;Push-&gt;EmitIfReady and bounded Ring confirm ownership/layout, not runtime parity/recovery. Use command-scoped safe.directory for read-only git; no global mutation.</p>
+<h2 id="schema-and-monotone-cursor-correction-after-joint-review">Schema and monotone-cursor correction after joint review<a class="headerlink" href="#schema-and-monotone-cursor-correction-after-joint-review" title="Permanent link">&para;</a></h2>
+<p><code>trader/book_store.py</code> DDL has NO seq column; write_checkpoint/awrite_checkpoint omit cp.seq and every PG reader reconstructs seq=0. Existing persisted blobs cannot be retrospectively paired to their cut. The initial proposed selection needs an explicit production schema/read migration, not a query over currently persisted seq.</p>
+<p>Minimal representation: extend existing book_checkpoint with nullable snapshot_seq, snapshot_event_head_ms and stream_epoch_ms (legacy NULL means unproven, never invent0); write all symbols at exact owner cut S in existing transaction. Existing stream_cursor stays monotone latest persisted publication checkpoint S, not deliberately rolled back to R. At boot read persisted high-watermark S and derive an older all-symbol paired seed generation R&lt;=S from existing checkpoint rows in the SAME epoch; resume MD at R+1 to warm engines. R is transient restart selection, not a new durable cursor store; durable current cursor never goes backwards. Selection must require every selected/held symbol's seed to belong to that generation, or explicitly diagnose missing/corrupt. Add schema idempotently in production boot and empty-infra regression. Extend PG readers/writers and uniqueness/pruning contracts before declaring paired recovery.</p>
+<p>For first missing boundary M after retained published B, start A=M-W, require generation R maximum applied market event head &lt;= A-10,000ms-liquidation_overlap_skew(10,000ms), and replay with valid books through A before constructing M. At normal settlement10s, checkpoint for B-W has event head at most B-W+10s+10s admitted skew: for M=B+W, A=B; W1800s leaves1760s margin to A-20s. This assumes measured/validated skew bound; future event timestamps beyond bound cannot certify equality. First selected sample bucket and book sample/resync policies require independent equality checks. Keep enough generations (normally latest plus predecessor for30m/10s/10s, but test prune/crash) to establish inequality; do not assume newest seed restores the first missing window.</p>
+<p>Native expired backup: don't edit binary metadata/checksums. Restore verified old official snapshot through released broker RESTORE API with an explicit TEST-ONLY override max_age=0 before message activation; record original24h config and override. Verify exact identities/payload digest and epoch/seq BEFORE shutdown, freeze2.10 copy, then upgrade same preserved copy2.15 and compare. If API cannot override before retention expiry, generate fresh equivalent representative store/snapshot and label native historical compatibility UNPROVEN; preserve expiry loss separately from upgrade loss. Never use production source mutation for this diagnostic.</p>
+<h2 id="diagnostic-implementation-and-review-correction">Diagnostic implementation and review correction<a class="headerlink" href="#diagnostic-implementation-and-review-correction" title="Permanent link">&para;</a></h2>
+<p>Authorized sole repo change: tools/paper_finish_calc_probe.py. Modes public-pull (only14334/14335 disposable URLs), recovery-cut, state-size, ordered-apply. Runtime unchanged. Syntax compile passed; delegate did not execute broker/CPU probes. Public SDK pending bound128messages/1MiB payload includes status headroom around requested64; one outstanding server request.</p>
+<p>Root's first baseline PUBLIC_PULL_PASS does NOT accept partial/cancel contracts: messages were already available, no_wait returned immediately, cancellation happened after completion. Revised fixture starts fetch EMPTY, inspects public num_waiting==1, publishes3 after50ms, checks request still outstanding after delivery, adds near-expiry message, and requires actual CancelledError mid-request before public fence/delete/rebind. Preserve flawed result as historical diagnosis, not PASS evidence.</p>
+<p>State-size allocates100engines filled1800slots,4800full791-key completed row copies and48retained stamp windows per symbol; estimates10million IDs from100k sample without allocating10million. Reports deep bytes and actual process maxRSS; does not include depth/liq/SDK/stack charged cache. Retained stamp seenIDs=0 matches pump live=False boot. ordered-apply requires initial snapshot records and increasing seq; preserved topn JSONL base64 payload is decoded, but that source lacks initial seeds and seq so cannot directly certify historical book equality.</p>
+<p>Exact execution commands (orchestrator alone, in bounded isolated container with checkout RO and writable disposable NATS only):</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>/opt/trading/venv/bin/python tools/paper_finish_calc_probe.py public-pull --url nats://127.0.0.1:14335
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>/opt/trading/venv/bin/python tools/paper_finish_calc_probe.py public-pull --url nats://127.0.0.1:14334
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>/opt/trading/venv/bin/python tools/paper_finish_calc_probe.py recovery-cut
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>/opt/trading/venv/bin/python tools/paper_finish_calc_probe.py state-size
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>/opt/trading/venv/bin/python tools/paper_finish_calc_probe.py ordered-apply --fixture /absolute/path/seeded-mixed.jsonl --max-events 100000 --window-ms 1800000 --downstream-delay-ms 0
+</span></code></pre></div>
+<p>Seeded mixed JSONL contract: first records <code>{market,symbol,snapshot:{bids:[[price,qty]],asks:[[price,qty]],u}}</code>, then records <code>{seq,subject,data:dict_or_base64_json,headers}</code> in increasing MD log seq; mixed Spot events are counted/skipped, USD-M depth chain is checked; funding uses existing bridge policy. A raw source missing initial seed/seq/provenance must be transformed with explicit manifest; no fabricated historical seed. No synthetic representative capacity claim. Delay can be repeated at1ms to demonstrate output invariance (diagnostic CPU rate includes intentional delay). Tool contains no comments beyond permitted module help docstring. Root owns tools/README.md registration.</p>
+<p>Native archive caveat: STREAM RESTORE config+state public contract is documented in <a href="https://github.com/nats-io/nats-server/blob/main/server/jetstream_api.go">official server source</a>. Native whole-volume tar is NOT automatically a stream snapshot wire bundle. Use only genuine official snapshot input for restore override; otherwise label aged native compatibility unproven and do not hand-edit metadata/checksums or stream native tar to restore.</p>
+<h3 id="public-pull-r3-correction-sole-continuation">Public-pull r3 correction (sole continuation)<a class="headerlink" href="#public-pull-r3-correction-sole-continuation" title="Permanent link">&para;</a></h3>
+<p>Root's baseline r2 failed the diagnostic assertion, not an established server contract: installed2.16 fetch returned1 message at~0.054s with waiting0. Partial early return is permitted. r3 removes force-linger assertion. It starts EMPTY, observes actual outstanding request, publishes3 at50ms, accepts early/late partial return, fences public waiting, retires/rebinds if delivered&gt;applied, publishes fourth at~0.9s from request start, and verifies exact applied identities afterward. It separately requires actual CancelledError on EMPTY outstanding fetch and cancels actual apply of64 fetched messages after3 completed transitions; public retire/rebind at applied+1 replays unapplied tail. No private SDK queue. Same r3 contract failure stops this path; no further retries delegated. Delegate only syntax-compiled, executed no broker.</p>
+<h2 id="fresh-f1f3-evidence-2026-09-30t1310z">Fresh F1/F3 evidence, 2026-09-30T13:10Z<a class="headerlink" href="#fresh-f1f3-evidence-2026-09-30t1310z" title="Permanent link">&para;</a></h2>
+<p>The hour sampler observed4032177admittedmessages/3599.974s,1120.057/s combined. NATS inbound bytes2454163915include request traffic;2454181381B/h is an inbound-counter diagnostic and not an exact MD logical-byte rate. Peak300s combined admission1907.881/s and inbound4402948025B/h require updated capacity; the earlier1202.2/s publisher fixture cannot establish this peak. Exact physical sizing and R remain open until admitted storage bytes are reconciled. MD still retains only about10.5h under21GB cap. Read-only subject-filter INFO at13:00:40 found21871807USD-M retained messages in800subjects, first02:30:58 andlast13:00:40.</p>
+<p>Fresh exact-prefix B2ListObjectsV2 completed16objects/5003361143B; closed9/29 has all9kinds/4919443100B. Full klineGET10049818B was fsynced/checksummed; full512-row census found131980rows (USD-M66380,Spot65600),0duplicateMsgIds. Original raw source parity remains unavailable and no interval is promoted toGOOD from object existence alone. Private evidence f3-inventory/b2-fresh-list.json,b2-fresh-get-kline.json,b2-kline-census-r2.json. Initial census referenced absent timestamp_ms; corrected census uses klineclose_time and preserves the failure.</p>
+<p>Full10m dedup churn diagnostic revealed increasing cost across the first100k evictions; OrderedDict remained flat but adds about454MB per10m entries. A1.3m-compaction-boundary probe is pending before any runtime choice. This is a concrete retained-lifetime cost, not a hypothetical failure healing branch.</p>
+<h2 id="full-depth-archive-diagnostic-outcome">Full-depth archive diagnostic outcome<a class="headerlink" href="#full-depth-archive-diagnostic-outcome" title="Permanent link">&para;</a></h2>
+<p>The2400/s independent offer fixture preserved120000source identities, full broker/payload/header/Parquet readback and120000concurrent merged rows withzero mismatches orduplicates. AllnineACKpending/pending/redelivery counts endedzero. ActualpublisherACKrate1665.3/s, queuegrew640.9/s to31995messages thenreturnedzero. Thus capacity2385/s is NOT proven by this run. Real archive lifecycle peakcgroup687747072B, RSS491692032B; Arrowpeak46838528B, noOOM/maxevents. The40s concurrent LIVEpaper+threefixtures+operator charge peaked8936325120B withhostavailableminimum12671135744B; this is not fulloperationalstackacceptance.</p>
+<p>Existing archive handle_message offloads ONE row per executor await despite publicfetch batches. A bounded writer batch per fetched cohort is the concrete simplification candidate if backlog-only profiling confirms intake insufficient. Preserve segment ownership/fsync-before-ACK, individual poison verdicts and full payload/row identity; do not introduce a merge process or discard depth. Broker/collector admission remains separately measured because archive reader cannot manufacture offered capacity. Historical timestamps mean this fixture does not prove60s+30s live residence. Evidence f1-probes/archive-full-depth-2400-r1/shared/archive/result.json andconcurrent-charge-40s.jsonl.</p>
+<h2 id="retained-dedup-lifetime-decision-evidence">Retained dedup lifetime decision evidence<a class="headerlink" href="#retained-dedup-lifetime-decision-evidence" title="Permanent link">&para;</a></h2>
+<p>The original actual10m-ID LiveDedup fill/churn fixture reached block9 at1147/s andblock10 at836/s, below1208/s observed USD-M ingress and1510/s required surplus; the1.3m baseline run timed out600s before completion. Its partial counters are a concrete bottleneck counterexample, not a PASS, and the expensive baseline is not repeated. OrderedLiveDedup is a diagnostic prototype only: same membership/insertion/oldest-eviction/discard semantics andsame10m capacity. Full100engines/4800rows/100books/2mcurrentstamps plus1.3m ordered evictions completed95.63s; minimum100kblockrate21624/s, fullstate cgrouppeak3644403712B, processmaxRSS3687014400B. Final underlying OrderedDict hadgrown to1080567280B; actualretainedgraphupper3259618130B. This replaces the earlier454MB linear memory estimate with the measured resized table. Candidate calc allocation must include another186MBengine snapshot plus SDK/IO/liquidation/sample skew rather than claim the3.64GB probe is a service ceiling. Evidence ordered-state.jsonl,ordered-state-resource-tail.jsonl,dedup-churn-r2-timeout.jsonl.</p>
+<p>Corrected limits fixtures passboth2.10.29 and2.15.0: DiscardOld max_msgs3 preserves2..4, duplicatePubAck leaveslast/count unchanged, max_age1s becomesemptyat1.240-1.242s withstablecreated/last_seq4, nextpublish/pull isseq5. Officialcachedclock100ms andminimum250ms timer-reset make1.2s invalid. R1failures retained; R2streamsuffix-only overlap andR3datetime serialization failures were corrected withoutdeletingoldstreams. FinalR4 JSON is complete; no specialruntimeexpirybranch is introduced.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+</div>
+      
+        
+<div class="md-social">
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://github.com/SNCapital" target="_blank" rel="noopener" title="github.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+      <div class="md-progress" data-md-component="progress" role="progressbar"></div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["navigation.instant", "navigation.instant.progress", "navigation.tracking", "navigation.tabs", "navigation.tabs.sticky", "navigation.sections", "navigation.expand", "navigation.indexes", "navigation.top", "navigation.footer", "search.suggest", "search.highlight", "search.share", "toc.follow", "content.code.copy", "content.code.annotate", "content.tabs.link", "content.tooltips"], "search": "../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+        <script src="../../../javascripts/katex.js"></script>
+      
+        <script src="https://unpkg.com/katex@0/dist/katex.min.js"></script>
+      
+        <script src="https://unpkg.com/katex@0/dist/contrib/auto-render.min.js"></script>
+      
+    
+  </body>
+</html>

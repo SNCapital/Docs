@@ -2271,6 +2271,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#d-d-ordered-state-owner-and-paired-bounded-recovery" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        D-D. Ordered state owner and paired bounded recovery
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -2535,6 +2546,21 @@ pacing, SlowConsumer→fatal как последняя линия (не downgrad
   стендозависимый тюнабл в yaml.</li>
 <li>Re-evaluation Trigger: если алерт-шторм при декодер-деплое неприемлем
   операционно — добавить канареечный гейт деплоя, не менять механику.</li>
+</ul>
+<h3 id="d-d-ordered-state-owner-and-paired-bounded-recovery">D-D. Ordered state owner and paired bounded recovery<a class="headerlink" href="#d-d-ordered-state-owner-and-paired-bounded-recovery" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Status: selected revision-4 candidate, 2026-09-30; F1 resource acceptance remains open. The deployed path above is unchanged until the integrated release passes F1-F6.</li>
+<li>Evidence: <a href="../../../validation/rollout-evidence/paper-finish-design/">paper-finish design</a> records actual callers, remove/replace/keep, state/event/action/position/barrier/failure transitions, ordered full-key/stamp equality, paired warmup and resource probes. <a href="../../../validation/rollout-evidence/paper-finish-storage/">Storage evidence</a> distinguishes steady native storage and contingency restoration. Component results do not certify simultaneous production acceptance.</li>
+<li>Decision: one ordered USD-M owner uses the official public ephemeral AckNone pull API, one outstanding request and bounded raw/decoded batches. Depth application, book scalar sampling, metric/funding transition and stamp commit finish before the next event. REST IO returns an immutable symbol/generation result; only the owner changes book state. Boundary, completion and catalogue commands run between complete transitions. New pulls pause during owner IO; durable backlog remains in MD.</li>
+<li>Remove: calc-only bus intake/subscription, bridge driver task, drain sentinels, bridge-drained flags and separate pending/cold raw queues together with the asynchronous section they guarded. Preserve shared bridge/bus callers, the single metrics implementation, completion verdicts, retained-bar authority and settlement. SDK/TaskGroup and existing runner own transport/lifecycle; no actor framework or alternate live/replay engine.</li>
+<li>Position: fetched is instrumentation, applied advances only after a whole transition or explicit terminal discard, and the existing PG cursor remains persisted publication authority. Reconnect of the same owner starts at applied+1. A process crash reconstructs from PG, not broker delivery. Unknown partial state terminates; failed application is not committed into dedup. Spot interleaving makes numeric USD-M sequence gaps legitimate.</li>
+<li>Recovery cut: supersede D-A's later-book/older-watermark pair in the candidate. At one ordered sequence cut S, freeze eligible books with their cut sequence/epoch and the bounded effective market head, book sample state and pending funding domain state needed for exact reconstruction. Publish required settled outputs before committing this generation and publication cursor in one existing PG transaction. No Python heap serialization and no new durable cursor store.</li>
+<li>Restart seed: choose a common older paired generation R from retained existing checkpoint rows, beneath persisted publication authority S. Seed books/domain state at R before replay R+1. A first missing bar needs a complete engine window plus liquidation-tail/skew overlap; newest-valid per-symbol snapshots cannot be mixed with an older scalar cursor. Replay once through MD with fresh engines; retained valid warmup bars remain authoritative. Missing/unpaired generation, epoch reset or expired source produces the explicit existing hole/cold outcome, never a fabricated complete bar.</li>
+<li>Completion: retain full-horizon completed rows for this candidate because the measured 100-symbol, 48-window retained state fits the component budget. Intake pauses for verdict/publication; completed apply replaces the bus barrier. Readiness waits for whole drain, all symbol verdicts, settlement and final post-pass lag/catchup. Empty or expired fetch alone cannot release boot. Real service recovery/crash and simultaneous state peaks remain F6 gates.</li>
+<li>Dedup: preserve identity semantics with measured bounded OrderedDict storage and commit after successful apply. No new cache or journal. Historical presence stamps need no duplicate identity sets when admission already establishes uniqueness; shared external stamp API remains intact. Any ownership consolidation needs a regression proving equal stamps, not a blanket removal.</li>
+<li>Resource gate: decimal whole-stack normal &lt;=10,000,000,000 bytes, peak &lt;=12,000,000,000, including charged cache and archive merge/upload, with host MemAvailable &gt;=2,147,483,648. Current candidate shares remain unaccepted until the cache/full-collector terms are measured; F6 verifies simultaneous peak and return to steady. Preserve configured 1.3 GB collector accounting, source coverage, books, history and risk semantics.</li>
+<li>Ownership: Sol low owns calc pump/service/completion and shared bridge extraction in sequential 2a/2b/2c work; complex archive ownership covers cohort decode and writer/closure ACK serialization. Sol medium integrates schema/config/overrides/ADR and independently accepts. No component deployment; one pinned release after F1-F6.</li>
+<li>Re-evaluation: failed service surplus/retention margin, full retained-state or simultaneous resource gate requires a concrete revised decision before release. Do not quietly activate more shards, drop completed history, reduce top-N or add a healing framework.</li>
 </ul>
 <h2 id="11-risks-failure-modes">11. Risks + Failure Modes<a class="headerlink" href="#11-risks-failure-modes" title="Permanent link">&para;</a></h2>
 <ul>

@@ -3973,6 +3973,7 @@ server-side create-only для конкурирующих внешних writers
 <li>Verification: kill-archiver soak S-2; X-004 file-side метод (per-stream du).</li>
 </ul>
 <h3 id="d4-calc-acknone-published-watermark-pg">D4. Calc AckNone + скалярный published-watermark в PG<a class="headerlink" href="#d4-calc-acknone-published-watermark-pg" title="Permanent link">&para;</a></h3>
+<p>Revision-4 candidate, 2026-09-30: <a href="../../0003-calc-single-stream-md/0003-calc-single-stream-md/#d-d-ordered-state-owner-and-paired-bounded-recovery">ADR-0003 D-D</a> replaces the calc-only push/bus section with ordered public pull and pairs book/domain checkpoint generations with their actual sequence cut. The existing scalar PG cursor stays publication authority; process restart selects a common older paired generation for complete warmup. Publication-before-checkpoint, retained authority and per-symbol verdicts remain mandatory. This is an explicit candidate revision, gated by F1 resources and F6 service proofs; the current deployed behavior described below remains until release. D7, D11-D13 and ADR-0004 are unchanged.</p>
 <ul>
 <li>Status: accepted; read-path заменён ADR-0003, 2026-09-28.</li>
 <li>Context: calc и trader — разные сервисы. Восстановление сырья принадлежит
