@@ -2403,6 +2403,28 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#2026-10-01-actual-broker-reconnect-correction" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2026-10-01 actual broker reconnect correction
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2026-10-01-active-native-suffix-ack-evidence" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2026-10-01 active native suffix ACK evidence
+      
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -2946,6 +2968,15 @@
 <p>Inspection also found the existing production archiver exited 137 with OOMKilled=true at 805,306,368 bytes on <code>2026-10-01T00:10:02.077418543Z</code>. Its metadata/logs and staging volume were preserved; the same image/config/container was restarted with 1,610,612,736 bytes, and the existing cutover override now records that allowance. Actual durable ACK logs resumed. This restores collection/archive operation; it does not release the candidate. Calc/trader and acceptance soak remain off.</p>
 <p>Evidence: <code>/opt/trading/codex-operations/capacity-oom-correction-20261001/</code>, especially <code>correction-summary.json</code>, <code>final-broker-ledger-state.json</code>, <code>failed-store-copy-verified.json</code>, regression logs and component samples. F6 remains open for the complete corrected concurrent run, default-window recovery matrix, measured whole-stack 10 GB steady/12 GB peak and full-day retention. A new prefill is not launched against uncertified prefix or an unverified disk forecast.</p>
 <p>Two human decisions remain pending. For <code>live_liq</code>, retain the existing true-live/false-replay provenance distinction and require numerical/book/cursor equality, or change the contract to require equal provenance stamps as well (a behavior change requiring implementation and regression evidence). For catalogue turnover, retain fail-closed recovery margin until a complete generation proves the new catalogue, or authorize a defined transitional unproven interval before that generation; the latter needs an explicit duration and observer/runtime contract. Neither choice is inferred from elapsed time. They must be resolved before deployment depends on them.</p>
+<h2 id="2026-10-01-actual-broker-reconnect-correction">2026-10-01 actual broker reconnect correction<a class="headerlink" href="#2026-10-01-actual-broker-reconnect-correction" title="Permanent link">&para;</a></h2>
+<p>The real intake TCP disconnect first failed: the released SDK emitted <code>UnexpectedEOF</code>, reconnected successfully, but calc had already set its fatal flag before resubscription. The failed store, named PG database, dump, callback transcript and exact source remain retained. Calc now treats only <code>UnexpectedEOF</code> and <code>ConnectionRefusedError</code> as waiting for the SDK reconnect callback. It logs both explicitly and does not resubscribe before transport returns. SlowConsumer handling is unchanged; generic NATS errors, protocol errors and unknown OS errors remain fatal. No recovery cursor or financial behavior changed.</p>
+<p>The separately admitted corrected W1800 one-symbol actual-service case passed strict reference comparison: applied position 9,230 remained fixed during disconnect; actual consumer start and first successful apply were 9,231; durable cursor stayed 7,405 before the next paired commit; final checkpoint/cursor 14,785, book, bars and stamps matched. This covers intake TCP loss with the broker process/store running, fixture REST and controlled boundary clock. It does not prove broker process restart, selected-100 capacity, production retention or release. Two diagnostic baseline regressions and three correction regressions fail separately; 64 focused tests pass with the existing threaded-fork warnings. Operations evidence: <code>capacity-oom-correction-20261001/{broker-reconnect-service/,broker-reconnect-corrected-service/,broker-reconnect-tool/}</code>.</p>
+<p>Both finite after-completion archive observers succeeded with 350 resource and 184 rate samples. Partial-stack charge peaked at 9,164,472,320 bytes with calc/trader off; sampled OOM and slow-consumer deltas were zero, but NATS and archiver accumulated 218 and 1,046 hard-limit events respectively. All nine active pull pending counts reached zero; durable ACK-pending work remained. Read-only 09:05 checks found oldest matching trade/diff messages after ACK floors about 82 seconds old. MD held about 11.49 hours at its 21 GB cap, not 24 hours; disk remained above the 33.6 GB reserve. Whole-stack guard headroom, capacity, F7 release and F8 soak remain unpassed. Original capacity OOM/provenance failure, both pending human contracts and financial POOR hold/reconciliation remain unchanged.</p>
+<h2 id="2026-10-01-active-native-suffix-ack-evidence">2026-10-01 active native suffix ACK evidence<a class="headerlink" href="#2026-10-01-active-native-suffix-ack-evidence" title="Permanent link">&para;</a></h2>
+<p>A bounded active-consumer native suffix case passed on the certified 1,092,974-message backup prefix: 99 generated rows per broker, sequences 1,092,975–1,093,073, identical raw sequence/header/payload digest, and 198 confirmed delivery ACKs across nine consumers on candidate and rollback. All consumers ended with zero pending, ACK-pending and redelivered counts; configuration and creation identity matched the saved baseline. Source inputs are saved before connection/publication; a 600-record fsynced journal retains 200 PubACKs (including two deliberate duplicate confirmations), 198 deliveries, 198 confirmed ACKs and four raw snapshots. Published timestamps differ and are reported explicitly. This proves active post-backup suffix replay on the bounded fixture, not production backup sizing, production rollback acceptance or original publisher-to-Parquet header parity.</p>
+<p>The first active case failed comparison because the SDK config decoder mutated the saved raw before snapshot in memory; final raw API reads prove actual broker configuration stayed unchanged. Its stores, 99 candidate suffix rows, empty rollback suffix, logs and raw final states remain preserved; no failed prefix was resumed or resent. Direct subscription to saved delivery subjects avoids decoder mutation. Generated-source and partial ACK evidence are mandatory. Named baseline regressions cover ACK identity/confirmation, preserved creation identity, raw snapshot fidelity, SDK duration mutation, source-before-publication and mandatory evidence. Final focused checks pass (23 suffix tests and 64 reconnect/completion tests).</p>
+<p>Final unit gate after all corrective edits: 2,773 passed, 11 environment skips, one existing expected failure, 40.01 seconds; the two existing threaded-fork warnings remain. The skips are the previously recorded seven absent Go fixtures, two absent promtool checks and two optional research OpenAI-package checks. Existing serial slow/load, isolated integration and 5,000-message soak evidence is reused; no blanket rerun. Exact executed diagnostic source is preserved separately; the final constructor narrowing does not change its provided-argument CLI path. Operations evidence: <code>capacity-oom-correction-20261001/{native-active-ack-service/,native-active-ack-corrected-service/,native-active-ack-tool/,final-unit-after-reconnect-active-ack.log}</code>.</p>
+<p>All isolated stateful brokers and PGs used in these cases are stopped after verifying AutoRemove=false and bind-only stores and saving results/dumps/logs. Only stopped diagnostic native-store file cache was flushed/released; all files and stores remain intact and production cache/coverage/configuration were not changed. Collection/archive remain running; financial POOR hold and reconciliation are unchanged. Capacity OOM/provenance, whole-stack sizing/headroom, physical 24-hour retention, remaining selected-catalogue cases, thresholds, production archive identity/backup, independent public reachability and both human contracts still gate F7/F8. No paper release or acceptance soak passed.</p>
 
 
 
