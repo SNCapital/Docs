@@ -2259,6 +2259,17 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#2026-10-01-finite-archive-observation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2026-10-01 finite archive observation
+      
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -2656,6 +2667,9 @@ unchanged. No release or 24-48h soak has begun.</p>
 <p>Final completion requires full paper pipeline/soak/resource/quality/archive/alerts/retire evidence plus P2 reports and P3 work, or explicit owner cancellation of named remnants. Commit/push of the current handoff was explicitly authorized; server rollback/data preservation and real-money exclusion remain mandatory.</p>
 <h2 id="2026-10-01-fresh-capacity-correction">2026-10-01 fresh capacity correction<a class="headerlink" href="#2026-10-01-fresh-capacity-correction" title="Permanent link">&para;</a></h2>
 <p>F2-F5 are implemented at <code>eb3591ba62595e43735229d74030b74f51ce97bb</code>; retain their completed verification evidence. F6 failed due to isolated NATS OOM at its 1.5 GB limit, not a missing-cgroup reader error. The component allowance is corrected to 2.5 GB with preserved store and fail-loud component diagnostics. Final stored tail lacks 23 source records and 47 transmitted-header hashes, and consumers advanced ACK floors: existing prefix continuation is uncertified and was not run. Six idle diagnostic brokers are stopped with stores/results preserved. Collection continues and the production archiver was restored after a separate OOM with a recorded 1.5 GiB allowance. No candidate paper release or acceptance soak passed. See the latest section of <code>paper-finish-design.md</code> and operations <code>capacity-oom-correction-20261001/</code>. F7/F8 stay gated; live_liq parity and catalogue-turnover margin remain pending human decisions.</p>
+<h2 id="2026-10-01-finite-archive-observation">2026-10-01 finite archive observation<a class="headerlink" href="#2026-10-01-finite-archive-observation" title="Permanent link">&para;</a></h2>
+<p>The completed 900-second archive watch recorded 175 resource samples, 6.72–7.72 GB charged memory with calc/trader off, advancing durable archive ACKs, and disk reserve falling below 33.6 GB. Eight September 30 local merge digests are preserved; trade remains merging and the remote prefix still has 16 objects. This is neither capacity acceptance nor release/soak. The inventory tool now supports bounded complete GET hashing with <code>--get-key --digest-only</code>, allowing the 8.6 GB diff readback without another local object copy; baseline eight failures and final eleven focused passes are retained in operations. Public Google/Cloudflare DNS agree on the dashboard address; host-to-public-IP TLS health/auth checks pass, while independent external reachability remains unverified.</p>
+<p>The idle failed capacity broker was stopped after saving metadata/logs and observing zero clients. Its original and post-restart stores, source and identity ledgers remain preserved. Stopping the idle test PostgreSQL container unintentionally triggered Docker AutoRemove and deleted its anonymous volume. This is a preservation violation, recorded in <code>capacity-oom-correction-20261001/idle-capacity-components-stop-incident.json</code>; do not claim complete preservation of that test DB or reconstruct its exact state. Production PostgreSQL, collection and archive were unaffected. Inspect AutoRemove and preserve actual anonymous-volume contents before any further stop.</p>
 
 
 
