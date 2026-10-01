@@ -2392,6 +2392,17 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#fresh-capacity-oom-correction-2026-10-01" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Fresh capacity OOM correction, 2026-10-01
+      
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -2928,6 +2939,13 @@
 <h2 id="retained-dedup-lifetime-decision-evidence">Retained dedup lifetime decision evidence<a class="headerlink" href="#retained-dedup-lifetime-decision-evidence" title="Permanent link">&para;</a></h2>
 <p>The original actual10m-ID LiveDedup fill/churn fixture reached block9 at1147/s andblock10 at836/s, below1208/s observed USD-M ingress and1510/s required surplus; the1.3m baseline run timed out600s before completion. Its partial counters are a concrete bottleneck counterexample, not a PASS, and the expensive baseline is not repeated. OrderedLiveDedup is a diagnostic prototype only: same membership/insertion/oldest-eviction/discard semantics andsame10m capacity. Full100engines/4800rows/100books/2mcurrentstamps plus1.3m ordered evictions completed95.63s; minimum100kblockrate21624/s, fullstate cgrouppeak3644403712B, processmaxRSS3687014400B. Final underlying OrderedDict hadgrown to1080567280B; actualretainedgraphupper3259618130B. This replaces the earlier454MB linear memory estimate with the measured resized table. Candidate calc allocation must include another186MBengine snapshot plus SDK/IO/liquidation/sample skew rather than claim the3.64GB probe is a service ceiling. Evidence ordered-state.jsonl,ordered-state-resource-tail.jsonl,dedup-churn-r2-timeout.jsonl.</p>
 <p>Corrected limits fixtures passboth2.10.29 and2.15.0: DiscardOld max_msgs3 preserves2..4, duplicatePubAck leaveslast/count unchanged, max_age1s becomesemptyat1.240-1.242s withstablecreated/last_seq4, nextpublish/pull isseq5. Officialcachedclock100ms andminimum250ms timer-reset make1.2s invalid. R1failures retained; R2streamsuffix-only overlap andR3datetime serialization failures were corrected withoutdeletingoldstreams. FinalR4 JSON is complete; no specialruntimeexpirybranch is introduced.</p>
+<h2 id="fresh-capacity-oom-correction-2026-10-01">Fresh capacity OOM correction, 2026-10-01<a class="headerlink" href="#fresh-capacity-oom-correction-2026-10-01" title="Permanent link">&para;</a></h2>
+<p>F2-F5 remain implemented and verified at <code>eb3591ba62595e43735229d74030b74f51ce97bb</code>. The fresh F6 capacity unit failed: Docker records broker exit 137, OOMKilled=true, finished <code>2026-09-30T22:39:33.867287856Z</code>, at a 1,500,000,000-byte component limit. The maximum sampled broker charge was 1,499,996,160 bytes. The final sample's 8,305,303,552-byte combined charge and runner zero OOM counters do not certify completion or broker health. Its subsequent missing cgroup is a consequence of broker death.</p>
+<p>The bounded correction raises this isolated broker allowance to 2,500,000,000 bytes, preserves the original FILE/S2 store, 24-hour retention, five-minute duplicate window, always-sync and all fixture depth/coverage. The 10 MB memory-store setting does not bound FILE cache, dedup, indexes, consumer state or Go heap. At 1,908 offers/s, the configured duplicate window spans 572,400 offered identities; the burst doubles that rate. No measured original anon/cache split survives the deleted cgroup. New samples include each external component's current/peak/events and stop with explicit FAILED evidence on OOM or cgroup disappearance. Six baseline regression failures and 19 final focused tests cover that diagnostic; completed production suites are reused.</p>
+<p>Six completed diagnostic brokers were stopped after metadata/log preservation; containers and stores remain. They are not mandatory simultaneous production overhead. Before restarting the failed broker, its 286-file, 543,420,516-byte store was copied and every file checksum verified. The original source fixture, final ledger and failed outputs remain. Exact recovered MD state is dense 1..3,457,021; final source records cover 1..3,456,998 and transmitted-header hashes cover 1..3,456,974. Therefore 23 stored messages lack original source records and 47 lack original transmitted-header hashes. Several archive consumers and calc also advanced ACK floors. The existing zero-ACK, fully covered prefix continuation cannot certify this case. No prefix is resent, reconstructed or promoted from the stale sample. Read-only recovery at the new allowance is not concurrent capacity acceptance.</p>
+<p>Inspection also found the existing production archiver exited 137 with OOMKilled=true at 805,306,368 bytes on <code>2026-10-01T00:10:02.077418543Z</code>. Its metadata/logs and staging volume were preserved; the same image/config/container was restarted with 1,610,612,736 bytes, and the existing cutover override now records that allowance. Actual durable ACK logs resumed. This restores collection/archive operation; it does not release the candidate. Calc/trader and acceptance soak remain off.</p>
+<p>Evidence: <code>/opt/trading/codex-operations/capacity-oom-correction-20261001/</code>, especially <code>correction-summary.json</code>, <code>final-broker-ledger-state.json</code>, <code>failed-store-copy-verified.json</code>, regression logs and component samples. F6 remains open for the complete corrected concurrent run, default-window recovery matrix, measured whole-stack 10 GB steady/12 GB peak and full-day retention. A new prefill is not launched against uncertified prefix or an unverified disk forecast.</p>
+<p>Two human decisions remain pending. For <code>live_liq</code>, retain the existing true-live/false-replay provenance distinction and require numerical/book/cursor equality, or change the contract to require equal provenance stamps as well (a behavior change requiring implementation and regression evidence). For catalogue turnover, retain fail-closed recovery margin until a complete generation proves the new catalogue, or authorize a defined transitional unproven interval before that generation; the latter needs an explicit duration and observer/runtime contract. Neither choice is inferred from elapsed time. They must be resolved before deployment depends on them.</p>
 
 
 
