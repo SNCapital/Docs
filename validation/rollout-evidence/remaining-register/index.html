@@ -2270,6 +2270,17 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#2026-10-01-remote-readback-and-default-window-service-evidence" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2026-10-01 remote readback and default-window service evidence
+      
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -2670,6 +2681,10 @@ unchanged. No release or 24-48h soak has begun.</p>
 <h2 id="2026-10-01-finite-archive-observation">2026-10-01 finite archive observation<a class="headerlink" href="#2026-10-01-finite-archive-observation" title="Permanent link">&para;</a></h2>
 <p>The completed 900-second archive watch recorded 175 resource samples, 6.72–7.72 GB charged memory with calc/trader off, advancing durable archive ACKs, and disk reserve falling below 33.6 GB. Eight September 30 local merge digests are preserved; trade remains merging and the remote prefix still has 16 objects. This is neither capacity acceptance nor release/soak. The inventory tool now supports bounded complete GET hashing with <code>--get-key --digest-only</code>, allowing the 8.6 GB diff readback without another local object copy; baseline eight failures and final eleven focused passes are retained in operations. Public Google/Cloudflare DNS agree on the dashboard address; host-to-public-IP TLS health/auth checks pass, while independent external reachability remains unverified.</p>
 <p>The idle failed capacity broker was stopped after saving metadata/logs and observing zero clients. Its original and post-restart stores, source and identity ledgers remain preserved. Stopping the idle test PostgreSQL container unintentionally triggered Docker AutoRemove and deleted its anonymous volume. This is a preservation violation, recorded in <code>capacity-oom-correction-20261001/idle-capacity-components-stop-incident.json</code>; do not claim complete preservation of that test DB or reconstruct its exact state. Production PostgreSQL, collection and archive were unaffected. Inspect AutoRemove and preserve actual anonymous-volume contents before any further stop.</p>
+<h2 id="2026-10-01-remote-readback-and-default-window-service-evidence">2026-10-01 remote readback and default-window service evidence<a class="headerlink" href="#2026-10-01-remote-readback-and-default-window-service-evidence" title="Permanent link">&para;</a></h2>
+<p>The completed 1,800-second archive upload watch recorded 349 charged-memory samples (6,547,984,384–7,586,541,568 bytes), no sampled OOM increments or slow-consumer increment, and advancing durable ACK floors. Calc and trader were off. Disk free reached 25,651,888,128 bytes during the merge and recovered to 49,248,952,320 bytes after the existing archiver completed its normal verified-upload retirement. The exact remote prefix now contains 25 objects / 15,503,604,365 bytes, including all nine September 30 kinds / 10,500,243,222 bytes. Complete streamed GETs match all eight previously saved local merge digests. Trade has a complete remote GET digest but lacks a pre-upload local digest; publisher/header-to-archive parity remains unestablished. No manual source or volume deletion was performed.</p>
+<p>A bounded fixture tool now derives four configured 30-minute windows plus settlement from one preserved synthetic symbol, with full source depth payloads, linked identities, and source/output manifests. It does not reuse or certify the failed capacity prefix. The first baseline exposed extra WebSocket <code>E</code> fields in the diagnostic poller rewrite. Three baseline regression failures and 30 focused passes cover preserving the funding/stats/info flat schemas. The corrected actual-service baseline and paired restart have zero decode errors, W=1,800,000 ms, cursor/checkpoint 14,785, identical book and numerical bars, and restart verdict <code>replayed</code>. Strict equality still fails solely on the first replayed bar's <code>live_liq</code> stamp (<code>true</code> live, <code>false</code> replayed). The full process-crash/publication/PG-commit/reconnect matrix and whole-stack capacity remain open. All isolated PG/NATS bind stores, including the rejected first fixture/run, are retained; stopped stateful containers were checked for AutoRemove=false and PG was also dumped.</p>
+<p>The two human choices remain pending: retain the current live/replay provenance distinction and accept numerical/book/cursor equality with that explicit stamp difference, or require identical provenance stamps and specify the intended meaning before changing behavior; retain fail-closed recovery margin until the entire selected/held catalogue has a proven paired generation, or define a finite transition interval and its stop condition explicitly. Neither is inferred from elapsed time. Evidence is in operations <code>capacity-oom-correction-20261001/{archive-upload-observation-review.json,sept30-remote-readback-review.json,default-window-service/review.json,poller-fixture-baseline-red.log,poller-fixture-final-green.log}</code>. Original NATS OOM at 1.5 GB remains the failed capacity root cause; corrected allowance is 2.5 GB, final prefix remains uncertified, and F7/F8 are unreleased/not soaking.</p>
 
 
 
