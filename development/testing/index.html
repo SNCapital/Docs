@@ -2267,11 +2267,10 @@ pass on the new one.</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>.venv/bin/python<span class="w"> </span>-m<span class="w"> </span>pytest<span class="w"> </span>-q<span class="w"> </span>-n<span class="w"> </span>auto<span class="w"> </span>-m<span class="w"> </span><span class="s2">"not slow and not load and not integration and not realdata"</span><span class="w"> </span>--timeout<span class="o">=</span><span class="m">5</span>
 </span></code></pre></div>
 <h2 id="integration-tests">Integration tests<a class="headerlink" href="#integration-tests" title="Permanent link">&para;</a></h2>
-<p>Use isolated NATS JetStream and Postgres instances. Set <code>NATS_URL</code>, <code>PGHOST</code>,
-<code>PGPORT</code>, <code>PGDATABASE</code>, <code>PGUSER</code> and <code>PGPASSWORD</code> to those test services.
-Missing required infrastructure is an error, not a skip. Use a fresh test
-broker for each integration or slow/load batch: some scenarios intentionally
-leave streams configured, while the convergence test requires an empty broker.</p>
+<p>Use isolated Kafka and Postgres instances. Set <code>KAFKA_BOOTSTRAP_SERVERS</code>,
+<code>PGHOST</code>, <code>PGPORT</code>, <code>PGDATABASE</code>, <code>PGUSER</code> and <code>PGPASSWORD</code> to those test
+services. Missing required infrastructure is an error, not a skip. Use a fresh
+test broker and database for each integration or slow/load batch.</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>.venv/bin/python<span class="w"> </span>-m<span class="w"> </span>pytest<span class="w"> </span>-q<span class="w"> </span>-m<span class="w"> </span><span class="s2">"integration and not realdata"</span><span class="w"> </span>tests/integration
 </span></code></pre></div>
 <h2 id="load-and-slow-tests">Load and slow tests<a class="headerlink" href="#load-and-slow-tests" title="Permanent link">&para;</a></h2>
@@ -2286,7 +2285,8 @@ repeats <code>not realdata</code>.</p>
 <code>tests/</code>. Keep tests for active contracts when deleting dead implementations.
 A test exclusively exercising removed code can be removed with it. Infrastructure
 creation must be tested from an empty database or broker through the production
-bootstrap path.</p>
+bootstrap path. Passing tests are not rollout acceptance; see
+<code>deploy/RUNBOOK.md</code> for the current candidate gates and status.</p>
 
 
 

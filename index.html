@@ -2145,9 +2145,17 @@
 <h1 id="backend">Backend<a class="headerlink" href="#backend" title="Permanent link">&para;</a></h1>
 <p>A Binance research and trading stack with separate ingestion, calculation,
 execution and archival services.</p>
-<p>The live path is <strong>collector → NATS → calc → metric bars → trader</strong>. Strategies
-also run in the offline backtester. Postgres stores recovery state; archiver
-persists raw events to object storage.</p>
+<p>The Kafka target path is <strong>collector -&gt; <code>md.spot</code> / <code>md.usdm</code> -&gt; calc -&gt;
+<code>bars.binance.spot</code> -&gt; trader</strong>. Each topic has eight partitions, and records
+are keyed by symbol. Calc owns the local order book and metrics engine. It
+commits completed-bar history, offsets, per-symbol recovery state, and an output
+outbox to Postgres before publishing bars. The trader loads full bar history
+from Postgres, replays a bounded retained Kafka range, then follows live bars.
+The archiver writes raw events to Parquet, makes files durable before advancing
+its offset ledger, and removes staged files only after S3 copies are verified.
+Raw market values retain float64 precision.</p>
+<p>Strategies also run in the offline backtester. Candidate acceptance and cutover
+status are tracked in <a href="https://github.com/SNCapital/Backend/blob/main/deploy/RUNBOOK.md"><code>deploy/RUNBOOK.md</code></a>.</p>
 <ul>
 <li><a href="getting-started/installation/">Installation</a></li>
 <li><a href="getting-started/quickstart/">Quick start</a></li>

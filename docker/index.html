@@ -2129,18 +2129,28 @@
 
 
 <h1 id="docker-services">Docker services<a class="headerlink" href="#docker-services" title="Permanent link">&para;</a></h1>
-<p><code>docker-compose.yml</code> defines NATS, Postgres, collector, calc, trader, dashboard,
-archiver and Prometheus. The collector publishes raw events, calc publishes
-metric bars, trader executes strategies and archiver persists raw data.</p>
-<p>Collector, calc, trader, dashboard and archiver mount <code>live_config.yaml</code>. Supply secrets and service wiring through
-<code>.env</code>; <code>PGPASSWORD</code> is required. Named volumes retain JetStream data, Postgres,
-metric output, trader state and archiver staging across container replacement.
-Published NATS, dashboard and Prometheus ports bind to loopback.</p>
-<p>Review execution mode and deployment gates before starting the stack. The
-operator procedure is <code>deploy/RUNBOOK.md</code>. Trader, calc and archiver replacements
-are stop-first; the collector permits overlap under message deduplication.</p>
-<p>The legacy systemd configuration remains for the existing installation until
-its retirement is explicitly completed. Do not run two traders on one account.</p>
+<p><code>docker-compose.yml</code> defines the Kafka target stack: a single-node Kafka KRaft
+broker, Postgres, collector, calc, trader, dashboard, archiver, Prometheus and
+Grafana. The collector publishes raw events to <code>md.spot</code> and <code>md.usdm</code>; each
+topic has eight symbol-keyed partitions. Calc consumes those topics, owns the
+local order book, and commits completed-bar history, recovery state, offsets and
+outbox rows to Postgres. It publishes committed bars to the eight-partition
+<code>bars.binance.usdm</code> topic. The trader loads full history from Postgres, replays
+the bounded retained Kafka range, then follows live bars.</p>
+<p>The archiver makes raw Parquet durable before advancing its local partition
+offset ledger. It uploads files to S3, verifies each copy and then removes the
+local staged file. Raw prices, quantities, volumes and depth values retain
+float64 precision.</p>
+<p>Collector, calc, trader, dashboard and archiver mount <code>live_config.yaml</code>. Supply
+secrets and service wiring through <code>.env</code>; <code>PGPASSWORD</code> is required. Named
+volumes retain Kafka data, Postgres, collection ranking, metrics output, trader
+state, archiver staging and monitoring data across container replacement.
+Published Kafka, dashboard, Prometheus and Grafana ports bind to loopback.</p>
+<p>Review the execution mode and acceptance gates in <code>deploy/RUNBOOK.md</code> before
+deployment. Candidate acceptance and cutover remain pending until that runbook's
+gates have evidence. Follow its stop-first replacement and rollback procedures;
+preserve legacy data and volumes until retirement is reviewed. Do not run two
+traders on one account.</p>
 
 
 

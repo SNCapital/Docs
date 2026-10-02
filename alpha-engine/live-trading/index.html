@@ -1006,6 +1006,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#account-and-strategy-history" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Account and strategy history
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#operations" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2228,6 +2239,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#account-and-strategy-history" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Account and strategy history
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#operations" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2259,34 +2281,45 @@
 
 
 <h1 id="live-trading">Live trading<a class="headerlink" href="#live-trading" title="Permanent link">&para;</a></h1>
-<p><code>python main.py live-trade</code> runs the USD-M bars trader. Bare <code>python main.py</code>
-and <code>python main.py live</code> select the same runtime. It consumes calc's <code>bars.*</code>
-stream and shares strategy classes with the offline backtester.</p>
+<p><code>python main.py live-trade</code> runs the bars trader. Bare <code>python main.py</code>
+and <code>python main.py live</code> select the same runtime. It consumes actual Spot
+<code>bars.binance.spot</code> from calc and shares strategy classes with the backtester.
+USD-M execution, valuation and allocation returns use separate Futures prices.</p>
 <h2 id="configuration">Configuration<a class="headerlink" href="#configuration" title="Permanent link">&para;</a></h2>
-<p>The repository-root <code>live_config.yaml</code> is the canonical configuration. Set the
-execution mode, strategies, symbols, allocation and risk limits there. Missing,
-null or invalid required values fail during loading. Trading parameters have no
-CLI or environment overrides. Environment variables hold exchange credentials
-and NATS/Postgres connection details.</p>
-<p>Signal, paper, taker and maker execution are implemented; consult the configured
-mode before starting the process. Availability in code does not establish that
-a deployment has passed exchange acceptance tests.</p>
+<p>The repository-root <code>live_config.yaml</code> contains every trading parameter and
+Kafka setting. Missing, null or invalid required values fail during loading.
+Environment variables supply secrets and PostgreSQL wiring.</p>
+<p>The configured three alphas use Markowitz combination, a top-40 active universe
+from top-100 Spot collection, full history, target leverage 2 and maximum
+leverage 2.5. Mainnet uses maker execution with a 90-second wait and 15 workers.
+Fresh account equity replaces configured capital at activation. Code availability
+and an authorized mainnet configuration do not establish runtime activation.</p>
 <h2 id="bar-processing">Bar processing<a class="headerlink" href="#bar-processing" title="Permanent link">&para;</a></h2>
-<p><code>trader/bars_service.py</code> restores state and retained bars before starting live
-consumption. <code>BarsReader</code> supplies metric frames to the strategy pipeline.
-UTC-aligned bar boundaries, settlement delay, data-quality gates and risk limits
-control evaluation and execution. The executor reconciles positions and orders;
-state and dashboard output are persisted separately from calc's book checkpoints.</p>
-<p>Calc owns raw tick intake, book reconstruction, metric aggregation and recovery.
-The trader must not start its live consumer while its recovery is still running.
-See <a href="../../arch/split-services-jetstream/bars-contract/">the bars contract</a> and
-<a href="../../adr/0002-split-services-jetstream/0002-split-services-jetstream/">ADR-0002</a>.</p>
+<p>The trader restores full PostgreSQL history and replays a captured retained Kafka
+range before live consumption. UTC-aligned boundaries, settlement delay,
+data-quality gates and risk limits control evaluation. POOR bars hold positions
+while exchange reconciliation continues. Spot historical features retain their
+source market and unproven quality; Futures metrics are never relabelled Spot.</p>
+<p>Calc owns raw tick intake, local books, aggregation and recovery. It commits
+completed bars, state, next partition offsets and an output outbox together in
+PostgreSQL, then publishes committed outbox entries to Kafka. Broker and database
+commits are separate; acknowledged bar identities support replay.</p>
+<h2 id="account-and-strategy-history">Account and strategy history<a class="headerlink" href="#account-and-strategy-history" title="Permanent link">&para;</a></h2>
+<p>Fresh mainnet startup reconciles positions and preserves existing orders. A new
+state file records activation wallet, equity and lifetime unrealized PnL, and
+creates a <code>mainnet:&lt;timestamp&gt;</code> performance namespace. Restart retains that
+baseline. Resetting performance sends no orders and does not flatten positions.</p>
+<p>The dashboard displays the latest venue snapshot and its age. Account performance
+excludes transfers since activation. Lifetime unrealized PnL stays separate from
+its change since activation. Per-strategy returns, Sharpe, drawdown and model
+dollar PnL come from authoritative PostgreSQL rows. Model PnL is return times
+activation equity; it does not allocate actual exchange fills among strategies.</p>
 <h2 id="operations">Operations<a class="headerlink" href="#operations" title="Permanent link">&para;</a></h2>
-<p>Deploy the trader with stop-first ordering: confirm the old process is stopped
-before starting its replacement. Calc and archiver also require stop-first
-replacement. Collector overlap is permitted by the JetStream deduplication
-contract. Follow <code>deploy/RUNBOOK.md</code>; retained systemd units describe the legacy
-installation and must remain until its retirement is confirmed.</p>
+<p>CI tests pull requests and main with native Kafka/PostgreSQL and unit gates,
+builds one exact-SHA image, and deploys its immutable registry digest through a
+restricted SSH entrypoint. Stop the sole trader before replacement; preserve
+secrets, config and named volumes. See <code>deploy/RELEASE.md</code>
+and <code>deploy/RUNBOOK.md</code> for verification and rollback.</p>
 
 
 
