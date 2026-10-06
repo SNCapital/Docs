@@ -2161,6 +2161,13 @@ consumer responsible for raw staging and uploads. The legacy <code>--order-book<
 collector flag is retired.</p>
 <p>See <a href="../../getting-started/architecture/">architecture</a>,
 <a href="../storage/">storage</a> and <a href="../../arch/split-services-jetstream/OBS-SPEC/">observability</a>.</p>
+<p>Retained-source baseline scans are serialized across Spot and USD-M within one
+collector. Daily catalogue refresh keeps the existing market generation running
+until added symbols have been seeded from retained Kafka; only then does it
+replace subscriptions. This avoids overlapping native scan heaps and a raw
+collection outage lasting the full history scan. Added symbols remain subject
+to ordinary history and full-window quality gates. Subscription replacement
+still creates an honestly stamped reconnect interval.</p>
 
 
 
