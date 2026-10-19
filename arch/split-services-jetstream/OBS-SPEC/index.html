@@ -2226,7 +2226,7 @@ boundary, ADR-0002 §12 INV-003).</p>
 <tbody>
 <tr>
 <td>1a gap count U/u/pu+agg</td>
-<td>WIRED: collector gap_monitor.py stamps X-Gap-Count/X-Gap-Lost on egress headers; calc feeds stamp + health.record_bar_gap (health.py:304, dict keyed (symbol,leg,gap_kind) at :65); stream counters trade_id/agg_id/seq_gaps at health.py:26-34</td>
+<td>WIRED: collector stamps trade/depth sequence checks and checkpoints confirmed IDs with Kafka offsets; calc consumes checked headers, retains ID detection for legacy header-free records, and feeds stamp + health.record_bar_gap (health.py:304, dict keyed (symbol,leg,gap_kind) at :65); stream counters trade_id/agg_id/seq_gaps at health.py:26-34</td>
 <td>diff_u_gaps + diff_lost_est + trade_agg_gaps (0 valid only if checked, unchecked = field absent = bar invalid)</td>
 <td>trading_bar_gap_total{<code>symbol,leg(diff\|trade\|events),gap_kind(u_gap\|agg_gap)</code>} — emitted; + trading_trade_id_gaps_total / trading_agg_id_gaps_total / trading_seq_gaps_total</td>
 <td>increase[30m] &gt; 0 per symbol (warning; page if all symbols = venue incident)</td>

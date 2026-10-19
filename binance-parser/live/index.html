@@ -2150,10 +2150,10 @@
 <h1 id="live-collection">Live collection<a class="headerlink" href="#live-collection" title="Permanent link">&para;</a></h1>
 <p><code>collector/services/live.py</code> wires WebSocket listeners and REST pollers to
 <code>collector/queue_publish.py</code>. Events use the subjects, message IDs and schemas
-owned by <code>common/nats_wire.py</code>.</p>
+owned by <code>common/event_wire.py</code>.</p>
 <p>Run <code>python -m collector.main live --market usdm --with-funding</code> from the
-repository root, with NATS connection wiring configured. The collector handles
-connections, reconnection, publication and its bounded outage buffer. It serves
+repository root, with Kafka configured in <code>live_config.yaml</code>. The collector handles
+connections, reconnection, bounded publication and source sequence checks. It serves
 metrics for monitoring; it does not own a live parquet writer.</p>
 <p>Calc is the consumer responsible for order-book reconstruction, replay,
 metric calculation and bar publication. Archiver is an independent durable
@@ -2161,13 +2161,26 @@ consumer responsible for raw staging and uploads. The legacy <code>--order-book<
 collector flag is retired.</p>
 <p>See <a href="../../getting-started/architecture/">architecture</a>,
 <a href="../storage/">storage</a> and <a href="../../arch/split-services-jetstream/OBS-SPEC/">observability</a>.</p>
-<p>Retained-source baseline scans are serialized across Spot and USD-M within one
-collector. Daily catalogue refresh keeps the existing market generation running
-until added symbols have been seeded from retained Kafka; only then does it
-replace subscriptions. This avoids overlapping native scan heaps and a raw
-collection outage lasting the full history scan. Added symbols remain subject
-to ordinary history and full-window quality gates. Subscription replacement
-still creates an honestly stamped reconnect interval.</p>
+<p>Collector source continuity uses <code>collector_source_state_path</code> and
+<code>collector_source_checkpoint_seconds</code> from <code>live_config.yaml</code>. The state file
+stores topic identities, next offsets for each partition and last confirmed
+trade/depth IDs. Docker persists it in the <code>collector_source</code> volume.</p>
+<p>With no checkpoint, startup captures current Kafka high offsets without reading
+history. The first trade or depth event establishes a valid baseline. This
+explicitly accepts the unknown pre-start boundary; it does not manufacture a
+gap or claim coverage before collection began. Newly encountered pairs follow
+the same rule.</p>
+<p>After restart, only the suffix after the saved partition offsets is consumed.
+Acknowledged events advance durable state in publication order. A periodic
+atomic write runs outside the event loop, and clean shutdown flushes Kafka and
+saves the final checkpoint. An incompatible topic identity, partition layout or
+expired checkpoint offset fails loudly. Keep the checkpoint volume when
+recreating collector; do not run overlapping collector writers against it.</p>
+<p>Every checked trade/depth record carries <code>X-Source-Checked: 1</code>; detected gaps
+also carry <code>X-Gap-Count</code> and <code>X-Gap-Lost</code>. Calc uses these authoritative headers.
+Its prior ID detection remains for retained records from the already-deployed
+collector version that supplied no sequence headers. Normal book reconstruction
+still independently verifies depth continuity.</p>
 
 
 
