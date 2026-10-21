@@ -1,0 +1,29 @@
+{
+  "symbol": "ADA_USDT",
+  "hour": "2025-09-01T00:00:00Z",
+  "source": {
+    "compressed_bytes": 3336347,
+    "sha256": "0370ed075c4a509de05ba7f862a2b15a9e4d3fa57a712a5ce1fc81a8ea293ab7",
+    "url": "https://download.gatedata.org/futures_usdt/orderbooks/202509/ADA_USDT-2025090100.csv.gz"
+  },
+  "diagnostics": {
+    "boundary_tail_rows": 4,
+    "event_rows": 493141,
+    "final_ask_levels": 1447,
+    "final_bid_levels": 1073,
+    "final_native_book_sha256": "15bf49019861d23e5589afcdd4c24a7b2d120f95e91e5fe8e2ab9cd80e11a1da",
+    "last_event_ms": 1756688400000,
+    "last_sequence": 12112779977,
+    "merged_updates": 537420,
+    "snapshot_exact_checks": 0,
+    "snapshot_unaligned": 0
+  },
+  "next_initial_url": "https://download.gatedata.org/futures_usdt/orderbooks/202509/ADA_USDT-2025090101.csv.gz",
+  "next_initial_sequence": 12112779977,
+  "next_initial_rows": 2520,
+  "next_initial_native_sha256": "15bf49019861d23e5589afcdd4c24a7b2d120f95e91e5fe8e2ab9cd80e11a1da",
+  "sequence_equal": true,
+  "full_native_book_equal": true,
+  "parquet_bytes": 19199,
+  "elapsed_seconds": 5.07776500005275
+}

@@ -1,0 +1,40 @@
+{
+  "diagnostics": {
+    "boundary_tail_rows": 96,
+    "event_rows": 623348,
+    "final_ask_levels": 878,
+    "final_bid_levels": 1123,
+    "final_native_book_sha256": "6f2049abb5597484b383fdab39fe6a527c011834dc662560656711e3301d8278",
+    "last_event_ms": 1735693200000,
+    "last_sequence": 25624511296,
+    "merged_updates": 749301,
+    "snapshot_exact_checks": 0,
+    "snapshot_unaligned": 0
+  },
+  "elapsed_seconds": 5.428784082992934,
+  "feature_count": 21,
+  "feature_version": "gate-book-v1",
+  "job": {
+    "hour": "2025-01-01T00:00:00Z",
+    "membership_intervals": [],
+    "quantity_mode": "contract_counts",
+    "symbol": "SOL_USDT",
+    "verify_snapshots": false
+  },
+  "parquet_bytes": 19175,
+  "parquet_sha256": "6498c2ed1b75f381fd605c7a3b349f1eee36ff1569fcca7b9f2dbad61126a405",
+  "quality": "validated",
+  "rows": 60,
+  "snapshots": null,
+  "source": {
+    "compressed_bytes": 3839513,
+    "sha256": "553f11374a73c9c3b69a57067dca71e24f39289c60768fb6e47dbd818cb9ba32",
+    "url": "https://download.gatedata.org/futures_usdt/orderbooks/202501/SOL_USDT-2025010100.csv.gz"
+  },
+  "universe_policy": {
+    "provenance": "native-book reconstruction cohort; no universe selection",
+    "quantity_mode": "contract_counts",
+    "status": "pilot"
+  },
+  "validation": "sequence_continuity,gzip_crc,hour_range,book_invariants,uniform_sampling"
+}

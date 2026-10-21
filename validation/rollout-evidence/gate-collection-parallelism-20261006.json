@@ -1,0 +1,14 @@
+{
+  "checked_at": "2026-10-06T09:43:21.274451+00:00",
+  "jobs": 64,
+  "workers_seconds": {
+    "4": 94.661,
+    "4-repeat": 63.87,
+    "8": 27.795,
+    "10": 25.495
+  },
+  "source_and_feature_bytes_identical": true,
+  "chosen_workers": 10,
+  "warm_comparison_speedup": 2.505197097470092,
+  "scope": "Same 64 verified hourly archives; sequential runs; CDN and network variability; not a whole-history ETA"
+}

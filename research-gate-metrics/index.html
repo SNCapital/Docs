@@ -1,0 +1,2928 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Quantitative research and live-trading stack on top of Binance market data. Strategy engine + WebSocket data pipeline + local L2 order book.
+">
+      
+      
+      
+        <link rel="canonical" href="https://sncapital.github.io/Docs/research-gate-metrics/">
+      
+      
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>Gate history and compact research metrics - SN Capital — Backend</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="https://unpkg.com/katex@0/dist/katex.min.css">
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#gate-history-and-compact-research-metrics" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="SN Capital — Backend" class="md-header__button md-logo" aria-label="SN Capital — Backend" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            SN Capital — Backend
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Gate history and compact research metrics
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m14.3 16-.7-2h-3.2l-.7 2H7.8L11 7h2l3.2 9zM20 8.69V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12zm-9.15 3.96h2.3L12 9z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_2" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to system preference"  type="radio" name="__palette" id="__palette_2">
+    
+      <label class="md-header__button md-icon" title="Switch to system preference" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+          <a href="javascript:void(0)" class="md-search__icon md-icon" title="Share" aria-label="Share" data-clipboard data-clipboard-text="" data-md-component="search-share" tabindex="-1">
+            
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9a3 3 0 0 0-3 3 3 3 0 0 0 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.15c-.05.21-.08.43-.08.66 0 1.61 1.31 2.91 2.92 2.91s2.92-1.3 2.92-2.91A2.92 2.92 0 0 0 18 16.08"/></svg>
+          </a>
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/SNCapital/Backend" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    SNCapital/Backend
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+    
+      
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href=".." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../getting-started/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Getting started
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../alpha-engine/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Alpha engine
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../binance-parser/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Binance parser
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../strategies/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Strategies
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../reference/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Reference
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../development/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Development
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../adr/0001-collector-trader-split/0001-collector-trader-split/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Architecture decisions
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../research-log/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Research log
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../research/nsc-14-aggtrade-vs-trade/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Research notes
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+    
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="SN Capital — Backend" class="md-nav__button md-logo" aria-label="SN Capital — Backend" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    SN Capital — Backend
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/SNCapital/Backend" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    SNCapital/Backend
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../getting-started/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Getting started
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_2" id="__nav_2_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Getting started
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../getting-started/installation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Installation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../getting-started/quickstart/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Quick start
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../getting-started/architecture/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../alpha-engine/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Alpha engine
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_3" id="__nav_3_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Alpha engine
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../alpha-engine/pipeline/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Pipeline overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../alpha-engine/data-layer/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Data layer
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../alpha-engine/writing-a-strategy/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Writing a strategy
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../alpha-engine/markowitz/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Markowitz combination
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../alpha-engine/backtesting/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Backtesting & PnL
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../alpha-engine/live-trading/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Live trading
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../binance-parser/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Binance parser
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_4" id="__nav_4_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Binance parser
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../binance-parser/live/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Live WebSocket
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../binance-parser/historical/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Historical download
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../binance-parser/storage/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Storage layout
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../binance-parser/order-book/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Local order book
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../binance-parser/extending/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Extending the parser
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../strategies/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Strategies
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_5" id="__nav_5_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Strategies
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../methodology/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Methodology
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../strategies/funding_reversion/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Funding mean reversion
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../strategies/trade_imbalance/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Trade imbalance
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../strategies/ob_mispricing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Orderbook mispricing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../strategies/book_depth_imbalance/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Book depth imbalance
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../strategies/vol_mean_reversion/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Volatility mean reversion
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../strategies/vol_ob_entropy/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Volume / OB entropy
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_6" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../reference/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Reference
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_6" id="__nav_6_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Reference
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../reference/cli/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    CLI
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../reference/operators/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Operators
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../reference/metrics/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Metrics catalogue
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../reference/glossary/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Glossary
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_7" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../development/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Development
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_7" id="__nav_7_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Development
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../development/setup/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Setup
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../development/testing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Testing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../development/contributing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Contributing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_8" >
+        
+          
+          <label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Architecture decisions
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Architecture decisions
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../adr/0001-collector-trader-split/0001-collector-trader-split/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ADR-0001 Collector / trader split
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../adr/0002-split-services-jetstream/0002-split-services-jetstream/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ADR-0002 Split services + JetStream
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../adr/0004-dual-market-topn-collection/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ADR-0004 Dual-market top-N collection
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../research-log/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Research log
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_10" >
+        
+          
+          <label class="md-nav__link" for="__nav_10" id="__nav_10_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Research notes
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_10_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_10">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Research notes
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../research/nsc-14-aggtrade-vs-trade/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    NSC-14 aggTrade vs trade
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#source-contract-and-reconstruction" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Source contract and reconstruction
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#causal-one-minute-feature-contract" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Causal one-minute feature contract
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#dynamic-universe-and-resource-boundaries" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Dynamic universe and resource boundaries
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#measured-pilot-evidence" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Measured pilot evidence
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Measured pilot evidence">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#native-count-selected-coin-cohort" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Native-count selected-coin cohort
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#binance-execution-with-gate-feature-inputs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Binance execution with Gate feature inputs
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#verified-archive-boundary-overlap" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Verified archive boundary overlap
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#sequence-effective-event-timestamps" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Sequence-effective event timestamps
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#source-rejection-versus-transport-retry" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Source rejection versus transport retry
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#acceptance-and-remaining-work" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Acceptance and remaining work
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="gate-history-and-compact-research-metrics">Gate history and compact research metrics<a class="headerlink" href="#gate-history-and-compact-research-metrics" title="Permanent link">&para;</a></h1>
+<p>This work implements a separate offline Gate USDT Futures book reader and a
+compact candidate feature set. It does not change live Binance collection,
+replace the 791-key engine, or certify a profitable feature set.</p>
+<p>The current collection freezes forty Binance USD-M USDT perpetuals ranked by
+USDT quote volume over 2026-09-02 through 2026-10-01, after excluding BTC, ETH,
+BCH, LTC, ETC and LINK. Both sources collect only that saved selection. The
+current selection is applied to historical research without historical
+reranking. Individual membership begins only when Binance and the preceding
+Gate book interval are available; no substitute coin replaces an unavailable
+member. This retrospective selection has current-universe selection bias.</p>
+<p>The saved experiment lives in <code>data/research-gate-fixed-20261003/</code>.
+<code>fixed-universe.json</code> pins the selection and thirty daily-volume inputs per
+established candidate, <code>acquisition.json</code> restricts Binance acquisition,
+and <code>universe.json</code> builds the Gate source and availability masks.
+The scoring cohort is 2025-10-01 through 2026-09-30, with up to sixty days of
+source warmup clipped to confirmed Gate archive availability. Warmup provides
+operator history; each strategy chooses its own signal horizon and smoothing.
+Train ends on 2026-06-01; adaptive Validation ends on 2026-10-01. A subsequent
+Final period remains sealed. The first configured twelve-iteration free-model
+wave is exploratory because admission requires at least thirty comparable
+trials and the other statistical and cost gates.</p>
+<p><code>collector/history/gate_history.py</code> owns the archive format and streaming reader.
+<code>metrics/research_features.py</code> owns the feature calculations.
+<code>calc/gate_history_metrics.py</code> reconstructs books, combines the reader with the
+feature engine and writes validated research artifacts.
+<code>tools/gate_history_metrics.py</code> provides only the offline CLI.</p>
+<h2 id="source-contract-and-reconstruction">Source contract and reconstruction<a class="headerlink" href="#source-contract-and-reconstruction" title="Permanent link">&para;</a></h2>
+<p>Gate publishes hourly gzip CSV book logs with a full initial snapshot followed
+by merged updates. The six fields are timestamp in seconds, action, price,
+signed contract count, begin ID, and merged count. Positive counts are bids;
+negative counts are asks. <code>set</code> supplies the initial absolute quantity, <code>make</code>
+adds the absolute quantity, and <code>take</code> subtracts it. A book reduction does not
+identify an executed trade. The final sequence of an update is
+<code>begin_id + merged_count - 1</code>.</p>
+<p>Reconstruction keeps exact Decimal prices and contract quantities in sorted
+in-memory maps. Native quantity is contract count. In <code>base</code> mode, base quantity
+is contract count times the explicit historical contract multiplier, and USD
+depth is price times that base quantity. In <code>contract_counts</code> mode no base
+quantity or USD depth is asserted. Each update must
+start at the preceding final sequence plus one. A missing sequence, inconsistent
+initial snapshot, duplicate snapshot level, negative depth, invalid timestamp,
+malformed action, or invalid gzip CRC fails the job. Completed timestamp groups
+must have a positive, uncrossed, unlocked two-sided book. There is no guessed
+resynchronization or skipped corrupt input.</p>
+<p>Updates merged by the source can span an independent snapshot ID. The verifier
+compares top levels at exactly aligned IDs and counts snapshots lying inside a
+merged span as unaligned. It never pretends it can reconstruct intermediate
+states. A requested verification with no aligned independent snapshots fails.
+Independent slices contain top levels, so equality certifies those observed
+levels rather than all deep orders.</p>
+<p>One observed source boundary is explicit: the 2023-04-25 05:00 UTC BTC file
+contains 26 update rows stamped exactly 06:00 UTC. These rows are validated for
+sequence continuity, book invariants and matching independent snapshots, but do
+not enter the minute ending at 06:00. The receipt counts boundary tail rows.
+Events later than the advertised hour end fail. Each next hour starts from its
+own source snapshot; the v1 minute features require no additional hidden
+cross-hour state.</p>
+<p>Official format and URL construction:</p>
+<p>Native contract names remain exact source identifiers, including Unicode names
+such as <code>\u5e01\u5b89\u4eba\u751f_USDT</code>. Archive URLs encode the native filename as UTF-8 percent
+escapes; partition names and receipt symbols retain the native identifier.
+The asset component accepts letters and numbers, with uppercase ASCII names,
+and rejects path separators, traversal, whitespace, control characters and
+URL syntax. Validation errors escape non-ASCII input for ASCII runtime output.
+An internal Binance research alias such as <code>BINANCE_LIFEUSDT</code> requires an
+explicit mapping to the native Gate contract; it never changes the filename.</p>
+<ul>
+<li><a href="https://www.gate.com/developer/historical_quotes">Gate historical quotation portal</a></li>
+<li><a href="https://www.gate.com/announcements/article/21688">Gate archive format announcement</a></li>
+</ul>
+<p>The current contract endpoint exposes <code>quanto_multiplier</code>, but a current value
+is not evidence of a historical value. The official public archive products and
+contract API documentation checked here do not expose a historical multiplier
+timeline. This does not prevent native count reconstruction or scale-free
+features. <a href="https://www.gate.com/docs/developers/apiv4/en/futures/">Official contract API</a></p>
+<p>Two explicit quantity contracts are supported:</p>
+<ul>
+<li><code>quantity_mode=contract_counts</code>: reconstruct official native contract counts,
+  expose 21 scale-free candidates and omit every USD field. No multiplier or
+  multiplier-verification fields are accepted. Reconstruction quality can be
+  <code>validated</code>; that certifies native counts, not historical USD depth.</li>
+<li><code>quantity_mode=base</code>: require a historical multiplier source and validity
+  interval covering the hour, then expose all 39 candidates. A current-value
+  assumption remains permitted only in a labeled format pilot with
+  <code>multiplier_verification=pilot_assumption</code> and quality
+  <code>pilot_units_unverified</code>; research loading rejects it.</li>
+</ul>
+<p>Legacy v1 jobs with the original required multiplier fields are base jobs.
+New builders declare <code>quantity_mode</code> explicitly. A manifest uses one mode,
+so available predictor names stay fixed within an experiment.</p>
+<h2 id="causal-one-minute-feature-contract">Causal one-minute feature contract<a class="headerlink" href="#causal-one-minute-feature-contract" title="Permanent link">&para;</a></h2>
+<p>The canonical v1 catalogue has 39 candidates; native-count output provides the
+21 candidates whose values do not depend on a common quantity multiplier. Uniform samples occur once per second;
+the state sampled at boundary <code>t</code> includes only event groups strictly before
+<code>t</code>. Updates at <code>t</code> belong to the following interval. Each minute has 60 samples.
+The opening midpoint is known at the minute start. OFI compares completed source
+timestamp groups rather than unstable intermediate rows within a merged group.</p>
+<table>
+<thead>
+<tr>
+<th>Candidate family</th>
+<th>Definition</th>
+<th style="text-align: right;">Count</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Spread</td>
+<td>Mean, close, population standard deviation, maximum of <code>(ask-bid)/mid * 10000</code></td>
+<td style="text-align: right;">4</td>
+</tr>
+<tr>
+<td>L1 imbalance</td>
+<td>Mean and close of <code>(bid_base-ask_base)/(bid_base+ask_base)</code></td>
+<td style="text-align: right;">2</td>
+</tr>
+<tr>
+<td>Weighted midpoint offset</td>
+<td>Mean and close of <code>((ask*bid_base + bid*ask_base)/(bid_base+ask_base)-mid)/mid * 10000</code></td>
+<td style="text-align: right;">2</td>
+</tr>
+<tr>
+<td>Near depth</td>
+<td>Bid and ask USD depth inside 5, 10, 25 bps of midpoint, mean and close</td>
+<td style="text-align: right;">12</td>
+</tr>
+<tr>
+<td>Near depth imbalance</td>
+<td>Mean and close of <code>(bid_usd-ask_usd)/(bid_usd+ask_usd)</code> for each band</td>
+<td style="text-align: right;">6</td>
+</tr>
+<tr>
+<td>L1 depth</td>
+<td>Mean bid and ask USD depth</td>
+<td style="text-align: right;">2</td>
+</tr>
+<tr>
+<td>OFI</td>
+<td>Quote-notional L1 and mean top-five rank OFI, divided by mean observed per-side depth</td>
+<td style="text-align: right;">2</td>
+</tr>
+<tr>
+<td>Depth additions/reductions</td>
+<td>Bid/ask <code>make</code> and <code>take</code> USD totals within the minute, over the full observed book</td>
+<td style="text-align: right;">4</td>
+</tr>
+<tr>
+<td>Update rate</td>
+<td>Source merged update count divided by 60 seconds</td>
+<td style="text-align: right;">1</td>
+</tr>
+<tr>
+<td>Depth flow imbalance</td>
+<td><code>(bid_make-bid_take-ask_make+ask_take)</code> divided by total additions and reductions</td>
+<td style="text-align: right;">1</td>
+</tr>
+<tr>
+<td>Midpoint movement</td>
+<td>Log return in bps, realized volatility from one-second log returns in bps, closing midpoint</td>
+<td style="text-align: right;">3</td>
+</tr>
+</tbody>
+</table>
+<p>The 18 omitted native-count predictors are all USD depth and flow magnitudes:
+12 near-depth values, two L1 depths, and four additions/reductions totals. The
+remaining 21 consist of four spread statistics, two L1 imbalances, two weighted
+midpoint offsets, six near-depth imbalances, two normalized OFIs, update rate,
+depth-flow imbalance, and three midpoint price/return/volatility features.
+Multiplying all quantities by the same positive factor cancels in these ratios
+and normalized flows. Predictor semantics remain native-contract observations;
+continuity of count units within aggregation intervals is an assumption, not
+proof of historical underlying-asset amounts.</p>
+<p>Native-count Parquet also contains one auxiliary <code>native_flow_weight</code> column:
+<code>sum(price * abs(raw_contract_count_delta))</code> over the minute, in units
+<code>price_times_contracts</code>. It is not USD, not a predictor and not offered to agents.
+Its purpose is exact thirty-minute depth-flow ratio aggregation:
+<code>sum(minute_ratio * native_weight) / sum(native_weight)</code>, zero for a fully
+observed zero-flow interval. This equals base-unit aggregation under a common
+quantity multiplier, without inventing dollar magnitudes.</p>
+<p>Near-depth features are measured from midpoint, not from the best quote. Wide
+spreads can leave both sides of a narrow band empty: both depth values are zero,
+and the imbalance is NULL. If any second of a minute has an undefined band
+imbalance, its minute mean is NULL. A zero depth-flow imbalance is meaningful
+when a fully observed minute has no depth changes. Neither rule invents missing
+trade or funding observations.</p>
+<p>The OFI variants use quote-notional contributions rather than the raw-share
+units of the cited equities papers. For a bid rank, improved price contributes
+new depth, worsened price removes old depth, and unchanged price contributes
+the quantity change. Ask signs reverse. Top-five OFI is the average of those
+rank contributions. These are candidate adaptations that need validation.</p>
+<p>Feature references:</p>
+<ul>
+<li><a href="https://arxiv.org/abs/1011.6402">Cont, Kukanov and Stoikov, The Price Impact of Order Book Events</a></li>
+<li><a href="https://arxiv.org/abs/1907.06230">Xu, Gould and Howison, Multi-Level Order-Flow Imbalance in a Limit Order Book</a></li>
+</ul>
+<p>Every row provides <code>bar_start_ms</code>, <code>ts</code> (bar end),
+<code>observed_through_ms</code>, <code>source_last_sequence</code>, <code>sample_count</code>,
+<code>bar_complete</code>, and <code>universe_member</code>. Input strictly after the bar boundary
+cannot alter an earlier feature row. Execution must follow the completed feature
+bar; midpoint is a feature price and not an executable VWAP.</p>
+<h2 id="dynamic-universe-and-resource-boundaries">Dynamic universe and resource boundaries<a class="headerlink" href="#dynamic-universe-and-resource-boundaries" title="Permanent link">&para;</a></h2>
+<p>The converter takes an explicit historical job manifest. It does not extrapolate
+a current top-40 list backward. The universe uses Binance historical traded
+volume and listing availability. The exclusion is the saved minimum-order coin
+exclusion from <code>live_config.yaml</code>, not a market-cap filter. Its exact snapshot
+and source hash belong in the universe provenance; exclusions are not silently
+recomputed from present-day prices. No historical market-cap purchase or API is
+needed for this requirement.</p>
+<p>The builder supplies all historical membership intervals for each requested
+symbol and enough earlier hourly jobs for warmup. The converter retains those
+warmup minutes but marks membership separately. Membership intervals are
+half-open <code>[start_ms,end_ms)</code>, minute aligned and checked at the minute start.
+An hour may contain entries and exits. The final number of distinct instruments
+across several years can exceed 40, so footprint projections must use actual
+historical jobs and warmup, not a fixed list of 40 survivors.</p>
+<p>A manifest has this shape; values below illustrate the schema and are not
+historically certified production input:</p>
+<div class="language-json highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="p">{</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="w">  </span><span class="nt">"schema"</span><span class="p">:</span><span class="w"> </span><span class="s2">"gate-research-jobs-v1"</span><span class="p">,</span>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">  </span><span class="nt">"universe_policy"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">    </span><span class="nt">"status"</span><span class="p">:</span><span class="w"> </span><span class="s2">"pilot"</span><span class="p">,</span>
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="w">    </span><span class="nt">"provenance"</span><span class="p">:</span><span class="w"> </span><span class="s2">"format pilot; no certified universe selection"</span>
+</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="w">  </span><span class="p">},</span>
+</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="w">  </span><span class="nt">"jobs"</span><span class="p">:</span><span class="w"> </span><span class="p">[{</span>
+</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="w">    </span><span class="nt">"symbol"</span><span class="p">:</span><span class="w"> </span><span class="s2">"BTC_USDT"</span><span class="p">,</span>
+</span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="w">    </span><span class="nt">"hour"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2023-04-25T05:00:00Z"</span><span class="p">,</span>
+</span><span id="__span-0-10"><a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="w">    </span><span class="nt">"quantity_mode"</span><span class="p">:</span><span class="w"> </span><span class="s2">"base"</span><span class="p">,</span>
+</span><span id="__span-0-11"><a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="w">    </span><span class="nt">"contract_multiplier"</span><span class="p">:</span><span class="w"> </span><span class="s2">"0.0001"</span><span class="p">,</span>
+</span><span id="__span-0-12"><a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="w">    </span><span class="nt">"multiplier_verification"</span><span class="p">:</span><span class="w"> </span><span class="s2">"pilot_assumption"</span><span class="p">,</span>
+</span><span id="__span-0-13"><a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="w">    </span><span class="nt">"multiplier_source"</span><span class="p">:</span><span class="w"> </span><span class="s2">"current contract endpoint; historical constancy unverified"</span><span class="p">,</span>
+</span><span id="__span-0-14"><a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="w">    </span><span class="nt">"multiplier_valid_from_ms"</span><span class="p">:</span><span class="w"> </span><span class="mi">1682398800000</span><span class="p">,</span>
+</span><span id="__span-0-15"><a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="w">    </span><span class="nt">"multiplier_valid_until_ms"</span><span class="p">:</span><span class="w"> </span><span class="mi">1682402400000</span><span class="p">,</span>
+</span><span id="__span-0-16"><a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="w">    </span><span class="nt">"membership_intervals"</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span>
+</span><span id="__span-0-17"><a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a><span class="w">    </span><span class="nt">"verify_snapshots"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span>
+</span><span id="__span-0-18"><a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a><span class="w">  </span><span class="p">}]</span>
+</span><span id="__span-0-19"><a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a><span class="p">}</span>
+</span></code></pre></div>
+<p>Historical manifests set <code>status=historical</code>, provide universe provenance and
+declare <code>quantity_mode=contract_counts</code> without multiplier fields, or
+<code>quantity_mode=base</code> with <code>multiplier_verification=historical</code> for every job. An empty membership
+list explicitly denotes warmup or format-pilot output. Snapshot checks are
+explicit per job so a finite deterministic validation schedule can be used
+without downloading slices for every hour forever.</p>
+<p>Run a bounded manifest:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>python<span class="w"> </span>tools/gate_history_metrics.py<span class="w"> </span>--manifest<span class="w"> </span>jobs.json<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="w">  </span>--output-root<span class="w"> </span>data-gate-research<span class="w"> </span>--max-hours<span class="w"> </span><span class="m">1</span>
+</span></code></pre></div>
+<p>The tool refuses a manifest exceeding its explicit hourly budget. It streams
+HTTP gzip directly into reconstruction; raw compressed or decompressed files
+are not written to disk. Feature rows are bounded to one hour in memory and
+stored as one zstd Parquet file with a source/quality manifest under
+<code>exchange=gate/market=usdm/type=research_metrics/dt=.../symbol=...</code>.
+Near-depth scans run once a second inside 25 bps rather than traversing the full
+book on every event; OFI needs only five levels per completed timestamp group.</p>
+<p>Parquet metadata records exchange, market, feature version, actual feature
+availability, quantity mode and units, quality, and universe policy. Base mode
+also records multiplier and verification status; count mode records auxiliary
+flow-weight units and omits multiplier metadata. The manifest also records
+compressed source SHA-256 and byte count, snapshot receipt, sequence and
+boundary diagnostics, feature count, row count, and measured elapsed time.
+Gzip EOF checks and advertised Content-Length checks precede output creation.
+Existing output is refused; temporary writes become final files by rename.
+A durable <code>part-&lt;hour&gt;.write-intent.json</code> records the exact job, universe policy
+and validated source receipt before any output is written. Its atomic staging
+filename includes a SHA-256 of the schema, job and policy. A prepublication
+restart may overwrite only that owned staging file when no output or published
+intent exists. Unknown staging files remain fatal and are preserved.</p>
+<p>The Parquet file and its manifest are synced before their renames; the manifest
+is published last. Both file contents and the parent directory are durable
+before the verified pair retires its intent. On resume, a complete pair passes
+the existing strict source, digest, schema, membership and causal-coverage
+checks. A matching remaining intent is removed only after verification. An
+incomplete publication may remove exactly its two final and two partial output
+paths only with a matching ownership intent. It is then regenerated. Unowned
+partials, mismatched intent provenance and corrupt complete pairs require
+inspection; none are repaired or accepted as good data.</p>
+<h2 id="measured-pilot-evidence">Measured pilot evidence<a class="headerlink" href="#measured-pilot-evidence" title="Permanent link">&para;</a></h2>
+<p>A full streamed BTC_USDT hour, 2023-04-25 05:00 UTC, was converted on
+2026-10-02. All 3,349 exactly aligned independent top-ten snapshots matched;
+27 snapshots inside merged spans were counted as unaligned rather than
+reconstructed. The source contained 1,267,356 CSV rows and 1,293,899 merged
+updates, including the 26 boundary tail rows described above.</p>
+<table>
+<thead>
+<tr>
+<th>Measurement</th>
+<th style="text-align: right;">Observed value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Compressed depth archive</td>
+<td style="text-align: right;">9,062,902 bytes</td>
+</tr>
+<tr>
+<td>Compressed independent slices</td>
+<td style="text-align: right;">137,695 bytes</td>
+</tr>
+<tr>
+<td>Output</td>
+<td style="text-align: right;">60 rows, 39 candidates, 26,318-byte zstd Parquet</td>
+</tr>
+<tr>
+<td>Converter elapsed time, including HTTP</td>
+<td style="text-align: right;">6.217 seconds</td>
+</tr>
+<tr>
+<td>Whole process wall time</td>
+<td style="text-align: right;">7.07 seconds</td>
+</tr>
+<tr>
+<td>Approximate CSV throughput</td>
+<td style="text-align: right;">204,000 rows/second</td>
+</tr>
+<tr>
+<td>Peak resident memory, macOS <code>time -l</code></td>
+<td style="text-align: right;">114,229,248 bytes (109 MiB)</td>
+</tr>
+</tbody>
+</table>
+<p>Source SHA-256:
+<code>ccc450af8e336ed9a2ec3a21ad47a6aa1d986b0e783e4b0996a2d49e1a45a021</code>.
+Independent-slice SHA-256:
+<code>a927b654025a97ea2f249e3646654afdafb9998bb0e671955be21dd4bdc8d758</code>.</p>
+<p>This pilot uses the current BTC multiplier only as an explicitly unverified
+historical assumption. It proves book reconstruction and bounded feature
+conversion on this file, not historical contract units or performance across
+all instruments and years. Network conditions and source sizes affect
+throughput; do not extrapolate this single file into a guaranteed long-run ETA.
+Pilot output was retained under <code>/tmp/gate-research-pilot-20261002</code>; no raw
+archive files were persisted.</p>
+<h3 id="native-count-selected-coin-cohort">Native-count selected-coin cohort<a class="headerlink" href="#native-count-selected-coin-cohort" title="Permanent link">&para;</a></h3>
+<p>After enabling the multiplier-independent path, five non-BTC hourly files were
+streamed with 21 scale-free predictors and one native-flow weighting auxiliary.
+For every file, the final reconstructed native book matched the next-hour fresh
+initial snapshot at exactly the same sequence ID and full-depth SHA-256.
+These are instrument/date samples, not a selected top-40 universe claim.</p>
+<table>
+<thead>
+<tr>
+<th>Contract/hour UTC</th>
+<th style="text-align: right;">CSV rows</th>
+<th style="text-align: right;">Compressed bytes</th>
+<th style="text-align: right;">Compact Parquet bytes</th>
+<th>Exact boundary equality</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>SOL, 2025-01-01 00:00</td>
+<td style="text-align: right;">623,348</td>
+<td style="text-align: right;">3,839,513</td>
+<td style="text-align: right;">19,175</td>
+<td>Full book, ID 25624511296</td>
+</tr>
+<tr>
+<td>DOGE, 2025-01-01 00:00</td>
+<td style="text-align: right;">465,438</td>
+<td style="text-align: right;">3,154,613</td>
+<td style="text-align: right;">19,459</td>
+<td>Full book, ID 26973609187</td>
+</tr>
+<tr>
+<td>SOL, 2025-09-01 00:00</td>
+<td style="text-align: right;">2,365,722</td>
+<td style="text-align: right;">14,904,967</td>
+<td style="text-align: right;">19,143</td>
+<td>Full book, ID 32509376967</td>
+</tr>
+<tr>
+<td>DOGE, 2025-09-01 00:00</td>
+<td style="text-align: right;">1,545,417</td>
+<td style="text-align: right;">10,762,977</td>
+<td style="text-align: right;">19,398</td>
+<td>Full book, ID 32798494314</td>
+</tr>
+<tr>
+<td>ADA, 2025-09-01 00:00</td>
+<td style="text-align: right;">493,141</td>
+<td style="text-align: right;">3,336,347</td>
+<td style="text-align: right;">19,199</td>
+<td>Full book, ID 12112779977</td>
+</tr>
+</tbody>
+</table>
+<p>The official documented slice URLs returned HTTP 404 for checked SOL dates and
+BNB/ADA/XRP/DOGE 2025-09-01. Verification was not silently skipped: the selected
+cohort used an explicit alternative fresh-snapshot boundary comparison. This
+checks independent state capture in an adjacent source file, not an independent
+market-data provider, and does not certify every intermediate state or all
+historical hours.</p>
+<p>Two ETH source checks failed and produced no accepted output. The 2023-04-25
+05:00 UTC file inserted an older timestamp and sequence at row 679,376. The
+2025-09-01 00:00 UTC file disagreed with its first aligned independent slice:
+at ID 75675406343, bid 4389.65 had 2,360 contracts in the slice and 55,286 in
+reconstruction. Both were rejected; no sorting, duplicate removal or guessed
+snapshot repair was applied.</p>
+<p>Small source receipts, native full-book hashes and rejection evidence are saved
+under <a href="validation/rollout-evidence/gate-book-pilot-20261002/">the pilot evidence directory</a>.
+No raw archive files are included. A production verification policy must
+explicitly choose finite independent-slice checks or sampled fresh boundary
+checks, preserve rejection evidence, and retain per-file gzip, sequence,
+timestamp and book-invariant gates on every processed hour.</p>
+<h2 id="binance-execution-with-gate-feature-inputs">Binance execution with Gate feature inputs<a class="headerlink" href="#binance-execution-with-gate-feature-inputs" title="Permanent link">&para;</a></h2>
+<p><code>alpha_mining/gate_data.py</code> attaches the compact book candidates under
+<code>data["gate-f"][native_key]</code>. DSL inputs use <code>gate__&lt;native_key&gt;</code>.
+The execution source remains Binance USD-M: Binance prices, traded volume,
+funding and costs continue through the shared execution evaluator. Gate midpoint
+is never substituted for Binance VWAP, and Gate book flow is never substituted
+for Binance traded volume. Transfer across venues is an empirical research
+question; evaluate it on the Binance execution results.</p>
+<p>The provider takes the builder-produced <code>gate-research-source-v1</code> descriptor
+through the research <code>gate_source_manifest</code> option. It pins the mapping Parquet,
+job manifest and membership Parquet with their SHA-256 hashes. The descriptor
+contains <code>mapping_file</code>, <code>mapping_sha256</code>, <code>jobs_manifest</code>, <code>jobs_sha256</code>,
+<code>membership_file</code>, <code>membership_sha256</code>, and the explicit
+<code>symbol_lifetime_policy=historical_disjoint_trading_lifetimes</code>. Disjoint
+relistings reset maturity; reused exchange tickers for different underlying assets
+receive separate research identities. Paths are relative
+to the descriptor. Mappings are one-to-one; name similarity is not a mapping.
+Jobs and artifacts require certified source quality and their explicit quantity
+mode. Historical multipliers are required only for base/USD predictors; native
+contract counts enable the scale-free candidates without that dependency. The adapter verifies each artifact's Parquet digest, receipt job and
+universe provenance, metadata, source archive digest, exactly 60 ordered complete
+minute rows per hour, strictly earlier observed event timestamps and membership
+mask equality. Pilot units are rejected.</p>
+<p>A feature at Binance decision <code>t</code> uses exactly 30 Gate minute bars ending in
+<code>(t-30 minutes,t]</code>. The first requested execution timestamp therefore needs
+additional preceding Gate history. The adapter streams one hour at a time,
+aggregates its two half-hours, and populates 21 or 39 preallocated frames on the
+Binance decision grid. It retains neither multi-year minute rows nor a growing
+list of per-hour receipts. A rolling digest records verified artifact receipts.
+Outside explicit mapping and requested job coverage, values remain NaN.
+Missing hours or minutes within expected jobs fail; a selected member without
+covered book inputs fails. No forward filling or fake zero measurements occur.
+The exact verified descriptor membership is exposed to the research strategy
+layer for selection instead of reconstructing a different top-N universe.</p>
+<p>Thirty-minute aggregation is mandatory per feature:</p>
+<table>
+<thead>
+<tr>
+<th>Minute feature</th>
+<th>Thirty-minute operation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>*_mean</code></td>
+<td>Mean of 30 equally sampled minute means; undefined values propagate</td>
+</tr>
+<tr>
+<td><code>*_close</code>, including midpoint</td>
+<td>Last completed minute value</td>
+</tr>
+<tr>
+<td>Spread maximum</td>
+<td>Maximum</td>
+</tr>
+<tr>
+<td>Spread standard deviation</td>
+<td>Pool within-minute variance plus variance of minute means</td>
+</tr>
+<tr>
+<td>Depth additions/reductions</td>
+<td>Sum USD flow</td>
+</tr>
+<tr>
+<td>Source update rate</td>
+<td>Mean</td>
+</tr>
+<tr>
+<td>Normalized L1 and top-five OFI</td>
+<td>Mean minute-normalized OFI; this is not an exact reconstructed thirty-minute OFI</td>
+</tr>
+<tr>
+<td>Depth-flow imbalance</td>
+<td>Recompute from summed USD flows in base mode or native-count auxiliary weights in count mode</td>
+</tr>
+<tr>
+<td>Midpoint return</td>
+<td>Log close-to-close return across contiguous covered intervals; first available interval uses its observed opening midpoint</td>
+</tr>
+<tr>
+<td>Midpoint realized volatility</td>
+<td>Root-sum-square minute volatility, with observed opening/previous-close boundary jumps added across contiguous intervals</td>
+</tr>
+</tbody>
+</table>
+<p>The provider preserves the original execution-data store, exposes the verified
+membership and source provenance, and supplies a static canonical Gate metric
+catalogue. Any coverage-based offering or feature selection must use only Train.
+The closed final-test data cannot influence availability probing or aggregation
+choices.</p>
+<h2 id="verified-archive-boundary-overlap">Verified archive boundary overlap<a class="headerlink" href="#verified-archive-boundary-overlap" title="Permanent link">&para;</a></h2>
+<p>Gate hourly files can contain updates timestamped after their nominal end.
+The ADA archive for 2025-08-02 02:00 UTC contains one update at 03:00:00.100;
+its complete reconstructed native book and final sequence 11787977128 exactly
+match the next file's initial snapshot. The next delta is at 03:00:00.200
+with sequence 11787977129. The 03:00 file also contains fourteen updates at
+04:00:00.100. This is observed source overlap, not a reason to introduce a
+100 ms timestamp tolerance. The snapshot's timestamp denotes its nominal
+hour and can precede the effective availability of its included updates.</p>
+<p>Sampling remains one second, represented by <code>RESEARCH_SAMPLE_CADENCE_MS</code>.
+An overlap must end strictly before the next hour's first scheduled sample.
+An update at or beyond that first sample is unsupported and fails. Post-end
+updates are replayed only to verify continuity: sampling is capped at the
+nominal hour end, and those updates never enter closed-minute flow, OFI,
+book samples or observation watermarks.</p>
+<p>Any post-end overlap requires lazy acquisition of the next hourly archive.
+Its entire compressed stream is consumed and checked before its SHA256 and
+byte count are recorded. Its full initial native book, sequence and nominal
+snapshot timestamp must match the reconstructed tail and next boundary;
+the first subsequent delta must continue the sequence without preceding
+the tail's event time. The proof records the snapshot's effective availability
+as the last overlapping update timestamp. A missing or inconsistent proof
+fails acquisition. Exact-end updates retain the existing behavior and do not
+request this additional archive.</p>
+<h2 id="sequence-effective-event-timestamps">Sequence-effective event timestamps<a class="headerlink" href="#sequence-effective-event-timestamps" title="Permanent link">&para;</a></h2>
+<p>The XRP 2025-08-04 15:00 UTC archive has one backwards timestamp among
+1,659,798 records: row 550176 is timestamped 15:17:51.700 after
+15:17:51.800. Its sequence is continuous, and replaying every unchanged
+record in source ID order produces the exact full initial book and sequence
+of the following hourly archive. Both archives pass gzip and SHA verification.</p>
+<p>The historical parser preserves source sequence order. An event whose raw
+timestamp falls behind the sequence clock is assigned the preceding effective
+timestamp only when both belong to the same one-second sampling bucket.
+There is no fixed millisecond tolerance. A regression across a completed
+sample, including a one-millisecond crossing, fails. Source IDs are never
+sorted or repaired. The parser retains the original millisecond timestamp
+through <code>raw_timestamp_ms</code> and records its displacement through
+<code>timestamp_regression_ms</code>.</p>
+<p>The converter reports the number of displaced records and maximum displacement
+in diagnostics. Its receipt declares
+<code>event_clock_policy=sequence_effective_within_one_second_sample</code>.
+Minute features use this causal sequence clock; late updates never enter an
+already completed second or minute. Full source checksums continue to identify
+the original bytes, including any raw timestamp anomalies.</p>
+<h2 id="source-rejection-versus-transport-retry">Source rejection versus transport retry<a class="headerlink" href="#source-rejection-versus-transport-retry" title="Permanent link">&para;</a></h2>
+<p>Market-record validation raises <code>GateSourceQualityError</code>; sequence gaps retain
+the more specific <code>GateSequenceGapError</code> subtype. This includes malformed
+records, invalid snapshot or reconstructed book states, unsupported event
+times and unsuccessful independent checks. Configuration validation and local
+output failures remain ordinary errors and must not be quarantined as data.</p>
+<p><code>GateArchiveUnavailableError</code> identifies an HTTP 404. Rate limits and HTTP
+server failures preserve their HTTP exceptions for transport retry.
+<code>GateArchiveCorruptionError</code> identifies invalid gzip data or CRC, invalid text,
+and abnormal gzip EOF after the complete declared compressed body was received.
+An abnormal EOF without a declared body length is unverified source data and
+receives the same quality rejection. A short declared body, including an HTTP
+incomplete read or short receipt, raises <code>GateArchiveTruncationError</code>, a
+<code>ConnectionError</code> that remains eligible for retry. Body decoder classification
+occurs only during archive reads; unrelated caller exceptions remain fatal.</p>
+<p>Typed exceptions retain <code>source_metadata</code> through worker-process serialization:
+the URL, compressed bytes read, their SHA256 and declared content length when
+available. <code>complete</code> identifies a complete declared body; otherwise this hash
+describes received bytes only, not a verified complete archive.</p>
+<p>The XRP 2025-08-08 00:00 UTC archive that previously ended with EOF was read
+successfully twice during investigation. Both reads produced 5,813,787 lines,
+38,135,426 compressed bytes matching Content-Length, valid gzip CRC, and SHA256
+<code>58ec57e6de8d2a09d0ecde5fd6cfa760036a2df7652e5d8ac00b5431f94395cf</code>.
+It is therefore not a reproducibly corrupt source file; a short transport
+response must not permanently blacklist this archive.</p>
+<h2 id="acceptance-and-remaining-work">Acceptance and remaining work<a class="headerlink" href="#acceptance-and-remaining-work" title="Permanent link">&para;</a></h2>
+<p>A successful format pilot is evidence of reconstruction and resource usage,
+not historical coverage or alpha quality. Before a long conversion:</p>
+<ol>
+<li>Validate sample hours over multiple dates and several large and small
+   instruments against aligned independent slices. Record coverage, final
+   sequence, boundary tails, network bytes, throughput and peak resident memory.</li>
+<li>Supply asset mappings and exact dynamic minimum-order exclusion and universe
+   provenance. Historical multiplier evidence is needed only when using USD
+   predictors, not for native-count scale-free acquisition. Check archive availability for selected intervals.</li>
+<li>Require actual Binance USD-M trade-price/VWAP and funding coverage for
+   execution. The book-only Gate output fabricates none of these fields.
+   Native Gate execution would additionally require actual Gate trades/funding.</li>
+<li>Verify end-to-end Gate/Binance transfer on the selected historical universe,
+   including exact membership and source availability at every decision.</li>
+<li>Compare the legacy 791 candidates, compact 21/39 candidates and a combined set
+   under equal data, execution costs and search budgets. Fit imputation,
+   normalization, redundancy clustering and all feature selection only on Train.
+   Assess incremental information, prediction/portfolio performance after costs,
+   temporal stability and sensitivity to liquidity regimes on permitted
+   validation windows. Freeze selection before the closed Final test.</li>
+</ol>
+<p>No mass history acquisition, paid metadata access, live deployment or mining
+claim is made by this tool. The acquisition and source integration dependencies
+above remain acceptance gates.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+</div>
+      
+        
+<div class="md-social">
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://github.com/SNCapital" target="_blank" rel="noopener" title="github.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+      <div class="md-progress" data-md-component="progress" role="progressbar"></div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.instant", "navigation.instant.progress", "navigation.tracking", "navigation.tabs", "navigation.tabs.sticky", "navigation.sections", "navigation.expand", "navigation.indexes", "navigation.top", "navigation.footer", "search.suggest", "search.highlight", "search.share", "toc.follow", "content.code.copy", "content.code.annotate", "content.tabs.link", "content.tooltips"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+        <script src="../javascripts/katex.js"></script>
+      
+        <script src="https://unpkg.com/katex@0/dist/katex.min.js"></script>
+      
+        <script src="https://unpkg.com/katex@0/dist/contrib/auto-render.min.js"></script>
+      
+    
+  </body>
+</html>

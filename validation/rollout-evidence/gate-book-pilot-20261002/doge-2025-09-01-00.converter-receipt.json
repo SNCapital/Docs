@@ -1,0 +1,40 @@
+{
+  "diagnostics": {
+    "boundary_tail_rows": 6,
+    "event_rows": 1545417,
+    "final_ask_levels": 5750,
+    "final_bid_levels": 4291,
+    "final_native_book_sha256": "db79c7d84cb348fbc937f72530764db1a43b91d7a3618a8de863201c3ba56964",
+    "last_event_ms": 1756688400000,
+    "last_sequence": 32798494314,
+    "merged_updates": 1642782,
+    "snapshot_exact_checks": 0,
+    "snapshot_unaligned": 0
+  },
+  "elapsed_seconds": 9.518351749982685,
+  "feature_count": 21,
+  "feature_version": "gate-book-v1",
+  "job": {
+    "hour": "2025-09-01T00:00:00Z",
+    "membership_intervals": [],
+    "quantity_mode": "contract_counts",
+    "symbol": "DOGE_USDT",
+    "verify_snapshots": false
+  },
+  "parquet_bytes": 19398,
+  "parquet_sha256": "b36d71dd9ca28da0632c6ab2507e115b5da860ccb2f124e389984f6307356666",
+  "quality": "validated",
+  "rows": 60,
+  "snapshots": null,
+  "source": {
+    "compressed_bytes": 10762977,
+    "sha256": "1507aae768c61675fd4c7682282230dceadd9b1f40972255d401b1ddd0853c17",
+    "url": "https://download.gatedata.org/futures_usdt/orderbooks/202509/DOGE_USDT-2025090100.csv.gz"
+  },
+  "universe_policy": {
+    "provenance": "native-book reconstruction cohort; no universe selection",
+    "quantity_mode": "contract_counts",
+    "status": "pilot"
+  },
+  "validation": "sequence_continuity,gzip_crc,hour_range,book_invariants,uniform_sampling"
+}

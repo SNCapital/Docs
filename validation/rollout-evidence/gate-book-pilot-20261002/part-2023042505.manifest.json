@@ -1,0 +1,45 @@
+{
+  "diagnostics": {
+    "boundary_tail_rows": 26,
+    "event_rows": 1267356,
+    "final_ask_levels": 4334,
+    "final_bid_levels": 3000,
+    "last_event_ms": 1682402400000,
+    "last_sequence": 36310300961,
+    "merged_updates": 1293899,
+    "snapshot_exact_checks": 3349,
+    "snapshot_unaligned": 27
+  },
+  "elapsed_seconds": 6.216512917075306,
+  "feature_count": 39,
+  "feature_version": "gate-book-v1",
+  "job": {
+    "contract_multiplier": "0.0001",
+    "hour": "2023-04-25T05:00:00Z",
+    "membership_intervals": [],
+    "multiplier_source": "https://api.gateio.ws/api/v4/futures/usdt/contracts/BTC_USDT observed 2026-10-02; historical constancy NOT verified",
+    "multiplier_valid_from_ms": 1682398800000,
+    "multiplier_valid_until_ms": 1682402400000,
+    "multiplier_verification": "pilot_assumption",
+    "symbol": "BTC_USDT",
+    "verify_snapshots": true
+  },
+  "parquet_bytes": 26318,
+  "quality": "pilot_units_unverified",
+  "rows": 60,
+  "snapshots": {
+    "compressed_bytes": 137695,
+    "sha256": "a927b654025a97ea2f249e3646654afdafb9998bb0e671955be21dd4bdc8d758",
+    "url": "https://download.gatedata.org/futures_usdt/orderbooks_slice/202304/BTC_USDT-2023042505.gz"
+  },
+  "source": {
+    "compressed_bytes": 9062902,
+    "sha256": "ccc450af8e336ed9a2ec3a21ad47a6aa1d986b0e783e4b0996a2d49e1a45a021",
+    "url": "https://download.gatedata.org/futures_usdt/orderbooks/202304/BTC_USDT-2023042505.csv.gz"
+  },
+  "universe_policy": {
+    "provenance": "format pilot only; no top40 selection or historical USD certification",
+    "status": "pilot"
+  },
+  "validation": "sequence_continuity,gzip_crc,hour_range,book_invariants,uniform_sampling"
+}

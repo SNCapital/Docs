@@ -1,0 +1,40 @@
+{
+  "diagnostics": {
+    "boundary_tail_rows": 4,
+    "event_rows": 493141,
+    "final_ask_levels": 1447,
+    "final_bid_levels": 1073,
+    "final_native_book_sha256": "15bf49019861d23e5589afcdd4c24a7b2d120f95e91e5fe8e2ab9cd80e11a1da",
+    "last_event_ms": 1756688400000,
+    "last_sequence": 12112779977,
+    "merged_updates": 537420,
+    "snapshot_exact_checks": 0,
+    "snapshot_unaligned": 0
+  },
+  "elapsed_seconds": 5.07776500005275,
+  "feature_count": 21,
+  "feature_version": "gate-book-v1",
+  "job": {
+    "hour": "2025-09-01T00:00:00Z",
+    "membership_intervals": [],
+    "quantity_mode": "contract_counts",
+    "symbol": "ADA_USDT",
+    "verify_snapshots": false
+  },
+  "parquet_bytes": 19199,
+  "parquet_sha256": "c98da0171036bf07eeb2341b702e33ec1ca9e49181d2f97b17d85e908bd7fb14",
+  "quality": "validated",
+  "rows": 60,
+  "snapshots": null,
+  "source": {
+    "compressed_bytes": 3336347,
+    "sha256": "0370ed075c4a509de05ba7f862a2b15a9e4d3fa57a712a5ce1fc81a8ea293ab7",
+    "url": "https://download.gatedata.org/futures_usdt/orderbooks/202509/ADA_USDT-2025090100.csv.gz"
+  },
+  "universe_policy": {
+    "provenance": "native-book reconstruction cohort; no universe selection",
+    "quantity_mode": "contract_counts",
+    "status": "pilot"
+  },
+  "validation": "sequence_continuity,gzip_crc,hour_range,book_invariants,uniform_sampling"
+}

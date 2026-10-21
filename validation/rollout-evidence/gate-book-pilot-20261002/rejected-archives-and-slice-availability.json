@@ -1,0 +1,72 @@
+{
+  "checked_at_utc": "2026-10-02",
+  "scope": "Bounded archive validation; not a dynamic trading universe or coverage guarantee",
+  "failures": [
+    {
+      "symbol": "ETH_USDT",
+      "hour": "2023-04-25T05:00:00Z",
+      "source_url": "https://download.gatedata.org/futures_usdt/orderbooks/202304/ETH_USDT-2023042505.csv.gz",
+      "verdict": "rejected_timestamp_and_sequence_regression",
+      "previous_row": {
+        "row": 679375,
+        "timestamp": 1682400622.6,
+        "begin_id": 41231034592
+      },
+      "rejected_row": {
+        "row": 679376,
+        "timestamp": 1682400600.0,
+        "action": "make",
+        "price": "1826.65",
+        "signed_contracts": "-4000",
+        "begin_id": 41231027057
+      },
+      "next_row": {
+        "timestamp": 1682400622.6,
+        "begin_id": 41231034593
+      },
+      "repair_applied": false
+    },
+    {
+      "symbol": "ETH_USDT",
+      "hour": "2025-09-01T00:00:00Z",
+      "source_url": "https://download.gatedata.org/futures_usdt/orderbooks/202509/ETH_USDT-2025090100.csv.gz",
+      "snapshot_url": "https://download.gatedata.org/futures_usdt/orderbooks_slice/202509/ETH_USDT-2025090100.gz",
+      "verdict": "rejected_independent_snapshot_mismatch",
+      "snapshot_id": 75675406343,
+      "first_mismatch": {
+        "side": "bid",
+        "price": "4389.65",
+        "snapshot_contracts": "2360",
+        "reconstructed_contracts": "55286"
+      },
+      "repair_applied": false
+    }
+  ],
+  "documented_slice_url_404": [
+    {
+      "symbol": "SOL_USDT",
+      "hour": "2024-09-01T00:00:00Z"
+    },
+    {
+      "symbol": "SOL_USDT",
+      "hour": "2026-09-07T00:00:00Z"
+    },
+    {
+      "symbol": "BNB_USDT",
+      "hour": "2025-09-01T00:00:00Z"
+    },
+    {
+      "symbol": "ADA_USDT",
+      "hour": "2025-09-01T00:00:00Z"
+    },
+    {
+      "symbol": "XRP_USDT",
+      "hour": "2025-09-01T00:00:00Z"
+    },
+    {
+      "symbol": "DOGE_USDT",
+      "hour": "2025-09-01T00:00:00Z"
+    }
+  ],
+  "alternative_validation": "Selected SOL/DOGE/ADA cohorts compare full native book SHA at exact same sequence with next-hour initial snapshot; see separate proof receipts."
+}

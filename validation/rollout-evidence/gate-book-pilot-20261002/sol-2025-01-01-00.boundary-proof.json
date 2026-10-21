@@ -1,0 +1,29 @@
+{
+  "symbol": "SOL_USDT",
+  "hour": "2025-01-01T00:00:00Z",
+  "source": {
+    "compressed_bytes": 3839513,
+    "sha256": "553f11374a73c9c3b69a57067dca71e24f39289c60768fb6e47dbd818cb9ba32",
+    "url": "https://download.gatedata.org/futures_usdt/orderbooks/202501/SOL_USDT-2025010100.csv.gz"
+  },
+  "diagnostics": {
+    "boundary_tail_rows": 96,
+    "event_rows": 623348,
+    "final_ask_levels": 878,
+    "final_bid_levels": 1123,
+    "final_native_book_sha256": "6f2049abb5597484b383fdab39fe6a527c011834dc662560656711e3301d8278",
+    "last_event_ms": 1735693200000,
+    "last_sequence": 25624511296,
+    "merged_updates": 749301,
+    "snapshot_exact_checks": 0,
+    "snapshot_unaligned": 0
+  },
+  "next_initial_url": "https://download.gatedata.org/futures_usdt/orderbooks/202501/SOL_USDT-2025010101.csv.gz",
+  "next_initial_sequence": 25624511296,
+  "next_initial_rows": 2001,
+  "next_initial_native_sha256": "6f2049abb5597484b383fdab39fe6a527c011834dc662560656711e3301d8278",
+  "sequence_equal": true,
+  "full_native_book_equal": true,
+  "parquet_bytes": 19175,
+  "elapsed_seconds": 5.428784082992934
+}
