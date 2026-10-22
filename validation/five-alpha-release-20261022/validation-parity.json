@@ -1,0 +1,47 @@
+{
+  "status": "verified",
+  "validation_since": "2026-07-20T00:00:00Z",
+  "validation_until_exclusive": "2026-10-01T00:00:00Z",
+  "target_gross": 1.0,
+  "standalone": {
+    "prior_high_path_variation_evenness_sequence_book": {
+      "sharpe": 7.341738934909545,
+      "pnl_net_total": 0.4462397378480828,
+      "max_drawdown": -0.10419278332906418
+    },
+    "illiquid_impact_positive_book_risk_demand": {
+      "sharpe": 6.583287642771722,
+      "pnl_net_total": 0.4174910860864235,
+      "max_drawdown": -0.05273228076479386
+    },
+    "spread_regime_reversal_low_turnover_observed_history": {
+      "sharpe": 4.979087849124414,
+      "pnl_net_total": 0.16933889209598052,
+      "max_drawdown": -0.06511212233691793
+    },
+    "positive_book_demand_timing_covariance": {
+      "sharpe": 3.174562049388224,
+      "pnl_net_total": 0.1439110519972341,
+      "max_drawdown": -0.08907787610188755
+    },
+    "tight_quote_rising_participation_premium": {
+      "sharpe": 3.1496532065644436,
+      "pnl_net_total": 0.1753858637170374,
+      "max_drawdown": -0.12502242821946524
+    }
+  },
+  "portfolio": {
+    "sharpe": 9.378337316746592,
+    "pnl_net_total": 0.3347632963019002,
+    "max_drawdown": -0.04873034989957788,
+    "n_bars": 3504
+  },
+  "prior_six_dependent_schedule": {
+    "sharpe": 8.41737885730137,
+    "pnl_net_total": 0.32499909278084205,
+    "max_drawdown": -0.047382649129274666
+  },
+  "decision_bars": 2885,
+  "prior_decision_bars": 2666,
+  "qualification": "Frozen standalone parity and reproduced prior six-dependent schedule. Corrected portfolio uses only the five configured sleeves for readiness. Adaptive validation, no live orders."
+}
