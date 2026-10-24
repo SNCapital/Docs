@@ -2297,8 +2297,10 @@ and an authorized mainnet configuration do not establish runtime activation.</p>
 <h2 id="bar-processing">Bar processing<a class="headerlink" href="#bar-processing" title="Permanent link">&para;</a></h2>
 <p>The trader restores full PostgreSQL history and replays a captured retained Kafka
 range before live consumption. UTC-aligned boundaries, settlement delay,
-data-quality gates and risk limits control evaluation. POOR bars hold positions
-while exchange reconciliation continues. Spot historical features retain their
+data-quality checks and risk limits control evaluation per symbol. Bad inputs
+disable new risk and target zero for affected positions while healthy instruments
+continue rebalancing. Unavailable whole-window targets reduce exposure;
+exchange reconciliation and kill-switch exits remain active. Spot historical features retain their
 source market and unproven quality; Futures metrics are never relabelled Spot.</p>
 <p>Calc owns raw tick intake, local books, aggregation and recovery. It commits
 completed bars, state, next partition offsets and an output outbox together in

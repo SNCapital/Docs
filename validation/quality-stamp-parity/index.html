@@ -2201,9 +2201,12 @@ existing <code>live_config.yaml</code> only when execution begins and passes the
 Library <code>AlphaPipeline</code> defaults retain the shared defaults. Custom library runs
 must supply an explicit <code>DataQualityThresholds(bar_filter=...)</code> matching their
 live configuration for numerical parity. <code>--help</code> does not load runtime config.</p>
-<p>Live DEGRADED and POOR hold the entire existing book and continue
-reconciliation. Backtest non-strict mode deliberately continues computation with
-an explicit report; it does not emulate the live hold/rebalance policy. Optional
+<p>The September baseline held the entire live book for DEGRADED and POOR windows.
+The October 24 execution policy supersedes that behavior with per-symbol
+eligibility, zero targets for unavailable inputs and continued healthy-symbol
+rebalancing. Mixed-market backtests share the new risk-reduction policy.
+Backtest non-strict mode still reports unavailable collection evidence; numeric
+coverage without historical stamps cannot prove live stamp-policy parity. Optional
 DailyParquetReader filtering keeps only NORM, so legacy rows without proof are
 excluded when that filter is explicitly enabled. The ordinary raw backtest remains
 usable in non-strict mode and reports the unavailable evidence. Filtering does not
